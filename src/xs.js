@@ -1,0 +1,147 @@
+// xs.js
+
+( function( exports ) {
+  /* -------------------------------------------------------------------------------------------
+     nil_function()
+  */
+  function nil_function() {}
+  
+  /* -------------------------------------------------------------------------------------------
+     extend( destination, source [, source_1 ... ] )
+  */
+  function extend( d ) {
+    var l = arguments.length;
+    
+    for ( var i = 0; ++i < l; ) {
+      var s = arguments[ i ];
+
+      for ( var p in s ) if ( s.hasOwnProperty( p ) ) d[ p ] = s[ p ];
+    }
+    
+    return d;
+  } // extend()
+  
+  /* -------------------------------------------------------------------------------------------
+     log( message )
+  */
+  var log;
+  
+  if ( typeof console != "object" || typeof console.log != "function" ) {
+    // Browsers that do not have a console.log()
+    log = nil_function;
+    log.s = nil_function;
+  } else {
+    log = function( message ) {
+      var date = new Date
+        , year     = "" + date.getFullYear()
+        , month    = "" + ( date.getMonth() + 1 )
+        , day      = "" + date.getDate()
+        , hour     = "" + date.getHours()
+        , minutes  = "" + date.getMinutes()
+        , seconds  = "" + date.getSeconds()
+        , ms       = "" + date.getMilliseconds()
+      ;
+      
+      if ( month  .length < 2 ) month    = "0" + month
+      if ( day    .length < 2 ) day      = "0" + day;
+      if ( hour   .length < 2 ) hour     = "0" + hour;
+      if ( minutes.length < 2 ) minutes  = "0" + minutes;
+      if ( seconds.length < 2 ) seconds  = "0" + seconds;
+      
+      switch( ms.length ) {
+        case 2: ms =  "0" + ms; break;
+        case 1: ms = "00" + ms; break;
+      }
+      
+      console.log( year + '/' + month + '/' + day
+        + ' ' + hour + ':' + minutes + ':' + seconds + '.' + ms
+        + ' - ' + message
+      );
+    } // log()
+    
+    log.s = JSON.stringify;
+  }
+  
+  /* -------------------------------------------------------------------------------------------
+     subclass( base, f )
+  */
+  function subclass( base, f ) {
+    return ( f.prototype = Object.create( base.prototype ) ).constructor = f;
+  } // subclass()
+  
+  /* -------------------------------------------------------------------------------------------
+     export_code( namespace, exports )
+     
+     Generate pretty code to export public attributes
+  */
+  function export_code( namespace, exports ) {
+    var max = Math.max.apply( Math, exports.map( function( v ) { return v.length } ) );
+    
+    for ( var s = '', i = -1; ++i < max; ) s += ' ';
+    
+    exports.unshift(
+      '\n  var ' + namespace + ' = exports.' + namespace + ' || {};\n' +
+      '\n  exports.' + namespace + ' = ' + namespace + ';\n'
+    );
+    
+    var export_code = exports.reduce(
+      function( r, f ) {
+        return r + '\n  XS.' + ( f + s ).substr( 0, max ) + " = " + f + ';'
+      }
+    );
+    
+    de&&ug( "exports:" + export_code );
+    
+    var XS = exports.XS || {};
+  } // export_code()
+  
+  /* -------------------------------------------------------------------------------------------
+     de&&ug()
+  */
+  var de = true;
+  
+  function ug( m ) {
+    log( "xs, " + m );
+  } // ug()
+  
+  /* -------------------------------------------------------------------------------------------
+     Set( a [, options] )
+  */
+  function Set( a, options ) {
+    this.a = a = a || [];
+    this.options = options = options || {};
+    
+    de&&ug( "New Set, name: " + options.name + ", length: " + a.length );
+    
+    return this;
+  } // Set()
+  
+  /* -------------------------------------------------------------------------------------------
+     Set instance methods
+  */
+  extend( Set.prototype, {
+  } );
+  
+  /* -------------------------------------------------------------------------------------------
+     Connection()
+  */
+  function Connection( options ) {
+    this.options = options = options || {};
+    
+    return this;
+  } // Connection()
+  
+  /* -------------------------------------------------------------------------------------------
+     Connection instance methods
+  */
+  extend( Connection.prototype, {
+  } );
+  
+  /* -------------------------------------------------------------------------------------------
+     module exports
+  */
+
+  eval( export_code( 'XS', [ 'Set', 'Connection', 'extend', 'log', 'subclass', 'export_code' ] ) );
+  
+  de&&ug( "module loaded" );
+} )( this ); // xs.js
