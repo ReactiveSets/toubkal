@@ -1,4 +1,2 @@
-ConnectedSets
-=============
-
 Connected Sets
+==============
