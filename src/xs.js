@@ -80,8 +80,7 @@
     for ( var s = '', i = -1; ++i < max; ) s += ' ';
     
     exports.unshift(
-      '\n  var ' + namespace + ' = exports.' + namespace + ' || {};\n' +
-      '\n  exports.' + namespace + ' = ' + namespace + ';\n'
+      '\n  var ' + namespace + ' = exports.' + namespace + ' = ' + namespace + ' || {};\n'
     );
     
     var export_code = exports.reduce(
@@ -92,7 +91,7 @@
     
     de&&ug( "exports:" + export_code );
     
-    var XS = exports.XS || {};
+    return export_code;
   } // export_code()
   
   /* -------------------------------------------------------------------------------------------
@@ -140,7 +139,6 @@
   /* -------------------------------------------------------------------------------------------
      module exports
   */
-
   eval( export_code( 'XS', [ 'Set', 'Connection', 'extend', 'log', 'subclass', 'export_code' ] ) );
   
   de&&ug( "module loaded" );
