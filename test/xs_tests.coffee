@@ -2,7 +2,8 @@
 # ------------------
 
 # include modules
-XS   = require '../src/xs.js' if require?
+XS = if require? then require '../src/xs.js' else this.XS 
+
 chai = require 'chai' if require?
 chai?.should()
 

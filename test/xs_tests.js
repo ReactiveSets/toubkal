@@ -2,9 +2,7 @@
 (function() {
   var XS, chai;
 
-  if (typeof require !== "undefined" && require !== null) {
-    XS = require('../src/xs.js');
-  }
+  XS = typeof require !== "undefined" && require !== null ? require('../src/xs.js') : this.XS;
 
   if (typeof require !== "undefined" && require !== null) {
     chai = require('chai');
