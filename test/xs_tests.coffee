@@ -38,7 +38,7 @@ chai?.should()
 
 describe 'XS test suite:', ->
   it 'XS should be defined:', ->
-    XS.should.be.exist
+    XS.should.exist
   
   describe 'XS.extend():', ->
     extend = XS.extend

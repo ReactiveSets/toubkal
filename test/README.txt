@@ -48,13 +48,23 @@ You should get errors that look like this:
   1) XS test suite: XS.extend() test suite: o2 should be deep equal to _o2:
      expected { email: 'knassik@gmail.com' } to not deeply equal { email: 'knassik@gmail.com' }
 
+You can also compile the CoffeeScript file and generate the javascript by runing:
+
+$ coffee --watch --compile test/
+
+then run the tests:
+
+$ mocha
 
 Mocha reporters
 
 Mocha reporters adjust to the terminal window, and always disable ansi-escape colouring when the stdio streams are not associated with a tty. By default mocha use 'dot matrix' reporter
 You can use a specific reporter( Spec for example ) by adding option '--reporter spec': 
 
-$ mocha --reporter spec --compilers coffee:coffee-script
+$ mocha -R spec --compilers coffee:coffee-script
+or
+$ mocha -R spec
+
 
 which results:
 

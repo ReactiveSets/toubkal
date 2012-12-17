@@ -51,7 +51,7 @@
 
   describe('XS test suite:', function() {
     it('XS should be defined:', function() {
-      return XS.should.be.exist;
+      return XS.should.exist;
     });
     return describe('XS.extend():', function() {
       var extend, o1, o2, o3, _o2, _o3;
