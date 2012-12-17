@@ -139,6 +139,7 @@
         '  var a = this.a'
       ;
       
+      // Local variables for key fields
       for( var i = -1, key = this.key, l = key.length; ++i < l; ) {
         var field = key[ i ];
         
@@ -151,13 +152,15 @@
       
       if ( l > 1 ) {
         code += '    var r = a[ i ];\n\n';
-      
+        
         for( i = -1; ++i < l; ) {
           var field = key[ i ];
-        
+          
           code += '    if ( r.' + field + ' !== _' + field + ' ) continue;\n';
         }
       } else {
+        var field = key[ 0 ];
+        
         code += '    if ( a[ i ].' + field + ' !== _' + field + ' ) continue;\n';
       }
       
@@ -190,7 +193,7 @@
         this[ a.action ]( a.objects, true );
       }
       
-      return this;
+      return this.notify_connections( transaction );
     }, // execute_transaction()
     
     notify_connections: function( transaction ) {
