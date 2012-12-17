@@ -109,16 +109,97 @@
   function Set( a, options ) {
     this.a = a = a || [];
     this.options = options = options || {};
+    this.connections = [];
+    this.key = options.key || [ "id" ];
     
     de&&ug( "New Set, name: " + options.name + ", length: " + a.length );
     
     return this;
   } // Set()
   
+  var push = Array.prototype.push;
+  
   /* -------------------------------------------------------------------------------------------
      Set instance methods
   */
   extend( Set.prototype, {
+    add: function( a, dont_notify ) {
+      push.apply( this.a, a );
+      
+      return dont_notify? this: this.notify_connections( [ { action: "add", obejcts: a } ] );
+    }, // add()
+    
+    index_of: function( o ) {
+      return this.make_index_of().index_of( o ); 
+    }, // index_of()
+    
+    make_index_of: function() {
+      var code =
+        'this.index_of = function( o ) {\n' +
+        '  var a = this.a'
+      ;
+      
+      for( var i = -1, key = this.key, l = key.length; ++i < l; ) {
+        var field = key[ i ];
+        
+        code += ', _' + field + ' = o.' + field;
+      }
+      
+      code += ';\n\n' +
+        '  for ( var i = -1, l = a.length; ++i < l; ) {\n\n'
+      ;
+      
+      if ( l > 1 ) {
+        code += '    var r = a[ i ];\n\n';
+      
+        for( i = -1; ++i < l; ) {
+          var field = key[ i ];
+        
+          code += '    if ( r.' + field + ' !== _' + field + ' ) continue;\n';
+        }
+      } else {
+        code += '    if ( a[ i ].' + field + ' !== _' + field + ' ) continue;\n';
+      }
+      
+      code +=
+        '    return i;\n' +
+        '  }\n\n' +
+        '  return -1;' +
+        '}'
+      ;
+      
+      de&&ug( "make_index_of(), code: " + code );
+      
+      eval( code );
+      
+      return this;
+    }, // make_index_of()
+    
+    execute_transaction: function( transaction ) {
+      var l = transaction.length;
+      
+      for ( var i = -1; ++i < l; ) {
+        var a = transaction[ i ].action;
+        
+        if ( ! this[ a ] ) throw( new Unsuported_Method( a ) );
+      }
+      
+      for ( var i = -1; ++i < l; ) {
+        var a = transaction[ i ];
+        
+        this[ a.action ]( a.objects, true );
+      }
+      
+      return this;
+    }, // execute_transaction()
+    
+    notify_connections: function( transaction ) {
+      var connections = this.connections, l = connections.length;
+      
+      for ( var i = -1; ++i < l; ) connections[ i ].notify( transaction );
+      
+      return this;
+    } // notify_connections()
   } );
   
   /* -------------------------------------------------------------------------------------------
