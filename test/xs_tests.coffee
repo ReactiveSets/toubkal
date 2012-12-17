@@ -86,5 +86,30 @@ describe 'XS test suite:', ->
     it 'o3 should be deep equal to _o3', ->
       o3.should.be.eql _o3
     
+  describe 'XS.subclass():', ->
+    subclass = XS.subclass
     
+    it 'subclass() should be a function', ->
+      subclass.should.be.a 'function'
     
+    Animal = ( name ) -> @name = name
+    
+    a = new Animal 'Sam'
+    
+    it 'a should be an instance of Animal', ->
+      a.should.be.an.instanceof Animal
+      
+    Snake = ( name ) ->
+    
+    subclass( Animal, Snake );
+    
+    s = new Snake( "Barry the Snake" )
+    
+    it 's should be an instance of Snake', ->
+      s.should.be.an.instanceof Snake
+    
+    it 's should be an instance of Animal', ->
+      s.should.be.an.instanceof Animal
+    
+    it 'a should not be an instance of Snake', ->
+      a.should.not.be.an.instanceof Snake

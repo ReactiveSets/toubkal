@@ -53,7 +53,7 @@
     it('XS should be defined:', function() {
       return XS.should.exist;
     });
-    return describe('XS.extend():', function() {
+    describe('XS.extend():', function() {
       var extend, o1, o2, o3, _o2, _o3;
       extend = XS.extend;
       it('extend() should be a function', function() {
@@ -105,6 +105,32 @@
       });
       return it('o3 should be deep equal to _o3', function() {
         return o3.should.be.eql(_o3);
+      });
+    });
+    return describe('XS.subclass():', function() {
+      var Animal, Snake, a, s, subclass;
+      subclass = XS.subclass;
+      it('subclass() should be a function', function() {
+        return subclass.should.be.a('function');
+      });
+      Animal = function(name) {
+        return this.name = name;
+      };
+      a = new Animal('Sam');
+      it('a should be an instance of Animal', function() {
+        return a.should.be.an["instanceof"](Animal);
+      });
+      Snake = function(name) {};
+      subclass(Animal, Snake);
+      s = new Snake("Barry the Snake");
+      it('s should be an instance of Snake', function() {
+        return s.should.be.an["instanceof"](Snake);
+      });
+      it('s should be an instance of Animal', function() {
+        return s.should.be.an["instanceof"](Animal);
+      });
+      return it('a should not be an instance of Snake', function() {
+        return a.should.not.be.an["instanceof"](Snake);
       });
     });
   });
