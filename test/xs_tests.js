@@ -107,7 +107,7 @@
         return o3.should.be.eql(_o3);
       });
     });
-    return describe('XS.subclass():', function() {
+    describe('XS.subclass():', function() {
       var Animal, Snake, a, s, subclass;
       subclass = XS.subclass;
       it('subclass() should be a function', function() {
@@ -131,6 +131,102 @@
       });
       return it('a should not be an instance of Snake', function() {
         return a.should.not.be.an["instanceof"](Snake);
+      });
+    });
+    return describe('XS.Set():', function() {
+      var Set, cars, cities, result, set;
+      Set = XS.Set;
+      set = new Set([]);
+      it('set should be a Set', function() {
+        return set.should.be.an["instanceof"](Set);
+      });
+      cities = new Set([
+        {
+          id: 1,
+          name: "Marrakech",
+          country: "Morocco"
+        }, {
+          id: 2,
+          name: "Mountain View",
+          country: "USA",
+          state: "California"
+        }, {
+          id: 3,
+          name: "Paris",
+          country: "France"
+        }
+      ]);
+      cities.add([
+        {
+          id: 4,
+          name: "Berlin",
+          country: "Germany"
+        }
+      ]);
+      it('cities.add( object ) should be a Set', function() {
+        return cities.should.be.an["instanceof"](Set);
+      });
+      result = new Set([
+        {
+          id: 1,
+          name: "Marrakech",
+          country: "Morocco"
+        }, {
+          id: 2,
+          name: "Mountain View",
+          country: "USA",
+          state: "California"
+        }, {
+          id: 3,
+          name: "Paris",
+          country: "France"
+        }, {
+          id: 4,
+          name: "Berlin",
+          country: "Germany"
+        }
+      ]);
+      it('cities.add( object ) should be equal to result', function() {
+        return cities.should.be.eql(result);
+      });
+      it('set.index_of( { id: 2 } ) should be -1: empty set', function() {
+        return set.index_of({
+          id: 2
+        }).should.be.eql(-1);
+      });
+      it('cities.index_of( { id: 2 } ) should be 1', function() {
+        return cities.index_of({
+          id: 2
+        }).should.be.eql(1);
+      });
+      cars = new Set([
+        {
+          id: 1,
+          brand: "Mercedes",
+          model: "C Class"
+        }, {
+          id: 2,
+          brand: "Mercedes",
+          model: "S Class"
+        }, {
+          id: 3,
+          brand: "BMW",
+          model: "M Serie"
+        }
+      ], {
+        key: ["id", "model"]
+      });
+      it('cars.index_of( { id: 2, model: "S Class" } ) should be 1', function() {
+        return cars.index_of({
+          id: 2,
+          model: "S Class"
+        }).should.be.eql(1);
+      });
+      return it('cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', function() {
+        return cars.index_of({
+          id: 3,
+          model: "S Class"
+        }).should.be.eql(-1);
       });
     });
   });

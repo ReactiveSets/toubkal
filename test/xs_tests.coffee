@@ -113,3 +113,52 @@ describe 'XS test suite:', ->
     
     it 'a should not be an instance of Snake', ->
       a.should.not.be.an.instanceof Snake
+    
+  describe 'XS.Set():', ->
+    Set = XS.Set
+    
+    set = new Set []
+    
+    it 'set should be a Set', ->
+      set.should.be.an.instanceof Set
+    
+    cities = new Set [
+      { id: 1, name: "Marrakech", country: "Morocco"  }
+      { id: 2, name: "Mountain View", country: "USA", state: "California" }
+      { id: 3, name: "Paris", country: "France" }
+    ]
+    
+    cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
+    
+    it 'cities.add( object ) should be a Set', ->
+      cities.should.be.an.instanceof Set
+    
+    result = new Set [
+      { id: 1, name: "Marrakech", country: "Morocco"  }
+      { id: 2, name: "Mountain View", country: "USA", state: "California" }
+      { id: 3, name: "Paris", country: "France" }
+      { id: 4, name: "Berlin", country: "Germany" }
+    ]
+    
+    it 'cities.add( object ) should be equal to result', ->
+      cities.should.be.eql result
+    
+    it 'set.index_of( { id: 2 } ) should be -1: empty set', ->
+      set.index_of( { id: 2 } ).should.be.eql -1
+    
+    it 'cities.index_of( { id: 2 } ) should be 1', ->
+      cities.index_of( { id: 2 } ).should.be.eql 1
+    
+    cars = new Set [
+          { id: 1, brand: "Mercedes", model: "C Class" }
+          { id: 2, brand: "Mercedes", model: "S Class" }
+          { id: 3, brand: "BMW"     , model: "M Serie" }
+        ]
+      , { key: [ "id", "model" ] }
+    
+    it 'cars.index_of( { id: 2, model: "S Class" } ) should be 1', ->
+      cars.index_of( { id: 2, model: "S Class" } ).should.be.eql 1
+    
+    it 'cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
+      cars.index_of( { id: 3, model: "S Class" } ).should.be.eql -1
+    
