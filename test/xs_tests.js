@@ -133,6 +133,18 @@
         return a.should.not.be.an["instanceof"](Snake);
       });
     });
+    describe('XS.Code():', function() {
+      var code, i;
+      code = new XS.Code('Code Test')["function"](null, 'f', []).add('var i').loop('i = -1', ' ++i < 10').end().add('return i').end().get();
+      eval(code);
+      i = f();
+      it('f should be a function', function() {
+        return f.should.be.a('function');
+      });
+      return it('i should be equal to 10', function() {
+        return i.should.be.eql(10);
+      });
+    });
     return describe('XS.Set():', function() {
       var Set, cars, cities, result, set;
       Set = XS.Set;

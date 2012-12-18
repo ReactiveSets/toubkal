@@ -114,6 +114,26 @@ describe 'XS test suite:', ->
     it 'a should not be an instance of Snake', ->
       a.should.not.be.an.instanceof Snake
     
+  describe 'XS.Code():', ->
+    code = new XS.Code( 'Code Test' )
+      .function( null, 'f', [] )
+        .add( 'var i' )
+        .loop( 'i = -1', ' ++i < 10' )
+        .end()
+        .add( 'return i' )
+      .end()
+      .get()
+    
+    eval code
+    
+    i = f()
+    
+    it 'f should be a function', ->
+      f.should.be.a 'function'
+    
+    it 'i should be equal to 10', ->
+      i.should.be.eql 10
+  
   describe 'XS.Set():', ->
     Set = XS.Set
     
