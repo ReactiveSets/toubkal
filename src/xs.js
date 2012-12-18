@@ -120,6 +120,114 @@
   var push = Array.prototype.push;
   
   /* -------------------------------------------------------------------------------------------
+     Pretty JavaScript code generator
+  */
+  function Code( name ) {
+    this.name = name;
+    this.code = '';
+    this.indent = '  ';
+    this.blocs = [];
+    
+    return this;
+  } // Code()
+  
+  extend( Code.prototype, {
+    get: function() {
+      return this.code;
+    }, // get()
+    
+    eval: function() {
+      de&&ug( "Code.eval: name: " + this.name + ', code:\n' + this.code );
+      
+      return eval( this.code );
+    }, // eval()
+    
+    line: function( line, new_lines ) {
+      this.code += this.indent + line + '\n';
+      
+      if ( new_lines ) while( new_lines-- ) this.code += '\n';
+      
+      return this;
+    }, // add()
+    
+    add: function( statement, new_lines ) {
+      return this.line( statement + ';', new_lines );
+    }, // add()
+    
+    comment: function( comment ) {
+      return this.line( '// ' + comment );
+    }, // comment()
+    
+    begin: function( code ) {
+      this.line( code + ' {' );
+      
+      this.blocs.push( code );
+      
+      this.indent += '  ';
+      
+      return this;
+    }, // begin()
+    
+    end: function( comment ) {
+      var code = this.blocs.pop();
+      
+      if ( code === undefined ) throw new Code.Syntax_Error( "Missing matching opening block" );
+      
+      this.indent = this.indent.substr( 2 );
+      
+      if ( comment === true ) {
+        comment = '// ' + code;
+      } else if ( comment ) {
+        comment = '// ' + comment;
+      } else {
+        comment = '';
+      }
+      
+      return this.line( '} ' + comment, 1 );
+    }, // end()
+    
+    function: function( lvalue, name, parameters ) {
+      var code = '';
+      
+      if ( lvalue ) code += lvalue;
+      
+      code += 'function';
+      
+      if ( name ) code += ' ' + name;
+      
+      code += '( ' + parameters.join( ', ' ) + ' )';
+      
+      return this.begin( code );
+    }, // function()
+    
+    vars: function( vars ) {
+      return this.add( 'var ' + vars.join( ', ' ), 1 );
+    }, // vars()
+    
+    vars_from_object: function( object, attributes ) {
+      if ( typeof attributes !== "object" || ! attributes instanceof Array ) throw new Code.Error( "Missing attributes" );
+      
+      var l = attributes.length;
+      
+      if ( ! l ) return this;
+      
+      var vars = [];
+      
+      for( var i = -1; ++i < l; ) {
+        var a = attributes[ i ];
+        
+        vars.push( '_' + a + ' = ' + object + '.' + a );
+      }
+      
+      return this.vars( vars );
+    }, // vars_from_object()
+    
+    loop: function( init, condition, step ) {
+      return this.begin( 'for( ' + ( init || '' ) + '; ' + ( condition || '' ) + '; ' + ( step || '' ) + ' )' );
+    } // loop()
+  } );
+  
+  /* -------------------------------------------------------------------------------------------
      Set instance methods
   */
   extend( Set.prototype, {
@@ -134,44 +242,38 @@
     }, // index_of()
     
     make_index_of: function() {
-      var code =
-        'this.index_of = function( o ) {\n' +
-        '  var a = this.a'
+      var key = this.key;
+      
+      var code = new Code( 'index_of' )
+        .function( 'this.index_of = ', null, [ 'o' ] )
+          .add( 'var a = this.a' )
+          .vars_from_object( 'o', key ) // Local variables for key
+          .loop( 'var i = -1, l = a.length', ' ++i < l' );
+            var l = key.length;
+            
+            if ( l > 1 ) {
+              code.vars( [ 'r = a[ i ]' ] );
+
+              for( var i = -1; ++i < l; ) {
+                var field = key[ i ];
+                
+                code.add( 'if ( r.' + field + ' !== _' + field + ' ) continue' );
+              }
+            } else {
+              var field = key[ 0 ];
+              
+              code.add( 'if ( a[ i ].' + field + ' !== _' + field + ' ) continue' );
+            }
+            
+            code.add( 'return i' )
+          .end()
+          .add( 'return -1' )
+        .end( 'index_of()' )
       ;
       
-      // Local variables for key fields
-      for( var i = -1, key = this.key, l = key.length; ++i < l; ) {
-        var field = key[ i ];
-        
-        code += ', _' + field + ' = o.' + field;
-      }
+      code = code.get();
       
-      code += ';\n\n' +
-        '  for ( var i = -1, l = a.length; ++i < l; ) {\n\n'
-      ;
-      
-      if ( l > 1 ) {
-        code += '    var r = a[ i ];\n\n';
-        
-        for( i = -1; ++i < l; ) {
-          var field = key[ i ];
-          
-          code += '    if ( r.' + field + ' !== _' + field + ' ) continue;\n';
-        }
-      } else {
-        var field = key[ 0 ];
-        
-        code += '    if ( a[ i ].' + field + ' !== _' + field + ' ) continue;\n';
-      }
-      
-      code +=
-        '    return i;\n' +
-        '  }\n\n' +
-        '  return -1;' +
-        '}'
-      ;
-      
-      de&&ug( "make_index_of(), code: " + code );
+      de&&ug( 'make_index_of(), code:\n' + code );
       
       eval( code );
       
@@ -223,7 +325,7 @@
   /* -------------------------------------------------------------------------------------------
      module exports
   */
-  eval( export_code( 'XS', [ 'Set', 'Connection', 'extend', 'log', 'subclass', 'export_code' ] ) );
+  eval( export_code( 'XS', [ 'Set', 'Connection', 'Code', 'extend', 'log', 'subclass', 'export_code' ] ) );
   
   de&&ug( "module loaded" );
 } )( this ); // xs.js
