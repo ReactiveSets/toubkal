@@ -470,7 +470,7 @@
   
   extend( Filter.prototype, {
     add: function( objects ) {
-      var l = objects.length, filter = this.filter, a = [], s = this.set;
+      var l = objects.length, filter = this.filter, a = [];
       
       for ( var i = -1; ++i < l; ) {
         var o = objects[ i ];
@@ -478,10 +478,24 @@
         if ( filter( o ) ) a.push( o );  
       }
       
-      a.length && this.set.add( a );
+      a.length && this.out.add( a );
       
       return this;
-    } // add()
+    }, // add()
+    
+    remove: function( objects ) {
+      var l = objects.length, filter = this.filter, a = [];
+      
+      for ( var i = -1; ++i < l; ) {
+        var o = objects[ i ];
+        
+        if ( filter( o ) ) a.push( o );
+      }
+      
+      a.length && this.out.remove( a );
+      
+      return this;
+    } // remove()
   } );
   
   /* -------------------------------------------------------------------------------------------
