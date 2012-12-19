@@ -104,22 +104,6 @@
   } // ug()
   
   /* -------------------------------------------------------------------------------------------
-     Set( a [, options] )
-  */
-  function Set( a, options ) {
-    this.a = a = a || [];
-    this.options = options = options || {};
-    this.connections = [];
-    this.key = options.key || [ "id" ];
-    
-    de&&ug( "New Set, name: " + options.name + ", length: " + a.length );
-    
-    return this;
-  } // Set()
-  
-  var push = Array.prototype.push;
-  
-  /* -------------------------------------------------------------------------------------------
      Pretty JavaScript code generator
   */
   function Code( name ) {
@@ -290,6 +274,22 @@
   } );
   
   /* -------------------------------------------------------------------------------------------
+     Set( a [, options] )
+  */
+  function Set( a, options ) {
+    this.a = a = a || [];
+    this.options = options = options || {};
+    this.connections = [];
+    this.key = options.key || [ "id" ];
+    
+    de&&ug( "New Set, name: " + options.name + ", length: " + a.length );
+    
+    return this;
+  } // Set()
+  
+  var push = Array.prototype.push;
+  
+  /* -------------------------------------------------------------------------------------------
      Set instance methods
   */
   extend( Set.prototype, {
@@ -297,36 +297,44 @@
       return this.a;
     }, // get()
     
-    add: function( a, dont_notify ) {
-      push.apply( this.a, a );
+    add: function( objects, dont_notify ) {
+      push.apply( this.a, objects );
       
-      return dont_notify? this: this.notify_connections( [ { action: "add", obejcts: a } ] );
+      return dont_notify? this: this.notify_connections( [ { action: "add", obejcts: objects } ] );
     }, // add()
     
-    update: function( o, dont_notify ) {
-      var i = this.index_of( o ), a = this.a;
-      
-      if ( i === -1 ) return this;
-      
-      a[ i ] = o;
-      
-      return dont_notify? this: this.notify_connections( [ { action: "update", obejcts: a } ] );
-    }, // update()
-    
-    remove: function( o, dont_notify ) {
-      var i = this.index_of( o ), a = this.a;
-      
-      if ( i === 0 ) {
-        a.shift();
-      } else if ( i === a.length - 1 ) {
-        a.pop();
-      } else if ( i !== -1 ) {
-        a.splice( i, 1 );
-      } else {
-        return this;
+    update: function( objects, dont_notify ) {
+      for ( var i = -1, l = objects.length; ++i < l; ) {
+        var o = objects[ i ]
+          , i = this.index_of( o[ 0 ] )
+          , a = this.a
+        ;
+        
+        if ( i === -1 ) continue;
+        
+        a[ i ] = o[ 1 ];
       }
       
-      return dont_notify? this: this.notify_connections( [ { action: "remove", obejcts: a } ] );
+      return dont_notify? this: this.notify_connections( [ { action: "update", obejcts: objects } ] );
+    }, // update()
+    
+    remove: function( objects, dont_notify ) {
+      for ( var i = -1, l = objects.length; ++i < l; ) {
+        var o = objects[ i ]
+          , i = this.index_of( o )
+          , a = this.a
+        ;
+        
+        if ( i === 0 ) {
+          a.shift();
+        } else if ( i === a.length - 1 ) {
+          a.pop();
+        } else if ( i !== -1 ) {
+          a.splice( i, 1 );
+        }
+      }
+      
+      return dont_notify? this: this.notify_connections( [ { action: "remove", obejcts: objects } ] );
     }, // remove()
     
     index_of: function( o ) {
@@ -459,7 +467,7 @@
     
     this.filter = filter;
     
-    this.out = new Set();
+    this.out = new Set( { key: set.key } );
     
     this.connect_to( set );
     
@@ -484,18 +492,34 @@
     }, // add()
     
     remove: function( objects ) {
-      var l = objects.length, filter = this.filter, a = [];
+      var l = objects.length, filter = this.filter, r = [];
       
       for ( var i = -1; ++i < l; ) {
         var o = objects[ i ];
         
-        if ( filter( o ) ) a.push( o );
+        if ( filter( o ) ) r.push( o );
       }
       
-      a.length && this.out.remove( a );
+      r.length && this.out.remove( r );
       
       return this;
-    } // remove()
+    }, // remove()
+    
+    update: function( objects ) {
+      var l = objects.length, filter = this.filter, r = [], a = [];
+      
+      for ( var i = -1; ++i < l; ) {
+        var o = objects[ i ];
+        
+        if ( filter( o[ 0 ] ) ) r.push( o[ 0 ] );
+        if ( filter( o[ 1 ] ) ) a.push( o[ 1 ] );
+      }
+      
+      r.length && this.out.remove( r );
+      a.length && this.out.add( a );
+      
+      return this;
+    } // update()
   } );
   
   /* -------------------------------------------------------------------------------------------
