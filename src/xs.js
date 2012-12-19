@@ -267,7 +267,7 @@
       
       this
         .begin( 'while( i < ul )' )
-          [ inner_is_statement ? 'line' : 'add' ]( first + ' ' + last )
+          [ inner_is_statement ? 'line' : 'add' ]( first + ( last ? ' ' + last : '' ) )
         .end()
       ;
       
