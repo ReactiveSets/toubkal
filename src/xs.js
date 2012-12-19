@@ -299,6 +299,32 @@
       return dont_notify? this: this.notify_connections( [ { action: "add", obejcts: a } ] );
     }, // add()
     
+    update: function( o, dont_notify ) {
+      var i = this.index_of( o ), a = this.a;
+      
+      if ( i === -1 ) return this;
+      
+      a[ i ] = o;
+      
+      return dont_notify? this: this.notify_connections( [ { action: "update", obejcts: a } ] );
+    }, // update()
+    
+    remove: function( o, dont_notify ) {
+      var i = this.index_of( o ), a = this.a;
+      
+      if ( i === 0 ) {
+        a.shift();
+      } else if ( i === a.length - 1 ) {
+        a.pop();
+      } else if ( i !== -1 ) {
+        a.splice( i, 1 );
+      } else {
+        return this;
+      }
+      
+      return dont_notify? this: this.notify_connections( [ { action: "remove", obejcts: a } ] );
+    }, // remove()
+    
     index_of: function( o ) {
       return this.make_index_of().index_of( o ); 
     }, // index_of()
@@ -341,20 +367,6 @@
       
       return this;
     }, // make_index_of()
-    
-    remove: function( o ) {
-      var i = this.index_of( o ), a = this.a;
-      
-      if ( i === 0 ) {
-        a.shift();
-      } else if ( i === a.length - 1 ) {
-        a.pop();
-      } else if ( i !== -1 ) {
-        a.splice( i, 1 );
-      }
-      
-      return this;
-    }, // remove()
     
     execute_transaction: function( transaction ) {
       var l = transaction.length;
