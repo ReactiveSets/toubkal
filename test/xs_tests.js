@@ -161,7 +161,7 @@
       });
     });
     return describe('XS.Set():', function() {
-      var Set, cars, cities, result, set;
+      var Set, cars, cities, employee, set;
       Set = XS.Set;
       set = new Set([]);
       it('set should be a Set', function() {
@@ -183,49 +183,6 @@
           country: "France"
         }
       ]);
-      cities.add([
-        {
-          id: 4,
-          name: "Berlin",
-          country: "Germany"
-        }
-      ]);
-      it('cities.add( object ) should be a Set', function() {
-        return cities.should.be.an["instanceof"](Set);
-      });
-      result = new Set([
-        {
-          id: 1,
-          name: "Marrakech",
-          country: "Morocco"
-        }, {
-          id: 2,
-          name: "Mountain View",
-          country: "USA",
-          state: "California"
-        }, {
-          id: 3,
-          name: "Paris",
-          country: "France"
-        }, {
-          id: 4,
-          name: "Berlin",
-          country: "Germany"
-        }
-      ]);
-      it('cities.add( object ) should be equal to result', function() {
-        return cities.should.be.eql(result);
-      });
-      it('set.index_of( { id: 2 } ) should be -1: empty set', function() {
-        return set.index_of({
-          id: 2
-        }).should.be.eql(-1);
-      });
-      it('cities.index_of( { id: 2 } ) should be 1', function() {
-        return cities.index_of({
-          id: 2
-        }).should.be.eql(1);
-      });
       cars = new Set([
         {
           id: 1,
@@ -243,17 +200,219 @@
       ], {
         key: ["id", "model"]
       });
-      it('cars.index_of( { id: 2, model: "S Class" } ) should be 1', function() {
-        return cars.index_of({
+      employee = new XS.Set([
+        {
+          id: 1,
+          name: "Stephen C. Cox",
+          salary: "$3000",
+          customer_id: "222",
+          order_id: "1222"
+        }, {
           id: 2,
-          model: "S Class"
-        }).should.be.eql(1);
-      });
-      return it('cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', function() {
-        return cars.index_of({
+          name: "Josephin Tan",
+          salary: "$1500",
+          customer_id: "223",
+          order_id: "1223"
+        }, {
           id: 3,
-          model: "S Class"
-        }).should.be.eql(-1);
+          name: "Joyce Ming",
+          salary: "$2000",
+          customer_id: "224",
+          order_id: "1224"
+        }, {
+          id: 4,
+          name: "James A. Pentel",
+          salary: "$1750",
+          customer_id: "225",
+          order_id: "1225"
+        }, {
+          id: 5,
+          name: "Alex Frog",
+          salary: "$3000",
+          customer_id: "226",
+          order_id: "1226"
+        }, {
+          id: 6,
+          name: "Tim Hancook",
+          salary: "$1500",
+          customer_id: "227",
+          order_id: "1227"
+        }
+      ]);
+      describe('add():', function() {
+        var result;
+        cities.add([
+          {
+            id: 4,
+            name: "Berlin",
+            country: "Germany"
+          }
+        ]);
+        it('cities.add( object ) should be a Set', function() {
+          return cities.should.be.an["instanceof"](Set);
+        });
+        result = new Set([
+          {
+            id: 1,
+            name: "Marrakech",
+            country: "Morocco"
+          }, {
+            id: 2,
+            name: "Mountain View",
+            country: "USA",
+            state: "California"
+          }, {
+            id: 3,
+            name: "Paris",
+            country: "France"
+          }, {
+            id: 4,
+            name: "Berlin",
+            country: "Germany"
+          }
+        ]);
+        return it('cities.add( object ) should be equal to result', function() {
+          return cities.should.be.eql(result);
+        });
+      });
+      describe('index_of():', function() {
+        it('set.index_of( { id: 2 } ) should be -1: empty set', function() {
+          return set.index_of({
+            id: 2
+          }).should.be.eql(-1);
+        });
+        it('cities.index_of( { id: 2 } ) should be 1', function() {
+          return cities.index_of({
+            id: 2
+          }).should.be.eql(1);
+        });
+        it('cars.index_of( { id: 2, model: "S Class" } ) should be 1', function() {
+          return cars.index_of({
+            id: 2,
+            model: "S Class"
+          }).should.be.eql(1);
+        });
+        return it('cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', function() {
+          return cars.index_of({
+            id: 3,
+            model: "S Class"
+          }).should.be.eql(-1);
+        });
+      });
+      return describe('remove():', function() {
+        it('set.remove( { id: 1 } ) should be equal to set: empty set', function() {
+          return set.remove({
+            id: 1
+          }).a.should.be.eql(set.a);
+        });
+        it('employee.remove( { id: 15 } ) should be equal to employee: record with id 15 doesn\'t exist', function() {
+          employee.remove({
+            id: 15
+          });
+          return employee.a.should.be.equal(employee.a);
+        });
+        it('employee.remove( { id: 1 } ) should be equal to result: first record', function() {
+          var result;
+          result = new Set([
+            {
+              id: 2,
+              name: "Josephin Tan",
+              salary: "$1500",
+              customer_id: "223",
+              order_id: "1223"
+            }, {
+              id: 3,
+              name: "Joyce Ming",
+              salary: "$2000",
+              customer_id: "224",
+              order_id: "1224"
+            }, {
+              id: 4,
+              name: "James A. Pentel",
+              salary: "$1750",
+              customer_id: "225",
+              order_id: "1225"
+            }, {
+              id: 5,
+              name: "Alex Frog",
+              salary: "$3000",
+              customer_id: "226",
+              order_id: "1226"
+            }, {
+              id: 6,
+              name: "Tim Hancook",
+              salary: "$1500",
+              customer_id: "227",
+              order_id: "1227"
+            }
+          ]);
+          employee.remove({
+            id: 1
+          });
+          return employee.a.should.be.eql(result.a);
+        });
+        it('employee.remove( { id: 5 } ) should be equal to result: record in the middle', function() {
+          var result;
+          result = new Set([
+            {
+              id: 2,
+              name: "Josephin Tan",
+              salary: "$1500",
+              customer_id: "223",
+              order_id: "1223"
+            }, {
+              id: 3,
+              name: "Joyce Ming",
+              salary: "$2000",
+              customer_id: "224",
+              order_id: "1224"
+            }, {
+              id: 4,
+              name: "James A. Pentel",
+              salary: "$1750",
+              customer_id: "225",
+              order_id: "1225"
+            }, {
+              id: 6,
+              name: "Tim Hancook",
+              salary: "$1500",
+              customer_id: "227",
+              order_id: "1227"
+            }
+          ]);
+          employee.remove({
+            id: 5
+          });
+          return employee.a.should.be.eql(result.a);
+        });
+        return it('employee.remove( { id: 6 } ) should be equal to result: last record', function() {
+          var result;
+          result = new Set([
+            {
+              id: 2,
+              name: "Josephin Tan",
+              salary: "$1500",
+              customer_id: "223",
+              order_id: "1223"
+            }, {
+              id: 3,
+              name: "Joyce Ming",
+              salary: "$2000",
+              customer_id: "224",
+              order_id: "1224"
+            }, {
+              id: 4,
+              name: "James A. Pentel",
+              salary: "$1750",
+              customer_id: "225",
+              order_id: "1225"
+            }
+          ]);
+          employee.remove({
+            id: 6
+          });
+          return employee.a.should.be.eql(result.a);
+        });
       });
     });
   });

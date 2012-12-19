@@ -173,27 +173,6 @@ describe 'XS test suite:', ->
       { id: 3, name: "Paris", country: "France" }
     ]
     
-    cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
-    
-    it 'cities.add( object ) should be a Set', ->
-      cities.should.be.an.instanceof Set
-    
-    result = new Set [
-      { id: 1, name: "Marrakech", country: "Morocco"  }
-      { id: 2, name: "Mountain View", country: "USA", state: "California" }
-      { id: 3, name: "Paris", country: "France" }
-      { id: 4, name: "Berlin", country: "Germany" }
-    ]
-    
-    it 'cities.add( object ) should be equal to result', ->
-      cities.should.be.eql result
-    
-    it 'set.index_of( { id: 2 } ) should be -1: empty set', ->
-      set.index_of( { id: 2 } ).should.be.eql -1
-    
-    it 'cities.index_of( { id: 2 } ) should be 1', ->
-      cities.index_of( { id: 2 } ).should.be.eql 1
-    
     cars = new Set [
           { id: 1, brand: "Mercedes", model: "C Class" }
           { id: 2, brand: "Mercedes", model: "S Class" }
@@ -201,9 +180,86 @@ describe 'XS test suite:', ->
         ]
       , { key: [ "id", "model" ] }
     
-    it 'cars.index_of( { id: 2, model: "S Class" } ) should be 1', ->
-      cars.index_of( { id: 2, model: "S Class" } ).should.be.eql 1
+    employee = new XS.Set [
+      { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
+      { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+      { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+      { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+      { id:  5, name: "Alex Frog"      , salary: "$3000", customer_id: "226", order_id: "1226" }
+      { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
+    ]
     
-    it 'cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
-      cars.index_of( { id: 3, model: "S Class" } ).should.be.eql -1
+    describe 'add():', ->
+      cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
+      
+      it 'cities.add( object ) should be a Set', ->
+        cities.should.be.an.instanceof Set
+      
+      result = new Set [
+        { id: 1, name: "Marrakech", country: "Morocco"  }
+        { id: 2, name: "Mountain View", country: "USA", state: "California" }
+        { id: 3, name: "Paris", country: "France" }
+        { id: 4, name: "Berlin", country: "Germany" }
+      ]
+      
+      it 'cities.add( object ) should be equal to result', ->
+        cities.should.be.eql result
     
+    describe 'index_of():', ->
+      it 'set.index_of( { id: 2 } ) should be -1: empty set', ->
+        set.index_of( { id: 2 } ).should.be.eql -1
+      
+      it 'cities.index_of( { id: 2 } ) should be 1', ->
+        cities.index_of( { id: 2 } ).should.be.eql 1
+      
+      it 'cars.index_of( { id: 2, model: "S Class" } ) should be 1', ->
+        cars.index_of( { id: 2, model: "S Class" } ).should.be.eql 1
+      
+      it 'cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
+        cars.index_of( { id: 3, model: "S Class" } ).should.be.eql -1
+    
+    describe 'remove():', ->
+      it 'set.remove( { id: 1 } ) should be equal to set: empty set', ->
+        set.remove( { id: 1 } ).a.should.be.eql set.a
+      
+      it 'employee.remove( { id: 15 } ) should be equal to employee: record with id 15 doesn\'t exist', ->
+        employee.remove( { id: 15 } )
+        
+        employee.a.should.be.equal employee.a
+      
+      it 'employee.remove( { id: 1 } ) should be equal to result: first record', ->
+        result = new Set [
+          { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+          { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+          { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+          { id:  5, name: "Alex Frog"      , salary: "$3000", customer_id: "226", order_id: "1226" }
+          { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
+        ]
+        
+        employee.remove( { id: 1 } )
+        
+        employee.a.should.be.eql result.a
+
+      it 'employee.remove( { id: 5 } ) should be equal to result: record in the middle', ->
+        result = new Set [
+          { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+          { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+          { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+          { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
+        ]
+        
+        employee.remove( { id: 5 } )
+        
+        employee.a.should.be.eql result.a
+      
+      it 'employee.remove( { id: 6 } ) should be equal to result: last record', ->
+        result = new Set [
+          { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+          { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+          { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+        ]
+        
+        employee.remove( { id: 6 } )
+        
+        employee.a.should.be.eql result.a
+      
