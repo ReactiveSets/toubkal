@@ -300,7 +300,7 @@
     add: function( objects, dont_notify ) {
       push.apply( this.a, objects );
       
-      return dont_notify? this: this.notify_connections( [ { action: "add", obejcts: objects } ] );
+      return dont_notify? this: this.connections_add( objects );
     }, // add()
     
     update: function( objects, dont_notify ) {
@@ -316,7 +316,7 @@
         updated.push( o );
       }
       
-      return dont_notify? this: this.notify_connections( [ { action: "update", objects: updated } ] );
+      return dont_notify? this: this.connections_update( updated );
     }, // update()
     
     remove: function( objects, dont_notify ) {
@@ -339,7 +339,7 @@
         removed.push( o ); 
       }
       
-      return dont_notify? this: this.notify_connections( [ { action: "remove", objects: removed } ] );
+      return dont_notify? this: this.connections_remove( removed );
     }, // remove()
     
     index_of: function( o ) {
@@ -410,6 +410,30 @@
       
       return this;
     }, // notify_connections()
+    
+    connections_add: function( added ) {
+      var connections = this.connections, l = connections.length;
+      
+      for ( var i = -1; ++i < l; ) connections[ i ].add( added );
+      
+      return this;
+    }, // connections_add()
+    
+    connections_update: function( updated ) {
+      var connections = this.connections, l = connections.length;
+      
+      for ( var i = -1; ++i < l; ) connections[ i ].update( updated );
+      
+      return this;
+    }, // connections_update()
+    
+    connections_remove: function( removed ) {
+      var connections = this.connections, l = connections.length;
+      
+      for ( var i = -1; ++i < l; ) connections[ i ].remove( removed );
+      
+      return this;
+    }, // connections_remove()
     
     connect: function( connection ) {
       this.connections.push( connection );
