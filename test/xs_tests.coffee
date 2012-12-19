@@ -133,6 +133,31 @@ describe 'XS test suite:', ->
     
     it 'i should be equal to 10', ->
       i.should.be.eql 10
+    
+    test = 'a[ ++i ] === n'
+    
+    code = new XS.Code( 'Test unfolded while' )
+      .function( 'g = ', null, [ 'n' ] )
+        .vars( [ 'a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1' ] )
+        .unfolded_while( 'if ( ' + test, '|| ' + test, ') return i' )
+        .add( 'return -1' )
+      .end( '' )
+      .get()
+    ;
+    
+    eval code
+    
+    it 'the index of 34 should be 0', ->
+      g( 34 ).should.be.eql 0
+  
+    it 'the index of 52 should be 4', ->
+      g( 52 ).should.be.eql 4
+  
+    it 'the index of 90 should be 9', ->
+      g( 90 ).should.be.eql 9
+  
+    it 'the index of 1 should be 8', ->
+      g( 1 ).should.be.eql 8
   
   describe 'XS.Set():', ->
     Set = XS.Set
