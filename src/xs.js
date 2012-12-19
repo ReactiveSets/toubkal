@@ -483,29 +483,25 @@
   
   extend( Filter.prototype, {
     add: function( objects ) {
-      var l = objects.length, filter = this.filter, a = [];
+      var l = objects.length, filter = this.filter, added = [], o;
       
       for ( var i = -1; ++i < l; ) {
-        var o = objects[ i ];
-        
-        if ( filter( o ) ) a.push( o );  
+        if ( filter( o = objects[ i ] ) ) added.push( o );
       }
       
-      a.length && this.out.add( a );
+      added.length && this.out.add( added );
       
       return this;
     }, // add()
     
     remove: function( objects ) {
-      var l = objects.length, filter = this.filter, r = [];
+      var l = objects.length, filter = this.filter, removed = [], o;
       
       for ( var i = -1; ++i < l; ) {
-        var o = objects[ i ];
-        
-        if ( filter( o ) ) r.push( o );
+        if ( filter( o = objects[ i ] ) ) removed.push( o );
       }
       
-      r.length && this.out.remove( r );
+      removed.length && this.out.remove( removed );
       
       return this;
     }, // remove()
