@@ -200,6 +200,10 @@
       return this.begin( code );
     }, // function()
     
+    var: function( v ) {
+      return this.add( 'var ' + v, 1 );
+    }, // var()
+    
     vars: function( vars ) {
       return this.add( 'var ' + vars.join( ', ' ), 1 );
     }, // vars()
@@ -224,7 +228,45 @@
     
     loop: function( init, condition, step ) {
       return this.begin( 'for( ' + ( init || '' ) + '; ' + ( condition || '' ) + '; ' + ( step || '' ) + ' )' );
-    } // loop()
+    }, // loop()
+    
+    unfolded_while: function( first, inner, last, count ) {
+      inner || ( inner = ' ' + first );
+      last  || ( last  = '' );
+      count || ( count = 200 / inner.length >> 0 );
+      
+      if ( count > 1 ) {
+        var indent = '\n  ' + this.indent;
+        
+        this
+          .var( 'ul = l - l % ' + count + ' - 1' )
+          
+          .begin( 'while( i < ul )' )
+            .add( first + repeat( count - 1, inner, indent + '  ' ) + indent + last )
+          .end()
+          
+          .add( 'ul = l - 1' )
+        ;
+      } else {
+        this.var( 'ul = l - 1' );
+      }
+      
+      this
+        .begin( 'while( i < ul )' )
+          .add( first + ' ' + last )
+        .end()
+      ;
+      
+      return this;
+      
+      function repeat( count, code, indent ) {
+        var c = '';
+        
+        for ( var i = -1; ++i < count; ) c += indent + code;
+        
+        return c;
+      }
+    } // unfolded_loop()
   } );
   
   /* -------------------------------------------------------------------------------------------
@@ -242,32 +284,34 @@
     }, // index_of()
     
     make_index_of: function() {
-      var key = this.key;
+      var key = this.key, l = key.length;
       
       var code = new Code( 'index_of' )
         .function( 'this.index_of = ', null, [ 'o' ] )
-          .add( 'var a = this.a' )
+          .vars( [ 'a = this.a', 'l = a.length', 'i = -1' ] )
           .vars_from_object( 'o', key ) // Local variables for key
-          .loop( 'var i = -1, l = a.length', ' ++i < l' );
-            var l = key.length;
-            
-            if ( l > 1 ) {
-              code.vars( [ 'r = a[ i ]' ] );
-
+          
+          if ( l > 1 ) {
+            code.loop( null, ' ++i < l' )
+              .var( 'r = a[ i ]' );
+              
               for( var i = -1; ++i < l; ) {
                 var field = key[ i ];
                 
                 code.add( 'if ( r.' + field + ' !== _' + field + ' ) continue' );
               }
-            } else {
-              var field = key[ 0 ];
               
-              code.add( 'if ( a[ i ].' + field + ' !== _' + field + ' ) continue' );
-            }
+              code.add( 'return i' )
+            .end();
+          } else {
+            var field = key[ 0 ]
+              , test = 'a[ ++i ].' + field + ' === _' + field
+            ;
             
-            code.add( 'return i' )
-          .end()
-          .add( 'return -1' )
+            code.unfolded_while( 'if ( ' + test, '|| ' + test, ') return i' );
+          }
+          
+          code.add( 'return -1' )
         .end( 'index_of()' )
       ;
       
