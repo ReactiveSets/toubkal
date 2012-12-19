@@ -510,18 +510,23 @@
       return this;
     }, // remove()
     
-    update: function( objects ) {
-      var l = objects.length, filter = this.filter, r = [], a = [];
+    update: function( updates ) {
+      var l = updates.length, filter = this.filter, removed = [], updated = [];
       
       for ( var i = -1; ++i < l; ) {
-        var o = objects[ i ];
+        var u = updates[ i ], o = u[ 0 ];
         
-        if ( filter( o[ 0 ] ) ) r.push( o[ 0 ] );
-        if ( filter( o[ 1 ] ) ) a.push( o[ 1 ] );
+        if ( filter( o ) ) {
+          if ( filter( u[ 1 ] ) ) {
+            updated.push( u );
+          } else {
+            removed.push( o );
+          }
+        }
       }
       
-      r.length && this.out.remove( r );
-      a.length && this.out.add( a );
+      removed.length && this.out.remove( removed );
+      updated.length && this.out.update( updated );
       
       return this;
     } // update()
