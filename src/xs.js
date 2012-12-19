@@ -143,7 +143,7 @@
     }, // eval()
     
     line: function( line, new_lines ) {
-      this.code += this.indent + line + '\n';
+      if ( line !== undefined ) this.code += this.indent + line + '\n';
       
       if ( new_lines ) while( new_lines-- ) this.code += '\n';
       
@@ -231,9 +231,12 @@
     }, // loop()
     
     unfolded_while: function( first, inner, last, count ) {
-      inner || ( inner = ' ' + first );
-      last  || ( last  = '' );
+      inner || ( inner = first );
       count || ( count = 200 / inner.length >> 0 );
+      
+      if ( inner.charAt( inner.length - 1 ) === ';' ) {
+        var inner_is_statement = true;
+      }
       
       if ( count > 1 ) {
         var indent = '\n  ' + this.indent;
@@ -241,8 +244,19 @@
         this
           .var( 'ul = l - l % ' + count + ' - 1' )
           
-          .begin( 'while( i < ul )' )
-            .add( first + repeat( count - 1, inner, indent + '  ' ) + indent + last )
+          .begin( 'while( i < ul )' );
+          
+            if ( inner_is_statement ) {
+              this
+                .line( first )
+                .repeat( count - 1, inner )
+                .line( last )
+              ;
+            } else {
+              this.add( first + repeat( count - 1, inner, indent + '  ' ) + indent + ( last || '' ) );
+            }
+            
+          this
           .end()
           
           .add( 'ul = l - 1' )
@@ -253,7 +267,7 @@
       
       this
         .begin( 'while( i < ul )' )
-          .add( first + ' ' + last )
+          [ inner_is_statement ? 'line' : 'add' ]( first + ' ' + last )
         .end()
       ;
       
@@ -266,7 +280,13 @@
         
         return c;
       }
-    } // unfolded_loop()
+    }, // unfolded_loop()
+    
+    repeat: function( count, code ) {
+      for ( var i = -1; ++i < count; ) this.line( code );
+      
+      return this;
+    } // repeat()
   } );
   
   /* -------------------------------------------------------------------------------------------
@@ -292,17 +312,15 @@
           .vars_from_object( 'o', key ) // Local variables for key
           
           if ( l > 1 ) {
-            code.loop( null, ' ++i < l' )
-              .var( 'r = a[ i ]' );
+            var tests = [];
+            
+            for( var i = -1; ++i < l; ) {
+              var field = key[ i ];
               
-              for( var i = -1; ++i < l; ) {
-                var field = key[ i ];
-                
-                code.add( 'if ( r.' + field + ' !== _' + field + ' ) continue' );
-              }
-              
-              code.add( 'return i' )
-            .end();
+              tests.push( ( i === 0 ? '( r = a[ ++i ] ).' : 'r.' ) + field + ' === _' + field );
+            }
+            
+            code.var( 'r' ).unfolded_while( 'if ( ' + tests.join( ' && ' ) + ' ) return i;' );
           } else {
             var field = key[ 0 ]
               , test = 'a[ ++i ].' + field + ' === _' + field
