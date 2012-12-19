@@ -304,37 +304,42 @@
     }, // add()
     
     update: function( objects, dont_notify ) {
-      for ( var i = -1, l = objects.length; ++i < l; ) {
+      for ( var i = -1, l = objects.length, updated = []; ++i < l; ) {
         var o = objects[ i ]
-          , i = this.index_of( o[ 0 ] )
-          , a = this.a
+          , p = this.index_of( o[ 0 ] )
         ;
         
-        if ( i === -1 ) continue;
+        if ( p === -1 ) continue;
         
-        a[ i ] = o[ 1 ];
+        this.a[ p ] = o[ 1 ];
+        
+        updated.push( o );
       }
       
-      return dont_notify? this: this.notify_connections( [ { action: "update", obejcts: objects } ] );
+      return dont_notify? this: this.notify_connections( [ { action: "update", objects: updated } ] );
     }, // update()
     
     remove: function( objects, dont_notify ) {
-      for ( var i = -1, l = objects.length; ++i < l; ) {
+      for ( var i = -1, l = objects.length, removed = []; ++i < l; ) {
         var o = objects[ i ]
-          , i = this.index_of( o )
+          , p = this.index_of( o )
           , a = this.a
         ;
         
-        if ( i === 0 ) {
+        if ( p === 0 ) {
           a.shift();
-        } else if ( i === a.length - 1 ) {
+        } else if ( p === a.length - 1 ) {
           a.pop();
-        } else if ( i !== -1 ) {
-          a.splice( i, 1 );
+        } else if ( p !== -1 ) {
+          a.splice( p, 1 );
+        } else {
+          continue;
         }
+        
+        removed.push( o ); 
       }
       
-      return dont_notify? this: this.notify_connections( [ { action: "remove", obejcts: objects } ] );
+      return dont_notify? this: this.notify_connections( [ { action: "remove", objects: removed } ] );
     }, // remove()
     
     index_of: function( o ) {
