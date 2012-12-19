@@ -299,7 +299,7 @@
           }).should.be.eql(-1);
         });
       });
-      return describe('remove():', function() {
+      describe('remove():', function() {
         it('set.remove( { id: 1 } ) should be equal to set: empty set', function() {
           return set.remove({
             id: 1
@@ -410,6 +410,53 @@
           ]);
           employee.remove({
             id: 6
+          });
+          return employee.a.should.be.eql(result.a);
+        });
+      });
+      return describe('update():', function() {
+        it('set.update( { id: 1 } ) should be equal to set: empty set', function() {
+          return set.update({
+            id: 1
+          }).a.should.be.eql(set.a);
+        });
+        it('employee.update( { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ) should be equal to employee: record with id 15 doesn\'t exist', function() {
+          employee.update({
+            id: 15,
+            name: "Khalifa P Nassik",
+            Salary: "$1500"
+          });
+          return employee.a.should.be.equal(employee.a);
+        });
+        return it('employee.update( { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ) should be equal to result', function() {
+          var result;
+          result = new Set([
+            {
+              id: 2,
+              name: "Josephin Tan",
+              salary: "$1500",
+              customer_id: "223",
+              order_id: "1223"
+            }, {
+              id: 3,
+              name: "Khalifa P Nassik",
+              Salary: "$1500",
+              customer_id: "224",
+              order_id: "1224"
+            }, {
+              id: 4,
+              name: "James A. Pentel",
+              salary: "$1750",
+              customer_id: "225",
+              order_id: "1225"
+            }
+          ]);
+          employee.update({
+            id: 3,
+            name: "Khalifa P Nassik",
+            Salary: "$1500",
+            customer_id: "224",
+            order_id: "1224"
           });
           return employee.a.should.be.eql(result.a);
         });
