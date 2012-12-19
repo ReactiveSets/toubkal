@@ -342,6 +342,20 @@
       return this;
     }, // make_index_of()
     
+    remove: function( o ) {
+      var i = this.index_of( o ), a = this.a;
+      
+      if ( i === 0 ) {
+        a.shift();
+      } else if ( i === a.length - 1 ) {
+        a.pop();
+      } else if ( i !== -1 ) {
+        a.splice( i, 1 );
+      }
+      
+      return this;
+    }, // remove()
+    
     execute_transaction: function( transaction ) {
       var l = transaction.length;
       
