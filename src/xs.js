@@ -293,6 +293,10 @@
      Set instance methods
   */
   extend( Set.prototype, {
+    get: function() {
+      return this.a;
+    }, // get()
+    
     add: function( a, dont_notify ) {
       push.apply( this.a, a );
       
@@ -368,7 +372,7 @@
       return this;
     }, // make_index_of()
     
-    execute_transaction: function( transaction ) {
+    notify: function( transaction ) {
       var l = transaction.length;
       
       for ( var i = -1; ++i < l; ) {
@@ -384,7 +388,7 @@
       }
       
       return this.notify_connections( transaction );
-    }, // execute_transaction()
+    }, // notify()
     
     notify_connections: function( transaction ) {
       var connections = this.connections, l = connections.length;
@@ -392,8 +396,20 @@
       for ( var i = -1; ++i < l; ) connections[ i ].notify( transaction );
       
       return this;
-    } // notify_connections()
-  } );
+    }, // notify_connections()
+    
+    connect: function( connection ) {
+      this.connections.push( connection );
+      
+      return this;
+    }, // connect()
+    
+    filter: function( filter ) {
+      var f = new Filter( this, filter );
+      
+      return f.out;
+    } // filter()
+  } ); // Set instance methods
   
   /* -------------------------------------------------------------------------------------------
      Connection()
@@ -408,12 +424,70 @@
      Connection instance methods
   */
   extend( Connection.prototype, {
+    connect_to: function( set ) {
+      set.connect( this );
+      
+      this.add( set.get() );
+      
+      return this;
+    }, // connect_to() 
+    
+    notify: function( transaction ) {
+      var l = transaction.length;
+      
+      for ( var i = -1; ++i < l; ) {
+        var a = transaction[ i ].action;
+        
+        if ( ! this[ a ] ) throw( new Unsuported_Method( a ) );
+      }
+      
+      for ( var i = -1; ++i < l; ) {
+        var a = transaction[ i ];
+        
+        this[ a.action ]( a.objects );
+      }
+      
+      return this;
+    } // notify()
+  } );
+  
+  /* -------------------------------------------------------------------------------------------
+     Filter()
+  */
+  function Filter( set, filter, options ) {
+    Connection.call( this, options );
+    
+    this.filter = filter;
+    
+    this.out = new Set();
+    
+    this.connect_to( set );
+    
+    return this;
+  } // Filter()
+  
+  subclass( Connection, Filter );
+  
+  extend( Filter.prototype, {
+    add: function( objects ) {
+      var l = objects.length, filter = this.filter, a = [], s = this.set;
+      
+      for ( var i = -1; ++i < l; ) {
+        var o = objects[ i ];
+        
+        if ( filter( o ) ) a.push( o );  
+      }
+      
+      a.length && this.set.add( a );
+      
+      return this;
+    } // add()
   } );
   
   /* -------------------------------------------------------------------------------------------
      module exports
   */
-  eval( export_code( 'XS', [ 'Set', 'Connection', 'Code', 'extend', 'log', 'subclass', 'export_code' ] ) );
+  eval( export_code( 'XS', [ 'Set', 'Connection', 'Filter', 'Code', 'extend', 'log', 'subclass', 'export_code' ] ) );
   
   de&&ug( "module loaded" );
 } )( this ); // xs.js
