@@ -589,7 +589,7 @@
             return cities_in_usa.get().should.be.eql(result);
           });
         });
-        return describe('update', function() {
+        describe('update', function() {
           it('cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', function() {
             var result;
             result = [
@@ -691,6 +691,57 @@
                   state: "Michigan"
                 }
               ]
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
+        });
+        return describe('remove()', function() {
+          it('cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', function() {
+            var result;
+            result = [
+              {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
+              }, {
+                id: 8,
+                name: "Detroit",
+                country: "USA",
+                state: "Michigan"
+              }
+            ];
+            cities.remove([
+              {
+                id: 2,
+                name: "Mountain View",
+                country: "USA",
+                state: "California"
+              }
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
+          return it('cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', function() {
+            var result;
+            result = [
+              {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
+              }, {
+                id: 8,
+                name: "Detroit",
+                country: "USA",
+                state: "Michigan"
+              }
+            ];
+            cities.remove([
+              {
+                id: 7,
+                name: "Venice",
+                country: "Italy"
+              }
             ]);
             return cities_in_usa.get().should.be.eql(result);
           });

@@ -363,7 +363,26 @@ describe 'XS test suite:', ->
           
           cities_in_usa.get().should.be.eql result
         
-      
+      describe 'remove()', ->
+        it 'cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', ->
+          result = [
+            { id: 5, name: "NY", country: "USA", state: "NY" }
+            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+          ]
+          
+          cities.remove [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
+          
+          cities_in_usa.get().should.be.eql result
+        
+        it 'cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', ->
+          result = [
+            { id: 5, name: "NY", country: "USA", state: "NY" }
+            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+          ]
+          
+          cities.remove [ { id: 7, name: "Venice", country: "Italy" } ]
+          
+          cities_in_usa.get().should.be.eql result
       
       
       
