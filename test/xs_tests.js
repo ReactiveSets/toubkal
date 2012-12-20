@@ -658,7 +658,7 @@
             ]);
             return cities_in_usa.get().should.be.eql(result);
           });
-          return it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', function() {
+          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', function() {
             var result;
             result = [
               {
@@ -689,6 +689,41 @@
                   name: "Detroit",
                   country: "USA",
                   state: "Michigan"
+                }
+              ]
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
+          return it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', function() {
+            var result;
+            result = [
+              {
+                id: 2,
+                name: "Mountain View",
+                country: "USA",
+                state: "California"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
+              }, {
+                id: 8,
+                name: "Detroit",
+                country: "USA",
+                state: "Michigan"
+              }
+            ];
+            cities.update([
+              [
+                {
+                  id: 3,
+                  name: "Paris",
+                  country: "France"
+                }, {
+                  id: 9,
+                  name: "Madrid",
+                  country: "Spain"
                 }
               ]
             ]);
