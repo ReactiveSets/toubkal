@@ -518,7 +518,7 @@
         it('cities_in_usa should be a Set', function() {
           return cities_in_usa.should.be.an["instanceof"](Set);
         });
-        return it('cities_in_usa should only contain cities in USA', function() {
+        it('cities_in_usa should only contain cities in USA', function() {
           return cities_in_usa.get().should.be.eql([
             {
               id: 2,
@@ -527,6 +527,173 @@
               state: "California"
             }
           ]);
+        });
+        describe('add():', function() {
+          it('cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', function() {
+            var result;
+            result = [
+              {
+                id: 2,
+                name: "Mountain View",
+                country: "USA",
+                state: "California"
+              }, {
+                id: 5,
+                name: "New York",
+                country: "USA",
+                state: "New York"
+              }
+            ];
+            cities.add([
+              {
+                id: 5,
+                name: "New York",
+                country: "USA",
+                state: "New York"
+              }
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
+          return it('cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', function() {
+            var result;
+            result = [
+              {
+                id: 2,
+                name: "Mountain View",
+                country: "USA",
+                state: "California"
+              }, {
+                id: 5,
+                name: "New York",
+                country: "USA",
+                state: "New York"
+              }, {
+                id: 7,
+                name: "Housten",
+                country: "USA",
+                state: "Texas"
+              }
+            ];
+            cities.add([
+              {
+                id: 6,
+                name: "Casablanca",
+                country: "Morocco"
+              }, {
+                id: 7,
+                name: 'Housten',
+                country: 'USA',
+                state: 'Texas'
+              }
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
+        });
+        return describe('update', function() {
+          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', function() {
+            var result;
+            result = [
+              {
+                id: 2,
+                name: "Mountain View",
+                country: "USA",
+                state: "California"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
+              }, {
+                id: 7,
+                name: "Housten",
+                country: "USA",
+                state: "Texas"
+              }
+            ];
+            cities.update([
+              [
+                {
+                  id: 5,
+                  name: "New York",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 5,
+                  name: "NY",
+                  country: "USA",
+                  state: "NY"
+                }
+              ]
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
+          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', function() {
+            var result;
+            result = [
+              {
+                id: 2,
+                name: "Mountain View",
+                country: "USA",
+                state: "California"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
+              }
+            ];
+            cities.update([
+              [
+                {
+                  id: 7,
+                  name: "Housten",
+                  country: "USA",
+                  state: "Texas"
+                }, {
+                  id: 7,
+                  name: "Venice",
+                  country: "Italy"
+                }
+              ]
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
+          return it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', function() {
+            var result;
+            result = [
+              {
+                id: 2,
+                name: "Mountain View",
+                country: "USA",
+                state: "California"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
+              }, {
+                id: 8,
+                name: "Detroit",
+                country: "USA",
+                state: "Michigan"
+              }
+            ];
+            cities.update([
+              [
+                {
+                  id: 3,
+                  name: "Paris",
+                  country: "France"
+                }, {
+                  id: 8,
+                  name: "Detroit",
+                  country: "USA",
+                  state: "Michigan"
+                }
+              ]
+            ]);
+            return cities_in_usa.get().should.be.eql(result);
+          });
         });
       });
     });

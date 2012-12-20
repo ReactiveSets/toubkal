@@ -308,3 +308,62 @@ describe 'XS test suite:', ->
       it 'cities_in_usa should only contain cities in USA', ->
         cities_in_usa.get().should.be.eql [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
       
+      describe 'add():', ->
+        it 'cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', ->
+          result = [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+            { id: 5, name: "New York", country: "USA", state: "New York" }
+          ]
+
+          cities.add [ { id: 5, name: "New York", country: "USA", state: "New York" } ]
+
+          cities_in_usa.get().should.be.eql result
+        
+        it 'cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', ->
+          result = [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+            { id: 5, name: "New York", country: "USA", state: "New York" }
+            { id: 7, name: "Housten", country: "USA", state: "Texas" }
+          ]
+
+          cities.add [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: 'Housten', country: 'USA', state: 'Texas' } ]
+          
+          cities_in_usa.get().should.be.eql result
+      
+      describe 'update', ->
+        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', ->
+          result = [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
+            { id: 7, name: "Housten", country: "USA", state: "Texas" }
+          ]
+
+          cities.update [ [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ]
+
+          cities_in_usa.get().should.be.eql result
+        
+        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', ->
+          result = [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
+          ]
+          
+          cities.update [ [ { id: 7, name: "Housten", country: "USA", state: "Texas" }, { id: 7, name: "Venice", country: "Italy" } ] ]
+          
+          cities_in_usa.get().should.be.eql result
+        
+        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', ->
+          result = [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
+            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+          ]
+          
+          cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ]
+          
+          cities_in_usa.get().should.be.eql result
+        
+      
+      
+      
+      
