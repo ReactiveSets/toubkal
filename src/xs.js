@@ -115,6 +115,24 @@
     return this;
   } // Code()
   
+  Code.decompile = function( f ) {
+    if ( typeof f !== 'function' ) return f;
+    
+    var s = f.toString();
+    
+    var parsed = /function\s*\((.*)\)\s*{\s*(.*)\s*return\s*(.*);\s*}/.exec( s );
+    
+    if ( f ) {
+      parsed = { parameters: parsed[ 1 ], code: parsed[ 2 ], condition: parsed[ 3 ], f: f };
+      
+      de&&ug( 'Code.decompile(), parsed:' + log.s( parsed ) + ', function: ' + s );
+      
+      return parsed;
+    }
+    
+    return f;
+  } // Code.decompile()
+  
   extend( Code.prototype, {
     get: function() {
       de&&ug( "Code:\n" + this.code );
@@ -514,78 +532,95 @@
   
   extend( Filter.prototype, {
     add: function( objects ) {
-      var filter = this.filter;
+      var filter = this.filter = Code.decompile( this.filter )
+        , vars = [ 'i = -1', 'l = objects.length', 'added = []', 'o' ]
+        , first
+      ;
       
       switch( typeof filter ) {
         case 'function':
-          var code = new Code()
-            .function( 'this.add =', null, [ 'objects' ] )
-              .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'added = []', 'o' ] )
-              
-              .unfolded_while( 'if ( filter( o = objects[ ++i ] ) ) added.push( o );' )
-              
-              .add( 'added.length && this.out.add( added )', 1 )
-              .add( 'return this' )
-            .end( 'Filter.add()' )
-            .get()
-          ;
+          vars.push( 'f = filter' );
           
-          eval( code );
-          
-          return this.add( objects );
+          first = 'if ( f( o = objects[ ++i ] ) ) added.push( o );';
         break;
         
-        case 'object':
+        case 'object': // { parameters: [], code: '', condition: '' }
+          first = 'o = objects[ ++i ]; ' + filter.code + ' if ( ' + filter.condition + ' ) added.push( o );'
         break;
       }
+      
+      eval( new Code()
+        .function( 'this.add =', null, [ 'objects' ] )
+          .vars( vars )
+          
+          .unfolded_while( first )
+          
+          .add( 'added.length && this.out.add( added )', 1 )
+          
+          .add( 'return this' )
+        .end( 'Filter.add()' )
+        .get()
+      );
+      
+      return this.add( objects );
     }, // add()
     
     remove: function( objects ) {
-      var filter = this.filter;
+      var filter = this.filter = Code.decompile( this.filter )
+        , vars = [ 'i = -1', 'l = objects.length', 'removed = []', 'o' ]
+        , first
+      ;
       
       switch( typeof filter ) {
         case 'function':
-          var code = new Code()
-            .function( 'this.remove =', null, [ 'objects' ] )
-              .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' ] )
-              
-              .unfolded_while( 'if ( filter( o = objects[ ++i ] ) ) removed.push( o );' )
-              
-              .add( 'removed.length && this.out.remove( removed )', 1 )
-
-              .add( 'return this' )
-            .end( 'Filter.remove()' )
-            .get()
-          ;
+          vars.push( 'f = filter' );
           
-          eval( code );
-          
-          return this.remove( objects );
+          first = 'if ( f( o = objects[ ++i ] ) ) removed.push( o );'
         break;
         
         case 'object':
+           first = 'o = objects[ ++i ]; ' + filter.code + ' if ( ' + filter.condition + ' ) removed.push( o );'
         break;
       }
+      
+      eval( new Code()
+        .function( 'this.remove =', null, [ 'objects' ] )
+          .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' ] )
+          
+          .unfolded_while( first )
+          
+          .add( 'removed.length && this.out.remove( removed )', 1 )
+
+          .add( 'return this' )
+        .end( 'Filter.remove()' )
+        .get()
+      );
+      
+      return this.remove( objects );
     }, // remove()
     
     update: function( updates ) {
       var filter = this.filter;
       
       switch( typeof filter ) {
+        case 'object':
+          filter = filter.f;
+        // follow-through
+        
         case 'function':
           this.update = function( updates ) {
-            var l = updates.length, filter = this.filter, removed = [], updated = [], added = [];
+            var l = updates.length, f = filter, removed = [], updated = [], added = [];
             
             for ( var i = -1; ++i < l; ) {
               var u = updates[ i ];
               
-              if ( filter( u[ 0 ] ) ) {
-                if ( filter( u[ 1 ] ) ) {
+              if ( f( u[ 0 ] ) ) {
+                if ( f( u[ 1 ] ) ) {
                   updated.push( u );
                 } else {
                   removed.push( u[ 0 ] );
                 }
-              } else if ( filter( u[ 1 ] ) ) {
+              } else if ( f( u[ 1 ] ) ) {
                 added.push( u[ 1 ] );
               }
             }
@@ -598,9 +633,6 @@
           };
           
           return this.update( updates );
-        break;
-        
-        case 'object':
         break;
       }
     } // update()
