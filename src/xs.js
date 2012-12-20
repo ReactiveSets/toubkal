@@ -605,7 +605,7 @@
       switch( typeof filter ) {
         case 'object':
           filter = filter.f;
-        // follow-through
+        // fall-through
         
         case 'function':
           this.update = function( updates ) {
@@ -645,6 +645,7 @@
     Connection.call( this, options );
     
     this.order = order;
+    this.organizer = organizer;
     
     organizer.connect( this );
     
@@ -653,19 +654,17 @@
   
   subclass( Connection, Order_Organizer );
   
-  extend( Order_Organizer.prototype, {
-    add: function( objects ) {
-      return this;
-    }, // add()
+  var p = Order_Organizer.prototype;
+  
+    p.add
+  = p.remove
+  = p.update
+  = p.update_organizer
+  = function() {
+    this.order.update_organizer( this.organizer.get() );
     
-    remove: function( objects ) {
-      return this;
-    }, // remove()
-    
-    update: function( updates ) {
-      return this;
-    } // update()
-  } ); // Order_Organizer instance methods
+    return this;
+  };
   
   /* -------------------------------------------------------------------------------------------
      Order()
@@ -675,10 +674,10 @@
     
     this.out = new Set( [], { key: set.key } );
     
-    this.organizer = organizer;
-    
     if ( organizer instanceof Set ) {
-      this.organizer = new Order_Organizer( organizer, this, options );
+      this.order_organizer = new Order_Organizer( organizer, this, options );
+    } else {
+      this.update_organizer( organizer );
     }
     
     set.connect( this );
@@ -689,6 +688,43 @@
   subclass( Connection, Order );
   
   extend( Order.prototype, {
+    update_organizer: function( organizer ) {
+      switch( typeof organizer ) {
+        case 'function':
+          this.organizer = organizer;
+        return this;
+        
+        case 'object':
+          if ( organizer !== null && organizer instanceof Array ) break;
+        // fall-through
+        
+        default: throw new Error( 'Order.update_organizer(), missing organizer function or Array' );
+      }
+      
+      var code = new Code( 'organizer' )
+        .function( 'this.organizer =', null, [ 'a', 'b' ] )
+          .vars( [ 'u', 'x', 'y' ] );
+          
+          for ( var i = -1; ++i < organizer.length; ) {
+            var d = organizer[ i ];
+            
+            code
+              .line( 'if ( ( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' ) ) {' )
+              .add ( '  if ( x === u || x === null || x < y ) return ' + ( d.descendent ? '-1' : ' 1' ) )
+              .add ( '  if ( y === u || y === null || y < x ) return ' + ( d.descendent ? ' 1' : '-1' ) )
+              .line( '}' )
+            ;
+          }
+          
+          code.add( 'return 0' )
+        .end( 'organizer()' )
+      ;
+      
+      eval( code.get() );
+      
+      return this;
+    }, // update_organizer()
+    
     add: function( objects ) {
       return this;
     }, // add()
