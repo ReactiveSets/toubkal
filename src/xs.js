@@ -117,6 +117,8 @@
   
   extend( Code.prototype, {
     get: function() {
+      de&&ug( "Code:\n" + this.code );
+      
       return this.code;
     }, // get()
     
@@ -173,7 +175,7 @@
     function: function( lvalue, name, parameters ) {
       var code = '';
       
-      if ( lvalue ) code += lvalue;
+      if ( lvalue ) code += lvalue + ' ';
       
       code += 'function';
       
@@ -376,17 +378,14 @@
       }
       
       var code = new Code( 'index_of' )
-        .function( 'this.index_of = ', null, [ 'o' ] )
+        .function( 'this.index_of =', null, [ 'o' ] )
           .vars( vars )
           .vars_from_object( 'o', key ) // Local variables for key
           .unfolded_while( first, inner, last )
           .add( 'return -1' )
         .end( 'index_of()' )
+        .get()
       ;
-      
-      code = code.get();
-      
-      de&&ug( 'make_index_of(), code:\n' + code );
       
       eval( code );
       
@@ -515,15 +514,30 @@
   
   extend( Filter.prototype, {
     add: function( objects ) {
-      var l = objects.length, filter = this.filter, added = [], o;
+      var filter = this.filter;
       
-      for ( var i = -1; ++i < l; ) {
-        if ( filter( o = objects[ i ] ) ) added.push( o );
+      switch( typeof filter ) {
+        case "function":
+          var code = new Code()
+            .function( 'this.add =', null, [ 'objects' ] )
+              .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'added = []', 'o' ] )
+              
+              .unfolded_while( 'if ( filter( o = objects[ ++i ] ) ) added.push( o );' )
+              
+              .add( 'added.length && this.out.add( added )' )
+              .add( 'return this' )
+            .end( 'Filter.add()' )
+            .get()
+          ;
+          
+          eval( code );
+          
+          return this.add( objects );
+        break;
+        
+        case "object":
+        break;
       }
-      
-      added.length && this.out.add( added );
-      
-      return this;
     }, // add()
     
     remove: function( objects ) {
