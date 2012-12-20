@@ -296,7 +296,7 @@
           }
         ]);
         return it('cities.add( object ) should be equal to result', function() {
-          return cities.should.be.eql(result);
+          return cities.get().should.be.eql(result.get());
         });
       });
       describe('index_of():', function() {
@@ -448,7 +448,7 @@
           return employee.get().should.be.eql(result.get());
         });
       });
-      return describe('update():', function() {
+      describe('update():', function() {
         it('set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', function() {
           return set.update([
             [
@@ -507,6 +507,26 @@
             ]
           ]);
           return employee.get().should.be.eql(result.get());
+        });
+      });
+      return describe('filter():', function() {
+        var cities_in_usa, is_in_usa;
+        is_in_usa = function(o) {
+          return o.country === 'USA';
+        };
+        cities_in_usa = cities.filter(is_in_usa);
+        it('cities_in_usa should be a Set', function() {
+          return cities_in_usa.should.be.an["instanceof"](Set);
+        });
+        return it('cities_in_usa should only contain cities in USA', function() {
+          return cities_in_usa.get().should.be.eql([
+            {
+              id: 2,
+              name: "Mountain View",
+              country: "USA",
+              state: "California"
+            }
+          ]);
         });
       });
     });

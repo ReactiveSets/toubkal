@@ -216,7 +216,7 @@ describe 'XS test suite:', ->
       ]
       
       it 'cities.add( object ) should be equal to result', ->
-        cities.should.be.eql result
+        cities.get().should.be.eql result.get()
     
     describe 'index_of():', ->
       it 'set.index_of( { id: 2 } ) should be -1: empty set', ->
@@ -295,3 +295,16 @@ describe 'XS test suite:', ->
         employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ] ] )
 
         employee.get().should.be.eql result.get()
+    
+    describe 'filter():', ->
+      is_in_usa = ( o ) ->
+        return o.country is 'USA'
+      
+      cities_in_usa = cities.filter is_in_usa
+      
+      it 'cities_in_usa should be a Set', ->
+        cities_in_usa.should.be.an.instanceof Set
+      
+      it 'cities_in_usa should only contain cities in USA', ->
+        cities_in_usa.get().should.be.eql [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
+      
