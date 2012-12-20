@@ -300,18 +300,22 @@
         });
       });
       describe('remove():', function() {
-        it('set.remove( { id: 1 } ) should be equal to set: empty set', function() {
-          return set.remove({
-            id: 1
-          }).a.should.be.eql(set.a);
+        it('set.remove( [ { id: 1 } ] ) should be equal to set: empty set', function() {
+          return set.remove([
+            {
+              id: 1
+            }
+          ]).get().should.be.eql(set.get());
         });
-        it('employee.remove( { id: 15 } ) should be equal to employee: record with id 15 doesn\'t exist', function() {
-          employee.remove({
-            id: 15
-          });
-          return employee.a.should.be.equal(employee.a);
+        it('employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', function() {
+          employee.remove([
+            {
+              id: 15
+            }
+          ]);
+          return employee.get().should.be.equal(employee.get());
         });
-        it('employee.remove( { id: 1 } ) should be equal to result: first record', function() {
+        it('employee.remove( [ { id: 1 } ] ) should be equal to result: first record', function() {
           var result;
           result = new Set([
             {
@@ -346,12 +350,14 @@
               order_id: "1227"
             }
           ]);
-          employee.remove({
-            id: 1
-          });
-          return employee.a.should.be.eql(result.a);
+          employee.remove([
+            {
+              id: 1
+            }
+          ]);
+          return employee.get().should.be.eql(result.get());
         });
-        it('employee.remove( { id: 5 } ) should be equal to result: record in the middle', function() {
+        it('employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', function() {
           var result;
           result = new Set([
             {
@@ -380,12 +386,14 @@
               order_id: "1227"
             }
           ]);
-          employee.remove({
-            id: 5
-          });
-          return employee.a.should.be.eql(result.a);
+          employee.remove([
+            {
+              id: 5
+            }
+          ]);
+          return employee.get().should.be.eql(result.get());
         });
-        return it('employee.remove( { id: 6 } ) should be equal to result: last record', function() {
+        return it('employee.remove( [ { id: 6 } ] ) should be equal to result: last record', function() {
           var result;
           result = new Set([
             {
@@ -408,27 +416,37 @@
               order_id: "1225"
             }
           ]);
-          employee.remove({
-            id: 6
-          });
-          return employee.a.should.be.eql(result.a);
+          employee.remove([
+            {
+              id: 6
+            }
+          ]);
+          return employee.get().should.be.eql(result.get());
         });
       });
       return describe('update():', function() {
-        it('set.update( { id: 1 } ) should be equal to set: empty set', function() {
-          return set.update({
-            id: 1
-          }).a.should.be.eql(set.a);
+        it('set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', function() {
+          return set.update([
+            [
+              {
+                id: 1
+              }
+            ]
+          ]).get().should.be.eql(set.get());
         });
-        it('employee.update( { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ) should be equal to employee: record with id 15 doesn\'t exist', function() {
-          employee.update({
-            id: 15,
-            name: "Khalifa P Nassik",
-            Salary: "$1500"
-          });
-          return employee.a.should.be.equal(employee.a);
+        it('employee.update( [ [ { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ] ] ) should be equal to employee: record with id 15 doesn\'t exist', function() {
+          employee.update([
+            [
+              {
+                id: 15,
+                name: "Khalifa P Nassik",
+                Salary: "$1500"
+              }
+            ]
+          ]);
+          return employee.get().should.be.equal(employee.get());
         });
-        return it('employee.update( { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ) should be equal to result', function() {
+        return it('employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', function() {
           var result;
           result = new Set([
             {
@@ -451,14 +469,20 @@
               order_id: "1225"
             }
           ]);
-          employee.update({
-            id: 3,
-            name: "Khalifa P Nassik",
-            Salary: "$1500",
-            customer_id: "224",
-            order_id: "1224"
-          });
-          return employee.a.should.be.eql(result.a);
+          employee.update([
+            [
+              {
+                id: 3
+              }, {
+                id: 3,
+                name: "Khalifa P Nassik",
+                Salary: "$1500",
+                customer_id: "224",
+                order_id: "1224"
+              }
+            ]
+          ]);
+          return employee.get().should.be.eql(result.get());
         });
       });
     });

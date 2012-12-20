@@ -219,15 +219,15 @@ describe 'XS test suite:', ->
         cars.index_of( { id: 3, model: "S Class" } ).should.be.eql -1
     
     describe 'remove():', ->
-      it 'set.remove( { id: 1 } ) should be equal to set: empty set', ->
-        set.remove( { id: 1 } ).a.should.be.eql set.a
+      it 'set.remove( [ { id: 1 } ] ) should be equal to set: empty set', ->
+        set.remove( [ { id: 1 } ] ).get().should.be.eql set.get()
       
-      it 'employee.remove( { id: 15 } ) should be equal to employee: record with id 15 doesn\'t exist', ->
-        employee.remove( { id: 15 } )
+      it 'employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', ->
+        employee.remove( [ { id: 15 } ] )
         
-        employee.a.should.be.equal employee.a
+        employee.get().should.be.equal employee.get()
       
-      it 'employee.remove( { id: 1 } ) should be equal to result: first record', ->
+      it 'employee.remove( [ { id: 1 } ] ) should be equal to result: first record', ->
         result = new Set [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
@@ -236,11 +236,11 @@ describe 'XS test suite:', ->
           { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
         ]
         
-        employee.remove( { id: 1 } )
+        employee.remove( [ { id: 1 } ] )
         
-        employee.a.should.be.eql result.a
+        employee.get().should.be.eql result.get()
 
-      it 'employee.remove( { id: 5 } ) should be equal to result: record in the middle', ->
+      it 'employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', ->
         result = new Set [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
@@ -248,37 +248,37 @@ describe 'XS test suite:', ->
           { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
         ]
         
-        employee.remove( { id: 5 } )
+        employee.remove( [ { id: 5 } ] )
         
-        employee.a.should.be.eql result.a
+        employee.get().should.be.eql result.get()
       
-      it 'employee.remove( { id: 6 } ) should be equal to result: last record', ->
+      it 'employee.remove( [ { id: 6 } ] ) should be equal to result: last record', ->
         result = new Set [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
         ]
         
-        employee.remove( { id: 6 } )
+        employee.remove( [ { id: 6 } ] )
         
-        employee.a.should.be.eql result.a
+        employee.get().should.be.eql result.get()
     
     describe 'update():', ->
-      it 'set.update( { id: 1 } ) should be equal to set: empty set', ->
-        set.update( { id: 1 } ).a.should.be.eql set.a
+      it 'set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', ->
+        set.update( [ [ { id: 1 } ] ] ).get().should.be.eql set.get()
       
-      it 'employee.update( { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ) should be equal to employee: record with id 15 doesn\'t exist', ->
-        employee.update( { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } )
+      it 'employee.update( [ [ { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ] ] ) should be equal to employee: record with id 15 doesn\'t exist', ->
+        employee.update( [ [ { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ] ] )
 	
-        employee.a.should.be.equal employee.a
+        employee.get().should.be.equal employee.get()
       
-      it 'employee.update( { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ) should be equal to result', ->
+      it 'employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', ->
         result = new Set [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
         ]
 
-        employee.update( { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } )
+        employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ] ] )
 
-        employee.a.should.be.eql result.a
+        employee.get().should.be.eql result.get()
