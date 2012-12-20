@@ -463,14 +463,22 @@
     connect: function( connection ) {
       this.connections.push( connection );
       
+      connection.add( this.get() );
+      
       return this;
     }, // connect()
     
-    filter: function( filter ) {
-      var f = new Filter( this, filter );
+    filter: function( filter, options ) {
+      var f = new Filter( this, filter, options );
       
       return f.out;
-    } // filter()
+    }, // filter()
+    
+    order: function( organizer, options ) {
+      var f = new Order( this, organizer, options );
+      
+      return f.out;
+    } // order()
   } ); // Set instance methods
   
   /* -------------------------------------------------------------------------------------------
@@ -486,14 +494,6 @@
      Connection instance methods
   */
   extend( Connection.prototype, {
-    connect_to: function( set ) {
-      set.connect( this );
-      
-      this.add( set.get() );
-      
-      return this;
-    }, // connect_to() 
-    
     notify: function( transaction ) {
       var l = transaction.length;
       
@@ -523,7 +523,7 @@
     
     this.out = new Set( [], { key: set.key } );
     
-    this.connect_to( set );
+    set.connect( this );
     
     return this;
   } // Filter()
@@ -639,6 +639,70 @@
   } ); // Filter instance methods
   
   /* -------------------------------------------------------------------------------------------
+     Order_Organizer()
+  */
+  function Order_Organizer( organizer, order, options ) {
+    Connection.call( this, options );
+    
+    this.order = order;
+    
+    organizer.connect( this );
+    
+    return this;
+  } // Order_Organizer()
+  
+  subclass( Connection, Order_Organizer );
+  
+  extend( Order_Organizer.prototype, {
+    add: function( objects ) {
+      return this;
+    }, // add()
+    
+    remove: function( objects ) {
+      return this;
+    }, // remove()
+    
+    update: function( updates ) {
+      return this;
+    } // update()
+  } ); // Order_Organizer instance methods
+  
+  /* -------------------------------------------------------------------------------------------
+     Order()
+  */
+  function Order( set, organizer, options ) {
+    Connection.call( this, options );
+    
+    this.out = new Set( [], { key: set.key } );
+    
+    this.organizer = organizer;
+    
+    if ( organizer instanceof Set ) {
+      this.organizer = new Order_Organizer( organizer, this, options );
+    }
+    
+    set.connect( this );
+    
+    return this;
+  } // Order()
+  
+  subclass( Connection, Order );
+  
+  extend( Order.prototype, {
+    add: function( objects ) {
+      return this;
+    }, // add()
+    
+    remove: function( objects ) {
+      return this;
+    }, // remove()
+    
+    update: function( updates ) {
+      return this;
+    } // update()
+  } ); // Order instance methods
+  
+  /* -------------------------------------------------------------------------------------------
      CXXX(): template for Connection
   */
   function CXXX( set, options ) {
@@ -646,7 +710,7 @@
     
     this.out = new Set( [], { key: set.key } );
     
-    this.connect_to( set );
+    set.connect( this );
     
     return this;
   } // CXXX()
@@ -662,7 +726,7 @@
       return this;
     }, // remove()
     
-    update: function( objects ) {
+    update: function( updates ) {
       return this;
     } // update()
   } ); // CXXX instance methods
