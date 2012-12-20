@@ -636,7 +636,36 @@
         break;
       }
     } // update()
-  } );
+  } ); // Filter instance methods
+  
+  /* -------------------------------------------------------------------------------------------
+     CXXX(): template for Connection
+  */
+  function CXXX( set, options ) {
+    Connection.call( this, options );
+    
+    this.out = new Set( [], { key: set.key } );
+    
+    this.connect_to( set );
+    
+    return this;
+  } // CXXX()
+  
+  subclass( Connection, CXXX );
+  
+  extend( CXXX.prototype, {
+    add: function( objects ) {
+      return this;
+    }, // add()
+    
+    remove: function( objects ) {
+      return this;
+    }, // remove()
+    
+    update: function( objects ) {
+      return this;
+    } // update()
+  } ); // CXXX instance methods
   
   /* -------------------------------------------------------------------------------------------
      module exports
