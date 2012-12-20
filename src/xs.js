@@ -574,22 +574,25 @@
       switch( typeof filter ) {
         case 'function':
           this.update = function( updates ) {
-            var l = updates.length, filter = this.filter, removed = [], updated = [];
+            var l = updates.length, filter = this.filter, removed = [], updated = [], added = [];
             
             for ( var i = -1; ++i < l; ) {
-              var u = updates[ i ], o = u[ 0 ];
+              var u = updates[ i ];
               
-              if ( filter( o ) ) {
+              if ( filter( u[ 0 ] ) ) {
                 if ( filter( u[ 1 ] ) ) {
                   updated.push( u );
                 } else {
-                  removed.push( o );
+                  removed.push( u[ 0 ] );
                 }
+              } else if ( filter( u[ 1 ] ) ) {
+                added.push( u[ 1 ] );
               }
             }
             
             removed.length && this.out.remove( removed );
             updated.length && this.out.update( updated );
+            added  .length && this.out.add   ( added   );
             
             return this;
           };
