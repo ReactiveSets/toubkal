@@ -349,30 +349,38 @@
     make_index_of: function() {
       var key = this.key, l = key.length;
       
+      var vars = [ 'a = this.a', 'l = a.length', 'i = -1' ];
+      
+      var first, inner, last;
+      
+      if ( l > 1 ) {
+        vars.push( 'r' );
+        
+        var tests = [];
+        
+        for( var i = -1; ++i < l; ) {
+          var field = key[ i ];
+          
+          tests.push( ( i === 0 ? '( r = a[ ++i ] ).' : 'r.' ) + field + ' === _' + field );
+        }
+        
+        first = 'if ( ' + tests.join( ' && ' ) + ' ) return i;';
+      } else {
+        var field = key[ 0 ]
+          , test = 'a[ ++i ].' + field + ' === _' + field
+        ;
+        
+        first = 'if ( ' + test;
+        inner = '|| ' + test;
+        last  = ') return i';
+      }
+      
       var code = new Code( 'index_of' )
         .function( 'this.index_of = ', null, [ 'o' ] )
-          .vars( [ 'a = this.a', 'l = a.length', 'i = -1' ] )
+          .vars( vars )
           .vars_from_object( 'o', key ) // Local variables for key
-          
-          if ( l > 1 ) {
-            var tests = [];
-            
-            for( var i = -1; ++i < l; ) {
-              var field = key[ i ];
-              
-              tests.push( ( i === 0 ? '( r = a[ ++i ] ).' : 'r.' ) + field + ' === _' + field );
-            }
-            
-            code.var( 'r' ).unfolded_while( 'if ( ' + tests.join( ' && ' ) + ' ) return i;' );
-          } else {
-            var field = key[ 0 ]
-              , test = 'a[ ++i ].' + field + ' === _' + field
-            ;
-            
-            code.unfolded_while( 'if ( ' + test, '|| ' + test, ') return i' );
-          }
-          
-          code.add( 'return -1' )
+          .unfolded_while( first, inner, last )
+          .add( 'return -1' )
         .end( 'index_of()' )
       ;
       
