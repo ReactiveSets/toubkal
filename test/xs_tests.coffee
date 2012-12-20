@@ -189,6 +189,19 @@ describe 'XS test suite:', ->
       { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
     ]
     
+    describe 'get():', ->
+      it 'set.get() should be empty', ->
+        set.get().should.be.eql []
+      
+      it 'cars.get() should be equal to result', ->
+        result = [
+          { id: 1, brand: "Mercedes", model: "C Class" }
+          { id: 2, brand: "Mercedes", model: "S Class" }
+          { id: 3, brand: "BMW"     , model: "M Serie" }
+        ]
+        
+        cars.get().should.be.eql result
+    
     describe 'add():', ->
       cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
       

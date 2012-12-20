@@ -239,6 +239,30 @@
           order_id: "1227"
         }
       ]);
+      describe('get():', function() {
+        it('set.get() should be empty', function() {
+          return set.get().should.be.eql([]);
+        });
+        return it('cars.get() should be equal to result', function() {
+          var result;
+          result = [
+            {
+              id: 1,
+              brand: "Mercedes",
+              model: "C Class"
+            }, {
+              id: 2,
+              brand: "Mercedes",
+              model: "S Class"
+            }, {
+              id: 3,
+              brand: "BMW",
+              model: "M Serie"
+            }
+          ];
+          return cars.get().should.be.eql(result);
+        });
+      });
       describe('add():', function() {
         var result;
         cities.add([
