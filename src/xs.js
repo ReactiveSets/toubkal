@@ -504,7 +504,7 @@
     
     this.filter = filter;
     
-    this.out = new Set( { key: set.key } );
+    this.out = new Set( [], { key: set.key } );
     
     this.connect_to( set );
     
