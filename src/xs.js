@@ -524,7 +524,7 @@
               
               .unfolded_while( 'if ( filter( o = objects[ ++i ] ) ) added.push( o );' )
               
-              .add( 'added.length && this.out.add( added )' )
+              .add( 'added.length && this.out.add( added )', 1 )
               .add( 'return this' )
             .end( 'Filter.add()' )
             .get()
@@ -541,15 +541,31 @@
     }, // add()
     
     remove: function( objects ) {
-      var l = objects.length, filter = this.filter, removed = [], o;
+      var filter = this.filter;
       
-      for ( var i = -1; ++i < l; ) {
-        if ( filter( o = objects[ i ] ) ) removed.push( o );
+      switch( typeof filter ) {
+        case "function":
+          var code = new Code()
+            .function( 'this.remove =', null, [ 'objects' ] )
+              .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' ] )
+              
+              .unfolded_while( 'if ( filter( o = objects[ ++i ] ) ) removed.push( o );' )
+              
+              .add( 'removed.length && this.out.remove( removed )', 1 )
+
+              .add( 'return this' )
+            .end( 'Filter.remove()' )
+            .get()
+          ;
+          
+          eval( code );
+          
+          return this.remove( objects );
+        break;
+        
+        case "object":
+        break;
       }
-      
-      removed.length && this.out.remove( removed );
-      
-      return this;
     }, // remove()
     
     update: function( updates ) {
