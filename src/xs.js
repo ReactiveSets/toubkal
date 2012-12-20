@@ -517,7 +517,7 @@
       var filter = this.filter;
       
       switch( typeof filter ) {
-        case "function":
+        case 'function':
           var code = new Code()
             .function( 'this.add =', null, [ 'objects' ] )
               .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'added = []', 'o' ] )
@@ -535,7 +535,7 @@
           return this.add( objects );
         break;
         
-        case "object":
+        case 'object':
         break;
       }
     }, // add()
@@ -544,7 +544,7 @@
       var filter = this.filter;
       
       switch( typeof filter ) {
-        case "function":
+        case 'function':
           var code = new Code()
             .function( 'this.remove =', null, [ 'objects' ] )
               .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' ] )
@@ -563,30 +563,43 @@
           return this.remove( objects );
         break;
         
-        case "object":
+        case 'object':
         break;
       }
     }, // remove()
     
     update: function( updates ) {
-      var l = updates.length, filter = this.filter, removed = [], updated = [];
+      var filter = this.filter;
       
-      for ( var i = -1; ++i < l; ) {
-        var u = updates[ i ], o = u[ 0 ];
+      switch( typeof filter ) {
+        case 'function':
+          this.update = function( updates ) {
+            var l = updates.length, filter = this.filter, removed = [], updated = [];
+            
+            for ( var i = -1; ++i < l; ) {
+              var u = updates[ i ], o = u[ 0 ];
+              
+              if ( filter( o ) ) {
+                if ( filter( u[ 1 ] ) ) {
+                  updated.push( u );
+                } else {
+                  removed.push( o );
+                }
+              }
+            }
+            
+            removed.length && this.out.remove( removed );
+            updated.length && this.out.update( updated );
+            
+            return this;
+          };
+          
+          return this.update( updates );
+        break;
         
-        if ( filter( o ) ) {
-          if ( filter( u[ 1 ] ) ) {
-            updated.push( u );
-          } else {
-            removed.push( o );
-          }
-        }
+        case 'object':
+        break;
       }
-      
-      removed.length && this.out.remove( removed );
-      updated.length && this.out.update( updated );
-      
-      return this;
     } // update()
   } );
   
