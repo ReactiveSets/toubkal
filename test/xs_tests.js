@@ -1053,7 +1053,7 @@
         });
       });
       return describe('order():', function() {
-        var books, organizer;
+        var books, books_ordered_by_descending_year, books_ordered_by_year, by_year;
         books = new Set([
           {
             id: 1,
@@ -1082,13 +1082,51 @@
             year: 2000
           }
         ]);
-        organizer = new Set([
+        by_year = new Set([
           {
             id: "year"
           }
         ]);
-        books = books.order(organizer);
-        it('books should be ordered by year', function() {
+        books_ordered_by_year = books.order(by_year);
+        books_ordered_by_descending_year = books.order(new Set([
+          {
+            id: "year",
+            descending: true
+          }
+        ]));
+        it('books_ordered_by_year should be ordered by ascending year', function() {
+          var result;
+          result = [
+            {
+              id: 1,
+              title: "A Tale of Two Cities",
+              author: "Charles Dickens",
+              year: 1859
+            }, {
+              id: 2,
+              title: "The Lord of the Rings",
+              author: "J. R. R. Tolkien",
+              year: 1955
+            }, {
+              id: 4,
+              title: "The Alchemist",
+              author: "Paulo Coelho",
+              year: 1988
+            }, {
+              id: 5,
+              title: "Angels and Demons",
+              author: "Dan Brown",
+              year: 2000
+            }, {
+              id: 3,
+              title: "The Da Vinci Code",
+              author: "Dan Brown",
+              year: 2003
+            }
+          ];
+          return books_ordered_by_year.get().should.be.eql(result);
+        });
+        it('books_ordered_by_descending_year should be ordered by descending year', function() {
           var result;
           result = [
             {
@@ -1118,7 +1156,7 @@
               year: 1859
             }
           ];
-          return books.get().should.be.eql(result);
+          return books_ordered_by_descending_year.get().should.be.eql(result);
         });
         return describe('add()', function() {
           it('books.add( object ) should be ordered by year', function() {
