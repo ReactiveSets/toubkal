@@ -725,15 +725,69 @@
       return this;
     }, // update_organizer()
     
+    binary_find: function( o, start ) {
+      var u, a = this.out.a, stop = a.length, orginizer = this.orginizer;
+      
+      if ( start === u ) start = 0;
+      
+      while( start < stop ) {
+      }
+      
+      return 0;
+    }, // binary_find()
+    
     add: function( objects ) {
+      objects = objects.slice( 0 );
+      
+      objects.sort( this.organizer );
+      
+      var a = this.out.a;
+      
+      if ( a.length === 0 ) {
+        this.out.a = objects;
+        
+        return this;
+      }
+      
+      for ( var i = -1, l = objects.length; ++i < l; ) {
+      }
+      
       return this;
     }, // add()
     
     remove: function( objects ) {
+      objects = objects.slice( 0 );
+      
+      objects.sort( this.organizer );
+      
+      for ( i = -1, l = objects.length; ++i < l; ) {
+        var o = objects[ i ];
+        
+        var p = this.binary_find( o );
+      }
+      
       return this;
     }, // remove()
     
     update: function( updates ) {
+      var objects = [], l = updates.length;
+      
+      for ( var i = -1; ++i < l; ) {
+        var u = updates[ i ], previous = u[ 0 ], o = { __new: u[ 1 ] };
+        
+        for ( var p in previous ) o[ p ] = previous[ p ];
+        
+        objects.push( o ); 
+      }
+      
+      objects.sort( this.organizer );
+      
+      for ( i = -1; ++i < l; ) {
+        var o = objects[ i ];
+        
+        var p = this.binary_find( o );
+      }
+      
       return this;
     } // update()
   } ); // Order instance methods
