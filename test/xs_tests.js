@@ -782,7 +782,7 @@
           });
         });
       });
-      return describe('notify():', function() {
+      describe('notify():', function() {
         it('add(): employee.notify( transaction ) should be equal to result', function() {
           var result, transaction;
           transaction = [
@@ -1050,6 +1050,202 @@
             }
           ];
           return cities_in_morocco.get().should.be.eql(result);
+        });
+      });
+      return describe('order():', function() {
+        var books, organizer;
+        books = new Set([
+          {
+            id: 1,
+            title: "A Tale of Two Cities",
+            author: "Charles Dickens",
+            year: 1859
+          }, {
+            id: 2,
+            title: "The Lord of the Rings",
+            author: "J. R. R. Tolkien",
+            year: 1955
+          }, {
+            id: 3,
+            title: "The Da Vinci Code",
+            author: "Dan Brown",
+            year: 2003
+          }, {
+            id: 4,
+            title: "The Alchemist",
+            author: "Paulo Coelho",
+            year: 1988
+          }, {
+            id: 5,
+            title: "Angels and Demons",
+            author: "Dan Brown",
+            year: 2000
+          }
+        ]);
+        organizer = new Set([
+          {
+            id: "year"
+          }
+        ]);
+        books = books.order(organizer);
+        it('books should be ordered by year', function() {
+          var result;
+          result = [
+            {
+              id: 3,
+              title: "The Da Vinci Code",
+              author: "Dan Brown",
+              year: 2003
+            }, {
+              id: 5,
+              title: "Angels and Demons",
+              author: "Dan Brown",
+              year: 2000
+            }, {
+              id: 4,
+              title: "The Alchemist",
+              author: "Paulo Coelho",
+              year: 1988
+            }, {
+              id: 2,
+              title: "The Lord of the Rings",
+              author: "J. R. R. Tolkien",
+              year: 1955
+            }, {
+              id: 1,
+              title: "A Tale of Two Cities",
+              author: "Charles Dickens",
+              year: 1859
+            }
+          ];
+          return books.get().should.be.eql(result);
+        });
+        return describe('add()', function() {
+          it('books.add( object ) should be ordered by year', function() {
+            var result;
+            books.add([
+              {
+                id: 6,
+                title: "The Girl with the Dragon Tattoo",
+                author: "Stieg Larsson",
+                year: 2005
+              }
+            ]);
+            result = [
+              {
+                id: 6,
+                title: "The Girl with the Dragon Tattoo",
+                author: "Stieg Larsson",
+                year: 2005
+              }, {
+                id: 3,
+                title: "The Da Vinci Code",
+                author: "Dan Brown",
+                year: 2003
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
+                year: 2000
+              }, {
+                id: 4,
+                title: "The Alchemist",
+                author: "Paulo Coelho",
+                year: 1988
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author: "J. R. R. Tolkien",
+                year: 1955
+              }, {
+                id: 1,
+                title: "A Tale of Two Cities",
+                author: "Charles Dickens",
+                year: 1859
+              }
+            ];
+            return books.get().should.be.eql(result);
+          });
+          return it('books.add( objects ) should be ordered by year', function() {
+            var result;
+            books.add([
+              {
+                id: 7,
+                title: "The McGuffey Readers",
+                author: "William Holmes McGuffey",
+                year: 1853
+              }, {
+                id: 8,
+                title: "The Hobbit",
+                author: "J. R. R. Tolkien",
+                year: 1937
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
+                year: 2008
+              }, {
+                id: 10,
+                title: "Harry Potter and the Prisoner of Azkaban",
+                author: "J.K. Rowling",
+                year: 1999
+              }
+            ]);
+            result = [
+              {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
+                year: 2008
+              }, {
+                id: 6,
+                title: "The Girl with the Dragon Tattoo",
+                author: "Stieg Larsson",
+                year: 2005
+              }, {
+                id: 3,
+                title: "The Da Vinci Code",
+                author: "Dan Brown",
+                year: 2003
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
+                year: 2000
+              }, {
+                id: 10,
+                title: "Harry Potter and the Prisoner of Azkaban",
+                author: "J.K. Rowling",
+                year: 1999
+              }, {
+                id: 4,
+                title: "The Alchemist",
+                author: "Paulo Coelho",
+                year: 1988
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author: "J. R. R. Tolkien",
+                year: 1955
+              }, {
+                id: 8,
+                title: "The Hobbit",
+                author: "J. R. R. Tolkien",
+                year: 1937
+              }, {
+                id: 1,
+                title: "A Tale of Two Cities",
+                author: "Charles Dickens",
+                year: 1859
+              }, {
+                id: 7,
+                title: "The McGuffey Readers",
+                author: "William Holmes McGuffey",
+                year: 1853
+              }
+            ];
+            return books.get().should.be.eql(result);
+          });
         });
       });
     });
