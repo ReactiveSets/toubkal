@@ -395,5 +395,76 @@ describe 'XS test suite:', ->
           
           cities_in_usa.get().should.be.eql result
       
+    describe 'notify():', ->
       
+      it 'add(): employee.notify( transaction ) should be equal to result', ->
+        transaction = [
+          {
+            action: "add"
+            objects: [
+              { id: 7, name: "John Morrison", salary: "$3000", customer_id: "228", order_id: "1228" }
+              { id: 8, name: "Thomas Buch", salary: "$2500", customer_id: "229", order_id: "1229" }
+            ]
+          }
+        ]
+        
+        result = [
+          { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
+          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
+          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+          { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
+          { id: 8, name: "Thomas Buch"     , salary: "$2500", customer_id: "229", order_id: "1229" }
+        ]
+        
+        employee.notify transaction
+        
+        employee.get().should.be.eql result
+      
+      it 'remove(): employee.notify( transaction ) should be equal to result', ->
+        transaction = [ { action: "remove", objects: [ { id: 8 } ] } ]
+
+        result = [
+          { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
+          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
+          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+          { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
+        ]
+      
+        employee.notify transaction
+        
+        employee.get().should.be.eql result
+      
+      it 'update(): employee.notify( transaction ) should be equal to result', ->
+        transaction = [ {
+          action: "update"
+          objects: [
+            [
+              { id: 7, name: "John Morrison", salary: "$3000", customer_id: "228", order_id: "1228" }
+              { id: 7, name: "John Morrison", salary: "$3500", customer_id: "228", order_id: "1228" }
+            ]
+            [
+
+              { id: 2, name: "Josephin Tan", salary: "$1500", customer_id: "223", order_id: "1223" }
+              { id: 2, name: "Josephin Tan", salary: "$2750", customer_id: "223", order_id: "1223" }
+            ]
+          ]
+        } ]
+
+        result = [
+          { id: 2, name: "Josephin Tan"    , salary: "$2750", customer_id: "223", order_id: "1223" }
+          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
+          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+          { id: 7, name: "John Morrison"   , salary: "$3500", customer_id: "228", order_id: "1228" }
+        ]
+      
+        employee.notify transaction
+        
+        employee.get().should.be.eql result
+      
+      
+        
+      
+    
+    
+    
       
