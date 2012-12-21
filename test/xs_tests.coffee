@@ -461,6 +461,47 @@ describe 'XS test suite:', ->
         
         employee.get().should.be.eql result
       
+      it 'filter(): cities.filter( is_in_morocco ) should be equal to result', ->
+        is_in_morocco = ( o ) ->
+          return o.country is "Morocco"
+        
+        cities_in_morocco = cities.filter is_in_morocco
+        
+        transaction = [
+          {
+            action: "add"
+            objects: [
+              { id:  9, name: "Moscow", country: "Russia"  }
+              { id: 10, name: "Tanger", country: "Morocco" }
+            ]
+          }
+          {
+            action: "update"
+            objects: [
+              [ { id:  6, name: "Casablanca", country: "Morocco" }, { id:  6, name: "Casa" , country: "Morocco" } ]
+              [ { id: 10, name: "Tanger"    , country: "Morocco" }, { id: 11, name: "Cairo", country: "Egypt"   } ]
+              [ { id:  3, name: "Paris"     , country: "France"  }, { id: 12, name: "Fes"  , country: "Morocco" } ]
+              [ { id:  9, name: "Madrid"    , country: "Spain"   }, { id: 13, name: "LA"   , country: "USA", state: "California" } ]
+            ]
+          }
+          {
+            action: "remove"
+            objects: [
+              { id: 13, name: "LA"   , country: "USA", state: "California" }
+              { id: 12, name: "Fes"  , country: "Morocco" }
+              { id: 11, name: "Cairo", country: "Egypt"   }
+            ]
+          }
+        ]
+        
+        cities.notify transaction
+        
+        result = [
+          { id:  1, name: "Marrakech", country: "Morocco" }
+          { id:  6, name: "Casa"     , country: "Morocco" }
+        ]
+        
+        cities_in_morocco.get().should.be.eql result
       
         
       
