@@ -1159,7 +1159,7 @@
           return books_ordered_by_descending_year.get().should.be.eql(result);
         });
         return describe('add()', function() {
-          it('books.add( object ) should be ordered by year', function() {
+          it('after books.add( object ), books_ordered_by_year should be ordered by ascending year', function() {
             var result;
             books.add([
               {
@@ -1171,10 +1171,20 @@
             ]);
             result = [
               {
-                id: 6,
-                title: "The Girl with the Dragon Tattoo",
-                author: "Stieg Larsson",
-                year: 2005
+                id: 1,
+                title: "A Tale of Two Cities",
+                author: "Charles Dickens",
+                year: 1859
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author: "J. R. R. Tolkien",
+                year: 1955
+              }, {
+                id: 4,
+                title: "The Alchemist",
+                author: "Paulo Coelho",
+                year: 1988
               }, {
                 id: 3,
                 title: "The Da Vinci Code",
@@ -1186,23 +1196,13 @@
                 author: "Dan Brown",
                 year: 2000
               }, {
-                id: 4,
-                title: "The Alchemist",
-                author: "Paulo Coelho",
-                year: 1988
-              }, {
-                id: 2,
-                title: "The Lord of the Rings",
-                author: "J. R. R. Tolkien",
-                year: 1955
-              }, {
-                id: 1,
-                title: "A Tale of Two Cities",
-                author: "Charles Dickens",
-                year: 1859
+                id: 6,
+                title: "The Girl with the Dragon Tattoo",
+                author: "Stieg Larsson",
+                year: 2005
               }
             ];
-            return books.get().should.be.eql(result);
+            return books_ordered_by_year.get().should.be.eql(result);
           });
           return it('books.add( objects ) should be ordered by year', function() {
             var result;
