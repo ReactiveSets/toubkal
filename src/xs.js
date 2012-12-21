@@ -722,6 +722,8 @@
       
       eval( code.get() );
       
+      this.out.a.sort( this.organizer );
+      
       return this;
     }, // update_organizer()
     
@@ -770,17 +772,9 @@
     }, // remove()
     
     update: function( updates ) {
-      var objects = [], l = updates.length;
+      var organizer = this.organizer;
       
-      for ( var i = -1; ++i < l; ) {
-        var u = updates[ i ], previous = u[ 0 ], o = { __new: u[ 1 ] };
-        
-        for ( var p in previous ) o[ p ] = previous[ p ];
-        
-        objects.push( o ); 
-      }
-      
-      objects.sort( this.organizer );
+      updates.sort( function( a, b ) { return organizer( a[ 0 ], b[ 0 ] ) } );
       
       for ( i = -1; ++i < l; ) {
         var o = objects[ i ];
