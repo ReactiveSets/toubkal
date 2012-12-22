@@ -801,7 +801,7 @@
         }
       } // while some_not_located
       
-      // de&&ug( "Order.locate(), locations: " + log.s( locations ) );
+      de&&ug( "Order.locate(), locations: " + log.s( locations, function( k, v ) { return k == 'previous' || k == 'next' ? u : v } ) );
       
       return locations;
     }, // locate()
