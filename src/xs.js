@@ -834,7 +834,7 @@
       for ( var i = locations.length; i; ) {
         var l = locations[ --i ];
         
-        a.splice( l.guess, 0, l.o );
+        a.splice( l.start, 0, l.o );
       }
       
       return this;
