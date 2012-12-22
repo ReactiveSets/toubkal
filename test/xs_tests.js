@@ -1095,8 +1095,7 @@
           }
         ]));
         it('books_ordered_by_year should be ordered by ascending year', function() {
-          var result;
-          result = [
+          return books_ordered_by_year.get().should.be.eql([
             {
               id: 1,
               title: "A Tale of Two Cities",
@@ -1123,12 +1122,10 @@
               author: "Dan Brown",
               year: 2003
             }
-          ];
-          return books_ordered_by_year.get().should.be.eql(result);
+          ]);
         });
         it('books_ordered_by_descending_year should be ordered by descending year', function() {
-          var result;
-          result = [
+          return books_ordered_by_descending_year.get().should.be.eql([
             {
               id: 3,
               title: "The Da Vinci Code",
@@ -1155,12 +1152,10 @@
               author: "Charles Dickens",
               year: 1859
             }
-          ];
-          return books_ordered_by_descending_year.get().should.be.eql(result);
+          ]);
         });
         return describe('add()', function() {
           it('after books.add( object ), books_ordered_by_year should be ordered by ascending year', function() {
-            var result;
             books.add([
               {
                 id: 6,
@@ -1169,7 +1164,7 @@
                 year: 2005
               }
             ]);
-            result = [
+            return books_ordered_by_year.get().should.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -1186,26 +1181,24 @@
                 author: "Paulo Coelho",
                 year: 1988
               }, {
-                id: 3,
-                title: "The Da Vinci Code",
-                author: "Dan Brown",
-                year: 2003
-              }, {
                 id: 5,
                 title: "Angels and Demons",
                 author: "Dan Brown",
                 year: 2000
+              }, {
+                id: 3,
+                title: "The Da Vinci Code",
+                author: "Dan Brown",
+                year: 2003
               }, {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
                 author: "Stieg Larsson",
                 year: 2005
               }
-            ];
-            return books_ordered_by_year.get().should.be.eql(result);
+            ]);
           });
-          return it('books.add( objects ) should be ordered by year', function() {
-            var result;
+          return it('after books.add( objects ) books_ordered_by_descending_year should be ordered by descending year', function() {
             books.add([
               {
                 id: 7,
@@ -1229,7 +1222,7 @@
                 year: 1999
               }
             ]);
-            result = [
+            return books_ordered_by_descending_year.get().should.be.eql([
               {
                 id: 9,
                 title: "The Hunger Games",
@@ -1281,8 +1274,7 @@
                 author: "William Holmes McGuffey",
                 year: 1853
               }
-            ];
-            return books.get().should.be.eql(result);
+            ]);
           });
         });
       });
