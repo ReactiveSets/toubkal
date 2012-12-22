@@ -671,11 +671,7 @@
   
   var p = Order_Organizer.prototype;
   
-    p.add
-  = p.remove
-  = p.update
-  = p.update_organizer
-  = function() {
+  p.add = p.remove = p.update = function() {
     this.order.update_organizer( this.organizer.get() );
     
     return this;
@@ -751,7 +747,7 @@
       ) {
         var o = objects[ i ];
         
-        var g = { o: o, guess: Math.floor( guess ), previous: previous };
+        var g = { o: o, guess: Math.floor( guess ), previous: previous, start: 0, stop: a.length };
         
         if ( o instanceof Array ) { // updates
           g.o = o[ 0 ];
@@ -760,8 +756,10 @@
         
         if ( previous ) previous.next = g;
         
-        locations.push( g );
+        locations.push( previous = g );
       }
+      
+      // de&&ug( "Order.locate(), start locations: " + log.s( locations ) + ', organizer: ' + organizer );
       
       var some_not_located = true, next, previous;
       
@@ -777,7 +775,7 @@
           
           if ( g.located ) continue;
           
-          if ( g.order = organizer( a[ g.guess ], g.o ) === 0 ) {
+          if ( ( g.order = organizer( a[ g.guess ], g.o ) ) === 0 ) {
             g.located = true;
             
             continue;
@@ -785,25 +783,15 @@
           
           if ( g.order > 0 ) {
             // guess > o, o is before guess
-            stop = g.stop = g.guess;
-            
-            if ( g.previous ) {
-              start = g.previous.guess;
-            } else {
-              start = g.start !== u ? g.start : g.start = 0;
-            }
+            stop  = g.stop = g.guess;
+            start = g.previous ? Math.max( g.previous.guess, g.start ) : g.start;
           } else {
             // guess < o, o is after guess
             start = g.start = g.guess + 1;
-            
-            if ( g.next ) {
-              stop = g.next.guess;
-            } else {
-              stop = g.stop !== u ? g.stop : g.stop = a.length;
-            }
+            stop  = g.next ? Math.min( g.next.guess, g.stop ) : g.stop;
           }
           
-          if ( g.start === u || g.stop === u || start < stop ) {
+          if ( g.start < g.stop ) {
             g.guess = Math.floor( ( start + stop ) / 2 );
             
             some_not_located = true;
@@ -811,7 +799,9 @@
             g.located = true;
           }
         }
-      }
+      } // while some_not_located
+      
+      // de&&ug( "Order.locate(), locations: " + log.s( locations ) );
       
       return locations;
     }, // locate()
