@@ -366,6 +366,21 @@
       return this.make_index_of().index_of( o ); 
     }, // index_of()
     
+    make_key: function( o ) {
+      var key = this.key, l = key.length, code = [];
+      
+      for ( var i = -1; ++i < l; ) code.push( 'o.' + key[ i ] );
+      
+      eval( new Code()
+        .function( 'this.make_key =', null, [ 'o' ] )
+          .add( "return '' + " + code.join( " + '#' + " ) )
+        .end( 'make_key()' )
+        .get()
+      );
+      
+      return this.make_key( o );
+    }, // make_key()
+    
     make_index_of: function() {
       var key = this.key, l = key.length;
       
@@ -691,7 +706,7 @@
     update_organizer: function( organizer ) {
       switch( typeof organizer ) {
         case 'function':
-          this.organizer = organizer;
+          this.out.a.sort( this.organizer = organizer );
         return this;
         
         case 'object':
@@ -710,8 +725,8 @@
             
             code
               .line( 'if ( ( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' ) ) {' )
-              .add ( '  if ( x === u || x === null || x < y ) return ' + ( d.descendent ? '-1' : ' 1' ) )
-              .add ( '  if ( y === u || y === null || y < x ) return ' + ( d.descendent ? ' 1' : '-1' ) )
+              .add ( '  if ( x === u || x === null || x < y ) return ' + ( d.descending ? ' 1' : '-1' ) )
+              .add ( '  if ( y === u || y === null || x > y ) return ' + ( d.descending ? '-1' : ' 1' ) )
               .line( '}' )
             ;
           }
@@ -727,16 +742,79 @@
       return this;
     }, // update_organizer()
     
-    binary_find: function( o, start ) {
-      var u, a = this.out.a, stop = a.length, orginizer = this.orginizer;
+    locate: function( objects ) {
+      var u, a = this.out.a, start = 0, stop = a.length, guess, organizer = this.organizer, order, next, previous;
       
-      if ( start === u ) start = 0;
-      
-      while( start < stop ) {
+      for ( var i = -1, n = objects.length, guess = 0, locations = [], step = stop / ( n + 1 )
+        ; ++i < n
+        ; guess += step
+      ) {
+        var o = objects[ i ];
+        
+        var g = { o: o, guess: Math.floor( guess ), previous: previous };
+        
+        if ( o instanceof Array ) { // updates
+          g.o = o[ 0 ];
+          g.update = o[ 1 ];
+        }
+        
+        if ( previous ) previous.next = g;
+        
+        locations.push( g );
       }
       
-      return 0;
-    }, // binary_find()
+      var some_not_located = true, next, previous;
+      
+      var count = 0;
+      
+      while( some_not_located ) {
+        some_not_located = false;
+        
+        for ( i = -1; ++i < n; ) {
+          if ( ++count > 1000 ) throw Error( "Infinite loop, locations: " + log.s( locations ) );
+          
+          var g = locations[ i ];
+          
+          if ( g.located ) continue;
+          
+          if ( g.order = organizer( a[ g.guess ], g.o ) === 0 ) {
+            g.located = true;
+            
+            continue;
+          }
+          
+          if ( g.order > 0 ) {
+            // guess > o, o is before guess
+            stop = g.stop = g.guess;
+            
+            if ( g.previous ) {
+              start = g.previous.guess;
+            } else {
+              start = g.start !== u ? g.start : g.start = 0;
+            }
+          } else {
+            // guess < o, o is after guess
+            start = g.start = g.guess + 1;
+            
+            if ( g.next ) {
+              stop = g.next.guess;
+            } else {
+              stop = g.stop !== u ? g.stop : g.stop = a.length;
+            }
+          }
+          
+          if ( g.start === u || g.stop === u || start < stop ) {
+            g.guess = Math.floor( ( start + stop ) / 2 );
+            
+            some_not_located = true;
+          } else {
+            g.located = true;
+          }
+        }
+      }
+      
+      return locations;
+    }, // locate()
     
     add: function( objects ) {
       objects = objects.slice( 0 );
@@ -751,7 +829,12 @@
         return this;
       }
       
-      for ( var i = -1, l = objects.length; ++i < l; ) {
+      var locations = this.locate( objects );
+      
+      for ( var i = locations.length; i; ) {
+        var l = locations[ --i ];
+        
+        a.splice( l.guess, 0, l.o );
       }
       
       return this;
@@ -762,10 +845,12 @@
       
       objects.sort( this.organizer );
       
-      for ( i = -1, l = objects.length; ++i < l; ) {
-        var o = objects[ i ];
+      var locations = this.locate( objects );
+      
+      for ( var i = locations.length; i; ) {
+        var l = locations[ --i ];
         
-        var p = this.binary_find( o );
+        if ( l.order === 0 ) a.splice( l.guess, 1 );
       }
       
       return this;
@@ -776,10 +861,12 @@
       
       updates.sort( function( a, b ) { return organizer( a[ 0 ], b[ 0 ] ) } );
       
-      for ( i = -1; ++i < l; ) {
-        var o = objects[ i ];
+      var locations = this.locate( updates );
+      
+      for ( var i = locations.length; i; ) {
+        var l = locations[ --i ];
         
-        var p = this.binary_find( o );
+        if ( l.order === 0 ) a[ l.guess ] = l.update;
       }
       
       return this;
