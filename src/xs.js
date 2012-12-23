@@ -296,7 +296,9 @@
   /* -------------------------------------------------------------------------------------------
      Connection()
   */
-  function Connection() {
+  function Connection( options ) {
+    this.options = options = options || {};
+    
     this.connections = [];
     
     return this;
@@ -366,10 +368,9 @@
      Set( a [, options] )
   */
   function Set( a, options ) {
-    Connection.call( this );
+    options = Connection.call( this, options ).options;
     
     this.a = a = a || [];
-    this.options = options = options || {};
     this.key = options.key || [ "id" ];
     
     de&&ug( "New Set, name: " + options.name + ", length: " + a.length );
