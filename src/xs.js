@@ -505,7 +505,7 @@
     }, // filter()
     
     order: function( organizer, options ) {
-      return new Order( this, organizer, options );
+      return new Ordered_Set( this, organizer, options );
     } // order()
   } ); // Set instance methods
   
@@ -635,39 +635,39 @@
   } ); // Filter instance methods
   
   /* -------------------------------------------------------------------------------------------
-     Order_Organizer()
+     Ordered_Set_Organizer()
   */
-  function Order_Organizer( organizer, order, options ) {
+  function Ordered_Set_Organizer( organizer, ordered_set, options ) {
     Connection.call( this, options );
     
-    this.order = order;
+    this.ordered_set = ordered_set;
     this.organizer = organizer;
     
     organizer.connect( this );
     
     return this;
-  } // Order_Organizer()
+  } // Ordered_Set_Organizer()
   
-  subclass( Connection, Order_Organizer );
+  subclass( Connection, Ordered_Set_Organizer );
   
-  var p = Order_Organizer.prototype;
+  var p = Ordered_Set_Organizer.prototype;
   
   p.add = p.remove = p.update = function() {
-    this.order.update_organizer( this.organizer.get() );
+    this.ordered_set.update_organizer( this.organizer.get() );
     
     return this;
   };
   
   /* -------------------------------------------------------------------------------------------
-     Order()
+     Ordered_Set()
   */
-  function Order( set, organizer, options ) {
+  function Ordered_Set( set, organizer, options ) {
     Set.call( this, options );
     
     this.key = set.key;
     
     if ( organizer instanceof Set ) {
-      this.order_organizer = new Order_Organizer( organizer, this, options );
+      this.ordered_set_organizer = new Ordered_Set_Organizer( organizer, this, options );
     } else {
       this.update_organizer( organizer );
     }
@@ -675,11 +675,11 @@
     set.connect( this );
     
     return this;
-  } // Order()
+  } // Ordered_Set()
   
-  subclass( Set, Order );
+  subclass( Set, Ordered_Set );
   
-  extend( Order.prototype, {
+  extend( Ordered_Set.prototype, {
     update_organizer: function( organizer ) {
       switch( typeof organizer ) {
         case 'function':
@@ -690,7 +690,7 @@
           if ( organizer !== null && organizer instanceof Array ) break;
         // fall-through
         
-        default: throw new Error( 'Order.update_organizer(), missing organizer function or Array' );
+        default: throw new Error( 'Ordered_Set.update_organizer(), missing organizer function or Array' );
       }
       
       var code = new Code( 'organizer' )
@@ -752,7 +752,7 @@
         locations.push( previous = g );
       }
       
-      // de&&ug( "Order.locate(), start locations: " + log.s( locations ) + ', organizer: ' + organizer );
+      // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations ) + ', organizer: ' + organizer );
       
       var some_not_located = true, next, previous;
       
@@ -794,7 +794,7 @@
         }
       } // while some_not_located
       
-      de&&ug( "Order.locate(), locations: " + log.s( locations, function( k, v ) { return k == 'previous' || k == 'next' ? u : v } ) );
+      de&&ug( "Ordered_Set.locate(), locations: " + log.s( locations, function( k, v ) { return k == 'previous' || k == 'next' ? u : v } ) );
       
       return locations;
     }, // locate()
@@ -854,7 +854,7 @@
       
       return dont_notify? this: this.connections_update( updates );
     } // update()
-  } ); // Order instance methods
+  } ); // Ordered_Set instance methods
   
   /* -------------------------------------------------------------------------------------------
      CXXX(): template for Connection
