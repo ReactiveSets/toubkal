@@ -234,7 +234,7 @@
       return this.begin( 'for( ' + ( init || '' ) + '; ' + ( condition || '' ) + '; ' + ( step || '' ) + ' )' );
     }, // loop()
     
-    unfolded_while: function( first, inner, last, count ) {
+    unrolled_while: function( first, inner, last, count ) {
       inner || ( inner = first );
       count || ( count = 200 / inner.length >> 0 );
       
@@ -414,7 +414,7 @@
         .function( 'this.index_of =', null, [ 'o' ] )
           .vars( vars )
           .vars_from_object( 'o', key ) // Local variables for key
-          .unfolded_while( first, inner, last )
+          .unrolled_while( first, inner, last )
           .add( 'return -1' )
         .end( 'index_of()' )
         .get()
@@ -568,7 +568,7 @@
         .function( 'this.add =', null, [ 'objects' ] )
           .vars( vars )
           
-          .unfolded_while( first )
+          .unrolled_while( first )
           
           .add( 'added.length && this.out.add( added )', 1 )
           
@@ -602,7 +602,7 @@
         .function( 'this.remove =', null, [ 'objects' ] )
           .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' ] )
           
-          .unfolded_while( first )
+          .unrolled_while( first )
           
           .add( 'removed.length && this.out.remove( removed )', 1 )
 

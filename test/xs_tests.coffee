@@ -139,7 +139,7 @@ describe 'XS test suite:', ->
     code = new XS.Code( 'Test unfolded while' )
       .function( 'g = ', null, [ 'n' ] )
         .vars( [ 'a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1' ] )
-        .unfolded_while( 'if ( ' + test, '|| ' + test, ') return i' )
+        .unrolled_while( 'if ( ' + test, '|| ' + test, ') return i' )
         .add( 'return -1' )
       .end( '' )
       .get()
