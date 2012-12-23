@@ -717,13 +717,25 @@
           .vars( [ 'u', 'x', 'y' ] );
           
           for ( var i = -1; ++i < organizer.length; ) {
-            var d = organizer[ i ];
+            var d = organizer[ i ], inferior, superior; 
+            
+            if ( d.descending ) {
+              inferior = ' 1';
+              superior = '-1';
+            } else {
+              inferior = '-1';
+              superior = ' 1';
+            }
             
             code
-              .line( 'if ( ( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' ) ) {' )
-              .add ( '  if ( x === u || x === null || x < y ) return ' + ( d.descending ? ' 1' : '-1' ) )
-              .add ( '  if ( y === u || y === null || x > y ) return ' + ( d.descending ? '-1' : ' 1' ) )
-              .line( '}' )
+              .begin( 'if ( ( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' ) )' )
+                .add(   'if ( x === u    ) return ' + inferior )
+                .add(   'if ( y === u    ) return ' + superior )
+                .add(   'if ( x === null ) return ' + inferior )
+                .add(   'if ( y === null ) return ' + superior )
+                .add(   'if ( x < y      ) return ' + inferior )
+                .add(   'if ( x > y      ) return ' + superior )
+              .end()
             ;
           }
           
