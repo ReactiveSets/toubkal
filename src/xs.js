@@ -505,9 +505,7 @@
     }, // filter()
     
     order: function( organizer, options ) {
-      var f = new Order( this, organizer, options );
-      
-      return f.out;
+      return new Order( this, organizer, options );
     } // order()
   } ); // Set instance methods
   
@@ -664,9 +662,9 @@
      Order()
   */
   function Order( set, organizer, options ) {
-    Connection.call( this, options );
+    Set.call( this, options );
     
-    this.out = new Set( [], { key: set.key } );
+    this.key = set.key;
     
     if ( organizer instanceof Set ) {
       this.order_organizer = new Order_Organizer( organizer, this, options );
@@ -679,13 +677,13 @@
     return this;
   } // Order()
   
-  subclass( Connection, Order );
+  subclass( Set, Order );
   
   extend( Order.prototype, {
     update_organizer: function( organizer ) {
       switch( typeof organizer ) {
         case 'function':
-          this.out.a.sort( this.organizer = organizer );
+          this.a.sort( this.organizer = organizer );
         return this;
         
         case 'object':
@@ -728,13 +726,13 @@
       
       eval( code.get() );
       
-      this.out.a.sort( this.organizer );
+      this.a.sort( this.organizer );
       
       return this;
     }, // update_organizer()
     
     locate: function( objects ) {
-      var u, a = this.out.a, start = 0, stop = a.length, guess, organizer = this.organizer, order, next, previous;
+      var u, a = this.a, start = 0, stop = a.length, guess, organizer = this.organizer, order, next, previous;
       
       for ( var i = -1, n = objects.length, guess = 0, locations = [], step = stop / ( n + 1 )
         ; ++i < n
@@ -801,15 +799,15 @@
       return locations;
     }, // locate()
     
-    add: function( objects ) {
+    add: function( objects, dont_notify ) {
       objects = objects.slice( 0 );
       
       objects.sort( this.organizer );
       
-      var a = this.out.a;
+      var a = this.a;
       
       if ( a.length === 0 ) {
-        this.out.a = objects;
+        this.a = objects;
         
         return this;
       }
@@ -822,10 +820,10 @@
         a.splice( l.start, 0, l.o );
       }
       
-      return this;
+      return dont_notify? this: this.connections_add( objects );
     }, // add()
     
-    remove: function( objects ) {
+    remove: function( objects, dont_notify ) {
       objects = objects.slice( 0 );
       
       objects.sort( this.organizer );
@@ -838,10 +836,10 @@
         if ( l.order === 0 ) a.splice( l.guess, 1 );
       }
       
-      return this;
+      return dont_notify? this: this.connections_remove( objects );
     }, // remove()
     
-    update: function( updates ) {
+    update: function( updates, dont_notify ) {
       var organizer = this.organizer;
       
       updates.sort( function( a, b ) { return organizer( a[ 0 ], b[ 0 ] ) } );
@@ -854,7 +852,7 @@
         if ( l.order === 0 ) a[ l.guess ] = l.update;
       }
       
-      return this;
+      return dont_notify? this: this.connections_update( updates );
     } // update()
   } ); // Order instance methods
   
