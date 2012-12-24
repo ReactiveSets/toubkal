@@ -512,9 +512,9 @@ describe 'XS test suite:', ->
         { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
       ]
       
-      by_year = new Set [ { id: "year" } ]
+      organizer = new Set [ { id: "year" } ]
       
-      books_ordered_by_year = books.order( by_year );
+      books_ordered_by_year = books.order( organizer );
       
       books_ordered_by_descending_year = books.order( new Set [ { id: "year", descending: true } ] );
       
@@ -681,7 +681,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'update organizer, books_ordered_by_year should be ordered by ascending by title', ->
-          by_year.update [ [ { id: "year" }, { id: "title" } ] ]
+          organizer.update [ [ { id: "year" }, { id: "title" } ] ]
 
           books_ordered_by_year.get().should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
@@ -701,7 +701,8 @@ describe 'XS test suite:', ->
             { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
-          
+        
+        
           
         
         

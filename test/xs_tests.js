@@ -1053,7 +1053,7 @@
         });
       });
       return describe('order():', function() {
-        var books, books_ordered_by_descending_year, books_ordered_by_year, by_year;
+        var books, books_ordered_by_descending_year, books_ordered_by_year, organizer;
         books = new Set([
           {
             id: 1,
@@ -1082,12 +1082,12 @@
             year: 2000
           }
         ]);
-        by_year = new Set([
+        organizer = new Set([
           {
             id: "year"
           }
         ]);
-        books_ordered_by_year = books.order(by_year);
+        books_ordered_by_year = books.order(organizer);
         books_ordered_by_descending_year = books.order(new Set([
           {
             id: "year",
@@ -1710,7 +1710,7 @@
             ]);
           });
           return it('update organizer, books_ordered_by_year should be ordered by ascending by title', function() {
-            by_year.update([
+            organizer.update([
               [
                 {
                   id: "year"
