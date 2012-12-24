@@ -1546,7 +1546,8 @@
               {
                 id: 14,
                 title: "And Then There Were None",
-                author: "Agatha Christie"
+                author: "Agatha Christie",
+                year: void 0
               }, {
                 id: 16,
                 title: "Charlie and the Chocolate Factory",
@@ -1624,7 +1625,7 @@
               }
             ]);
           });
-          return it('after books.add( objects ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function() {
+          it('after books.add( objects ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
                 id: 12,
@@ -1705,6 +1706,99 @@
                 id: 16,
                 title: "Charlie and the Chocolate Factory",
                 author: "Roald Dahl"
+              }
+            ]);
+          });
+          return it('update organizer, books_ordered_by_year should be ordered by ascending by title', function() {
+            by_year.update([
+              [
+                {
+                  id: "year"
+                }, {
+                  id: "title"
+                }
+              ]
+            ]);
+            return books_ordered_by_year.get().should.be.eql([
+              {
+                id: 1,
+                title: "A Tale of Two Cities",
+                author: "Charles Dickens",
+                year: 1859
+              }, {
+                id: 14,
+                title: "And Then There Were None",
+                author: "Agatha Christie",
+                year: void 0
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
+                year: 2000
+              }, {
+                id: 12,
+                title: "Breaking Dawn",
+                author: "Stephenie Meyer",
+                year: 2008
+              }, {
+                id: 16,
+                title: "Charlie and the Chocolate Factory",
+                author: "Roald Dahl"
+              }, {
+                id: 10,
+                title: "Harry Potter and the Prisoner of Azkaban",
+                author: "J.K. Rowling",
+                year: 1999
+              }, {
+                id: 13,
+                title: "Lolita",
+                author: "Vladimir Nabokov",
+                year: 1955
+              }, {
+                id: 15,
+                title: "Steps to Christ",
+                author: "Ellen G. White",
+                year: null
+              }, {
+                id: 4,
+                title: "The Alchemist",
+                author: "Paulo Coelho",
+                year: 1988
+              }, {
+                id: 3,
+                title: "The Da Vinci Code",
+                author: "Dan Brown",
+                year: 2003
+              }, {
+                id: 11,
+                title: "The Dukan Diet",
+                author: "Pierre Dukan",
+                year: 2000
+              }, {
+                id: 6,
+                title: "The Girl with the Dragon Tattoo",
+                author: "Stieg Larsson",
+                year: 2005
+              }, {
+                id: 8,
+                title: "The Hobbit",
+                author: "J. R. R. Tolkien",
+                year: 1937
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
+                year: 2008
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author: "J. R. R. Tolkien",
+                year: 1955
+              }, {
+                id: 7,
+                title: "The McGuffey Readers",
+                author: "William Holmes McGuffey",
+                year: 1853
               }
             ]);
           });
