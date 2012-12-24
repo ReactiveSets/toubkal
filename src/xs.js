@@ -317,10 +317,10 @@
       for ( var i = -1; ++i < l; ) {
         var a = transaction[ i ];
         
-        this[ a.action ]( a.objects, true );
+        this[ a.action ]( a.objects );
       }
       
-      return this.notify_connections( transaction );
+      return this;
     }, // notify()
     
     notify_connections: function( transaction ) {
@@ -390,13 +390,13 @@
       return this.a;
     }, // get()
     
-    add: function( objects, dont_notify ) {
+    add: function( objects ) {
       push.apply( this.a, objects );
       
-      return dont_notify? this: this.connections_add( objects );
+      return this.connections_add( objects );
     }, // add()
     
-    update: function( objects, dont_notify ) {
+    update: function( objects ) {
       for ( var i = -1, l = objects.length, updated = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o[ 0 ] )
@@ -409,10 +409,10 @@
         updated.push( o );
       }
       
-      return dont_notify? this: this.connections_update( updated );
+      return this.connections_update( updated );
     }, // update()
     
-    remove: function( objects, dont_notify ) {
+    remove: function( objects ) {
       for ( var i = -1, l = objects.length, removed = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o )
@@ -432,7 +432,7 @@
         removed.push( o ); 
       }
       
-      return dont_notify? this: this.connections_remove( removed );
+      return this.connections_remove( removed );
     }, // remove()
     
     index_of: function( o ) {
@@ -799,7 +799,7 @@
       return locations;
     }, // locate()
     
-    add: function( objects, dont_notify ) {
+    add: function( objects ) {
       objects = objects.slice( 0 );
       
       objects.sort( this.organizer );
@@ -820,10 +820,10 @@
         a.splice( l.start, 0, l.o );
       }
       
-      return dont_notify? this: this.connections_add( objects );
+      return this.connections_add( objects );
     }, // add()
     
-    remove: function( objects, dont_notify ) {
+    remove: function( objects ) {
       objects = objects.slice( 0 );
       
       objects.sort( this.organizer );
@@ -836,10 +836,10 @@
         if ( l.order === 0 ) a.splice( l.guess, 1 );
       }
       
-      return dont_notify? this: this.connections_remove( objects );
+      return this.connections_remove( objects );
     }, // remove()
     
-    update: function( updates, dont_notify ) {
+    update: function( updates ) {
       var organizer = this.organizer;
       
       updates.sort( function( a, b ) { return organizer( a[ 0 ], b[ 0 ] ) } );
@@ -852,7 +852,7 @@
         if ( l.order === 0 ) a[ l.guess ] = l.update;
       }
       
-      return dont_notify? this: this.connections_update( updates );
+      return this.connections_update( updates );
     } // update()
   } ); // Ordered_Set instance methods
   
