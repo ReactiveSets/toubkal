@@ -1089,18 +1089,18 @@
         ]);
         by_ascending_author = function(a, b) {
           if (a.author < b.author) {
-            return 1;
-          } else if (a.author > b.author) {
             return -1;
+          } else if (a.author > b.author) {
+            return 1;
           } else {
             return 0;
           }
         };
         by_descending_author = function(a, b) {
           if (a.author < b.author) {
-            return -1;
-          } else if (a.author > b.author) {
             return 1;
+          } else if (a.author > b.author) {
+            return -1;
           } else {
             return 0;
           }
@@ -1166,6 +1166,66 @@
               title: "The Lord of the Rings",
               author: "J. R. R. Tolkien",
               year: 1955
+            }, {
+              id: 1,
+              title: "A Tale of Two Cities",
+              author: "Charles Dickens",
+              year: 1859
+            }
+          ]);
+        });
+        it('books_ordered_by_ascending_author should be ordered by ascending auhtor: oranizer is a function', function() {
+          return books_ordered_by_ascending_author.get().should.be.eql([
+            {
+              id: 1,
+              title: "A Tale of Two Cities",
+              author: "Charles Dickens",
+              year: 1859
+            }, {
+              id: 3,
+              title: "The Da Vinci Code",
+              author: "Dan Brown",
+              year: 2003
+            }, {
+              id: 5,
+              title: "Angels and Demons",
+              author: "Dan Brown",
+              year: 2000
+            }, {
+              id: 2,
+              title: "The Lord of the Rings",
+              author: "J. R. R. Tolkien",
+              year: 1955
+            }, {
+              id: 4,
+              title: "The Alchemist",
+              author: "Paulo Coelho",
+              year: 1988
+            }
+          ]);
+        });
+        it('books_ordered_by_descending_author should be ordered by descending auhtor: oranizer is a function', function() {
+          return books_ordered_by_descending_author.get().should.be.eql([
+            {
+              id: 4,
+              title: "The Alchemist",
+              author: "Paulo Coelho",
+              year: 1988
+            }, {
+              id: 2,
+              title: "The Lord of the Rings",
+              author: "J. R. R. Tolkien",
+              year: 1955
+            }, {
+              id: 5,
+              title: "Angels and Demons",
+              author: "Dan Brown",
+              year: 2000
+            }, {
+              id: 3,
+              title: "The Da Vinci Code",
+              author: "Dan Brown",
+              year: 2003
             }, {
               id: 1,
               title: "A Tale of Two Cities",
