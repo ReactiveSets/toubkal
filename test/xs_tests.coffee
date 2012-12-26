@@ -798,6 +798,50 @@ describe 'XS test suite:', ->
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
           ]
         
+        it 'books_ordered_by_ascending_id should be ordered by ascending id: organizer is an objects', ->
+          books_ordered_by_ascending_id = books.order [ { id: "id" } ]
+          
+          books_ordered_by_ascending_id.get().should.be.eql [
+            { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+            { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
+            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+            { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
+            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
+            { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
+            { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
+            { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
+            { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
+            { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000 }
+            { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
+            { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
+            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
+            { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
+            { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
+          ]
+
+        it 'books_ordered_by_descending should be ordered by descending id: organizer is an objects', ->
+          books_ordered_by_ascending_id = books.order [ { id: "id", descending: true } ]
+          
+          books_ordered_by_ascending_id.get().should.be.eql [
+            { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
+            { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
+            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
+            { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
+            { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
+            { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000 }
+            { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
+            { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
+            { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
+            { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
+            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
+            { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
+            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+            { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
+            { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+          ]
         
         
-    
+        
+          
