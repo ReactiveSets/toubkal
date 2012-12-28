@@ -732,29 +732,35 @@
     }, // update_organizer()
     
     locate: function( objects ) {
-      var u, a = this.a, start = 0, stop = a.length, guess, organizer = this.organizer, order, next, previous;
+      var u
+        , organizer = this.organizer
+        , a = this.a
+        , start = 0, stop = a.length
+        , locations = [], location
+        , guess, order, previous
+      ;
       
-      for ( var i = -1, n = objects.length, guess = 0, locations = [], step = stop / ( n + 1 )
+      for ( var i = -1, n = objects.length, guess = 0, step = stop / ( n + 1 )
         ; ++i < n
         ; guess += step
       ) {
         var o = objects[ i ];
         
-        var g = { o: o, guess: Math.floor( guess ), previous: previous, start: 0, stop: a.length };
+        location = { o: o, guess: Math.floor( guess ), previous: previous, start: 0, stop: a.length };
         
         if ( o instanceof Array ) { // updates
-          g.o = o[ 0 ];
-          g.update = o[ 1 ];
+          location.o = o[ 0 ];
+          location.update = o[ 1 ];
         }
         
-        if ( previous ) previous.next = g;
+        if ( previous ) previous.next = location;
         
-        locations.push( previous = g );
+        locations.push( previous = location );
       }
       
-      // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations ) + ', organizer: ' + organizer );
+      // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations, replacer ) + ', organizer: ' + organizer );
       
-      var some_not_located = true, next, previous;
+      var some_not_located = true;
       
       var count = 0;
       
@@ -762,41 +768,48 @@
         some_not_located = false;
         
         for ( i = -1; ++i < n; ) {
-          if ( ++count > 1000 ) throw Error( "Infinite loop, locations: " + log.s( locations ) );
+          if ( ++count > 1000 ) throw Error( "Infinite loop, locations: " + log.s( locations, replacer ) );
           
-          var g = locations[ i ];
+          location = locations[ i ];
           
-          if ( g.located ) continue;
+          if ( location.located ) continue;
           
-          if ( ( g.order = organizer( a[ g.guess ], g.o ) ) === 0 ) {
-            g.located = true;
+          if ( ( location.order = organizer( a[ location.guess ], location.o ) ) === 0 ) {
+            location.located = true;
+            location.insert = location.guess + 1; // insert after current
+            // need to find last matching record
             
             continue;
           }
           
-          if ( g.order > 0 ) {
+          if ( location.order > 0 ) {
             // guess > o, o is before guess
-            stop  = g.stop = g.guess;
-            start = g.previous ? Math.max( g.previous.guess, g.start ) : g.start;
+            stop  = location.stop = location.guess;
+            start = location.previous ? Math.max( location.previous.guess, location.start ) : location.start;
           } else {
             // guess < o, o is after guess
-            start = g.start = g.guess + 1;
-            stop  = g.next ? Math.min( g.next.guess, g.stop ) : g.stop;
+            start = location.start = location.guess + 1;
+            stop  = location.next ? Math.min( location.next.guess, location.stop ) : location.stop;
           }
           
-          if ( g.start < g.stop ) {
-            g.guess = Math.floor( ( start + stop ) / 2 );
+          if ( start < stop ) {
+            location.guess = Math.floor( ( start + stop ) / 2 );
             
             some_not_located = true;
           } else {
-            g.located = true;
+            location.located = true;
+            location.insert = location.start;
           }
         }
       } // while some_not_located
       
-      de&&ug( "Ordered_Set.locate(), locations: " + log.s( locations, function( k, v ) { return k == 'previous' || k == 'next' ? u : v } ) );
+      de&&ug( "Ordered_Set.locate(), locations: " + log.s( locations, replacer ) );
       
       return locations;
+      
+      function replacer( k, v ) {
+        return k == 'previous' || k == 'next' ? u : v
+      }
     }, // locate()
     
     add: function( objects ) {
@@ -817,7 +830,7 @@
       for ( var i = locations.length; i; ) {
         var l = locations[ --i ];
         
-        a.splice( l.start, 0, l.o );
+        a.splice( l.insert, 0, l.o );
       }
       
       return this.connections_add( objects );
