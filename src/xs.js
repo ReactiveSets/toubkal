@@ -828,7 +828,7 @@
       
       objects.sort( this.organizer );
       
-      var locations = this.locate( objects );
+      var locations = this.locate( objects ), a = this.a;
       
       for ( var i = locations.length; i; ) {
         var l = locations[ --i ];
@@ -844,7 +844,7 @@
       
       updates.sort( function( a, b ) { return organizer( a[ 0 ], b[ 0 ] ) } );
       
-      var locations = this.locate( updates );
+      var locations = this.locate( updates ), a = this.a;
       
       for ( var i = locations.length; i; ) {
         var l = locations[ --i ];
