@@ -372,7 +372,7 @@
     }, // filter()
     
     order: function( organizer, options ) {
-      options = extend( {}, options, { key: this.key } );
+      options = extend( { key: this.key }, options );
       
       var ordered_set = new Ordered_Set( organizer, options );
       
