@@ -361,7 +361,23 @@
       connection.add( this.get() );
       
       return this;
-    } // connect()
+    }, // connect()
+    
+    filter: function( filter, options ) {
+      var f = new Filter( this, filter, options );
+      
+      return f.out;
+    }, // filter()
+    
+    order: function( organizer, options ) {
+      options = extend( {}, options || {}, { key: this.key } );
+      
+      var ordered_set = new Ordered_Set( organizer, options );
+      
+      this.connect( ordered_set );
+      
+      return ordered_set;
+    } // order()
   } ); // Connection instance methods
   
   /* -------------------------------------------------------------------------------------------
@@ -496,17 +512,7 @@
       eval( code );
       
       return this;
-    }, // make_index_of()
-    
-    filter: function( filter, options ) {
-      var f = new Filter( this, filter, options );
-      
-      return f.out;
-    }, // filter()
-    
-    order: function( organizer, options ) {
-      return new Ordered_Set( this, organizer, options );
-    } // order()
+    } // make_index_of()
   } ); // Set instance methods
   
   /* -------------------------------------------------------------------------------------------
@@ -643,7 +649,11 @@
     this.ordered_set = ordered_set;
     this.organizer = organizer;
     
-    organizer.connect( this );
+    if ( organizer instanceof Set ) {
+      organizer.connect( this );
+    } else {
+      this.add( organizer );
+    }
     
     return this;
   } // Ordered_Set_Organizer()
@@ -653,7 +663,62 @@
   var p = Ordered_Set_Organizer.prototype;
   
   p.add = p.remove = p.update = function() {
-    this.ordered_set.update_organizer( this.organizer.get() );
+    var organizer = this.organizer;
+    
+    switch( typeof organizer ) {
+      case 'function':
+        this.ordered_set.sort( this.organizer = organizer );
+      return this;
+      
+      case 'object':
+        if ( organizer !== null ) {
+          if ( organizer instanceof Set ) {
+            organizer = organizer.get();
+            
+            break;
+          }
+          
+          if ( organizer instanceof Array ) break;
+        }
+      // fall-through
+      
+      default: throw new Error( 'Ordered_Set.update_organizer(), missing organizer function or Array or Set' );
+    }
+    
+    var code = new Code( 'organizer' )
+      .function( 'organizer =', null, [ 'a', 'b' ] )
+        .vars( [ 'u', 'x', 'y' ] );
+        
+        for ( var i = -1; ++i < organizer.length; ) {
+          var d = organizer[ i ], inferior, superior; 
+          
+          if ( d.descending ) {
+            inferior = ' 1';
+            superior = '-1';
+          } else {
+            inferior = '-1';
+            superior = ' 1';
+          }
+          
+          code
+            .begin( 'if ( ( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' ) )' )
+              .add(   'if ( x === u    ) return ' + inferior )
+              .add(   'if ( y === u    ) return ' + superior )
+              .add(   'if ( x === null ) return ' + inferior )
+              .add(   'if ( y === null ) return ' + superior )
+              .add(   'if ( x < y      ) return ' + inferior )
+              .add(   'if ( x > y      ) return ' + superior )
+            .end()
+          ;
+        }
+        
+        code.add( 'return 0' )
+      .end( 'organizer()' )
+    ;
+    
+    eval( code.get() );
+    
+    this.ordered_set.sort( organizer );
     
     return this;
   };
@@ -661,18 +726,10 @@
   /* -------------------------------------------------------------------------------------------
      Ordered_Set()
   */
-  function Ordered_Set( set, organizer, options ) {
-    Set.call( this, options );
+  function Ordered_Set( organizer, options ) {
+    Set.call( this, [], options );
     
-    this.key = set.key;
-    
-    if ( organizer instanceof Set ) {
-      this.ordered_set_organizer = new Ordered_Set_Organizer( organizer, this, options );
-    } else {
-      this.update_organizer( organizer );
-    }
-    
-    set.connect( this );
+    this.ordered_set_organizer = new Ordered_Set_Organizer( organizer, this, options );
     
     return this;
   } // Ordered_Set()
@@ -680,56 +737,11 @@
   subclass( Set, Ordered_Set );
   
   extend( Ordered_Set.prototype, {
-    update_organizer: function( organizer ) {
-      switch( typeof organizer ) {
-        case 'function':
-          this.a.sort( this.organizer = organizer );
-        return this;
-        
-        case 'object':
-          if ( organizer !== null && organizer instanceof Array ) break;
-        // fall-through
-        
-        default: throw new Error( 'Ordered_Set.update_organizer(), missing organizer function or Array' );
-      }
-      
-      var code = new Code( 'organizer' )
-        .function( 'this.organizer =', null, [ 'a', 'b' ] )
-          .vars( [ 'u', 'x', 'y' ] );
-          
-          for ( var i = -1; ++i < organizer.length; ) {
-            var d = organizer[ i ], inferior, superior; 
-            
-            if ( d.descending ) {
-              inferior = ' 1';
-              superior = '-1';
-            } else {
-              inferior = '-1';
-              superior = ' 1';
-            }
-            
-            code
-              .begin( 'if ( ( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' ) )' )
-                .add(   'if ( x === u    ) return ' + inferior )
-                .add(   'if ( y === u    ) return ' + superior )
-                .add(   'if ( x === null ) return ' + inferior )
-                .add(   'if ( y === null ) return ' + superior )
-                .add(   'if ( x < y      ) return ' + inferior )
-                .add(   'if ( x > y      ) return ' + superior )
-              .end()
-            ;
-          }
-          
-          code.add( 'return 0' )
-        .end( 'organizer()' )
-      ;
-      
-      eval( code.get() );
-      
-      this.a.sort( this.organizer );
+    sort: function( organizer ) {
+      this.a.sort( this.organizer = organizer );
       
       return this;
-    }, // update_organizer()
+    }, // sort()
     
     locate: function( objects ) {
       var u
