@@ -15,7 +15,7 @@
     for ( var i = 0; ++i < l; ) {
       var s = arguments[ i ];
 
-      for ( var p in s ) if ( s.hasOwnProperty( p ) ) d[ p ] = s[ p ];
+      if ( s ) for ( var p in s ) if ( s.hasOwnProperty( p ) ) d[ p ] = s[ p ];
     }
     
     return d;
