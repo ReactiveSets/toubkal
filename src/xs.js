@@ -12,6 +12,8 @@
   function extend( d ) {
     var l = arguments.length;
     
+    if ( !d ) d = {};
+    
     for ( var i = 0; ++i < l; ) {
       var s = arguments[ i ];
 
@@ -370,7 +372,7 @@
     }, // filter()
     
     order: function( organizer, options ) {
-      options = extend( {}, options || {}, { key: this.key } );
+      options = extend( {}, options, { key: this.key } );
       
       var ordered_set = new Ordered_Set( organizer, options );
       
