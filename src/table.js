@@ -48,19 +48,19 @@
   
   extend( Table_Columns.prototype, {
     add: function( objects ) {
-      var table = this.table;
+      var table = this.table, a = table.get();
       
       return this;
     }, // add()
     
     remove: function( objects ) {
-      var table = this.table;
+      var table = this.table, a = table.get();
       
       return this;
     }, // remove()
     
     update: function( updates ) {
-      var table = this.table;
+      var table = this.table, a = table.get();
       
       return this;
     } // update()
@@ -74,8 +74,6 @@
     
     this.columns = new Table_Colunns( columns, this, options );
     
-    set.connect( this );
-    
     return this;
   } // Table()
   
@@ -83,12 +81,21 @@
   
   extend( Table.prototype, {
     add: function( objects ) {
+      Set.prototype.add.call( this, objects );
+      
+      return this;
     }, // add()
     
     remove: function( objects ) {
+      Set.prototype.remove.call( this, objects );
+      
+      return this;
     }, // remove()
     
     update: function( updates ) {
+      Set.prototype.update.call( this, objects );
+      
+      return this;
     } // update()
   } ); // Table instance methods
   
