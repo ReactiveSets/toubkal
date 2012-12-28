@@ -365,21 +365,35 @@
       return this;
     }, // connect()
     
+    set: function( options ) {
+      var s = new Set( options );
+      
+      this.connect( s );
+      
+      return s;
+    }, // set()
+    
     filter: function( filter, options ) {
       var f = new Filter( this, filter, options );
       
-      return f.out;
+      return f.out; // ToDo: Filter should not build a set
     }, // filter()
     
     order: function( organizer, options ) {
-      options = extend( { key: this.key }, options );
+      var s = new Ordered_Set( organizer, extend( { key: this.key }, options ) );
       
-      var ordered_set = new Ordered_Set( organizer, options );
+      this.connect( s );
       
-      this.connect( ordered_set );
+      return s;
+    }, // order()
+    
+    table: function( node, columns, options ) {
+      var t = new XS.table( node, columns, options );
       
-      return ordered_set;
-    } // order()
+      this.connect( t );
+      
+      return t;
+    } // table
   } ); // Connection instance methods
   
   /* -------------------------------------------------------------------------------------------
