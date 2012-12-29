@@ -794,7 +794,7 @@
         
         // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations, replacer ) );
         
-        var some_not_located = true, count = 0, start, stop;
+        var some_not_located = true, count = 0, start;
         
         while( some_not_located ) {
           some_not_located = false;
@@ -806,21 +806,32 @@
             
             if ( location.located ) continue;
             
-            var guess = location.guess, o = location.o;
+            var guess = location.guess, stop = location.stop;
+            
+            if ( guess === stop ) {
+              location.located = true;
+              location.insert = guess;
+              
+              continue;
+            }
+            
+            var o = location.o;
             
             if ( ( location.order = organizer( a[ guess ], o ) ) === 0 ) {
               location.located = true;
-              location.found = location.insert = guess;
+              var insert = location.found = guess;
               
               // Position insert after last object equal to searched object
-              while( ++location.insert < location.stop && organizer( a[ location.insert ], o ) === 0 );
+              while( ++insert < stop && organizer( a[ insert ], o ) === 0 );
+              
+              location.insert = insert;
               
               continue;
             }
             
             if ( location.order > 0 ) {
               // guess > o, o is before guess
-              stop  = location.stop = guess;
+              stop = location.stop = guess;
               
               var previous = location.previous;
               
@@ -831,7 +842,7 @@
               
               var next = location.next;
               
-              stop  = next && next.insert ? Math.min( next.insert, location.stop ) : location.stop;
+              if ( next && next.insert ) stop = Math.min( next.insert, stop );
             }
             
             if ( start < stop ) {
