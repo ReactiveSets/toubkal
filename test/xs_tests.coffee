@@ -798,15 +798,15 @@ describe 'XS test suite:', ->
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
-        it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', ->
+        it 'books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
           books_ordered_by_ascending_author.get().should.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
-            { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
             { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
+            { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
             { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
             { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000 }
@@ -818,7 +818,7 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
-        it 'books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', ->
+        it 'books_ordered_by_descending_author should be ordered by descending auhtor', ->
           books_ordered_by_descending_author.get().should.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
@@ -832,8 +832,8 @@ describe 'XS test suite:', ->
             { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
-            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
           ]

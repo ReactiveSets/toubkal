@@ -2129,7 +2129,7 @@
               }
             ]);
           });
-          it('books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', function() {
+          it('books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
             return books_ordered_by_ascending_author.get().should.be.eql([
               {
                 id: 14,
@@ -2157,15 +2157,15 @@
                 author: "Ellen G. White",
                 year: null
               }, {
-                id: 8,
-                title: "The Hobbit",
-                author: "J. R. R. Tolkien",
-                year: 1937
-              }, {
                 id: 2,
                 title: "The Lord of the Rings",
                 author: "J. R. R. Tolkien",
                 year: 1955
+              }, {
+                id: 8,
+                title: "The Hobbit",
+                author: "J. R. R. Tolkien",
+                year: 1937
               }, {
                 id: 10,
                 title: "Harry Potter and the Prisoner of Azkaban",
@@ -2213,7 +2213,7 @@
               }
             ]);
           });
-          it('books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', function() {
+          it('books_ordered_by_descending_author should be ordered by descending auhtor', function() {
             return books_ordered_by_descending_author.get().should.be.eql([
               {
                 id: 7,
@@ -2275,15 +2275,15 @@
                 author: "Ellen G. White",
                 year: null
               }, {
-                id: 5,
-                title: "Angels and Demons",
-                author: "Dan Brown",
-                year: 2000
-              }, {
                 id: 3,
                 title: "The Da Vinci Code",
                 author: "Dan Brown",
                 year: 2003
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
+                year: 2000
               }, {
                 id: 1,
                 title: "A Tale of Two Cities",
