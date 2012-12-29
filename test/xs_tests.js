@@ -1088,32 +1088,49 @@
           }
         ]);
         by_ascending_author = function(a, b) {
-          if (a.author < b.author) {
-            return -1;
-          } else if (a.author > b.author) {
-            return 1;
-          } else {
+          if ((a = a.author) === (b = b.author)) {
             return 0;
           }
+          if (a === void 0) {
+            return -1;
+          }
+          if (b === void 0) {
+            return 1;
+          }
+          if (a === null) {
+            return -1;
+          }
+          if (b === null) {
+            return 1;
+          }
+          if (a < b) {
+            return -1;
+          }
+          if (a > b) {
+            return 1;
+          }
+          return 0;
         };
         by_descending_author = function(a, b) {
-          if (a.author < b.author) {
-            return 1;
-          } else if (a.author > b.author) {
-            return -1;
-          } else {
-            return 0;
-          }
+          return by_ascending_author(b, a);
         };
-        books_ordered_by_year = books.order(organizer);
+        books_ordered_by_year = books.order(organizer, {
+          name: 'books_ordered_by_year'
+        });
         books_ordered_by_descending_year = books.order(new Set([
           {
             id: "year",
             descending: true
           }
-        ]));
-        books_ordered_by_ascending_author = books.order(by_ascending_author);
-        books_ordered_by_descending_author = books.order(by_descending_author);
+        ]), {
+          name: 'books_ordered_by_descending_year'
+        });
+        books_ordered_by_ascending_author = books.order(by_ascending_author, {
+          name: 'books_ordered_by_ascending_author'
+        });
+        books_ordered_by_descending_author = books.order(by_descending_author, {
+          name: 'books_ordered_by_descending_author'
+        });
         it('books_ordered_by_year should be ordered by ascending year', function() {
           return books_ordered_by_year.get().should.be.eql([
             {
@@ -1235,7 +1252,7 @@
           ]);
         });
         describe('add()', function() {
-          it('after books.add( object ), books_ordered_by_year should be ordered by ascending year', function() {
+          it('after books.add( book 6 ), books_ordered_by_year should be ordered by ascending year', function() {
             books.add([
               {
                 id: 6,
@@ -1278,7 +1295,7 @@
               }
             ]);
           });
-          it('after books.add( object ), books_ordered_by_descending_year should be ordered by descending year', function() {
+          it('after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
                 id: 6,
@@ -1313,7 +1330,7 @@
               }
             ]);
           });
-          it('after books.add( object ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
+          it('after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
             return books_ordered_by_ascending_author.get().should.be.eql([
               {
                 id: 1,
@@ -1348,7 +1365,7 @@
               }
             ]);
           });
-          it('after books.add( object ), books_ordered_by_descending_author should be ordered by descending auhtor', function() {
+          it('after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', function() {
             return books_ordered_by_descending_author.get().should.be.eql([
               {
                 id: 6,
@@ -1383,7 +1400,7 @@
               }
             ]);
           });
-          it('after books.add( 5 objects ), books_ordered_by_year should be ordered by ascending year', function() {
+          it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_year should be ordered by ascending year', function() {
             books.add([
               {
                 id: 7,
@@ -1461,7 +1478,7 @@
               }
             ]);
           });
-          it('after books.add( 5 objects ), books_ordered_by_descending_year should be ordered by descending year', function() {
+          it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
                 id: 9,
@@ -1516,7 +1533,7 @@
               }
             ]);
           });
-          it('after books.add( 5 objects ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
+          it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
             return books_ordered_by_ascending_author.get().should.be.eql([
               {
                 id: 1,
@@ -1571,7 +1588,7 @@
               }
             ]);
           });
-          it('after books.add( 3 objects ), whose years are already used; books_ordered_by_year should be ordered by ascending year', function() {
+          it('after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_year should be ordered by ascending year', function() {
             books.add([
               {
                 id: 11,
@@ -1659,7 +1676,7 @@
               }
             ]);
           });
-          it('after books.add( 3 objects ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', function() {
+          it('after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
                 id: 9,
@@ -1729,7 +1746,7 @@
               }
             ]);
           });
-          it('after books.add( objects ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', function() {
+          it('after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', function() {
             books.add([
               {
                 id: 14,
@@ -1830,7 +1847,7 @@
               }
             ]);
           });
-          it('after books.add( objects ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function() {
+          it('after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
                 id: 9,

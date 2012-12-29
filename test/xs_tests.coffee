@@ -515,26 +515,27 @@ describe 'XS test suite:', ->
       organizer = new Set [ { id: "year" } ]
       
       by_ascending_author  = ( a, b ) ->
-        if ( x = a.author ) === ( y = b.author ) return 0;
-
-        if x === undefined return -1
-        if y === undefined return  1
-        if x === null      return -1
-        if y === null      return  1
-        if x  <  y         return -1
-        if x  >  y         return 1
+        if ( a = a.author ) == ( b = b.author ) then return 0
+        
+        if a == undefined then return -1
+        if b == undefined then return  1
+        if a == null      then return -1
+        if b == null      then return  1
+        
+        if a  <  b        then return -1
+        if a  >  b        then return  1
 
         return 0
       
       by_descending_author = ( a, b ) ->
         return by_ascending_author( b, a )
       
-      books_ordered_by_year = books.order( organizer );
+      books_ordered_by_year = books.order organizer, { name: 'books_ordered_by_year' };
       
-      books_ordered_by_descending_year = books.order( new Set [ { id: "year", descending: true } ] );
+      books_ordered_by_descending_year = books.order new Set( [ { id: "year", descending: true } ] ), { name: 'books_ordered_by_descending_year' };
       
-      books_ordered_by_ascending_author  = books.order by_ascending_author
-      books_ordered_by_descending_author = books.order by_descending_author
+      books_ordered_by_ascending_author  = books.order by_ascending_author , { name: 'books_ordered_by_ascending_author'  }
+      books_ordered_by_descending_author = books.order by_descending_author, { name: 'books_ordered_by_descending_author' }
       
       it 'books_ordered_by_year should be ordered by ascending year', ->
         books_ordered_by_year.get().should.be.eql [
@@ -573,7 +574,7 @@ describe 'XS test suite:', ->
         ]
       
       describe 'add()', ->
-        it 'after books.add( object ), books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( book 6 ), books_ordered_by_year should be ordered by ascending year', ->
           books.add [ { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson", year: 2005 } ]
 
           books_ordered_by_year.get().should.be.eql [
@@ -585,7 +586,7 @@ describe 'XS test suite:', ->
             { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson"   , year: 2005 }
           ]
         
-        it 'after books.add( object ), books_ordered_by_descending_year should be ordered by descending year', ->
+        it 'after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', ->
           books_ordered_by_descending_year.get().should.be.eql [
             { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson"   , year: 2005 }
             { id: 3, title: "The Da Vinci Code"              , author: "Dan Brown"       , year: 2003 }
@@ -595,7 +596,7 @@ describe 'XS test suite:', ->
             { id: 1, title: "A Tale of Two Cities"           , author: "Charles Dickens" , year: 1859 }
           ]
         
-        it 'after books.add( object ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
+        it 'after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
           books_ordered_by_ascending_author.get().should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -605,7 +606,7 @@ describe 'XS test suite:', ->
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
           ]
 
-        it 'after books.add( object ), books_ordered_by_descending_author should be ordered by descending auhtor', ->
+        it 'after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', ->
           books_ordered_by_descending_author.get().should.be.eql [
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
@@ -615,7 +616,7 @@ describe 'XS test suite:', ->
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
           ]
 
-        it 'after books.add( 5 objects ), books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_year should be ordered by ascending year', ->
           books.add [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
@@ -636,7 +637,7 @@ describe 'XS test suite:', ->
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
-        it 'after books.add( 5 objects ), books_ordered_by_descending_year should be ordered by descending year', ->
+        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', ->
           books_ordered_by_descending_year.get().should.be.eql [
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -650,7 +651,7 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
         
-        it 'after books.add( 5 objects ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
+        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
           books_ordered_by_ascending_author.get().should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -664,7 +665,7 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
-        it 'after books.add( 3 objects ), whose years are already used; books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_year should be ordered by ascending year', ->
           books.add [
             { id: 11, title: "The Dukan Diet", author: "Pierre Dukan"    , year: 2000 }
             { id: 12, title: "Breaking Dawn" , author: "Stephenie Meyer" , year: 2008 }
@@ -687,7 +688,7 @@ describe 'XS test suite:', ->
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
           ]
         
-        it 'after books.add( 3 objects ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', ->
+        it 'after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', ->
           books_ordered_by_descending_year.get().should.be.eql [
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
@@ -704,7 +705,7 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
         
-        it 'after books.add( objects ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', ->
           books.add [
             { id: 14, title: "And Then There Were None"         , author: "Agatha Christie", year: undefined }
             { id: 15, title: "Steps to Christ"                  , author: "Ellen G. White" , year: null      }
@@ -730,7 +731,7 @@ describe 'XS test suite:', ->
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
           ]
         
-        it 'after books.add( objects ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', ->
+        it 'after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', ->
           books_ordered_by_descending_year.get().should.be.eql [
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
