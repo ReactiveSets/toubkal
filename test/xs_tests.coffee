@@ -904,8 +904,8 @@ describe 'XS test suite:', ->
             { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
-            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
         it 'after books.update( object ), books_ordered_by_descending_year should be ordered by descending year', ->

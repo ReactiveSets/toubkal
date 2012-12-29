@@ -2567,14 +2567,14 @@
                 author: "Stieg Larsson",
                 year: 2005
               }, {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
-              }, {
                 id: 12,
                 title: "Breaking Dawn",
                 author: "Stephenie Meyer",
+                year: 2008
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
                 year: 2008
               }
             ]);
