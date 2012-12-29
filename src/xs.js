@@ -806,23 +806,32 @@
             
             if ( location.located ) continue;
             
-            if ( ( location.order = organizer( a[ location.guess ], location.o ) ) === 0 ) {
+            var guess = location.guess, o = location.o;
+            
+            if ( ( location.order = organizer( a[ guess ], o ) ) === 0 ) {
               location.located = true;
-              location.found = location.guess;
-              location.insert = location.guess + 1; // insert after current
-              // need to find last matching record
+              location.found = location.insert = guess;
+              
+              // Position insert after last object equal to searched object
+              while( ++location.insert < location.stop && organizer( a[ location.insert ], o ) === 0 );
               
               continue;
             }
             
             if ( location.order > 0 ) {
               // guess > o, o is before guess
-              stop  = location.stop = location.guess;
-              start = location.previous && location.previous.insert ? Math.max( location.previous.insert, location.start ) : location.start;
+              stop  = location.stop = guess;
+              
+              var previous = location.previous;
+              
+              start = previous && previous.insert ? Math.max( previous.insert, location.start ) : location.start;
             } else {
               // guess < o, o is after guess
-              start = location.start = location.guess + 1;
-              stop  = location.next && location.next.insert ? Math.min( location.next.insert, location.stop ) : location.stop;
+              start = location.start = guess + 1;
+              
+              var next = location.next;
+              
+              stop  = next && next.insert ? Math.min( next.insert, location.stop ) : location.stop;
             }
             
             if ( start < stop ) {
