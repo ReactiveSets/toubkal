@@ -515,14 +515,19 @@ describe 'XS test suite:', ->
       organizer = new Set [ { id: "year" } ]
       
       by_ascending_author  = ( a, b ) ->
-        if a.author < b.author then return -1
-        else if a.author > b.author then return 1
-        else return 0
+        if ( x = a.author ) === ( y = b.author ) return 0;
+
+        if x === undefined return -1
+        if y === undefined return  1
+        if x === null      return -1
+        if y === null      return  1
+        if x  <  y         return -1
+        if x  >  y         return 1
+
+        return 0
       
       by_descending_author = ( a, b ) ->
-        if a.author < b.author then return 1
-        else if a.author > b.author then return -1
-        else return 0
+        return by_ascending_author( b, a )
       
       books_ordered_by_year = books.order( organizer );
       
@@ -549,7 +554,7 @@ describe 'XS test suite:', ->
           { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
         ]
       
-      it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: oranizer is a function', ->
+      it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', ->
         books_ordered_by_ascending_author.get().should.be.eql [
           { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
           { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -558,7 +563,7 @@ describe 'XS test suite:', ->
           { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
         ]
 
-      it 'books_ordered_by_descending_author should be ordered by descending auhtor: oranizer is a function', ->
+      it 'books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', ->
         books_ordered_by_descending_author.get().should.be.eql [
           { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
           { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
@@ -590,7 +595,27 @@ describe 'XS test suite:', ->
             { id: 1, title: "A Tale of Two Cities"           , author: "Charles Dickens" , year: 1859 }
           ]
         
-        it 'after books.add( 5 objects ) books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( object ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
+          books_ordered_by_ascending_author.get().should.be.eql [
+            { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
+            { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
+            { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
+            { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
+          ]
+
+        it 'after books.add( object ), books_ordered_by_descending_author should be ordered by descending auhtor', ->
+          books_ordered_by_descending_author.get().should.be.eql [
+            { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
+            { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
+            { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
+            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
+            { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+          ]
+
+        it 'after books.add( 5 objects ), books_ordered_by_year should be ordered by ascending year', ->
           books.add [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
@@ -611,7 +636,7 @@ describe 'XS test suite:', ->
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
-        it 'after books.add( 5 objects ) books_ordered_by_descending_year should be ordered by descending year', ->
+        it 'after books.add( 5 objects ), books_ordered_by_descending_year should be ordered by descending year', ->
           books_ordered_by_descending_year.get().should.be.eql [
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -625,6 +650,20 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
         
+        it 'after books.add( 5 objects ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
+          books_ordered_by_ascending_author.get().should.be.eql [
+            { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
+            { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
+            { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
+            { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
+            { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
+            { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
+            { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
+          ]
+
         it 'after books.add( 3 objects ), whose years are already used; books_ordered_by_year should be ordered by ascending year', ->
           books.add [
             { id: 11, title: "The Dukan Diet", author: "Pierre Dukan"    , year: 2000 }
@@ -733,7 +772,7 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
         
-        it 'add a second filed to organizer, books_ordered_by_year should be ordered by ascending year and title', ->
+        it 'add a second field to organizer, books_ordered_by_year should be ordered by ascending year and title', ->
           organizer.notify [
             { action: "update", objects: [ [ { id: "title" }, { id: "year" } ] ] }
             { action: "add"   , objects: [ { id: "title" } ] }
@@ -758,7 +797,7 @@ describe 'XS test suite:', ->
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
-        it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: oranizer is a function', ->
+        it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', ->
           books_ordered_by_ascending_author.get().should.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
@@ -778,7 +817,7 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
-        it 'books_ordered_by_descending_author should be ordered by descending auhtor: oranizer is a function', ->
+        it 'books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', ->
           books_ordered_by_descending_author.get().should.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
