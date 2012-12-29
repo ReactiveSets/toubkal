@@ -760,21 +760,14 @@
     }, // sort()
     
     locate: function( objects ) {
-      var u
-        , organizer = this.organizer
-        , a = this.a
-        , start = 0, stop = a.length
-        , locations = [], location
-        , guess, order, previous
+      var start = 0, stop = this.a.length, n = objects.length, step = stop / ( n + 1 ), guess = 0
+        , locations = [], previous
       ;
       
-      for ( var i = -1, n = objects.length, guess = 0, step = stop / ( n + 1 )
-        ; ++i < n
-        ; guess += step
-      ) {
-        var o = objects[ i ];
-        
-        location = { o: o, guess: Math.floor( guess ), previous: previous, start: 0, stop: a.length };
+      for ( var i = -1; ++i < n; guess += step ) {
+        var o = objects[ i ]
+          , location = { o: o, guess: Math.floor( guess ), previous: previous, start: start, stop: stop }
+        ;
         
         if ( o instanceof Array ) { // updates
           location.o = o[ 0 ];
@@ -784,59 +777,68 @@
         if ( previous ) previous.next = location;
         
         locations.push( previous = location );
+        
+        if ( i === 0 ) {
+          locate( this.a, this.organizer, locations, 0, 1 );
+          
+          start = location.insert;
+        }
       }
       
-      // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations, replacer ) + ', organizer: ' + organizer );
+      return locate( this.a, this.organizer, locations, 1, n );
       
-      var some_not_located = true;
-      
-      var count = 0;
-      
-      while( some_not_located ) {
-        some_not_located = false;
+      function locate( a, organizer, locations, begin, end ) {
+        // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations, replacer ) );
         
-        for ( i = -1; ++i < n; ) {
-          if ( ++count > 1000 ) throw Error( "Infinite loop, locations: " + log.s( locations, replacer ) );
+        var some_not_located = true, count = 0, start, stop;
+        
+        while( some_not_located ) {
+          some_not_located = false;
           
-          location = locations[ i ];
-          
-          if ( location.located ) continue;
-          
-          if ( ( location.order = organizer( a[ location.guess ], location.o ) ) === 0 ) {
-            location.located = true;
-            location.insert = location.guess + 1; // insert after current
-            // need to find last matching record
+          for ( var i = begin - 1; ++i < end; ) {
+            if ( ++count > 1000 ) throw Error( "Infinite loop, locations: " + log.s( locations, replacer ) );
             
-            continue;
-          }
-          
-          if ( location.order > 0 ) {
-            // guess > o, o is before guess
-            stop  = location.stop = location.guess;
-            start = location.previous ? Math.max( location.previous.guess, location.start ) : location.start;
-          } else {
-            // guess < o, o is after guess
-            start = location.start = location.guess + 1;
-            stop  = location.next ? Math.min( location.next.guess, location.stop ) : location.stop;
-          }
-          
-          if ( start < stop ) {
-            location.guess = Math.floor( ( start + stop ) / 2 );
+            var location = locations[ i ];
             
-            some_not_located = true;
-          } else {
-            location.located = true;
-            location.insert = location.start;
+            if ( location.located ) continue;
+            
+            if ( ( location.order = organizer( a[ location.guess ], location.o ) ) === 0 ) {
+              location.located = true;
+              location.found = location.guess;
+              location.insert = location.guess + 1; // insert after current
+              // need to find last matching record
+              
+              continue;
+            }
+            
+            if ( location.order > 0 ) {
+              // guess > o, o is before guess
+              stop  = location.stop = location.guess;
+              start = location.previous && location.previous.insert ? Math.max( location.previous.insert, location.start ) : location.start;
+            } else {
+              // guess < o, o is after guess
+              start = location.start = location.guess + 1;
+              stop  = location.next && location.next.insert ? Math.min( location.next.insert, location.stop ) : location.stop;
+            }
+            
+            if ( start < stop ) {
+              location.guess = Math.floor( ( start + stop ) / 2 );
+              
+              some_not_located = true;
+            } else {
+              location.located = true;
+              location.insert = location.start;
+            }
           }
-        }
-      } // while some_not_located
-      
-      de&&ug( "Ordered_Set.locate(), locations: " + log.s( locations, replacer ) );
-      
-      return locations;
+        } // while some_not_located
+        
+        de&&ug( "Ordered_Set.locate(), locations: " + log.s( locations, replacer ) );
+        
+        return locations;
+      } // locate()
       
       function replacer( k, v ) {
-        return k == 'previous' || k == 'next' ? u : v
+        return k == 'previous' || k == 'next' ? undefined : v
       }
     }, // locate()
     
@@ -869,12 +871,12 @@
       
       objects.sort( this.organizer );
       
-      var locations = this.locate( objects ), a = this.a;
+      var locations = this.locate( objects ), a = this.a, u;
       
       for ( var i = locations.length; i; ) {
-        var l = locations[ --i ];
+        var f = locations[ --i ].found;
         
-        if ( l.order === 0 ) a.splice( l.guess, 1 );
+        if ( f !== u ) a.splice( f, 1 );
       }
       
       return this.connections_remove( objects );
@@ -885,12 +887,12 @@
       
       updates.sort( function( a, b ) { return organizer( a[ 0 ], b[ 0 ] ) } );
       
-      var locations = this.locate( updates ), a = this.a;
+      var locations = this.locate( updates ), a = this.a, u;
       
       for ( var i = locations.length; i; ) {
-        var l = locations[ --i ];
+        var l = locations[ --i ], f = l.found;
         
-        if ( l.order === 0 ) a[ l.guess ] = l.update;
+        if ( f !== u ) a[ f ] = l.update;
       }
       
       return this.connections_update( updates );
