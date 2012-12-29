@@ -299,7 +299,7 @@
      Connection()
   */
   function Connection( options ) {
-    this.options = options = options || {};
+    this.options = options || {};
     
     this.connections = [];
     
@@ -366,7 +366,7 @@
     }, // connect()
     
     set: function( options ) {
-      var s = new Set( options );
+      var s = new Set( extend( { key: this.key }, options ) );
       
       this.connect( s );
       
@@ -374,7 +374,7 @@
     }, // set()
     
     filter: function( filter, options ) {
-      var f = new Filter( this, filter, options );
+      var f = new Filter( this, filter, extend( { key: this.key }, options ) );
       
       return f.out; // ToDo: Filter should not build a set
     }, // filter()
@@ -388,7 +388,7 @@
     }, // order()
     
     table: function( node, columns, options ) {
-      var t = new XS.table( node, columns, options );
+      var t = new XS.table( node, columns, extend( { key: this.key }, options ) );
       
       this.connect( t );
       
@@ -683,7 +683,7 @@
     
     switch( typeof organizer ) {
       case 'function':
-        this.ordered_set.sort( this.organizer = organizer );
+        this.ordered_set.sort( organizer );
       return this;
       
       case 'object':
@@ -762,6 +762,7 @@
     locate: function( objects ) {
       var start = 0, stop = this.a.length, n = objects.length, step = stop / ( n + 1 ), guess = 0
         , locations = [], previous
+        , options = this.options
       ;
       
       for ( var i = -1; ++i < n; guess += step ) {
@@ -788,6 +789,8 @@
       return locate( this.a, this.organizer, locations, 1, n );
       
       function locate( a, organizer, locations, begin, end ) {
+        if ( begin >= end ) return locations;
+        
         // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations, replacer ) );
         
         var some_not_located = true, count = 0, start, stop;
@@ -832,7 +835,7 @@
           }
         } // while some_not_located
         
-        de&&ug( "Ordered_Set.locate(), locations: " + log.s( locations, replacer ) );
+        de&&ug( "Ordered_Set.locate(), name: " + options.name + ", locations: " + log.s( locations, replacer ) );
         
         return locations;
       } // locate()
