@@ -1551,15 +1551,15 @@
                 author: "Dan Brown",
                 year: 2000
               }, {
-                id: 8,
-                title: "The Hobbit",
-                author: "J. R. R. Tolkien",
-                year: 1937
-              }, {
                 id: 2,
                 title: "The Lord of the Rings",
                 author: "J. R. R. Tolkien",
                 year: 1955
+              }, {
+                id: 8,
+                title: "The Hobbit",
+                author: "J. R. R. Tolkien",
+                year: 1937
               }, {
                 id: 10,
                 title: "Harry Potter and the Prisoner of Azkaban",
