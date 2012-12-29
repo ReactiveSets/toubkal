@@ -760,7 +760,7 @@
     }, // sort()
     
     locate: function( objects ) {
-      var start = 0, stop = this.a.length, n = objects.length, step = stop / ( n + 1 ), guess = 0
+      var start = 0, stop = this.a.length, n = objects.length, step, guess = 0
         , locations = [], previous
         , options = this.options
       ;
@@ -782,7 +782,8 @@
         if ( i === 0 ) {
           locate( this.a, this.organizer, locations, 0, 1 );
           
-          start = location.insert;
+          guess = start = location.insert;
+          step = ( stop - start ) / n;
         }
       }
       
