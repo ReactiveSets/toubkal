@@ -2663,7 +2663,7 @@
               }
             ]);
           });
-          it('after books.notify( transaction ), books_ordered_by_year should be ordered by ascending year', function() {
+          it('after books.notify( 3 updates transaction ), books_ordered_by_year should be ordered by ascending year', function() {
             books.notify([
               {
                 action: "update",
@@ -2709,10 +2709,19 @@
             ]);
             return books_ordered_by_year.get().should.be.eql([
               {
+                id: 14,
+                title: "And Then There Were None",
+                author: "Agatha Christie",
+                year: void 0
+              }, {
+                id: 16,
+                title: "Charlie and the Chocolate Factory",
+                author: "Roald Dahl"
+              }, {
                 id: 15,
                 title: "Steps to Christ",
                 author: "Ellen G. White",
-                year: void 0
+                year: null
               }, {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -2729,25 +2738,15 @@
                 author: "J. R. R. Tolkien",
                 year: 1937
               }, {
-                id: 14,
-                title: "And Then There Were None",
-                author: "Agatha Christie",
-                year: 1947
-              }, {
                 id: 2,
-                title: "The Lord of the Rings",
+                title: "The Lord of the Rings 1",
                 author: "J. R. R. Tolkien",
-                year: 1955
+                year: 1954
               }, {
                 id: 13,
                 title: "Lolita",
                 author: "Vladimir Nabokov",
                 year: 1955
-              }, {
-                id: 16,
-                title: "Charlie and the Chocolate Factory",
-                author: "Roald Dahl",
-                year: 1970
               }, {
                 id: 4,
                 title: "The Alchemist",
@@ -2779,14 +2778,14 @@
                 author: "Stieg Larsson",
                 year: 2005
               }, {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
-              }, {
                 id: 12,
                 title: "Breaking Dawn",
                 author: "Stephenie Meyer",
+                year: 2008
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
                 year: 2008
               }
             ]);
