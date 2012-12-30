@@ -786,7 +786,7 @@
           locate( this.a, this.organizer, locations, 0, 1 );
           
           guess = start = location.insert;
-          step = ( stop - start ) / n;
+          step = ( stop - start ) / n; // could be zero is insert === stop, inserting all further objects at the end
         }
       }
       
@@ -803,7 +803,7 @@
           some_not_located = false;
           
           for ( var i = begin - 1; ++i < end; ) {
-            if ( ++count > 1000 ) throw Error( "Infinite loop, locations: " + log.s( locations, replacer ) );
+            if ( ++count > 1000000 ) throw Error( "Infinite loop, locations: " + log.s( locations, replacer ) );
             
             var location = locations[ i ];
             
@@ -822,7 +822,7 @@
             
             if ( ( location.order = organizer( a[ guess ], o ) ) === 0 ) {
               location.located = true;
-              var insert = location.found = guess;
+              var insert = location.found = guess; // ToDo: location.found needs to take into account the key
               
               // Position insert after last object equal to searched object
               if ( options.insert_before ) {
@@ -852,7 +852,7 @@
               if ( next && next.insert ) stop = Math.min( next.insert, stop );
             }
             
-            if ( start < stop ) {
+            if ( start !== stop ) {
               location.guess = Math.floor( ( start + stop ) / 2 );
               
               some_not_located = true;
