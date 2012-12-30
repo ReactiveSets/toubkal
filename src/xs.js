@@ -946,24 +946,72 @@
             /* Update other locations if affected by the move.
             
               Here is an example showing potential problems when sorting by descending years that move:
-
+              
+              [ { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
+                { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
+                { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
+                { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+                { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
+                { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000 }
+                { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
+                { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
+                { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
+                { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien"       , year: 1954 }
+                { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
+                { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+                { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
+                { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
+                { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
+                { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
+              ]
+              
               update( [
-                [ { id:  8, title: "The Hobbit", author: "J. R. R. Tolkien"         , year: 1937 },
+                [ { id:  8, title: "The Hobbit", author: "J. R. R. Tolkien"         , year: 1937 }, // needs to move up
                   { id:  8, title: "The Hobbit Changed", author: "J. R. R. Tolkien" , year: 1937 }
                 ]
                 
-                [ { id: 15, title: "Steps to Christ", author: "Ellen G. White", year: null      },
-                  { id: 15, title: "Steps to Christ", author: "Ellen G. White", year: undefined }
+                [ { id: 15, title: "Steps to Christ", author: "Ellen G. White", year: null      }, // needs to move up
+                  { id: 15, title: "Steps to Christ", author: "Ellen G. White", year: undefined } // move to the end
+                ],
+                                
+                [ { id: 14, title: "And Then There Were None", author: "Agatha Christie", year: undefined },
+                  { id: 14, title: "And Then There Were None", author: "Agatha Christie", year: 1927      } // moves backward
                 ],
                 
-                [ { id: 14, title: "And Then There Were None", author: "Agatha Christie", year: undefined },
-                  { id: 14, title: "And Then There Were None", author: "Agatha Christie", year: 1947      }
-                ],
-
-                [ { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"             },
-                  { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl", year: 1970 }
+                [ { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"             }, // last
+                  { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl", year: 1970 } // moves backward
                 ]
               ] )
+              
+              It now works although id 16 and 14 are located incorectly because undefined and a year not defined are equivalent:
+              
+              2012/12/30 15:02:17.774 - xs, Ordered_Set.locate(), name: books_ordered_by_descending_year, locations: [
+                { "o":{"id":8,"title":"The Hobbit","author":"J. R. R. Tolkien","year":1937},
+                  "guess":10,"start":9,"stop":12,
+                  "update":{"id":8,"title":"The Hobbit Changed","author":"J. R. R. Tolkien","year":1937},
+                  "order":0,"located":true,"found":10,"insert":11
+                },
+                
+                { "o":{"id":15,"title":"Steps to Christ","author":"Ellen G. White","year":null},
+                  "guess":13,"start":13,"stop":14,
+                  "update":{"id":15,"title":"Steps to Christ","author":"Ellen G. White"},
+                  "order":0,"located":true,"found":13,"insert":14
+                },
+                
+                { "o":{"id":14,"title":"And Then There Were None","author":"Agatha Christie"},
+                  "guess":15,"start":14,"stop":16,
+                  "update":{"id":14,"title":"And Then There Were None","author":"Agatha Christie","year":1927},
+                  "order":0,"located":true,"found":15,"insert":16
+                },
+                
+                { "o":{"id":16,"title":"Charlie and the Chocolate Factory","author":"Roald Dahl"},
+                  "guess":14,"start":11,"stop":16,
+                  "update":{"id":16,"title":"Charlie and the Chocolate Factory","author":"Roald Dahl","year":1970},
+                  "order":0,"located":true,"found":14,"insert":16
+                }
+              ]
+              
+              To fix this remaining issue, locate() needs to use the key to locate the exact record.
             */
             
             for ( var j = -1; ++j < i; ) {
