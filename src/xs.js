@@ -829,9 +829,11 @@
             if ( ( location.order = organizer( a[ guess ], o ) ) === 0 ) {
               location.located = true;
               
-              var insert = guess; // ToDo: location.found needs to take into account the key
+              var insert = guess;
               
               var key = that.make_key( o ), make_key = that.make_key;
+              
+              stop = a.length; // Search for a matching key could go beyond ordered search  
               
               while ( true ) {
                 if ( key === make_key( a[ insert ] ) ) {
@@ -876,16 +878,18 @@
               // guess > o, o is before guess
               stop = location.stop = guess;
               
-              var previous = location.previous;
+              var previous = location.previous && location.previous.insert;
               
-              start = previous && previous.insert ? Math.max( previous.insert, location.start ) : location.start;
+              // Use previous - 1 to find an exact match if any  
+              start = previous !== u ? Math.max( previous - 1, location.start ) : location.start;
             } else {
               // guess < o, o is after guess
               start = location.start = guess + 1;
               
-              var next = location.next;
+              var next = location.next && location.next.insert;
               
-              if ( next && next.insert ) stop = Math.min( next.insert, stop );
+              // Use next + 1 to find an exact match if any
+              if ( next !== u ) stop = Math.min( next + 1, stop );
             }
             
             if ( start !== stop ) {
