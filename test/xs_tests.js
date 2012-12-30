@@ -2855,14 +2855,14 @@
                 author: "Dan Brown",
                 year: 2001
               }, {
-                id: 11,
-                title: "The Dukan Diet",
-                author: "Pierre Dukan",
-                year: 1999
-              }, {
                 id: 10,
                 title: "Harry Potter and the Prisoner of Azkaban",
                 author: "J.K. Rowling",
+                year: 1999
+              }, {
+                id: 11,
+                title: "The Dukan Diet",
+                author: "Pierre Dukan",
                 year: 1999
               }, {
                 id: 4,
