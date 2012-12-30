@@ -2673,35 +2673,35 @@
                       id: 14,
                       title: "And Then There Were None",
                       author: "Agatha Christie",
-                      year: 1947
+                      year: void 0
                     }, {
                       id: 14,
                       title: "And Then There Were None",
                       author: "Agatha Christie",
-                      year: void 0
+                      year: 1947
                     }
                   ], [
                     {
-                      id: 15,
-                      title: "Steps to Christ",
-                      author: "Ellen G. White",
-                      year: void 0
-                    }, {
                       id: 15,
                       title: "Steps to Christ",
                       author: "Ellen G. White",
                       year: null
+                    }, {
+                      id: 15,
+                      title: "Steps to Christ",
+                      author: "Ellen G. White",
+                      year: void 0
                     }
                   ], [
                     {
                       id: 16,
                       title: "Charlie and the Chocolate Factory",
-                      author: "Roald Dahl",
-                      year: 1970
+                      author: "Roald Dahl"
                     }, {
                       id: 16,
                       title: "Charlie and the Chocolate Factory",
-                      author: "Roald Dahl"
+                      author: "Roald Dahl",
+                      year: 1970
                     }
                   ]
                 ]
@@ -2709,19 +2709,10 @@
             ]);
             return books_ordered_by_year.get().should.be.eql([
               {
-                id: 14,
-                title: "And Then There Were None",
-                author: "Agatha Christie",
-                year: void 0
-              }, {
-                id: 16,
-                title: "Charlie and the Chocolate Factory",
-                author: "Roald Dahl"
-              }, {
                 id: 15,
                 title: "Steps to Christ",
                 author: "Ellen G. White",
-                year: null
+                year: void 0
               }, {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -2738,6 +2729,11 @@
                 author: "J. R. R. Tolkien",
                 year: 1937
               }, {
+                id: 14,
+                title: "And Then There Were None",
+                author: "Agatha Christie",
+                year: 1947
+              }, {
                 id: 2,
                 title: "The Lord of the Rings 1",
                 author: "J. R. R. Tolkien",
@@ -2747,6 +2743,11 @@
                 title: "Lolita",
                 author: "Vladimir Nabokov",
                 year: 1955
+              }, {
+                id: 16,
+                title: "Charlie and the Chocolate Factory",
+                author: "Roald Dahl",
+                year: 1970
               }, {
                 id: 4,
                 title: "The Alchemist",
@@ -2793,14 +2794,14 @@
           return it('after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
-                id: 12,
-                title: "Breaking Dawn",
-                author: "Stephenie Meyer",
-                year: 2008
-              }, {
                 id: 9,
                 title: "The Hunger Games",
                 author: "Suzanne Collins",
+                year: 2008
+              }, {
+                id: 12,
+                title: "Breaking Dawn",
+                author: "Stephenie Meyer",
                 year: 2008
               }, {
                 id: 6,
@@ -2813,14 +2814,14 @@
                 author: "Dan Brown",
                 year: 2003
               }, {
-                id: 11,
-                title: "The Dukan Diet",
-                author: "Pierre Dukan",
-                year: 2000
-              }, {
                 id: 5,
                 title: "Angels and Demons",
                 author: "Dan Brown",
+                year: 2000
+              }, {
+                id: 11,
+                title: "The Dukan Diet",
+                author: "Pierre Dukan",
                 year: 2000
               }, {
                 id: 10,
@@ -2844,9 +2845,9 @@
                 year: 1955
               }, {
                 id: 2,
-                title: "The Lord of the Rings",
+                title: "The Lord of the Rings 1",
                 author: "J. R. R. Tolkien",
-                year: 1955
+                year: 1954
               }, {
                 id: 14,
                 title: "And Then There Were None",
