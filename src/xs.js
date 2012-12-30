@@ -299,7 +299,9 @@
      Connection()
   */
   function Connection( options ) {
-    this.options = options || {};
+    this.options = options = options || {};
+    
+    this.key = options.key || [ "id" ];
     
     this.connections = [];
     
@@ -365,6 +367,21 @@
       return this;
     }, // connect()
     
+    make_key: function( o ) {
+      var key = this.key, l = key.length, code = [];
+      
+      for ( var i = -1; ++i < l; ) code.push( 'o.' + key[ i ] );
+      
+      eval( new Code()
+        .function( 'this.make_key =', null, [ 'o' ] )
+          .add( "return '' + " + code.join( " + '#' + " ) )
+        .end( 'make_key()' )
+        .get()
+      );
+      
+      return this.make_key( o );
+    }, // make_key()
+    
     set: function( options ) {
       var s = new Set( extend( { key: this.key }, options ) );
       
@@ -402,10 +419,11 @@
   function Set( a, options ) {
     options = Connection.call( this, options ).options;
     
-    this.a = a = a || [];
-    this.key = options.key || [ "id" ];
+    this.a = [];
     
-    de&&ug( "New Set, name: " + options.name + ", length: " + a.length );
+    a && this.add( a )
+    
+    de&&ug( "New Set, name: " + options.name + ", length: " + this.a.length );
     
     return this;
   } // Set()
@@ -470,21 +488,6 @@
     index_of: function( o ) {
       return this.make_index_of().index_of( o ); 
     }, // index_of()
-    
-    make_key: function( o ) {
-      var key = this.key, l = key.length, code = [];
-      
-      for ( var i = -1; ++i < l; ) code.push( 'o.' + key[ i ] );
-      
-      eval( new Code()
-        .function( 'this.make_key =', null, [ 'o' ] )
-          .add( "return '' + " + code.join( " + '#' + " ) )
-        .end( 'make_key()' )
-        .get()
-      );
-      
-      return this.make_key( o );
-    }, // make_key()
     
     make_index_of: function() {
       var key = this.key, l = key.length;
@@ -920,7 +923,9 @@
       for ( var i = locations.length; i; ) {
         var l = locations[ --i ], f = l.found;
         
-        if ( f !== u ) a[ f ] = l.update;
+        if ( f !== u ) {
+          a[ f ] = l.update;
+        }
       }
       
       return this.connections_update( updates );
