@@ -822,7 +822,11 @@
               var insert = location.found = guess;
               
               // Position insert after last object equal to searched object
-              while( ++insert < stop && organizer( a[ insert ], o ) === 0 );
+              if ( options.insert_before ) {
+                while ( insert && organizer( a[ insert - 1 ], o ) === 0 ) insert -= 1;
+              } else {
+                while ( ++insert < stop && organizer( a[ insert ], o ) === 0 );
+              }
               
               location.insert = insert;
               
