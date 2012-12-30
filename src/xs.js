@@ -362,8 +362,6 @@
     connect: function( connection ) {
       this.connections.push( connection );
       
-      connection.add( this.get() );
-      
       return this;
     }, // connect()
     
@@ -397,7 +395,7 @@
     }, // filter()
     
     order: function( organizer, options ) {
-      var s = new Ordered_Set( organizer, extend( { key: this.key }, options ) );
+      var s = new Ordered_Set( [], organizer, extend( { key: this.key }, options ) );
       
       this.connect( s );
       
@@ -439,6 +437,14 @@
     get: function() {
       return this.a;
     }, // get()
+    
+    connect: function( connection ) {
+      this.connections.push( connection );
+      
+      connection.add( this.get() );
+      
+      return this;
+    }, // connect()
     
     add: function( objects ) {
       push.apply( this.a, objects );
@@ -745,8 +751,8 @@
   /* -------------------------------------------------------------------------------------------
      Ordered_Set()
   */
-  function Ordered_Set( organizer, options ) {
-    Set.call( this, [], options );
+  function Ordered_Set( a, organizer, options ) {
+    Set.call( this, a, options );
     
     this.ordered_set_organizer = new Ordered_Set_Organizer( organizer, this, options );
     
