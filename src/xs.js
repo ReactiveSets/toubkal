@@ -931,13 +931,54 @@
         
         if ( f !== u ) {
           if ( organizer( l.o, l.update ) ) {
-            // the updaed object needs to be moved
+            // Updaed object is moving
+            
+            var remove = f;
             
             a.splice( f, 1 ); // remove the old one
             
             l = this.locate( [ l.update ] )[ 0 ]; // locate updated object
             
-            a.splice( l.insert, 0, l.o ); // insert at new location
+            var insert = l.insert;
+            
+            a.splice( insert, 0, l.o ); // insert at new location
+
+            /* Update other locations if affected by the move.
+            
+              Here is an example showing potential problems when sorting by descending years that move:
+
+              update( [
+                [ { id:  8, title: "The Hobbit", author: "J. R. R. Tolkien"         , year: 1937 },
+                  { id:  8, title: "The Hobbit Changed", author: "J. R. R. Tolkien" , year: 1937 }
+                ]
+                
+                [ { id: 15, title: "Steps to Christ", author: "Ellen G. White", year: null      },
+                  { id: 15, title: "Steps to Christ", author: "Ellen G. White", year: undefined }
+                ],
+                
+                [ { id: 14, title: "And Then There Were None", author: "Agatha Christie", year: undefined },
+                  { id: 14, title: "And Then There Were None", author: "Agatha Christie", year: 1947      }
+                ],
+
+                [ { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"             },
+                  { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl", year: 1970 }
+                ]
+              ] )
+            */
+            
+            for ( var j = -1; ++j < i; ) {
+              l = locations[ j ], f = l.found;
+              
+              if ( f !== u ) {
+                if ( f < remove ) {
+                  if ( f >= insert ) f += 1;
+                } else {
+                  if ( f  < insert ) f -= 1;
+                }
+                
+                l.found = f;
+              }
+            }
           } else {
             a[ f ] = l.update;
           }
