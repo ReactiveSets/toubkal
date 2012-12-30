@@ -771,7 +771,7 @@
     locate: function( objects ) {
       var start = 0, stop = this.a.length, n = objects.length, step, guess = 0
         , locations = [], previous
-        , options = this.options
+        , that = this, options = this.options
       ;
       
       for ( var i = -1; ++i < n; guess += step ) {
@@ -828,16 +828,46 @@
             
             if ( ( location.order = organizer( a[ guess ], o ) ) === 0 ) {
               location.located = true;
-              var insert = location.found = guess; // ToDo: location.found needs to take into account the key
               
-              // Position insert after last object equal to searched object
-              if ( options.insert_before ) {
-                while ( insert && organizer( a[ insert - 1 ], o ) === 0 ) insert -= 1;
-              } else {
-                while ( ++insert < stop && organizer( a[ insert ], o ) === 0 );
+              var insert = guess; // ToDo: location.found needs to take into account the key
+              
+              var key = that.make_key( o ), make_key = that.make_key;
+              
+              while ( true ) {
+                if ( key === make_key( a[ insert ] ) ) {
+                  location.found = insert;
+                }
+                
+                if ( options.insert_before ) {
+                  if ( insert === 0 || organizer( a[ insert - 1 ], o ) ) break;
+                  
+                  insert -= 1;
+                } else {
+                  // Position insert after last object equal to searched object
+                  if ( ++insert >= stop || organizer( a[ insert ], o ) ) break;
+                }
               }
               
               location.insert = insert;
+              
+              if ( location.found === void 0 ) {
+                while( true ) {
+                  // throw new Error( "Not found" )
+                  if ( ! options.insert_before ) {
+                    if ( guess === 0 || organizer( a[ guess - 1 ], o ) ) break;
+                    
+                    guess -= 1;
+                  } else {
+                    if ( ++guess >= stop || organizer( a[ guess ], o ) ) break;
+                  }
+                  
+                  if ( key === make_key( a[ guess ] ) ) {
+                    location.found = guess;
+                    
+                    break;
+                  }
+                }
+              }
               
               continue;
             }
@@ -983,9 +1013,9 @@
                 ]
               ] )
               
-              It now works although id 16 and 14 are located incorectly because undefined and a year not defined are equivalent:
+              The location of the itens is correct as seen by the trace for test 76:
               
-              2012/12/30 15:02:17.774 - xs, Ordered_Set.locate(), name: books_ordered_by_descending_year, locations: [
+              2012/12/30 20:41:20.518 - xs, Ordered_Set.locate(), name: books_ordered_by_descending_year, locations: [
                 { "o":{"id":8,"title":"The Hobbit","author":"J. R. R. Tolkien","year":1937},
                   "guess":10,"start":9,"stop":12,
                   "update":{"id":8,"title":"The Hobbit Changed","author":"J. R. R. Tolkien","year":1937},
@@ -1001,17 +1031,15 @@
                 { "o":{"id":14,"title":"And Then There Were None","author":"Agatha Christie"},
                   "guess":15,"start":14,"stop":16,
                   "update":{"id":14,"title":"And Then There Were None","author":"Agatha Christie","year":1927},
-                  "order":0,"located":true,"found":15,"insert":16
+                  "order":0,"located":true,"insert":16,"found":14
                 },
                 
                 { "o":{"id":16,"title":"Charlie and the Chocolate Factory","author":"Roald Dahl"},
                   "guess":14,"start":11,"stop":16,
                   "update":{"id":16,"title":"Charlie and the Chocolate Factory","author":"Roald Dahl","year":1970},
-                  "order":0,"located":true,"found":14,"insert":16
+                  "order":0,"located":true,"found":15,"insert":16
                 }
               ]
-              
-              To fix this remaining issue, locate() needs to use the key to locate the exact record.
             */
             
             for ( var j = -1; ++j < i; ) {
