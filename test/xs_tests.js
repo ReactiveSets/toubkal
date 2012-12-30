@@ -2715,6 +2715,30 @@
                       author: "Roald Dahl",
                       year: 1970
                     }
+                  ], [
+                    {
+                      id: 11,
+                      title: "The Dukan Diet",
+                      author: "Pierre Dukan",
+                      year: 2000
+                    }, {
+                      id: 11,
+                      title: "The Dukan Diet",
+                      author: "Pierre Dukan",
+                      year: 1999
+                    }
+                  ], [
+                    {
+                      id: 5,
+                      title: "Angels and Demons",
+                      author: "Dan Brown",
+                      year: 2000
+                    }, {
+                      id: 5,
+                      title: "Angels and Demons",
+                      author: "Dan Brown",
+                      year: 2001
+                    }
                   ]
                 ]
               }
@@ -2771,15 +2795,15 @@
                 author: "J.K. Rowling",
                 year: 1999
               }, {
-                id: 5,
-                title: "Angels and Demons",
-                author: "Dan Brown",
-                year: 2000
-              }, {
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
-                year: 2000
+                year: 1999
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
+                year: 2001
               }, {
                 id: 3,
                 title: "The Da Vinci Code",
@@ -2829,12 +2853,12 @@
                 id: 5,
                 title: "Angels and Demons",
                 author: "Dan Brown",
-                year: 2000
+                year: 2001
               }, {
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
-                year: 2000
+                year: 1999
               }, {
                 id: 10,
                 title: "Harry Potter and the Prisoner of Azkaban",
@@ -2929,7 +2953,7 @@
                 id: 5,
                 title: "Angels and Demons",
                 author: "Dan Brown",
-                year: 2000
+                year: 2001
               }, {
                 id: 2,
                 title: "The Lord of the Rings 1",
@@ -2954,7 +2978,7 @@
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
-                year: 2000
+                year: 1999
               }, {
                 id: 16,
                 title: "Charlie and the Chocolate Factory",
@@ -3004,7 +3028,7 @@
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
-                year: 2000
+                year: 1999
               }, {
                 id: 4,
                 title: "The Alchemist",
@@ -3034,7 +3058,7 @@
                 id: 5,
                 title: "Angels and Demons",
                 author: "Dan Brown",
-                year: 2000
+                year: 2001
               }, {
                 id: 1,
                 title: "A Tale of Two Cities",
