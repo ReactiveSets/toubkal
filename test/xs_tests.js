@@ -2663,12 +2663,24 @@
               }
             ]);
           });
-          it('after books.notify( 3 updates transaction ), books_ordered_by_year should be ordered by ascending year', function() {
+          it('after books.notify( 4 updates transaction ), books_ordered_by_year should be ordered by ascending year', function() {
             books.notify([
               {
                 action: "update",
                 objects: [
                   [
+                    {
+                      id: 8,
+                      title: "The Hobbit",
+                      author: "J. R. R. Tolkien",
+                      year: 1937
+                    }, {
+                      id: 8,
+                      title: "The Hobbit Changed",
+                      author: "J. R. R. Tolkien",
+                      year: 1937
+                    }
+                  ], [
                     {
                       id: 14,
                       title: "And Then There Were None",
@@ -2678,7 +2690,7 @@
                       id: 14,
                       title: "And Then There Were None",
                       author: "Agatha Christie",
-                      year: 1947
+                      year: 1927
                     }
                   ], [
                     {
@@ -2724,15 +2736,15 @@
                 author: "Charles Dickens",
                 year: 1859
               }, {
-                id: 8,
-                title: "The Hobbit",
-                author: "J. R. R. Tolkien",
-                year: 1937
-              }, {
                 id: 14,
                 title: "And Then There Were None",
                 author: "Agatha Christie",
-                year: 1947
+                year: 1927
+              }, {
+                id: 8,
+                title: "The Hobbit Changed",
+                author: "J. R. R. Tolkien",
+                year: 1937
               }, {
                 id: 2,
                 title: "The Lord of the Rings 1",
@@ -2849,15 +2861,15 @@
                 author: "J. R. R. Tolkien",
                 year: 1954
               }, {
+                id: 8,
+                title: "The Hobbit Changed",
+                author: "J. R. R. Tolkien",
+                year: 1937
+              }, {
                 id: 14,
                 title: "And Then There Were None",
                 author: "Agatha Christie",
-                year: 1947
-              }, {
-                id: 8,
-                title: "The Hobbit",
-                author: "J. R. R. Tolkien",
-                year: 1937
+                year: 1927
               }, {
                 id: 1,
                 title: "A Tale of Two Cities",
