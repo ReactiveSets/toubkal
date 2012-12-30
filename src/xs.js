@@ -791,7 +791,7 @@
         if ( i === 0 ) {
           locate( this.a, this.organizer, locations, 0, 1 );
           
-          guess = start = location.insert;
+          guess = start = location.insert ? location.insert - 1 : location.insert;
           step = ( stop - start ) / n; // could be zero is insert === stop, inserting all further objects at the end
         }
       }
@@ -854,7 +854,6 @@
               
               if ( location.found === u ) {
                 while( true ) {
-                  // throw new Error( "Not found" )
                   if ( ! options.insert_before ) {
                     if ( guess === 0 || organizer( a[ guess - 1 ], o ) ) break;
                     
