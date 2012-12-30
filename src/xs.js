@@ -930,7 +930,17 @@
         var l = locations[ --i ], f = l.found;
         
         if ( f !== u ) {
-          a[ f ] = l.update;
+          if ( organizer( l.o, l.update ) ) {
+            // the updaed object needs to be moved
+            
+            a.splice( f, 1 ); // remove the old one
+            
+            l = this.locate( [ l.update ] )[ 0 ]; // locate updated object
+            
+            a.splice( l.insert, 0, l.o ); // insert at new location
+          } else {
+            a[ f ] = l.update;
+          }
         }
       }
       
