@@ -2890,7 +2890,7 @@
           });
         });
         return describe('remove():', function() {
-          it('after books.remove( objects), books_ordered_by_ascending_author should be ordered by ascending auhtor: oranizer is a function', function() {
+          it('after books.remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
             books.remove([
               {
                 id: 12,
@@ -2914,7 +2914,7 @@
                 id: 14,
                 title: "And Then There Were None",
                 author: "Agatha Christie",
-                year: void 0
+                year: 1927
               }, {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -2931,15 +2931,15 @@
                 author: "Dan Brown",
                 year: 2000
               }, {
+                id: 2,
+                title: "The Lord of the Rings 1",
+                author: "J. R. R. Tolkien",
+                year: 1954
+              }, {
                 id: 8,
-                title: "The Hobbit",
+                title: "The Hobbit Changed",
                 author: "J. R. R. Tolkien",
                 year: 1937
-              }, {
-                id: 2,
-                title: "The Lord of the Rings",
-                author: "J. R. R. Tolkien",
-                year: 1955
               }, {
                 id: 10,
                 title: "Harry Potter and the Prisoner of Azkaban",
@@ -2958,7 +2958,8 @@
               }, {
                 id: 16,
                 title: "Charlie and the Chocolate Factory",
-                author: "Roald Dahl"
+                author: "Roald Dahl",
+                year: 1970
               }, {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
@@ -2977,7 +2978,7 @@
               }
             ]);
           });
-          return it('after books.remove( objects), books_ordered_by_descending_author should be ordered by descending auhtor: oranizer is a function', function() {
+          return it('after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', function() {
             return books_ordered_by_descending_author.get().should.be.eql([
               {
                 id: 7,
@@ -2997,7 +2998,8 @@
               }, {
                 id: 16,
                 title: "Charlie and the Chocolate Factory",
-                author: "Roald Dahl"
+                author: "Roald Dahl",
+                year: 1970
               }, {
                 id: 11,
                 title: "The Dukan Diet",
@@ -3015,24 +3017,24 @@
                 year: 1999
               }, {
                 id: 2,
-                title: "The Lord of the Rings",
+                title: "The Lord of the Rings 1",
                 author: "J. R. R. Tolkien",
-                year: 1955
+                year: 1954
               }, {
                 id: 8,
-                title: "The Hobbit",
+                title: "The Hobbit Changed",
                 author: "J. R. R. Tolkien",
                 year: 1937
-              }, {
-                id: 5,
-                title: "Angels and Demons",
-                author: "Dan Brown",
-                year: 2000
               }, {
                 id: 3,
                 title: "The Da Vinci Code",
                 author: "Dan Brown",
                 year: 2003
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
+                year: 2000
               }, {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -3042,7 +3044,7 @@
                 id: 14,
                 title: "And Then There Were None",
                 author: "Agatha Christie",
-                year: void 0
+                year: 1927
               }
             ]);
           });
