@@ -769,7 +769,7 @@
     }, // sort()
     
     locate: function( objects ) {
-      var start = 0, stop = this.a.length, n = objects.length, step, guess = 0
+      var u, start = 0, stop = this.a.length, n = objects.length, step, guess = 0
         , locations = [], previous
         , that = this, options = this.options
       ;
@@ -803,7 +803,7 @@
         
         // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations, replacer ) );
         
-        var some_not_located = true, count = 0, start;
+        var u, some_not_located = true, count = 0, start;
         
         while( some_not_located ) {
           some_not_located = false;
@@ -850,7 +850,7 @@
               
               location.insert = insert;
               
-              if ( location.found === void 0 ) {
+              if ( location.found === u ) {
                 while( true ) {
                   // throw new Error( "Not found" )
                   if ( ! options.insert_before ) {
@@ -905,7 +905,7 @@
       } // locate()
       
       function replacer( k, v ) {
-        return k == 'previous' || k == 'next' ? undefined : v
+        return k == 'previous' || k == 'next' ? u : v
       }
     }, // locate()
     
