@@ -2582,14 +2582,14 @@
           it('after books.update( object ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
-                id: 12,
-                title: "Breaking Dawn",
-                author: "Stephenie Meyer",
-                year: 2008
-              }, {
                 id: 9,
                 title: "The Hunger Games",
                 author: "Suzanne Collins",
+                year: 2008
+              }, {
+                id: 12,
+                title: "Breaking Dawn",
+                author: "Stephenie Meyer",
                 year: 2008
               }, {
                 id: 6,
@@ -2602,14 +2602,14 @@
                 author: "Dan Brown",
                 year: 2003
               }, {
-                id: 11,
-                title: "The Dukan Diet",
-                author: "Pierre Dukan",
-                year: 2000
-              }, {
                 id: 5,
                 title: "Angels and Demons",
                 author: "Dan Brown",
+                year: 2000
+              }, {
+                id: 11,
+                title: "The Dukan Diet",
+                author: "Pierre Dukan",
                 year: 2000
               }, {
                 id: 10,
