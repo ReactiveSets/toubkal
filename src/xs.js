@@ -1052,7 +1052,9 @@
                 if ( f < remove ) {
                   if ( f >= insert ) f += 1;
                 } else {
-                  if ( f  < insert ) f -= 1; // Missing test: no current test fails if commented out
+                  // The insertion is done on the set with one element removed
+                  // So the test that must be done is f - 1 < insert, which can be simplified to f <= insert
+                  if ( f <= insert ) f -= 1;
                 }
                 
                 l.found = f;
