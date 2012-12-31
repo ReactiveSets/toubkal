@@ -768,7 +768,7 @@
       return this;
     }, // sort()
     
-    locate: function( objects ) {
+    locate: function( objects, exact ) {
       var u, start = 0, stop = this.a.length, n = objects.length, step, guess = 0
         , locations = [], previous
         , that = this, options = this.options
@@ -789,16 +789,16 @@
         locations.push( previous = location );
         
         if ( i === 0 ) {
-          locate( this.a, this.organizer, locations, 0, 1 );
+          locate( this.a, this.organizer, locations, 0, 1, exact );
           
           guess = start = location.insert ? location.insert - 1 : location.insert;
           step = ( stop - start ) / n; // could be zero is insert === stop, inserting all further objects at the end
         }
       }
       
-      return locate( this.a, this.organizer, locations, 1, n );
+      return locate( this.a, this.organizer, locations, 1, n, exact );
       
-      function locate( a, organizer, locations, begin, end ) {
+      function locate( a, organizer, locations, begin, end, exact ) {
         if ( begin >= end ) return locations;
         
         // de&&ug( "Ordered_Set.locate(), start locations: " + log.s( locations, replacer ) );
@@ -831,12 +831,14 @@
               
               var insert = guess;
               
-              var key = that.make_key( o ), make_key = that.make_key;
+              if ( exact ) {
+                var key = that.make_key( o ), make_key = that.make_key;
+              }
               
               stop = a.length; // Search for a matching key could go beyond ordered search  
               
               while ( true ) {
-                if ( location.found === u && key === make_key( a[ insert ] ) ) {
+                if ( exact && location.found === u && key === make_key( a[ insert ] ) ) {
                   location.found = insert;
                 }
                 
@@ -852,7 +854,7 @@
               
               location.insert = insert;
               
-              if ( location.found === u ) {
+              if ( exact && location.found === u ) {
                 while( true ) {
                   if ( options.insert_before ) {
                     if ( ++guess >= stop || organizer( a[ guess ], o ) ) break;
@@ -941,7 +943,7 @@
       
       objects.sort( this.organizer );
       
-      var locations = this.locate( objects ), a = this.a, u;
+      var locations = this.locate( objects, true ), a = this.a, u;
       
       for ( var i = locations.length; i; ) {
         var f = locations[ --i ].found;
@@ -957,7 +959,7 @@
       
       updates.sort( function( a, b ) { return organizer( a[ 0 ], b[ 0 ] ) } );
       
-      var locations = this.locate( updates ), a = this.a, u;
+      var locations = this.locate( updates, true ), a = this.a, u;
       
       for ( var i = locations.length; i; ) {
         var l = locations[ --i ], f = l.found;
