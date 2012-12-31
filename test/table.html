@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" media="all" type="text/css" href="css/table.css" />
+    
+    <script type="text/javascript" charset="utf-8" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    
+    <title>XS Table</title>
+    
+    <script type="text/javascript" charset="utf-8" src="../src/xs.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/table.js"></script>
+    
+  </head>
+  
+  <body>
+    <h4>XS Table</h4>
+    
+    <div id="demo"></div>
+    
+    <script type="text/javascript" charset="utf-8">
+      var columns = new XS.Set( [
+        { id: "id"    , label: "ID"     },
+        { id: "name"  , label: "Name"   },
+        { id: "salary", label: "Salary" }
+      ] );
+      
+      new XS.Table( document.getElementById( "demo" ), columns, {
+      
+      } );
+    </script>
+  </body>
+</html>
+
+
+
