@@ -1123,7 +1123,8 @@
             descending: true
           }
         ]), {
-          name: 'books_ordered_by_descending_year'
+          name: 'books_ordered_by_descending_year',
+          insert_before: true
         });
         books_ordered_by_ascending_author = books.order(by_ascending_author, {
           name: 'books_ordered_by_ascending_author'
@@ -1679,14 +1680,14 @@
           it('after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
-              }, {
                 id: 12,
                 title: "Breaking Dawn",
                 author: "Stephenie Meyer",
+                year: 2008
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
                 year: 2008
               }, {
                 id: 6,
@@ -1699,14 +1700,14 @@
                 author: "Dan Brown",
                 year: 2003
               }, {
-                id: 5,
-                title: "Angels and Demons",
-                author: "Dan Brown",
-                year: 2000
-              }, {
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
+                year: 2000
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
                 year: 2000
               }, {
                 id: 10,
@@ -1719,14 +1720,14 @@
                 author: "Paulo Coelho",
                 year: 1988
               }, {
-                id: 2,
-                title: "The Lord of the Rings",
-                author: "J. R. R. Tolkien",
-                year: 1955
-              }, {
                 id: 13,
                 title: "Lolita",
                 author: "Vladimir Nabokov",
+                year: 1955
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author: "J. R. R. Tolkien",
                 year: 1955
               }, {
                 id: 8,
@@ -1850,14 +1851,14 @@
           it('after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
-              }, {
                 id: 12,
                 title: "Breaking Dawn",
                 author: "Stephenie Meyer",
+                year: 2008
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
                 year: 2008
               }, {
                 id: 6,
@@ -1870,14 +1871,14 @@
                 author: "Dan Brown",
                 year: 2003
               }, {
-                id: 5,
-                title: "Angels and Demons",
-                author: "Dan Brown",
-                year: 2000
-              }, {
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
+                year: 2000
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
                 year: 2000
               }, {
                 id: 10,
@@ -1890,14 +1891,14 @@
                 author: "Paulo Coelho",
                 year: 1988
               }, {
-                id: 2,
-                title: "The Lord of the Rings",
-                author: "J. R. R. Tolkien",
-                year: 1955
-              }, {
                 id: 13,
                 title: "Lolita",
                 author: "Vladimir Nabokov",
+                year: 1955
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author: "J. R. R. Tolkien",
                 year: 1955
               }, {
                 id: 8,
@@ -2582,14 +2583,14 @@
           it('after books.update( object ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
-              }, {
                 id: 12,
                 title: "Breaking Dawn",
                 author: "Stephenie Meyer",
+                year: 2008
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
                 year: 2008
               }, {
                 id: 6,
@@ -2602,14 +2603,14 @@
                 author: "Dan Brown",
                 year: 2003
               }, {
-                id: 5,
-                title: "Angels and Demons",
-                author: "Dan Brown",
-                year: 2000
-              }, {
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
+                year: 2000
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author: "Dan Brown",
                 year: 2000
               }, {
                 id: 10,
@@ -2842,14 +2843,14 @@
           return it('after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
-              }, {
                 id: 12,
                 title: "Breaking Dawn",
                 author: "Stephenie Meyer",
+                year: 2008
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
                 year: 2008
               }, {
                 id: 6,
@@ -2867,14 +2868,14 @@
                 author: "Dan Brown",
                 year: 2001
               }, {
-                id: 10,
-                title: "Harry Potter and the Prisoner of Azkaban",
-                author: "J.K. Rowling",
-                year: 1999
-              }, {
                 id: 11,
                 title: "The Dukan Diet",
                 author: "Pierre Dukan",
+                year: 1999
+              }, {
+                id: 10,
+                title: "Harry Potter and the Prisoner of Azkaban",
+                author: "J.K. Rowling",
                 year: 1999
               }, {
                 id: 4,

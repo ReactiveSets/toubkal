@@ -840,7 +840,7 @@
                   location.found = insert;
                 }
                 
-                if ( options.insert_before ) { // Missing test for options.insert_before
+                if ( options.insert_before ) {
                   if ( insert === 0 || organizer( a[ insert - 1 ], o ) ) break;
                   
                   insert -= 1;
@@ -854,7 +854,7 @@
               
               if ( location.found === u ) {
                 while( true ) {
-                  if ( options.insert_before ) { // Missing test for options.insert_before
+                  if ( options.insert_before ) {
                     if ( ++guess >= stop || organizer( a[ guess ], o ) ) break;
                   } else {
                     if ( guess === 0 || organizer( a[ guess - 1 ], o ) ) break;
