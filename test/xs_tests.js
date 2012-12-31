@@ -1130,7 +1130,8 @@
           name: 'books_ordered_by_ascending_author'
         });
         books_ordered_by_descending_author = books.order(by_descending_author, {
-          name: 'books_ordered_by_descending_author'
+          name: 'books_ordered_by_descending_author',
+          insert_before: true
         });
         it('books_ordered_by_year should be ordered by ascending year', function() {
           return books_ordered_by_year.get().should.be.eql([
@@ -2261,15 +2262,15 @@
                 author: "J.K. Rowling",
                 year: 1999
               }, {
-                id: 2,
-                title: "The Lord of the Rings",
-                author: "J. R. R. Tolkien",
-                year: 1955
-              }, {
                 id: 8,
                 title: "The Hobbit",
                 author: "J. R. R. Tolkien",
                 year: 1937
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author: "J. R. R. Tolkien",
+                year: 1955
               }, {
                 id: 15,
                 title: "Steps to Christ",
@@ -2481,7 +2482,7 @@
           });
         });
         describe('update():', function() {
-          it('after books.update( object ), books_ordered_by_year should be ordered by ascending year', function() {
+          it('after books.update( object 2 ), books_ordered_by_year should be ordered by ascending year', function() {
             books.update([
               [
                 {
@@ -2580,7 +2581,7 @@
               }
             ]);
           });
-          it('after books.update( object ), books_ordered_by_descending_year should be ordered by descending year', function() {
+          it('after books.update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
                 id: 12,
@@ -2683,18 +2684,6 @@
                     }
                   ], [
                     {
-                      id: 14,
-                      title: "And Then There Were None",
-                      author: "Agatha Christie",
-                      year: void 0
-                    }, {
-                      id: 14,
-                      title: "And Then There Were None",
-                      author: "Agatha Christie",
-                      year: 1927
-                    }
-                  ], [
-                    {
                       id: 15,
                       title: "Steps to Christ",
                       author: "Ellen G. White",
@@ -2715,6 +2704,18 @@
                       title: "Charlie and the Chocolate Factory",
                       author: "Roald Dahl",
                       year: 1970
+                    }
+                  ], [
+                    {
+                      id: 14,
+                      title: "And Then There Were None",
+                      author: "Agatha Christie",
+                      year: void 0
+                    }, {
+                      id: 14,
+                      title: "And Then There Were None",
+                      author: "Agatha Christie",
+                      year: 1927
                     }
                   ], [
                     {
