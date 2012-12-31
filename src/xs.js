@@ -836,11 +836,11 @@
               stop = a.length; // Search for a matching key could go beyond ordered search  
               
               while ( true ) {
-                if ( key === make_key( a[ insert ] ) ) {
+                if ( location.found === u && key === make_key( a[ insert ] ) ) {
                   location.found = insert;
                 }
                 
-                if ( options.insert_before ) {
+                if ( options.insert_before ) { // Missing test for options.insert_before
                   if ( insert === 0 || organizer( a[ insert - 1 ], o ) ) break;
                   
                   insert -= 1;
@@ -854,12 +854,12 @@
               
               if ( location.found === u ) {
                 while( true ) {
-                  if ( ! options.insert_before ) {
+                  if ( options.insert_before ) { // Missing test for options.insert_before
+                    if ( ++guess >= stop || organizer( a[ guess ], o ) ) break;
+                  } else {
                     if ( guess === 0 || organizer( a[ guess - 1 ], o ) ) break;
                     
                     guess -= 1;
-                  } else {
-                    if ( ++guess >= stop || organizer( a[ guess ], o ) ) break;
                   }
                   
                   if ( key === make_key( a[ guess ] ) ) {
@@ -887,7 +887,7 @@
               
               var next = location.next && location.next.insert;
               
-              // Use next + 1 to find an exact match if any
+              // Use next + 1 to find an exact match if any: Missing test, no current test fails if 'next + 1' is replaced by 'next'
               if ( next !== u ) stop = Math.min( next + 1, stop );
             }
             
@@ -1052,7 +1052,7 @@
                 if ( f < remove ) {
                   if ( f >= insert ) f += 1;
                 } else {
-                  if ( f  < insert ) f -= 1;
+                  if ( f  < insert ) f -= 1; // Missing test: no current test fails if commented out
                 }
                 
                 l.found = f;
