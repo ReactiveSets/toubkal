@@ -935,7 +935,7 @@ describe 'XS test suite:', ->
               objects: [
                 [
                   { id:  8, title: "The Hobbit", author: "J. R. R. Tolkien"         , year: 1937 }
-                  { id:  8, title: "The Hobbit Changed", author: "J. R. R. Tolkien" , year: 1937 }
+                  { id:  8, title: "The Hobbit Changed", author: "J. R. R. Tolkien 8" , year: 1937 }
                 ]
                 
                 [
@@ -951,6 +951,11 @@ describe 'XS test suite:', ->
                 [
                   { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"             }
                   { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl", year: 1970 }
+                ]
+                
+                [
+                  { id:  2, title: "The Lord of the Rings 1", author: "J. R. R. Tolkien", year: 1954 }
+                  { id:  2, title: "The Lord of the Rings 1", author: "J. R. R. Tolkien 2", year: 1954 }
                 ]
                 
                 [
@@ -971,8 +976,8 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
-            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien"       , year: 1937 }
-            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien"       , year: 1954 }
+            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
+            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
@@ -997,8 +1002,8 @@ describe 'XS test suite:', ->
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
-            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien"       , year: 1954 }
-            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien"       , year: 1937 }
+            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
+            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
@@ -1018,8 +1023,8 @@ describe 'XS test suite:', ->
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
-            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien"       , year: 1954 }
-            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien"       , year: 1937 }
+            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
+            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
             { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
             { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 1999 }
@@ -1038,8 +1043,8 @@ describe 'XS test suite:', ->
             { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 1999 }
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
             { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
-            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien"       , year: 1954 }
-            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien"       , year: 1937 }
+            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
+            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }

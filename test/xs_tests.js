@@ -2677,7 +2677,7 @@
                     }, {
                       id: 8,
                       title: "The Hobbit Changed",
-                      author: "J. R. R. Tolkien",
+                      author: "J. R. R. Tolkien 8",
                       year: 1937
                     }
                   ], [
@@ -2714,6 +2714,18 @@
                       title: "Charlie and the Chocolate Factory",
                       author: "Roald Dahl",
                       year: 1970
+                    }
+                  ], [
+                    {
+                      id: 2,
+                      title: "The Lord of the Rings 1",
+                      author: "J. R. R. Tolkien",
+                      year: 1954
+                    }, {
+                      id: 2,
+                      title: "The Lord of the Rings 1",
+                      author: "J. R. R. Tolkien 2",
+                      year: 1954
                     }
                   ], [
                     {
@@ -2767,12 +2779,12 @@
               }, {
                 id: 8,
                 title: "The Hobbit Changed",
-                author: "J. R. R. Tolkien",
+                author: "J. R. R. Tolkien 8",
                 year: 1937
               }, {
                 id: 2,
                 title: "The Lord of the Rings 1",
-                author: "J. R. R. Tolkien",
+                author: "J. R. R. Tolkien 2",
                 year: 1954
               }, {
                 id: 13,
@@ -2882,12 +2894,12 @@
               }, {
                 id: 2,
                 title: "The Lord of the Rings 1",
-                author: "J. R. R. Tolkien",
+                author: "J. R. R. Tolkien 2",
                 year: 1954
               }, {
                 id: 8,
                 title: "The Hobbit Changed",
-                author: "J. R. R. Tolkien",
+                author: "J. R. R. Tolkien 8",
                 year: 1937
               }, {
                 id: 14,
@@ -2957,12 +2969,12 @@
               }, {
                 id: 2,
                 title: "The Lord of the Rings 1",
-                author: "J. R. R. Tolkien",
+                author: "J. R. R. Tolkien 2",
                 year: 1954
               }, {
                 id: 8,
                 title: "The Hobbit Changed",
-                author: "J. R. R. Tolkien",
+                author: "J. R. R. Tolkien 8",
                 year: 1937
               }, {
                 id: 10,
@@ -3040,15 +3052,15 @@
                 author: "J.K. Rowling",
                 year: 1999
               }, {
-                id: 2,
-                title: "The Lord of the Rings 1",
-                author: "J. R. R. Tolkien",
-                year: 1954
-              }, {
                 id: 8,
                 title: "The Hobbit Changed",
-                author: "J. R. R. Tolkien",
+                author: "J. R. R. Tolkien 8",
                 year: 1937
+              }, {
+                id: 2,
+                title: "The Lord of the Rings 1",
+                author: "J. R. R. Tolkien 2",
+                year: 1954
               }, {
                 id: 3,
                 title: "The Da Vinci Code",
