@@ -967,6 +967,16 @@ describe 'XS test suite:', ->
                   { id:  5, title: "Angels and Demons", author: "Dan Brown", year: 2000 }
                   { id:  5, title: "Angels and Demons", author: "Dan Brown", year: 2001 }
                 ]
+                
+                [
+                  { id: 12, title: "Breaking Dawn", author: "Stephenie Meyer", year: 2008 }
+                  { id: 12, title: "Breaking Dawn", author: "Stephenie Meyer", year: 1875 }
+                ]
+                
+                [
+                  { id:  9, title: "The Hunger Games", author: "Suzanne Collins", year: 2008 }
+                  { id:  9, title: "The Hunger Games", author: "Suzanne Collins", year: 1942 }
+                ]
               ]
             }
           ]
@@ -975,8 +985,10 @@ describe 'XS test suite:', ->
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: undefined }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+            { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 1875 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
             { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
             { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
@@ -986,14 +998,10 @@ describe 'XS test suite:', ->
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
-            { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
-            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
         it 'after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', ->
           books_ordered_by_descending_year.get().should.be.eql [
-            { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
-            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
@@ -1003,8 +1011,10 @@ describe 'XS test suite:', ->
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
             { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
             { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
+            { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 1875 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: undefined }
@@ -1030,14 +1040,14 @@ describe 'XS test suite:', ->
             { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 1999 }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
-            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
         it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', ->
           books_ordered_by_descending_author.get().should.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
-            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
+            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
             { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 1999 }

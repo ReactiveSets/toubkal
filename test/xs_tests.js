@@ -2752,6 +2752,30 @@
                       author: "Dan Brown",
                       year: 2001
                     }
+                  ], [
+                    {
+                      id: 12,
+                      title: "Breaking Dawn",
+                      author: "Stephenie Meyer",
+                      year: 2008
+                    }, {
+                      id: 12,
+                      title: "Breaking Dawn",
+                      author: "Stephenie Meyer",
+                      year: 1875
+                    }
+                  ], [
+                    {
+                      id: 9,
+                      title: "The Hunger Games",
+                      author: "Suzanne Collins",
+                      year: 2008
+                    }, {
+                      id: 9,
+                      title: "The Hunger Games",
+                      author: "Suzanne Collins",
+                      year: 1942
+                    }
                   ]
                 ]
               }
@@ -2773,6 +2797,11 @@
                 author: "Charles Dickens",
                 year: 1859
               }, {
+                id: 12,
+                title: "Breaking Dawn",
+                author: "Stephenie Meyer",
+                year: 1875
+              }, {
                 id: 14,
                 title: "And Then There Were None",
                 author: "Agatha Christie",
@@ -2782,6 +2811,11 @@
                 title: "The Hobbit Changed",
                 author: "J. R. R. Tolkien 8",
                 year: 1937
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
+                year: 1942
               }, {
                 id: 2,
                 title: "The Lord of the Rings 1",
@@ -2827,32 +2861,12 @@
                 title: "The Girl with the Dragon Tattoo",
                 author: "Stieg Larsson",
                 year: 2005
-              }, {
-                id: 12,
-                title: "Breaking Dawn",
-                author: "Stephenie Meyer",
-                year: 2008
-              }, {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
               }
             ]);
           });
           return it('after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', function() {
             return books_ordered_by_descending_year.get().should.be.eql([
               {
-                id: 12,
-                title: "Breaking Dawn",
-                author: "Stephenie Meyer",
-                year: 2008
-              }, {
-                id: 9,
-                title: "The Hunger Games",
-                author: "Suzanne Collins",
-                year: 2008
-              }, {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
                 author: "Stieg Larsson",
@@ -2898,6 +2912,11 @@
                 author: "J. R. R. Tolkien 2",
                 year: 1954
               }, {
+                id: 9,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
+                year: 1942
+              }, {
                 id: 8,
                 title: "The Hobbit Changed",
                 author: "J. R. R. Tolkien 8",
@@ -2907,6 +2926,11 @@
                 title: "And Then There Were None",
                 author: "Agatha Christie",
                 year: 1927
+              }, {
+                id: 12,
+                title: "Breaking Dawn",
+                author: "Stephenie Meyer",
+                year: 1875
               }, {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -3006,7 +3030,7 @@
                 id: 9,
                 title: "The Hunger Games",
                 author: "Suzanne Collins",
-                year: 2008
+                year: 1942
               }, {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -3026,7 +3050,7 @@
                 id: 9,
                 title: "The Hunger Games",
                 author: "Suzanne Collins",
-                year: 2008
+                year: 1942
               }, {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
