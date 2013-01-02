@@ -192,7 +192,7 @@
       return this.line( '} ' + comment, 1 );
     }, // end()
     
-    function: function( lvalue, name, parameters ) {
+    procedure: function( lvalue, name, parameters ) {
       var code = '';
       
       if ( lvalue ) code += lvalue + ' ';
@@ -204,11 +204,11 @@
       code += '( ' + parameters.join( ', ' ) + ' )';
       
       return this.begin( code );
-    }, // function()
+    }, // procedure()
     
-    var: function( v ) {
+    variable: function( v ) {
       return this.add( 'var ' + v, 1 );
-    }, // var()
+    }, // variable()
     
     vars: function( vars ) {
       return this.add( 'var ' + vars.join( ', ' ), 1 );
@@ -248,7 +248,7 @@
         var indent = '\n  ' + this.indent;
         
         this
-          .var( 'ul = l - l % ' + count + ' - 1' )
+          .variable( 'ul = l - l % ' + count + ' - 1' )
           
           .begin( 'while( i < ul )' );
           
@@ -371,7 +371,7 @@
       for ( var i = -1; ++i < l; ) code.push( 'o.' + key[ i ] );
       
       eval( new Code()
-        .function( 'this.make_key =', null, [ 'o' ] )
+        .procedure( 'this.make_key =', null, [ 'o' ] )
           .add( "return '' + " + code.join( " + '#' + " ) )
         .end( 'make_key()' )
         .get()
@@ -525,7 +525,7 @@
       }
       
       var code = new Code( 'index_of' )
-        .function( 'this.index_of =', null, [ 'o' ] )
+        .procedure( 'this.index_of =', null, [ 'o' ] )
           .vars( vars )
           .vars_from_object( 'o', key ) // Local variables for key
           .unrolled_while( first, inner, last )
@@ -577,7 +577,7 @@
       }
       
       eval( new Code()
-        .function( 'this.add =', null, [ 'objects' ] )
+        .procedure( 'this.add =', null, [ 'objects' ] )
           .vars( vars )
           
           .unrolled_while( first )
@@ -611,7 +611,7 @@
       }
       
       eval( new Code()
-        .function( 'this.remove =', null, [ 'objects' ] )
+        .procedure( 'this.remove =', null, [ 'objects' ] )
           .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' ] )
           
           .unrolled_while( first )
@@ -711,7 +711,7 @@
     }
     
     var code = new Code( 'organizer' )
-      .function( 'organizer =', null, [ 'a', 'b' ] )
+      .procedure( 'organizer =', null, [ 'a', 'b' ] )
         .vars( [ 'u', 'x', 'y' ] );
         
         for ( var i = -1; ++i < organizer.length; ) {

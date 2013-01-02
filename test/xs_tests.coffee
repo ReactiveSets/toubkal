@@ -116,7 +116,7 @@ describe 'XS test suite:', ->
     
   describe 'XS.Code():', ->
     code = new XS.Code( 'Code Test' )
-      .function( null, 'f', [] )
+      .procedure( null, 'f', [] )
         .add( 'var i' )
         .loop( 'i = -1', ' ++i < 10' )
         .end()
@@ -137,7 +137,7 @@ describe 'XS test suite:', ->
     test = 'a[ ++i ] === n'
     
     code = new XS.Code( 'Test unfolded while' )
-      .function( 'g = ', null, [ 'n' ] )
+      .procedure( 'g = ', null, [ 'n' ] )
         .vars( [ 'a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1' ] )
         .unrolled_while( 'if ( ' + test, '|| ' + test, ') return i' )
         .add( 'return -1' )
