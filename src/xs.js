@@ -742,13 +742,13 @@
           }
           
           code
-            .begin( 'if ( ( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' ) )' )
-              .add(   'if ( x === u    ) return ' + inferior )
-              .add(   'if ( y === u    ) return ' + superior )
-              .add(   'if ( x === null ) return ' + inferior )
-              .add(   'if ( y === null ) return ' + superior )
-              .add(   'if ( x < y      ) return ' + inferior )
-              .add(   'if ( x > y      ) return ' + superior )
+            ._if( '( x = a.' + d.id + ' ) !== ( y = b.' + d.id + ' )' )
+              .add( 'if ( x === u    ) return ' + inferior )
+              .add( 'if ( y === u    ) return ' + superior )
+              .add( 'if ( x === null ) return ' + inferior )
+              .add( 'if ( y === null ) return ' + superior )
+              .add( 'if ( x  <  y    ) return ' + inferior )
+              .add( 'if ( x  >  y    ) return ' + superior )
             .end()
           ;
         }
