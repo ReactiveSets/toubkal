@@ -33,7 +33,6 @@
     Connection.call( this, options );
     
     this.table   = table;
-    this.node    = table.node;
     this.columns = columns;
     
     if ( columns instanceof Set ) {
@@ -42,36 +41,28 @@
       this.add( columns );
     }
     
-    this.init();
-    
     return this;
   } // Table_Colunns()
   
   subclass( Connection, Table_Columns );
   
   extend( Table_Columns.prototype, {
-    init: function() {
-      var table   = this.node.getElementsByTagName( "table" )[ 0 ]
-        , columns = this.columns.get()
-        , header  = this.header = table.appendChild( document.createElement( "thead" ) )
-        , l       = columns.length
+    add: function( objects ) {
+      var table = this.table
+        , a     = table.get()
+        , row   = table.header.getElementsByTagName( "tr" )[ 0 ]
+        , l     = objects.length
       ;
       
       for( var i = -1; ++i < l; ) {
-        var c  = columns[ i ]
+        var c  = objects[ i ]
           , th = document.createElement( "th" )
         ;
         
-        th.appendChild( document.createTextNode( c.label ) );
+        th.innerHTML = c.label;
         
-        header.appendChild( th );
+        row.appendChild( th );
       }
-      
-      return this;
-    }, // init()
-    
-    add: function( objects ) {
-      var table = this.table, a = table.get();
       
       return this;
     }, // add()
@@ -93,9 +84,12 @@
      Table()
   */
   function Table( node, columns, options ) {
-    Set.call( this, options );
+    Set.call( this, [], options );
+    
+    options = this.process_options( options );
     
     this.set_node( node );
+    this.init();
     
     this.columns = new Table_Columns( columns, this, options );
     
@@ -108,14 +102,44 @@
     set_node: function( node ) {
       if( is_DOM( node ) ) {
         this.node = node;
-        
-        node.appendChild( document.createElement( "table" ) );
       } else {
         throw( "the given node is not a DOM element" );
       }
       
       return this;
     }, // set_node()
+    
+    // process and set the default options
+    process_options: function( options ) {
+      options = extend( {}, options );
+      
+      return this.options = options;
+    }, // process_options
+    
+    init: function() {
+      var table   = document.createElement( "table" )
+        , header  = this.header = table.createTHead()
+        , options = this.options
+      ;
+      
+      table.setAttribute( "class", "xs_table" );
+      table.createCaption();
+      
+      header.insertRow( 0 );
+      
+      this.node.appendChild( table );
+      
+      if( options.caption ) this.set_caption( options.caption );
+      
+      return this;
+    }, // init()
+    
+    // set the table caption
+    set_caption: function( caption ) {
+      this.node.getElementsByTagName( "table" )[ 0 ].caption.innerHTML = caption;
+      
+      return this;
+    }, // set_caption()
     
     add: function( objects ) {
       Set.prototype.add.call( this, objects );
