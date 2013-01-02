@@ -192,6 +192,22 @@
       return this.line( '} ' + comment, 1 );
     }, // end()
     
+    _if: function( expression ) {
+      return this.begin( 'if ( ' + expression + ' ) ' );
+    }, // _if()
+    
+    _else: function() {
+      if ( this.blocs.length === 0 ) throw new Code.Syntax_Error( "Missing matching opening block" );
+      
+      this.indent = this.indent.substr( 2 );
+      
+      this.line( '} else {' );
+      
+      this.indent += '  ';
+      
+      return this;
+    }, // _else()
+    
     procedure: function( lvalue, name, parameters ) {
       var code = '';
       
@@ -268,7 +284,7 @@
           .add( 'ul = l - 1' )
         ;
       } else {
-        this.var( 'ul = l - 1' );
+        this.variable( 'ul = l - 1' );
       }
       
       this
@@ -403,7 +419,7 @@
     }, // order()
     
     table: function( node, columns, options ) {
-      var t = new XS.table( node, columns, extend( { key: this.key }, options ) );
+      var t = new XS.Table( node, columns, extend( { key: this.key }, options ) );
       
       this.connect( t );
       
@@ -1071,16 +1087,135 @@
       return this.connections_update( updates );
     } // update()
   } ); // Ordered_Set instance methods
+
+  /* -------------------------------------------------------------------------------------------
+     Aggregator_Dimensions()
+  */
+  function Aggregator_Dimensions( aggregator, dimensions, options ) {
+    Connection.call( this, options );
+    
+    this.aggregator = aggregator;
+    this.dimensions = dimensions;
+    
+    if ( dimensions instanceof Set ) {
+      dimensions.connect( this );
+    } else {
+      this.add( dimensions );
+    }
+    
+    return this;
+  } // Aggregator_Dimensions()
+  
+  subclass( Connection, Aggregator_Dimensions );
+  
+  extend( Aggregator_Dimensions.prototype, {
+    make_group: function( dimensions ) {
+      dimensions = this.dimensions instanceof Set ? this.dimensions.get() : dimensions;
+      
+      if ( dimensions.length === 0 ) throw new Error( 'Aggregator_Dimensions.make_group(), needs at least one dimension' );
+      
+      var ids = [];
+      
+      for ( var i = -1; ++i < dimensions.length; ) {
+        var d = dimensions[ i ];
+        
+        ids.push( d.id );
+      }
+      
+      var key_code = 'o[' + ids.join( ' ] + "_" + o[ ' ) + ' ]';
+      
+      var code = new Code( 'group' )
+        .procedure( 'this.aggregator.group =', null, [ 'objects' ] )
+          .vars( [ 'groups = {}', 'keys = []', 'i = -1', 'o', 'k', 'g' ] )
+          
+          .begin( 'while( o = objects[ ++i ] )' )
+            ._if( 'g = groups[ k = ' + key_code + ' ]' )
+              .add( 'g.push( o )' )
+              .add( 'continue' )
+            .end()
+            
+            .add( 'groups[ k ] = [ o ]' )
+            .add( 'keys.push( k )' )
+          .end()
+          
+          .add( 'return { groups: groups, keys: keys };' )
+        .end( 'group()' )
+      ;
+      
+      eval( code.get() );
+      
+      return this;
+    }, // make_group()
+    
+    add: function( dimensions ) {
+      return this.make_group( dimensions );
+    }, // add()
+    
+    remove: function( dimensions ) {
+      return this.make_group();
+    }, // remove()
+    
+    update: function( dimension_updates ) {
+      return this.make_group();
+    } // update()
+  } ); // Aggregator_Dimensions instance methods  
+  
+  /* -------------------------------------------------------------------------------------------
+     Aggregator_Measures()
+  */
+  function Aggregator_Measures( aggregator, measures, options ) {
+    Connection.call( this, options );
+    
+    this.aggregator = aggregator;
+    this.measures   = measures;
+    
+    if ( measures instanceof Set ) {
+      measures.connect( this );
+    } else {
+      this.add( measures );
+    }
+    
+    return this;
+  } // Aggregator_Measures()
+  
+  subclass( Connection, Aggregator_Measures );
+  
+  extend( Aggregator_Measures.prototype, {
+    build_aggregator: function( measures ) {
+      this.aggregator.measures = this.measures instanceof Set ? this.measures.get() : measures;
+      
+      return this;
+    }, // add()
+    
+    add: function( measures ) {
+      return this.build_aggregator( measures );
+    }, // add()
+    
+    remove: function( measures ) {
+      return this.build_aggregator();
+    }, // remove()
+    
+    update: function( measure_updates ) {
+      return this.build_aggregator();
+    } // update()
+  } ); // Aggregator_Measures instance methods  
   
   /* -------------------------------------------------------------------------------------------
      Aggregator()
   */
+  Connection.prototype.aggregate = function( dimensions, measures, options ) {
+    var a = new Aggregator( dimensions, measures, options );
+    
+    this.connect( a );
+    
+    return a;
+  }; // Connection.prototype.aggregate()
+  
   function Aggregator( dimensions, measures, options ) {
     Connection.call( this, options );
     
-    this.out = new Set( [], { key: set.key } );
-    
-    set.connect( this );
+    new Aggregator_Dimensions( this, dimensions, options );
+    new Aggregator_Measures  ( this, measures  , options );
     
     return this;
   } // Aggregator()
@@ -1088,6 +1223,12 @@
   subclass( Connection, Aggregator );
   
   extend( Aggregator.prototype, {
+    aggregate: function( objects ) {
+      this.group( objects );
+      
+      return this;
+    }, // aggregate()
+    
     add: function( objects ) {
       return this;
     }, // add()
