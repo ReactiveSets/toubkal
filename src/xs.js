@@ -1073,6 +1073,35 @@
   } ); // Ordered_Set instance methods
   
   /* -------------------------------------------------------------------------------------------
+     Aggregator()
+  */
+  function Aggregator( dimensions, measures, options ) {
+    Connection.call( this, options );
+    
+    this.out = new Set( [], { key: set.key } );
+    
+    set.connect( this );
+    
+    return this;
+  } // Aggregator()
+  
+  subclass( Connection, Aggregator );
+  
+  extend( Aggregator.prototype, {
+    add: function( objects ) {
+      return this;
+    }, // add()
+    
+    remove: function( objects ) {
+      return this;
+    }, // remove()
+    
+    update: function( updates ) {
+      return this;
+    } // update()
+  } ); // Aggregator instance methods
+  
+  /* -------------------------------------------------------------------------------------------
      CXXX(): template for Connection
   */
   function CXXX( set, options ) {
