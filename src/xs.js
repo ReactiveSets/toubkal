@@ -6,6 +6,10 @@
   */
   function nil_function() {}
   
+  var push = Array.prototype.push
+    , slice = Array.prototype.slice
+  ;
+  
   /* -------------------------------------------------------------------------------------------
      extend( destination, source [, source_1 ... ] )
   */
@@ -196,22 +200,34 @@
       return this.begin( 'if ( ' + expression + ' ) ' );
     }, // _if()
     
-    _else: function() {
+    _else: function( expression ) {
       if ( this.blocs.length === 0 ) throw new Code.Syntax_Error( "Missing matching opening block" );
       
       this.indent = this.indent.substr( 2 );
       
-      this.line( '} else {' );
+      if ( expression === void 0 ) {
+        this.line( '} else {' );
+      } else {
+        this.line( '} else if ( ' + expression + ' ) {' );
+      }
       
       this.indent += '  ';
       
       return this;
     }, // _else()
     
-    procedure: function( lvalue, name, parameters ) {
+    _while: function( expression ) {
+      return this.begin( 'while ( ' + expression + ' ) ' );
+    }, // _while()
+    
+    _for: function( init, condition, step ) {
+      return this.begin( 'for( ' + ( init || '' ) + '; ' + ( condition || '' ) + '; ' + ( step || '' ) + ' )' );
+    }, // _for()
+    
+    _function: function( lvalue, name, parameters ) {
       var code = '';
       
-      if ( lvalue ) code += lvalue + ' ';
+      if ( lvalue ) code += lvalue + ' = ';
       
       code += 'function';
       
@@ -220,13 +236,11 @@
       code += '( ' + parameters.join( ', ' ) + ' )';
       
       return this.begin( code );
-    }, // procedure()
-    
-    variable: function( v ) {
-      return this.add( 'var ' + v, 1 );
-    }, // variable()
+    }, // _function()
     
     vars: function( vars ) {
+      if ( typeof vars === 'string' ) vars = slice.call( arguments, 0 );
+      
       return this.add( 'var ' + vars.join( ', ' ), 1 );
     }, // vars()
     
@@ -248,10 +262,6 @@
       return this.vars( vars );
     }, // vars_from_object()
     
-    loop: function( init, condition, step ) {
-      return this.begin( 'for( ' + ( init || '' ) + '; ' + ( condition || '' ) + '; ' + ( step || '' ) + ' )' );
-    }, // loop()
-    
     unrolled_while: function( first, inner, last, count ) {
       inner || ( inner = first );
       count || ( count = 200 / inner.length >> 0 );
@@ -264,7 +274,7 @@
         var indent = '\n  ' + this.indent;
         
         this
-          .variable( 'ul = l - l % ' + count + ' - 1' )
+          .vars( 'ul = l - l % ' + count + ' - 1' )
           
           .begin( 'while( i < ul )' );
           
@@ -284,7 +294,7 @@
           .add( 'ul = l - 1' )
         ;
       } else {
-        this.variable( 'ul = l - 1' );
+        this.vars( 'ul = l - 1' );
       }
       
       this
@@ -387,7 +397,7 @@
       for ( var i = -1; ++i < l; ) code.push( 'o.' + key[ i ] );
       
       eval( new Code()
-        .procedure( 'this.make_key =', null, [ 'o' ] )
+        ._function( 'this.make_key', null, [ 'o' ] )
           .add( "return '' + " + code.join( " + '#' + " ) )
         .end( 'make_key()' )
         .get()
@@ -443,8 +453,6 @@
   } // Set()
   
   subclass( Connection, Set );
-  
-  var push = Array.prototype.push;
   
   /* -------------------------------------------------------------------------------------------
      Set instance methods
@@ -541,7 +549,7 @@
       }
       
       var code = new Code( 'index_of' )
-        .procedure( 'this.index_of =', null, [ 'o' ] )
+        ._function( 'this.index_of', null, [ 'o' ] )
           .vars( vars )
           .vars_from_object( 'o', key ) // Local variables for key
           .unrolled_while( first, inner, last )
@@ -593,7 +601,7 @@
       }
       
       eval( new Code()
-        .procedure( 'this.add =', null, [ 'objects' ] )
+        ._function( 'this.add', null, [ 'objects' ] )
           .vars( vars )
           
           .unrolled_while( first )
@@ -627,8 +635,8 @@
       }
       
       eval( new Code()
-        .procedure( 'this.remove =', null, [ 'objects' ] )
-          .vars( [ 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' ] )
+        ._function( 'this.remove', null, [ 'objects' ] )
+          .vars( 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' )
           
           .unrolled_while( first )
           
@@ -727,8 +735,8 @@
     }
     
     var code = new Code( 'organizer' )
-      .procedure( 'organizer =', null, [ 'a', 'b' ] )
-        .vars( [ 'u', 'x', 'y' ] );
+      ._function( 'organizer', null, [ 'a', 'b' ] )
+        .vars( 'u', 'x', 'y' );
         
         for ( var i = -1; ++i < organizer.length; ) {
           var d = organizer[ i ], inferior, superior; 
@@ -1125,10 +1133,10 @@
       var key_code = 'o[' + ids.join( ' ] + "_" + o[ ' ) + ' ]';
       
       var code = new Code( 'group' )
-        .procedure( 'this.aggregator.group =', null, [ 'objects' ] )
-          .vars( [ 'groups = {}', 'keys = []', 'i = -1', 'o', 'k', 'g' ] )
+        ._function( 'this.aggregator.group', null, [ 'objects' ] )
+          .vars( 'groups = {}', 'keys = []', 'i = -1', 'o', 'k', 'g' )
           
-          .begin( 'while( o = objects[ ++i ] )' )
+          ._while( 'o = objects[ ++i ]' )
             ._if( 'g = groups[ k = ' + key_code + ' ]' )
               .add( 'g.push( o )' )
               .add( 'continue' )
@@ -1181,22 +1189,56 @@
   subclass( Connection, Aggregator_Measures );
   
   extend( Aggregator_Measures.prototype, {
-    build_aggregator: function( measures ) {
+    build_reduce_groups: function( measures ) {
       this.aggregator.measures = this.measures instanceof Set ? this.measures.get() : measures;
       
+      for ( var ids = [], i = -1, m; m = measures[ ++i ]; ) ids.push( m.id );
+      
+      var code = new Code()
+        ._function( 'this.aggregator.reduce_groups', null, [ 'groups' ] )
+          .vars( 'keys = groups.keys', 'l = keys.length', 'out = []' )
+          
+          .add( 'groups = groups.groups' )
+          
+          ._for( 'var i = -1', '++i < l' )
+            .vars( 'g = groups[ keys[ i ] ]', 'gl = g.length', '_' + ids.join( ' = 0, _' ) + ' = 0', 'o' )
+            
+            ._for( 'var j = -1', '++j < gl' );
+              
+              for ( var i = -1, id; id = ids[ ++i ] !== void 0; ) {
+                code.add( '_' + id + ' += ' + ( i ? 'o.' : '( o = g[ j ] ).' ) + id )
+              }
+              
+            code.end()
+            
+            .line( 'out.push( {' );
+            
+              for ( var i = -1, id; id = ids[ ++i ] !== void 0; ) {
+                code.add( '  ' + id + ': _' + id );
+              }
+            
+            code.line( '} );' )
+          .end()
+          
+          .add( 'return out' )
+        .end( 'aggregate()' )
+      ;
+      
+      eval( code.get() );
+      
       return this;
-    }, // add()
+    }, // build_reduce_groups()
     
     add: function( measures ) {
-      return this.build_aggregator( measures );
+      return this.build_reduce_groups( measures );
     }, // add()
     
     remove: function( measures ) {
-      return this.build_aggregator();
+      return this.build_reduce_groups();
     }, // remove()
     
     update: function( measure_updates ) {
-      return this.build_aggregator();
+      return this.build_reduce_groups();
     } // update()
   } ); // Aggregator_Measures instance methods  
   
@@ -1224,7 +1266,7 @@
   
   extend( Aggregator.prototype, {
     aggregate: function( objects ) {
-      this.group( objects );
+      this.reduce_groups( this.group( objects ) );
       
       return this;
     }, // aggregate()
