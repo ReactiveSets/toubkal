@@ -60,6 +60,7 @@
         ;
         
         th.innerHTML = c.label;
+        th.setAttribute( "column_id", c.id );
         
         row.appendChild( th );
       }
@@ -68,13 +69,50 @@
     }, // add()
     
     remove: function( objects ) {
-      var table = this.table, a = table.get();
+      var table = this.table
+        , a     = table.get()
+        , row   = table.header.getElementsByTagName( "tr" )[ 0 ]
+        , cells = row.cells
+        , ul    = objects.length
+        , cl    = cells.length
+      ;
+      
+      for( var i = ul; i; ) {
+        var o = objects[ --i ];
+        
+        for( var j = cl; j; ) {
+          var c = cells[ --j ];
+          
+          if( c.getAttribute( "column_id" ) === o.id ) row.deleteCell( j );
+        }
+      }
       
       return this;
     }, // remove()
     
     update: function( updates ) {
-      var table = this.table, a = table.get();
+      var table = this.table
+        , a     = table.get()
+        , cells = table.header.getElementsByTagName( "tr" )[ 0 ].cells
+        , ul    = updates.length
+        , cl    = cells.length
+      ;
+      
+      for( var i = ul; i; ) {
+        var u  = updates[ --i ]
+          , u0 = u[ 0 ]
+          , u1 = u[ 1 ]
+        ;
+        
+        for( var j = cl; j; ) {
+          var c = cells[ --j ];
+          
+          if( c.getAttribute( "column_id" ) === u0.id ) {
+            c.setAttribute( "column_id", u1.id );
+            c.innerHTML = u1.label;
+          }
+        }
+      }
       
       return this;
     } // update()
@@ -83,7 +121,7 @@
   /* -------------------------------------------------------------------------------------------
      Table()
   */
-  function Table( node, columns, options ) {
+   function Table( node, columns, options ) {
     Set.call( this, [], options );
     
     options = this.process_options( options );
@@ -171,7 +209,7 @@
          typeof HTMLElement === "object" ? node instanceof HTMLElement : node
       && typeof node === "object" && node.nodeType === 1 && typeof node.nodeName ==="string"
     );
-  }
+  } // is_DOM()
   
   de&&ug( "module loaded" );
 } )( this ); // table.js

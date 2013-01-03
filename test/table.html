@@ -31,7 +31,9 @@
       
       dataset.table( document.getElementById( "demo" ), columns, {} );
       
-      columns.add( [ { id: "customer_id", label: "Customer ID" } ] );
+      columns.add   ( [ { id: "customer_id", label: "Customer ID" } ] );
+      columns.update( [ [ { id: "name", label: "Name" } , { id: "name", label: "Full Name" } ] ] );
+      columns.remove( [ { id: "customer_id", label: "Customer ID" } ] );
     </script>
   </body>
 </html>
