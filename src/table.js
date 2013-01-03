@@ -157,9 +157,11 @@
     init: function() {
       var table   = document.createElement( "table" )
         , header  = this.header = table.createTHead()
+        , body    = this.body   = document.createElement( "tbody" )
         , options = this.options
       ;
       
+      table.appendChild( body );
       table.setAttribute( "class", "xs_table" );
       table.createCaption();
       
@@ -181,6 +183,29 @@
     
     add: function( objects ) {
       Set.prototype.add.call( this, objects );
+      
+      if( ! this.columns ) return this;
+      
+      var body    = this.body
+        , columns = this.columns.columns.get()
+        , l       = objects.length
+        , cl      = columns.length
+      ;
+      
+      for( var i = -1; ++i < l; ) {
+        var o = objects[ i ]
+          , r = body.insertRow( 0 )
+        ;
+        
+        for( var j = -1; ++j < cl; ) {
+          var c  = columns[ j ]
+            , td = r.insertCell( -1 )
+            , v = o[ c.id ]
+          ;
+          
+          if( v !== undefined ) td.innerHTML = o[ c.id ];
+        }
+      }
       
       return this;
     }, // add()
