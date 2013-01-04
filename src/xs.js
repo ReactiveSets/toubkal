@@ -456,6 +456,8 @@
     connect: function( connection ) {
       this.connections.push( connection );
       
+      // connection.add( this.fetch() );
+      
       return this;
     }, // connect()
     
@@ -624,7 +626,7 @@
     
     this.filter = filter;
     
-    this.out = new Set( [], { key: set.key } );
+    this.connect( this.out = new Set( [], { key: set.key } ) );
     
     set.connect( this );
     
@@ -658,7 +660,7 @@
           
           .unrolled_while( first )
           
-          .add( 'added.length && this.out.add( added )', 1 )
+          .add( 'added.length && this.connections_add( added )', 1 )
           
           .add( 'return this' )
         .end( 'Filter.add()' )
@@ -692,7 +694,7 @@
           
           .unrolled_while( first )
           
-          .add( 'removed.length && this.out.remove( removed )', 1 )
+          .add( 'removed.length && this.connections_remove( removed )', 1 )
 
           .add( 'return this' )
         .end( 'Filter.remove()' )
@@ -728,9 +730,9 @@
               }
             }
             
-            removed.length && this.out.remove( removed );
-            updated.length && this.out.update( updated );
-            added  .length && this.out.add   ( added   );
+            removed.length && this.connections_remove( removed );
+            updated.length && this.connections_update( updated );
+            added  .length && this.connections_add   ( added   );
             
             return this;
           };
