@@ -1117,18 +1117,16 @@
   subclass( Connection, Aggregator_Dimensions );
   
   extend( Aggregator_Dimensions.prototype, {
+    get: function() {
+      return this.dimensions instanceof Set ? this.dimensions.get() : this.dimensions;
+    }, // get()
+    
     make_group: function( dimensions ) {
-      dimensions = this.dimensions instanceof Set ? this.dimensions.get() : dimensions;
+      dimensions = this.get();
       
       if ( dimensions.length === 0 ) throw new Error( 'Aggregator_Dimensions.make_group(), needs at least one dimension' );
       
-      var ids = [];
-      
-      for ( var i = -1; ++i < dimensions.length; ) {
-        var d = dimensions[ i ];
-        
-        ids.push( d.id );
-      }
+      for ( var ids = [], i = -1, d; d = dimensions[ ++i ]; ) ids.push( d.id );
       
       var key_code = 'o[' + ids.join( ' ] + "_" + o[ ' ) + ' ]';
       
@@ -1189,8 +1187,16 @@
   subclass( Connection, Aggregator_Measures );
   
   extend( Aggregator_Measures.prototype, {
+    get: function() {
+      return this.measures instanceof Set ? this.measures.get() : this.measures;
+    }, // get()
+    
     build_reduce_groups: function( measures ) {
-      this.aggregator.measures = this.measures instanceof Set ? this.measures.get() : measures;
+      measures = this.get();
+      
+      var dimensions = this.aggregator.dimensions.get(), dimension_ids = [];
+      
+      for ( var i = -1, d; d = dimensions[ ++i ]; ) dimension_ids.push( d.id );
       
       for ( var ids = [], i = -1, m; m = measures[ ++i ]; ) ids.push( m.id );
       
@@ -1212,7 +1218,9 @@
             code.end()
             
             .line( 'out.push( {' );
-            
+              for ( var i = -1, id; id = ids[ ++i ] !== void 0; ) {
+              }              
+              
               for ( var i = -1, id; id = ids[ ++i ] !== void 0; ) {
                 code.add( '  ' + id + ': _' + id );
               }
@@ -1220,7 +1228,7 @@
             code.line( '} );' )
           .end()
           
-          .add( 'return out' )
+          .add( 'return { groups: out, keys: keys }' )
         .end( 'aggregate()' )
       ;
       
@@ -1256,8 +1264,8 @@
   function Aggregator( dimensions, measures, options ) {
     Connection.call( this, options );
     
-    new Aggregator_Dimensions( this, dimensions, options );
-    new Aggregator_Measures  ( this, measures  , options );
+    this.dimensions = new Aggregator_Dimensions( this, dimensions, options );
+    this.measures   = new Aggregator_Measures  ( this, measures  , options );
     
     return this;
   } // Aggregator()
