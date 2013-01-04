@@ -1256,44 +1256,55 @@
     build_reduce_groups: function( measures ) {
       measures = this.get();
       
-      var u, i, m, ids = [], id, first, d, dimensions = this.aggregator.dimensions.get(), dimension_ids = [];
+      var u, i, m, ids = [], id, first
+        , d, dimensions = this.aggregator.dimensions.get()
+        , dimension_ids = []
+        , vars = []
+        , init_measures = '';
+      ;
       
       if ( measures.length ) {
-        for ( i = -1; m = measures[ ++i ]; ) ids.push( m.id );
+        for ( i = -1; m = measures[ ++i ]; ) {
+          ids.push( id = m.id );
+          vars.push( id = '_' + id );
+          init_measures += id + ' = 0; ';
+        }
         
-        if ( ids.length === 1 ) {
-          var id = ids[ 0 ];
-          
-          first = '_' + id + ' += ' + 'g[ ++j ].' + id + ';';
+        id = ids[ i = 0 ];
+        
+        if ( measures.length === 1 ) {
+          first = '_' + id + ' += g[ ++j ].' + id + ';';
         } else {
-          var id = ids[ 0 ];
+          first = '_' + id + ' += ( o = g[ ++j ] ).' + id + ';';
           
-          first = '_' + id + ' += ' + '( o = g[ ++j ] ).' + id + ';';
-          
-          for ( i = -1; ( id = ids[ ++i ] ) !== u; ) {
-            first += '_' + id + ' += ' + 'o.' + id + ';';
+          for ( ; ( id = ids[ ++i ] ) !== u; ) {
+            first += ' _' + id + ' += o.' + id + ';';
           }
         }
       }
       
       var code = new Code()
         ._function( 'this.aggregator.reduce_groups', null, [ 'groups' ] )
-          ._var( 'keys = groups.keys', 'l = keys.length', 'out = []' )
+          ._var( 'keys = groups.keys', 'key', 'out = []', 'o' )
+          ._var( vars )
           
           .add( 'groups = groups.groups' )
           
-          ._for( 'var i = -1', '++i < l' )
-            ._var( 'g = groups[ keys[ i ] ]' );
+          ._for( 'var j = -1', 'key = keys[ ++j ]' );
             
             if ( measures.length ) {
-            
-              code._var( 'j = -1', 'gl = g.length', '_' + ids.join( ' = 0, _' ) + ' = 0', 'o' )
-              .unrolled_while( first );
-            } else {
-              code._var( 'o = groups[ keys[ i ] ][ 0 ]' );
+              code
+                ._var( 'g = groups[ key ]', 'i = -1', 'l = g.length' )
+                
+                .line( init_measures )
+                
+                .unrolled_while( first )
+              ;
             }
             
             code()
+            .add( 'o = groups[ key ][ 0 ]', 1 )
+            
             .line( 'out.push( {' );
               for ( i = -1; d = dimensions[ ++i ]; ) {
                 code.line( '  ' + d.id + ': o.' + d.id );
