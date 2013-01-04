@@ -121,15 +121,14 @@
   /* -------------------------------------------------------------------------------------------
      Table()
   */
-   function Table( node, columns, options ) {
-    Set.call( this, [], options );
-    
-    options = this.process_options( options );
-    
+  function Table( node, columns, options ) {
+    this.process_options( options );
     this.set_node( node );
     this.init();
     
     this.columns = new Table_Columns( columns, this, options );
+    
+    Set.call( this, [], options );
     
     return this;
   } // Table()
@@ -149,9 +148,9 @@
     
     // process and set the default options
     process_options: function( options ) {
-      options = extend( {}, options );
+      this.options = options = extend( {}, options );
       
-      return this.options = options;
+      return this;
     }, // process_options
     
     init: function() {
@@ -184,8 +183,6 @@
     add: function( objects ) {
       Set.prototype.add.call( this, objects );
       
-      if( ! this.columns ) return this;
-      
       var body    = this.body
         , columns = this.columns.columns.get()
         , l       = objects.length
@@ -194,7 +191,7 @@
       
       for( var i = -1; ++i < l; ) {
         var o = objects[ i ]
-          , r = body.insertRow( 0 )
+          , r = body.insertRow( -1 )
         ;
         
         for( var j = -1; ++j < cl; ) {
