@@ -15,6 +15,7 @@
     , Code       = XS.Code
     , Connection = XS.Connection
     , Set        = XS.Set
+    , Ordered_Set= XS.Ordered_Set
   ;
   
   /* -------------------------------------------------------------------------------------------
@@ -121,19 +122,28 @@
   /* -------------------------------------------------------------------------------------------
      Table()
   */
-  function Table( node, columns, options ) {
+  
+  Connection.prototype.table = function( node, columns, organizer, options ) {
+    var t = new Table( node, columns, organizer, extend( { key: this.key }, options ) );
+    
+    this.connect( t );
+    
+    return t;
+  };
+  
+  function Table( node, columns, organizer, options ) {
     this.process_options( options );
     this.set_node( node );
     this.init();
     
     this.columns = new Table_Columns( columns, this, options );
     
-    Set.call( this, [], options );
+    Ordered_Set.call( this, [], organizer, options );
     
     return this;
   } // Table()
   
-  subclass( Set, Table );
+  subclass( Ordered_Set, Table );
   
   extend( Table.prototype, {
     set_node: function( node ) {
@@ -181,17 +191,18 @@
     }, // set_caption()
     
     add: function( objects ) {
-      Set.prototype.add.call( this, objects );
+      Ordered_Set.prototype.add.call( this, objects );
       
-      var body    = this.body
-        , columns = this.columns.columns.get()
-        , l       = objects.length
-        , cl      = columns.length
+      var body      = this.body
+        , columns   = this.columns.columns.get()
+        , locations = this.locate( objects )
+        , l         = objects.length
+        , cl        = columns.length
       ;
       
       for( var i = -1; ++i < l; ) {
         var o = objects[ i ]
-          , r = body.insertRow( -1 )
+          , r = body.insertRow( locations[ i ].insert - 1 )
         ;
         
         for( var j = -1; ++j < cl; ) {
@@ -208,13 +219,13 @@
     }, // add()
     
     remove: function( objects ) {
-      Set.prototype.remove.call( this, objects );
+      Ordered_Set.prototype.remove.call( this, objects );
       
       return this;
     }, // remove()
     
     update: function( updates ) {
-      Set.prototype.update.call( this, objects );
+      Ordered_Set.prototype.update.call( this, objects );
       
       return this;
     } // update()
