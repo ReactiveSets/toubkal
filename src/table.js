@@ -50,9 +50,11 @@
   extend( Table_Columns.prototype, {
     add: function( objects ) {
       var table = this.table
-        , a     = table.get()
+        , a     = table.get() || []
         , row   = table.header.getElementsByTagName( "tr" )[ 0 ]
+        , lines = table.body.getElementsByTagName( "tr" )
         , l     = objects.length
+        , al    = a.length
       ;
       
       for( var i = -1; ++i < l; ) {
@@ -64,6 +66,15 @@
         th.setAttribute( "column_id", c.id );
         
         row.appendChild( th );
+        
+        for( var j = al; j; ) {
+          var o  = a[ --j ]
+            , td = lines[ j ].insertCell( -1 )
+            , v  = o[ c.id ]
+          ;
+          
+          if( v !== undefined ) td.innerHTML = v;
+        }
       }
       
       return this;
@@ -191,8 +202,6 @@
     }, // set_caption()
     
     add: function( objects ) {
-      Ordered_Set.prototype.add.call( this, objects );
-      
       var body      = this.body
         , columns   = this.columns.columns.get()
         , locations = this.locate( objects )
@@ -202,7 +211,7 @@
       
       for( var i = -1; ++i < l; ) {
         var o = objects[ i ]
-          , r = body.insertRow( locations[ i ].insert - 1 )
+          , r = body.insertRow( locations[ i ].insert + i )
         ;
         
         for( var j = -1; ++j < cl; ) {
@@ -214,6 +223,8 @@
           if( v !== undefined ) td.innerHTML = o[ c.id ];
         }
       }
+      
+      Ordered_Set.prototype.add.call( this, objects );
       
       return this;
     }, // add()
