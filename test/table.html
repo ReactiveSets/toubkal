@@ -18,6 +18,14 @@
   <body>
     <h4>XS Table</h4>
     
+    <form id="div">
+      <label for="_id">ID</label><input id="_id" type="text" />
+      <label for="_title">Title</label><input id="_title" type="text" />
+      <label for="_author">Author</label><input id="_author" type="text" />
+      <label for="_year">Year</label><input id="_year" type="text" />
+      <input id="submit" type="button" value="ADD" />
+    </div>
+    
     <div id="demo"></div>
     
     <script type="text/javascript" charset="utf-8">
@@ -26,31 +34,28 @@
             { id: "title" , label: "Title"  },
             { id: "author", label: "Author" },
             { id: "year"  , label: "Year"   }
-          ] )
+          ], { name: "Columns Set" } )
         
-        , books = new XS.Set( [
-            { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 },
-            { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 },
-            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 },
-            { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 },
-            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 },
-            { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 },
-            { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 },
-            { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 },
-            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 },
-            { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 },
-            { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000 },
-            { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 },
-            { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 },
-            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined },
-            { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null },
-            { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
-          ] )
+        , organizer = new XS.Set( [ { id: "title" } ], { name: "Organizer: by title ascending" } )
+        
+        , books = new XS.Ordered_Set( [
+            { id: 1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 },
+            { id: 2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 },
+            { id: 3, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          },
+            { id: 4, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+          ], organizer, { name: "Books" } )
       ;
       
-      books.table( document.getElementById( "demo" ), columns, {
+      
+      books.table( document.getElementById( "demo" ), columns, organizer, {
         caption: "List of the best-selling books (source: wikipedia)"
       } );
+      
+      books.add( [
+      { id: 5, title: "Angels and Demons", author: "Dan Brown"      , year: 2000 },
+      { id: 9, title: "The Hunger Games" , author: "Suzanne Collins", year: 2008 }
+      ] );
+      
       /*
       books.add( [
         { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 },
@@ -76,6 +81,20 @@
       columns.update( [ [ { id: "name", label: "Name" } , { id: "name", label: "Full Name" } ] ] );
       columns.remove( [ { id: "customer_id", label: "Customer ID" } ] );
       */
+      
+      $( "#submit" ).click( execute );
+      
+      function execute() {
+        var _id     = $( "#_id"     ).val()
+          , _title  = $( "#_title"  ).val()
+          , _author = $( "#_author" ).val()
+          , _year   = $( "#_year"   ).val()
+        ;
+        
+        if( _id === "" || _title === "" || _author === "" || _year === "" ) return;
+        
+        books.add( [ { id: _id, title: _title, author: _author, year: _year } ] );
+      }
     </script>
   </body>
 </html>
