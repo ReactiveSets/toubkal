@@ -262,6 +262,72 @@
       return this._var( vars );
     }, // vars_from_object()
     
+    /* unrolled_while( first, inner, last, count )
+      
+      Generates an unrolled while loop.
+      
+      Parameters:
+        - first: the first line of the body of the unfolded loop. This code must increment the
+          variable 'i' - e.g. 'if ( a[ ++i ].id === _id'
+          
+        - inner (optional): the inner line of the body, default is to use the first line of body.
+          This code must increment the variable 'i' - e.g. '|| a[ ++i ].id === _id'
+        
+        - last (optional): the last line of the body, default is empty string, this code must
+          NOT increment the variable 'i' - e.g. ') return i'
+          
+        - count (optional): the number of iterations unrolled, default is calculated based on
+          the string size of the inner statement.
+      
+      The code generated requires that:
+        - the variable 'l' contains the total number of iterations
+        - the variable 'i' is the start index minus 1
+        - i is incremented by the code provided as parameters
+      
+      Generated code creates the intermediate variable 'ul'.
+      
+      Example 1:
+        _var( 'removed = []', 'i = -1', 'l = objects.length', 'o' )
+        .unrolled_while( 'o = objects[ ++i ];  if ( o.country === "Morocco" ) removed.push( o );' )
+        
+        Generates:
+          var ul = l - l % 2 - 1;
+
+          while( i < ul ) {
+            o = objects[ ++i ];  if ( o.country === "Morocco" ) removed.push( o );
+            o = objects[ ++i ];  if ( o.country === "Morocco" ) removed.push( o );
+          }
+          
+          ul = l - 1;
+          while( i < ul ) {
+            o = objects[ ++i ];  if ( o.country === "Morocco" ) removed.push( o );
+          }
+      
+      Example 2:
+        unrolled_while( 'if ( a[ ++i ].id === _id', '|| a[ ++i ].id === _id', ') return i' )
+        
+        Generates:
+          var ul = l - l % 9 - 1;
+
+          while( i < ul ) {
+            if ( a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+              || a[ ++i ].id === _id
+            ) return i;
+          }
+          
+          ul = l - 1;
+          while( i < ul ) {
+            if ( a[ ++i ].id === _id ) return i;
+          }
+      
+    */
     unrolled_while: function( first, inner, last, count ) {
       inner || ( inner = first );
       count || ( count = 200 / inner.length >> 0 );
@@ -406,42 +472,20 @@
       );
       
       return this.make_key( o );
-    }, // make_key()
-    
-    set: function( options ) {
-      var s = new Set( extend( { key: this.key }, options ) );
-      
-      this.connect( s );
-      
-      return s;
-    }, // set()
-    
-    filter: function( filter, options ) {
-      var f = new Filter( this, filter, extend( { key: this.key }, options ) );
-      
-      return f.out; // ToDo: Filter should not build a set
-    }, // filter()
-    
-    order: function( organizer, options ) {
-      var s = new Ordered_Set( [], organizer, extend( { key: this.key }, options ) );
-      
-      this.connect( s );
-      
-      return s;
-    }, // order()
-    
-    table: function( node, columns, options ) {
-      var t = new XS.Table( node, columns, extend( { key: this.key }, options ) );
-      
-      this.connect( t );
-      
-      return t;
-    } // table
+    } // make_key()
   } ); // Connection instance methods
   
   /* -------------------------------------------------------------------------------------------
      Set( a [, options] )
   */
+  Connection.prototype.set = function( options ) {
+    var s = new Set( extend( { key: this.key }, options ) );
+    
+    this.connect( s );
+    
+    return s;
+  } // set()
+  
   function Set( a, options ) {
     options = Connection.call( this, options ).options;
     
@@ -569,6 +613,12 @@
   /* -------------------------------------------------------------------------------------------
      Filter()
   */
+  Connection.prototype.filter = function( filter, options ) {
+    var f = new Filter( this, filter, extend( { key: this.key }, options ) );
+    
+    return f.out; // ToDo: Filter should not build a set
+  } // filter()
+  
   function Filter( set, filter, options ) {
     Connection.call( this, options );
     
@@ -777,6 +827,14 @@
   /* -------------------------------------------------------------------------------------------
      Ordered_Set()
   */
+  Connection.prototype.order = function( organizer, options ) {
+    var s = new Ordered_Set( [], organizer, extend( { key: this.key }, options ) );
+    
+    this.connect( s );
+    
+    return s;
+  } // order()
+  
   function Ordered_Set( a, organizer, options ) {
     Set.call( this, a, options );
     
@@ -1196,11 +1254,25 @@
     build_reduce_groups: function( measures ) {
       measures = this.get();
       
-      var dimensions = this.aggregator.dimensions.get(), dimension_ids = [];
+      var u, i, m, ids = [], id, first, d, dimensions = this.aggregator.dimensions.get(), dimension_ids = [];
       
-      for ( var i = -1, d; d = dimensions[ ++i ]; ) dimension_ids.push( d.id );
-      
-      for ( var ids = [], i = -1, m; m = measures[ ++i ]; ) ids.push( m.id );
+      if ( measures.length ) {
+        for ( i = -1; m = measures[ ++i ]; ) ids.push( m.id );
+        
+        if ( ids.length === 1 ) {
+          var id = ids[ 0 ];
+          
+          first = '_' + id + ' += ' + 'g[ ++j ].' + id + ';';
+        } else {
+          var id = ids[ 0 ];
+          
+          first = '_' + id + ' += ' + '( o = g[ ++j ] ).' + id + ';';
+          
+          for ( i = -1; ( id = ids[ ++i ] ) !== u; ) {
+            first += '_' + id + ' += ' + 'o.' + id + ';';
+          }
+        }
+      }
       
       var code = new Code()
         ._function( 'this.aggregator.reduce_groups', null, [ 'groups' ] )
@@ -1209,22 +1281,24 @@
           .add( 'groups = groups.groups' )
           
           ._for( 'var i = -1', '++i < l' )
-            ._var( 'g = groups[ keys[ i ] ]', 'gl = g.length', '_' + ids.join( ' = 0, _' ) + ' = 0', 'o' )
+            ._var( 'g = groups[ keys[ i ] ]' );
             
-            ._for( 'var j = -1', '++j < gl' );
-              
-              for ( var i = -1, id; id = ids[ ++i ] !== void 0; ) {
-                code.add( '_' + id + ' += ' + ( i ? 'o.' : '( o = g[ j ] ).' ) + id )
+            if ( measures.length ) {
+            
+              code._var( 'j = -1', 'gl = g.length', '_' + ids.join( ' = 0, _' ) + ' = 0', 'o' )
+              .unrolled_while( first );
+            } else {
+              code._var( 'o = groups[ keys[ i ] ][ 0 ]' );
+            }
+            
+            code()
+            .line( 'out.push( {' );
+              for ( i = -1; d = dimensions[ ++i ]; ) {
+                code.line( '  ' + d.id + ': o.' + d.id );
               }
               
-            code.end()
-            
-            .line( 'out.push( {' );
-              for ( var i = -1, id; id = ids[ ++i ] !== void 0; ) {
-              }              
-              
-              for ( var i = -1, id; id = ids[ ++i ] !== void 0; ) {
-                code.add( '  ' + id + ': _' + id );
+              for ( i = -1; ( id = ids[ ++i ] ) !== u; ) {
+                code.line( '  ' + id + ': _' + id );
               }
             
             code.line( '} );' )
@@ -1326,7 +1400,11 @@
   /* -------------------------------------------------------------------------------------------
      module exports
   */
-  eval( export_code( 'XS', [ 'Connection', 'Set', 'Filter', 'Code', 'extend', 'log', 'subclass', 'export_code' ] ) );
+  eval( export_code( 'XS', [
+    'Connection', 'Set', 'Ordered_Set', 'Filter',
+    'Aggregator', 'Aggregator_Dimensions', 'Aggregator_Measures',
+    'Code', 'extend', 'log', 'subclass', 'export_code'
+  ] ) );
   
   de&&ug( "module loaded" );
 } )( this ); // xs.js
