@@ -58,8 +58,9 @@
       ;
       
       for( var i = -1; ++i < l; ) {
-        var c  = objects[ i ]
-          , th = document.createElement( "th" )
+        var c     = objects[ i ]
+          , th    = document.createElement( "th" )
+          , align = c.align
         ;
         
         th.innerHTML = c.label;
@@ -73,7 +74,18 @@
             , v  = o[ c.id ]
           ;
           
-          if( v !== undefined ) td.innerHTML = v;
+          if( align ) td.style.textAlign = align;
+          
+          switch( typeof v ) {
+            case "undefined":
+              v = "";
+              
+            case "number":
+              if( td.style.textAlign === "" ) td.style.textAlign = "right";
+             
+            case "string":
+              td.innerHTML = v;
+          }
         }
       }
       
@@ -205,7 +217,7 @@
       var body      = this.body
         , columns   = this.columns.columns.get()
         , locations = this.locate( objects )
-        , l         = objects.length
+        , l         = locations.length
         , cl        = columns.length
       ;
       
@@ -215,12 +227,24 @@
         ;
         
         for( var j = -1; ++j < cl; ) {
-          var c  = columns[ j ]
-            , td = r.insertCell( -1 )
-            , v = o[ c.id ]
+          var c     = columns[ j ]
+            , td    = r.insertCell( -1 )
+            , v     = o[ c.id ]
+            , align = c.align
           ;
           
-          if( v !== undefined ) td.innerHTML = o[ c.id ];
+          if( align ) td.style.textAlign = align;
+          
+          switch( typeof v ) {
+            case "undefined":
+              v = "";
+              
+            case "number":
+              if( td.style.textAlign == "" ) td.style.textAlign = "right";
+             
+            case "string":
+              td.innerHTML = v;
+          }
         }
       }
       
