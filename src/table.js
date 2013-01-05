@@ -68,25 +68,7 @@
         
         row.appendChild( th );
         
-        for( var j = al; j; ) {
-          var o  = a[ --j ]
-            , td = lines[ j ].insertCell( -1 )
-            , v  = o[ c.id ]
-          ;
-          
-          if( align ) td.style.textAlign = align;
-          
-          switch( typeof v ) {
-            case "undefined":
-              v = "";
-              
-            case "number":
-              if( td.style.textAlign === "" ) td.style.textAlign = "right";
-             
-            case "string":
-              td.innerHTML = v;
-          }
-        }
+        for( var j = al; j; ) _add_cell( lines[ --j ], a[ j ][ c.id ], align );
       }
       
       return this;
@@ -227,24 +209,9 @@
         ;
         
         for( var j = -1; ++j < cl; ) {
-          var c     = columns[ j ]
-            , td    = r.insertCell( -1 )
-            , v     = o[ c.id ]
-            , align = c.align
-          ;
+          var c     = columns[ j ];
           
-          if( align ) td.style.textAlign = align;
-          
-          switch( typeof v ) {
-            case "undefined":
-              v = "";
-              
-            case "number":
-              if( td.style.textAlign == "" ) td.style.textAlign = "right";
-             
-            case "string":
-              td.innerHTML = v;
-          }
+          _add_cell( r, objects[ i ][ c.id ], c.align );
         }
       }
       
@@ -278,6 +245,25 @@
       && typeof node === "object" && node.nodeType === 1 && typeof node.nodeName ==="string"
     );
   } // is_DOM()
+  
+  // add cell
+  function _add_cell( r, v, align ) {
+    var td = r.insertCell( -1 );
+    
+    if( align ) td.style.textAlign = align;
+    
+    switch( typeof v ) {
+      case "undefined":
+        v = "";
+      break;
+        
+      case "number":
+        if( td.style.textAlign == "" ) td.style.textAlign = "right";
+       
+      case "string":
+        td.innerHTML = v;
+    }
+  } // _add_cell()
   
   de&&ug( "module loaded" );
 } )( this ); // table.js
