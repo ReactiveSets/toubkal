@@ -44,6 +44,7 @@
   if (typeof require !== "undefined" && require !== null) {
     require('../src/code.js');
     require('../src/connection.js');
+    require('../src/filter.js');
   }
 
   if (typeof require !== "undefined" && require !== null) {

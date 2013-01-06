@@ -36,6 +36,7 @@ XS = if require? then ( require '../src/xs.js' ).XS else this.XS
 if require?
   require '../src/code.js'
   require '../src/connection.js'
+  require '../src/filter.js'
 
 chai = require 'chai' if require?
 chai?.should()
