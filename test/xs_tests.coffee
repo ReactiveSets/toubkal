@@ -31,7 +31,10 @@ describe 'clone():', ->
 # ------------------
 
 # include modules
-XS = if require? then ( require '../src/xs.js' ).XS else this.XS 
+XS = if require? then ( require '../src/xs.js' ).XS else this.XS
+
+if require? then
+  require '../src/code.js'
 
 chai = require 'chai' if require?
 chai?.should()
