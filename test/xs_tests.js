@@ -45,6 +45,7 @@
     require('../src/code.js');
     require('../src/connection.js');
     require('../src/filter.js');
+    require('../src/aggregator.js');
   }
 
   if (typeof require !== "undefined" && require !== null) {
