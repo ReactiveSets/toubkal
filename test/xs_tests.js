@@ -42,6 +42,11 @@
   XS = typeof require !== "undefined" && require !== null ? (require('../src/xs.js')).XS : this.XS;
 
   if (typeof require !== "undefined" && require !== null) {
+    require('../src/code.js');
+    require('../src/connection.js');
+  }
+
+  if (typeof require !== "undefined" && require !== null) {
     chai = require('chai');
   }
 
