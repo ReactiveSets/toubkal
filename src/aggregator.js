@@ -1,4 +1,4 @@
-// connection.js
+// aggregator.js
 
 ( function( exports ) {
   var XS;

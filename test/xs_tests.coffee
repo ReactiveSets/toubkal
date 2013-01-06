@@ -37,6 +37,7 @@ if require?
   require '../src/code.js'
   require '../src/connection.js'
   require '../src/filter.js'
+  require '../src/ordered_set.js'
   require '../src/aggregator.js'
 
 chai = require 'chai' if require?

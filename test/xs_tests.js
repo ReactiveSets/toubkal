@@ -45,6 +45,7 @@
     require('../src/code.js');
     require('../src/connection.js');
     require('../src/filter.js');
+    require('../src/ordered_set.js');
     require('../src/aggregator.js');
   }
 
