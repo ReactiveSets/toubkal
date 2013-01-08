@@ -49,12 +49,12 @@
   
   extend( Table_Columns.prototype, {
     add: function( objects ) {
-      var table = this.table
-        , a     = table.get() || []
-        , row   = table.header.getElementsByTagName( "tr" )[ 0 ]
-        , lines = table.body.getElementsByTagName( "tr" )
-        , l     = objects.length
-        , al    = a.length
+      var table      = this.table
+        , a          = table.get() || []
+        , header_row = table.header.getElementsByTagName( "tr" )[ 0 ]
+        , body_rows  = table.body  .getElementsByTagName( "tr" )
+        , l          = objects.length
+        , al         = a.length
       ;
       
       for( var i = -1; ++i < l; ) {
@@ -66,9 +66,9 @@
         th.innerHTML = c.label;
         th.setAttribute( "column_id", c.id );
         
-        row.appendChild( th );
+        header_row.appendChild( th );
         
-        for( var j = al; j; ) _add_cell( lines[ --j ], a[ j ][ c.id ], align );
+        for( var j = al; j; ) _add_cell( body_rows[ --j ], a[ j ][ c.id ], align );
       }
       
       return this;
@@ -221,6 +221,13 @@
     }, // add()
     
     remove: function( objects ) {
+      var body      = this.body
+        , locations = this.locate( objects )
+        , l         = locations.length
+      ;
+      
+      for( var i = -1; ++i < l; ) body.deleteRow( locations[ i ].insert - i - 1 );
+      
       Ordered_Set.prototype.remove.call( this, objects );
       
       return this;
@@ -230,7 +237,28 @@
       Ordered_Set.prototype.update.call( this, objects );
       
       return this;
-    } // update()
+    }, // update()
+    
+    sort: function( organizer ) {
+      // var a = this.get(), copy = []; for( var i = -1; ++i < a.length; ) copy.push( a[ i ] );
+      
+      Ordered_Set.prototype.sort.call( this, organizer );
+      /*
+      var locations = this.locate( a );
+      
+      var rows = this.body.getElementsByTagName( "tr" );
+      
+      
+      for( var i = locations.length; i; ) {
+        var insert = locations[ --i ].insert;
+        
+        console.log( insert );
+      }
+      
+      console.log( locations );
+      */
+      return this;
+    } // order()
   } ); // Table instance methods
   
   /* -------------------------------------------------------------------------------------------
@@ -242,7 +270,7 @@
   function is_DOM( node ){
     return (
          typeof HTMLElement === "object" ? node instanceof HTMLElement : node
-      && typeof node === "object" && node.nodeType === 1 && typeof node.nodeName ==="string"
+      && typeof node === "object" && node.nodeType === 1 && typeof node.nodeName === "string"
     );
   } // is_DOM()
   
