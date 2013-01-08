@@ -234,7 +234,28 @@
     }, // remove()
     
     update: function( updates ) {
-      Ordered_Set.prototype.update.call( this, objects );
+      var rows      = this.body.getElementsByTagName( "tr" )
+        , locations = this.locate( updates )
+        , columns   = this.columns.columns.get()
+        , l         = locations.length
+        , cl        = columns.length
+      ;
+      
+      for( var i = l; i; ) {
+        var cells  = rows[ locations[ --i ].insert - 1 ].cells
+          , update = updates[ i ]
+          , u0     = update [ 0 ]
+          , u1     = update [ 1 ]
+        ;
+        
+        for( var j = cl; j; ) {
+          var c = columns[ --j ];
+          
+          if( u0[ c.id ] !== u1[ c.id ] ) cells[ j ].innerHTML = u1[ c.id ];
+        }
+      }
+      
+      Ordered_Set.prototype.update.call( this, updates );
       
       return this;
     }, // update()
