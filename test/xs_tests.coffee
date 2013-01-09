@@ -43,6 +43,8 @@ if require?
 chai = require 'chai' if require?
 chai?.should()
 
+Set = XS.Set
+
 describe 'XS test suite:', ->
   it 'XS should be defined:', ->
     XS.should.exist
@@ -167,8 +169,6 @@ describe 'XS test suite:', ->
       g( 1 ).should.be.eql 8
   
   describe 'XS.Set():', ->
-    Set = XS.Set
-    
     set = new Set []
     
     it 'set should be a Set', ->
@@ -1067,3 +1067,67 @@ describe 'XS test suite:', ->
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
           ]
+  
+  describe 'XS.Aggregator():', ->
+    books_sales = new Set [
+      { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year: 1859 }
+      { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year: 1955 }
+      { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        80, year: 2003 }
+      { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , sales:        65, year: 1988 }
+      { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , sales:        39, year: 2000 }
+      { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , sales:        30, year: 2005 }
+      { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", sales:       125, year: 1853 }
+      { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , sales:       100, year: 1937 }
+      { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , sales:        23, year: 2008 }
+      { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , sales: undefined, year: 1999 }
+      { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , sales:        10, year: 2000 }
+      { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , sales: undefined, year: 2008 }
+      { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , sales:        50, year: 1955 }
+      { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , sales:       100, year: undefined }
+      { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , sales:        60, year: null }
+      { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13             }
+    ]
+    
+    measures  = new Set [ { id: "sales"  } ]
+    by_author = new Set [ { id: "author" } ]
+    by_year   = new Set [ { id: "year"   } ]
+    
+    books_sales_by_author = books_sales.aggregate by_author, measures
+    books_sales_by_year   = books_sales.aggregate by_year, measures
+    
+    it 'books_sales_by_author should by grouped by author', ->
+      books_sales_by_author.should.be.eql [
+        { author: "Charles Dickens"        , sales:       200 }
+        { author: "J. R. R. Tolkien"       , sales:       250 }
+        { author: "Dan Brown"              , sales:       119 }
+        { author: "Paulo Coelho"           , sales:        65 }
+        { author: "Stieg Larsson"          , sales:        30 }
+        { author: "William Holmes McGuffey", sales:       125 }
+        { author: "Suzanne Collins"        , sales:        23 }
+        { author: "J.K. Rowling"           , sales: undefined }
+        { author: "Pierre Dukan"           , sales:        10 }
+        { author: "Stephenie Meyer"        , sales: undefined }
+        { author: "Vladimir Nabokov"       , sales:        50 }
+        { author: "Agatha Christie"        , sales:       100 }
+        { author: "Ellen G. White"         , sales:        60 }
+        { author: "Roald Dahl"             , sales:        13 }
+      ]
+    
+    it 'books_sales_by_year should by grouped by year', ->
+      books_sales_by_year.should.be.eql [
+        { sales:       200, year: 1859 }
+        { sales:       200, year: 1955 }
+        { sales:        80, year: 2003 }
+        { sales:        65, year: 1988 }
+        { sales:        49, year: 2000 }
+        { sales:        30, year: 2005 }
+        { sales:       125, year: 1853 }
+        { sales:       100, year: 1937 }
+        { sales:        23, year: 2008 }
+        { sales: undefined, year: 1999 }
+        { sales:       113, year: undefined }
+        { sales:        60, year: null }
+      ]
+    
+    
+    
