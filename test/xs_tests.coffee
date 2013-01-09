@@ -1088,15 +1088,15 @@ describe 'XS test suite:', ->
       { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13             }
     ]
     
-    measures  = new Set [ { id: "sales"  } ]
+    sales  = new Set [ { id: "sales"  } ]
     by_author = new Set [ { id: "author" } ]
     by_year   = new Set [ { id: "year"   } ]
     
-    books_sales_by_author = books_sales.aggregate by_author, measures
-    books_sales_by_year   = books_sales.aggregate by_year, measures
+    books_sales_by_author = books_sales.aggregate by_author, sales
+    books_sales_by_year   = books_sales.aggregate by_year, sales
     
     it 'books_sales_by_author should by grouped by author', ->
-      books_sales_by_author.should.be.eql [
+      books_sales_by_author.get().should.be.eql [
         { author: "Charles Dickens"        , sales:       200 }
         { author: "J. R. R. Tolkien"       , sales:       250 }
         { author: "Dan Brown"              , sales:       119 }
@@ -1114,7 +1114,7 @@ describe 'XS test suite:', ->
       ]
     
     it 'books_sales_by_year should by grouped by year', ->
-      books_sales_by_year.should.be.eql [
+      books_sales_by_year.get().should.be.eql [
         { sales:       200, year: 1859 }
         { sales:       200, year: 1955 }
         { sales:        80, year: 2003 }

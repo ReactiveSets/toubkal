@@ -3123,7 +3123,7 @@
       });
     });
     return describe('XS.Aggregator():', function() {
-      var books_sales, books_sales_by_author, books_sales_by_year, by_author, by_year, measures;
+      var books_sales, books_sales_by_author, books_sales_by_year, by_author, by_year, sales;
       books_sales = new Set([
         {
           id: 1,
@@ -3222,7 +3222,7 @@
           sales: 13
         }
       ]);
-      measures = new Set([
+      sales = new Set([
         {
           id: "sales"
         }
@@ -3237,10 +3237,10 @@
           id: "year"
         }
       ]);
-      books_sales_by_author = books_sales.aggregate(by_author, measures);
-      books_sales_by_year = books_sales.aggregate(by_year, measures);
+      books_sales_by_author = books_sales.aggregate(by_author, sales);
+      books_sales_by_year = books_sales.aggregate(by_year, sales);
       it('books_sales_by_author should by grouped by author', function() {
-        return books_sales_by_author.should.be.eql([
+        return books_sales_by_author.get().should.be.eql([
           {
             author: "Charles Dickens",
             sales: 200
@@ -3287,7 +3287,7 @@
         ]);
       });
       return it('books_sales_by_year should by grouped by year', function() {
-        return books_sales_by_year.should.be.eql([
+        return books_sales_by_year.get().should.be.eql([
           {
             sales: 200,
             year: 1859
