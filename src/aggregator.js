@@ -16,6 +16,7 @@
     , subclass   = XS.subclass
     , Code       = XS.Code
     , Connection = XS.Connection
+    , Set        = XS.Set
   ;
   
   /* -------------------------------------------------------------------------------------------
@@ -171,16 +172,19 @@
               ;
             }
             
-            code()
+            code
             .add( 'o = groups[ key ][ 0 ]', 1 )
             
             .line( 'out.push( {' );
+              var indent = '    ';
               for ( i = -1; d = dimensions[ ++i ]; ) {
-                code.line( '  ' + d.id + ': o.' + d.id );
+                code.line( indent + d.id + ': o.' + d.id );
+                indent = '  , ';
               }
               
               for ( i = -1; ( id = ids[ ++i ] ) !== u; ) {
-                code.line( '  ' + id + ': _' + id );
+                code.line( indent + id + ': _' + id );
+                indent = '  , ';
               }
             
             code.line( '} );' )
