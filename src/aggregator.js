@@ -224,7 +224,7 @@
   }; // Connection.prototype.aggregate()
   
   function Aggregator( dimensions, measures, options ) {
-    Connection.call( this, options );
+    Set.call( this, options );
     
     this.dimensions = new Aggregator_Dimensions( this, dimensions, options );
     this.measures   = new Aggregator_Measures  ( this, measures  , options );
@@ -232,7 +232,7 @@
     return this;
   } // Aggregator()
   
-  subclass( Connection, Aggregator );
+  subclass( Set, Aggregator );
   
   extend( Aggregator.prototype, {
     aggregate: function( objects ) {
