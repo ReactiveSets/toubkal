@@ -215,15 +215,15 @@
   /* -------------------------------------------------------------------------------------------
      Aggregator()
   */
-  Connection.prototype.aggregate = function( dimensions, measures, options ) {
-    var a = new Aggregator( dimensions, measures, options );
+  Connection.prototype.aggregate = function( measures, dimensions, options ) {
+    var a = new Aggregator( measures, dimensions, options );
     
     this.connect( a );
     
     return a;
   }; // Connection.prototype.aggregate()
   
-  function Aggregator( dimensions, measures, options ) {
+  function Aggregator( measures, dimensions, options ) {
     Set.call( this, options );
     
     this.dimensions = new Aggregator_Dimensions( this, dimensions, options );

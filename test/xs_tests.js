@@ -3237,8 +3237,8 @@
           id: "year"
         }
       ]);
-      books_sales_by_author = books_sales.aggregate(by_author, sales);
-      books_sales_by_year = books_sales.aggregate(by_year, sales);
+      books_sales_by_author = books_sales.aggregate(sales, by_author);
+      books_sales_by_year = books_sales.aggregate(sales, by_year);
       it('books_sales_by_author should by grouped by author', function() {
         return books_sales_by_author.get().should.be.eql([
           {
