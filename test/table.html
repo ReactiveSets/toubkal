@@ -4,6 +4,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <link rel="stylesheet" media="all" type="text/css" href="css/table.css" />
+    <link rel="stylesheet" href="css/mocha.css" />
+    
+    <script src="javascript/es5.js"></script>
+
+    <script src="javascript/mocha.js"></script>
+    <script src="javascript/chai.js"></script>
+    <script>
+      mocha.setup( 'bdd' );
+
+      chai.should();
+    </script>
     
     <script type="text/javascript" charset="utf-8" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="javascript/es5.js"></script>
@@ -18,32 +29,20 @@
     <script type="text/javascript" charset="utf-8" src="../src/aggregator.js"></script>
     <script type="text/javascript" charset="utf-8" src="../src/table.js"></script>
     
+    <script>
+      window.onload = function() { mocha.run() };
+    </script>
+    
   </head>
   
   <body>
-    <h4>XS Table</h4>
-    
-    <div>
-      <h5>Add books</h3>
-      
-      <label for="_id">ID</label><input id="_id" type="text" />
-      <label for="_title">Title</label><input id="_title" type="text" />
-      <label for="_author">Author</label><input id="_author" type="text" />
-      <label for="_year">Year</label><input id="_year" type="text" />
-      <input id="add_books" type="button" value="ADD" />
-    </div>
-    
-    <div>
-      <h5>Add columns</h3>
-      
-      <label for="_column_id">ID</label><input id="_column_id" type="text" />
-      <label for="_column_label">Label</label><input id="_column_label" type="text" />
-      <input id="add_columns" type="button" value="ADD" />
-    </div>
-    
     <div id="demo"></div>
+    <div id="mocha"></div>
+    
+    <script src="xs_table_tests.js"></script>
     
     <script type="text/javascript" charset="utf-8">
+      /*
       var columns = new XS.Set( [
             { id: "id"    , label: "ID"     },
             { id: "title" , label: "Title"  },
@@ -105,31 +104,7 @@
       ] );
       
       // organizer.update( [ [ { id: "title" }, { id: "author" } ] ] );
-      
-      $( "#add_books"   ).click( add_books   );
-      $( "#add_columns" ).click( add_columns );
-      
-      function add_books() {
-        var _id     = $( "#_id"     ).val()
-          , _title  = $( "#_title"  ).val()
-          , _author = $( "#_author" ).val()
-          , _year   = $( "#_year"   ).val()
-        ;
-        
-        if( _id === "" || _title === "" || _author === "" || _year === "" ) return;
-        
-        books.add( [ { id: _id, title: _title, author: _author, year: _year } ] );
-      }
-      
-      function add_columns() {
-        var _id    = $( "#_column_id"    ).val()
-          , _label = $( "#_column_label" ).val()
-        ;
-        
-        if( _id === "" || _label === "" ) return;
-        
-        columns.add( [ { id: _id, label: _label } ] );
-      }
+      */
     </script>
   </body>
 </html>
