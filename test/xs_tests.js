@@ -3264,13 +3264,13 @@
             sales: 23
           }, {
             author: "J.K. Rowling",
-            sales: void 0
+            sales: 0
           }, {
             author: "Pierre Dukan",
             sales: 10
           }, {
             author: "Stephenie Meyer",
-            sales: void 0
+            sales: 0
           }, {
             author: "Vladimir Nabokov",
             sales: 50
@@ -3316,7 +3316,7 @@
             sales: 23,
             year: 2008
           }, {
-            sales: void 0,
+            sales: 0,
             year: 1999
           }, {
             sales: 113,

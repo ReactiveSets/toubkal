@@ -1097,20 +1097,20 @@ describe 'XS test suite:', ->
     
     it 'books_sales_by_author should by grouped by author', ->
       books_sales_by_author.get().should.be.eql [
-        { author: "Charles Dickens"        , sales:       200 }
-        { author: "J. R. R. Tolkien"       , sales:       250 }
-        { author: "Dan Brown"              , sales:       119 }
-        { author: "Paulo Coelho"           , sales:        65 }
-        { author: "Stieg Larsson"          , sales:        30 }
-        { author: "William Holmes McGuffey", sales:       125 }
-        { author: "Suzanne Collins"        , sales:        23 }
-        { author: "J.K. Rowling"           , sales: undefined }
-        { author: "Pierre Dukan"           , sales:        10 }
-        { author: "Stephenie Meyer"        , sales: undefined }
-        { author: "Vladimir Nabokov"       , sales:        50 }
-        { author: "Agatha Christie"        , sales:       100 }
-        { author: "Ellen G. White"         , sales:        60 }
-        { author: "Roald Dahl"             , sales:        13 }
+        { author: "Charles Dickens"        , sales: 200 }
+        { author: "J. R. R. Tolkien"       , sales: 250 }
+        { author: "Dan Brown"              , sales: 119 }
+        { author: "Paulo Coelho"           , sales:  65 }
+        { author: "Stieg Larsson"          , sales:  30 }
+        { author: "William Holmes McGuffey", sales: 125 }
+        { author: "Suzanne Collins"        , sales:  23 }
+        { author: "J.K. Rowling"           , sales:   0 }
+        { author: "Pierre Dukan"           , sales:  10 }
+        { author: "Stephenie Meyer"        , sales:   0 }
+        { author: "Vladimir Nabokov"       , sales:  50 }
+        { author: "Agatha Christie"        , sales: 100 }
+        { author: "Ellen G. White"         , sales:  60 }
+        { author: "Roald Dahl"             , sales:  13 }
       ]
     
     it 'books_sales_by_year should by grouped by year', ->
@@ -1124,7 +1124,7 @@ describe 'XS test suite:', ->
         { sales:       125, year: 1853 }
         { sales:       100, year: 1937 }
         { sales:        23, year: 2008 }
-        { sales: undefined, year: 1999 }
+        { sales:         0, year: 1999 }
         { sales:       113, year: undefined }
         { sales:        60, year: null }
       ]
