@@ -126,7 +126,7 @@
     build_reduce_groups: function( measures ) {
       measures = this.get();
       
-      var u, i, m, ids = [], id, first
+      var u, i, m, ids = [], id, first, inner
         , d, dimensions = this.aggregator.dimensions.get()
         , dimension_ids = []
         , vars = []
@@ -143,9 +143,10 @@
         id = ids[ i = 0 ];
         
         if ( measures.length === 1 ) {
-          first = '_' + id + ' += g[ ++j ].' + id + ';';
+          first = '_' + id + ' += g[ ++i ].' + id;
+          inner = '+ g[ ++i ].' + id;
         } else {
-          first = '_' + id + ' += ( o = g[ ++j ] ).' + id + ';';
+          first = '_' + id + ' += ( o = g[ ++i ] ).' + id + ';';
           
           for ( ; ( id = ids[ ++i ] ) !== u; ) {
             first += ' _' + id + ' += o.' + id + ';';
@@ -168,7 +169,7 @@
                 
                 .line( init_measures )
                 
-                .unrolled_while( first )
+                .unrolled_while( first, inner )
               ;
             }
             
