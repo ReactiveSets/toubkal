@@ -61,6 +61,7 @@
     }, // notify()
     
     notify_connections: function( transaction ) {
+    // ToDo: JHR, remove this unused
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].notify( transaction );
