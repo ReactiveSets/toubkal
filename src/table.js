@@ -75,22 +75,24 @@
     }, // add()
     
     remove: function( objects ) {
-      var table = this.table
-        , a     = table.get()
-        , row   = table.header.getElementsByTagName( "tr" )[ 0 ]
-        , cells = row.cells
-        , ul    = objects.length
-        , cl    = cells.length
+      var table        = this.table
+        , header_row   = table.header.getElementsByTagName( "tr" )[ 0 ]
+        , body_rows    = table.body  .getElementsByTagName( "tr" )
+        , header_cells = header_row.cells
+        , a            = table.get() || []
+        , l            = objects.length
+        , al           = a.length
       ;
       
-      for( var i = ul; i; ) {
-        var o = objects[ --i ];
-        
-        for( var j = cl; j; ) {
-          var c = cells[ --j ];
+      for( var i = l; i; ) {
+        for( var j = header_cells.length, o = objects[ --i ]; j; ) {
+          if( header_cells[ --j ].getAttribute( "column_id" ) !== o.id ) continue;
           
-          if( c.getAttribute( "column_id" ) === o.id ) row.deleteCell( j );
+          header_row.deleteCell( j );
+          
+          for( var k = al; k; ) body_rows[ --k ].deleteCell( j );
         }
+        
       }
       
       return this;
