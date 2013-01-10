@@ -143,13 +143,14 @@
         id = ids[ i = 0 ];
         
         if ( measures.length === 1 ) {
-          first = '_' + id + ' += g[ ++i ].' + id;
-          inner = '+ g[ ++i ].' + id;
+          inner = '( g[ ++i ].' + id + ' || 0 )';
+          first = '_' + id + ' += ' + inner;
+          inner = '+ ' + inner;
         } else {
-          first = '_' + id + ' += ( o = g[ ++i ] ).' + id + ';';
+          first = '_' + id + ' += ( o = g[ ++i ] ).' + id + ' || 0;';
           
           for ( ; ( id = ids[ ++i ] ) !== u; ) {
-            first += ' _' + id + ' += o.' + id + ';';
+            first += ' _' + id + ' += o.' + id + ' || 0;';
           }
         }
       }
