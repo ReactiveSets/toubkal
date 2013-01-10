@@ -81,7 +81,12 @@
       
       columns.add( [ { id: "year" , label: "Year", align: "center" }, { id: "language", label: "Language" } ] );
       columns.remove( [ { id: "id", label: "ID" } ] );
-      /*
+      columns.update(
+        [
+          [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ],
+        ]
+      );
+      
       books.remove( [
         { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 },
         { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 },
@@ -98,7 +103,7 @@
           { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "Joanne Rowling", year: 1999 }
         ]
       ] );
-      */
+      
       // organizer.update( [ [ { id: "title" }, { id: "author" } ] ] );
       
       $( "#add_books"   ).click( add_books   );

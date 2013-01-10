@@ -68,7 +68,7 @@
         
         header_row.appendChild( th );
         
-        for( var j = al; j; ) _add_cell( body_rows[ --j ], a[ j ][ c.id ], align );
+        for( var j = al; j; ) _add_cell( body_rows[ --j ].insertCell( -1 ), a[ j ][ c.id ], align );
       }
       
       return this;
@@ -99,26 +99,39 @@
     }, // remove()
     
     update: function( updates ) {
-      var table = this.table
-        , a     = table.get()
-        , cells = table.header.getElementsByTagName( "tr" )[ 0 ].cells
-        , ul    = updates.length
-        , cl    = cells.length
+      var table        = this.table
+        , header_row   = table.header.getElementsByTagName( "tr" )[ 0 ]
+        , body_rows    = table.body  .getElementsByTagName( "tr" )
+        , header_cells = header_row.cells
+        , columns      = this.columns.get()
+        , a            = table.get() || []
+        , l            = updates.length
+        , al           = a.length
+        , cl           = columns.length
       ;
       
-      for( var i = ul; i; ) {
-        var u  = updates[ --i ]
-          , u0 = u[ 0 ]
-          , u1 = u[ 1 ]
+      for( var i = l; i; ) {
+        var u     = updates[ --i ]
+          , u0    = u[ 0 ]
+          , u1    = u[ 1 ]
+          , align = u1.align
         ;
         
         for( var j = cl; j; ) {
-          var c = cells[ --j ];
+          var header_cell = header_cells[ --j ];
           
-          if( c.getAttribute( "column_id" ) === u0.id ) {
-            c.setAttribute( "column_id", u1.id );
-            c.innerHTML = u1.label;
-          }
+          if(  u0.label !== u1.label && header_cell.innerHTML === u0.label ) header_cell.innerHTML = u1.label;
+          
+          if(  u0.id === u1.id || header_cell.getAttribute( "column_id" ) !== u0.id ) continue;
+          
+          header_cell.setAttribute( "column_id", u1.id );
+          
+          for( var k = al; k; ) _add_cell( body_rows[ --k ].cells[ j ], a[ k ][ u1.id ], align );
+          /*{
+            var v = a[ --k ][ u1.id ] || "";
+            
+            body_rows[ k ].cells[ j ].innerHTML = v;
+          }*/
         }
       }
       
@@ -213,7 +226,7 @@
         for( var j = -1; ++j < cl; ) {
           var c     = columns[ j ];
           
-          _add_cell( r, objects[ i ][ c.id ], c.align );
+          _add_cell( r.insertCell( -1 ), objects[ i ][ c.id ], c.align );
         }
       }
       
@@ -298,19 +311,18 @@
   } // is_DOM()
   
   // add cell
-  function _add_cell( r, v, align ) {
-    var td = r.insertCell( -1 );
-    
+  function _add_cell( td, v, align ) {
     if( align ) td.style.textAlign = align;
     
     switch( typeof v ) {
       case "undefined":
-        v = "";
-      break;
+        td.innerHTML = v = "";
         
+      break;
+      
       case "number":
         if( td.style.textAlign == "" ) td.style.textAlign = "right";
-       
+        
       case "string":
         td.innerHTML = v;
     }
