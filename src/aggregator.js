@@ -60,7 +60,7 @@
       
       for ( var ids = [], i = -1, d; d = dimensions[ ++i ]; ) ids.push( d.id );
       
-      var key_code = 'o[' + ids.join( ' ] + "_" + o[ ' ) + ' ]';
+      var key_code = 'o[ "' + ids.join( '" ] + "_" + o[ "' ) + '" ]';
       
       var code = new Code( 'group' )
         ._function( 'this.aggregator.group', null, [ 'objects' ] )
@@ -236,13 +236,19 @@
   
   extend( Aggregator.prototype, {
     aggregate: function( objects ) {
-      this.reduce_groups( this.group( objects ) );
+      this.groups = this.reduce_groups( this.group( objects ) );
       
       return this;
     }, // aggregate()
     
+    get: function() {
+      var g = this.groups;
+      
+      return g ? g.groups : g;
+    }, // get()
+    
     add: function( objects ) {
-      return this;
+      return this.aggregate( objects );
     }, // add()
     
     remove: function( objects ) {
