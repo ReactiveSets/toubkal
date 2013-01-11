@@ -270,7 +270,7 @@
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return books.get().should.be.eql(object.data);
     });
-    return it('after books.update( objects ): books should be equal to object.data', function() {
+    it('after books.update( objects ): books should be equal to object.data', function() {
       var object;
       books.update([
         [
@@ -298,6 +298,29 @@
             year: 1999
           }
         ]
+      ]);
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      return books.get().should.be.eql(object.data);
+    });
+    return it('after books.remove( objects ): books should be equal to object.data', function() {
+      var object;
+      books.remove([
+        {
+          id: 1,
+          title: "A Tale of Two Cities",
+          author: "Charles Dickens",
+          year: 1859
+        }, {
+          id: 13,
+          title: "Lolita",
+          author: "Vladimir Nabokov",
+          year: 1955
+        }, {
+          id: 7,
+          title: "The McGuffey Readers",
+          author: "William Holmes McGuffey",
+          year: 1853
+        }
       ]);
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return books.get().should.be.eql(object.data);
