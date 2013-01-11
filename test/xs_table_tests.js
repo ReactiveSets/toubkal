@@ -3,7 +3,7 @@
   var Ordered_Set, Set, Table, XS, books, chai, columns, from_HTML_to_object, organizer;
 
   from_HTML_to_object = function(node) {
-    var cell, columns, data, i, j, o, rows, v, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2;
+    var align, cell, columns, data, i, j, o, rows, v, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2;
     rows = node.rows;
     columns = [];
     data = [];
@@ -22,7 +22,19 @@
       for (_k = 0, _len1 = _ref2.length; _k < _len1; _k++) {
         cell = _ref2[_k];
         v = cell.innerHTML;
-        o[columns[j++].id] = isNaN(parseInt(v)) ? v : parseInt(v);
+        align = cell.style.textAlign;
+        if (!isNaN(parseInt(v))) {
+          v = parseInt(v);
+          if (align !== "right") {
+            columns[j].align = align;
+          }
+        } else {
+          if (typeof align === "function" ? align(abd(align !== "left")) : void 0) {
+            columns[j].align = align;
+          }
+        }
+        o[columns[j].id] = v;
+        j++;
       }
       data.push(o);
     }
@@ -118,9 +130,24 @@
   });
 
   describe('Columns_Set():', function() {
-    var object;
-    object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
-    return it('columns should be equal to object.columns:', function() {
+    it('columns should be equal to object.columns:', function() {
+      var object;
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      return columns.get().should.be.eql(object.columns);
+    });
+    return it('after add 2 objects: columns.add( objects ) should be equal to object.columns:', function() {
+      var object;
+      columns.add([
+        {
+          id: "year",
+          label: "Year",
+          align: "center"
+        }, {
+          id: "language",
+          label: "Language"
+        }
+      ]);
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return columns.get().should.be.eql(object.columns);
     });
   });

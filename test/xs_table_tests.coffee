@@ -15,9 +15,19 @@ from_HTML_to_object = ( node ) ->
     o     = {}
     
     for cell in rows[ i ].cells
-      v = cell.innerHTML
+      v     = cell.innerHTML
+      align = cell.style.textAlign
       
-      o[ columns[ j++ ].id] = if isNaN( parseInt v ) then v else parseInt v
+      if not isNaN( parseInt v )
+        v = parseInt v
+        
+        if align isnt "right" then columns[ j ].align = align
+      else
+        if align? abd align isnt "left" then columns[ j ].align = align
+        
+      o[ columns[ j ].id ] = v
+      
+      j++
     
     data.push o
   
@@ -58,9 +68,19 @@ books = new Ordered_Set [
 books.table document.getElementById( "demo" ), columns, organizer, {caption: "List of the best-selling books (source: wikipedia)" }
 
 describe 'Columns_Set():', ->
-  object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
-  
   it 'columns should be equal to object.columns:', ->
+    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    
     columns.get().should.be.eql object.columns
+  
+  it 'after add 2 objects: columns.add( objects ) should be equal to object.columns:', ->
+    columns.add [ { id: "year" , label: "Year", align: "center" }, { id: "language", label: "Language" } ]
+    
+    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    
+    columns.get().should.be.eql object.columns
+  
+  
+  
   
   
