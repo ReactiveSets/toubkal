@@ -185,8 +185,9 @@
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return books.get().should.be.eql(object.data);
     });
-    return it('after bokks.add( objects ): books should be equal to object.data', function() {
-      return books.add([
+    it('after books.add( objects ): books should be equal to object.data', function() {
+      var object;
+      books.add([
         {
           id: 5,
           title: "Angels and Demons",
@@ -266,6 +267,40 @@
           language: "English"
         }
       ]);
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      return books.get().should.be.eql(object.data);
+    });
+    return it('after books.update( objects ): books should be equal to object.data', function() {
+      var object;
+      books.update([
+        [
+          {
+            id: 2,
+            title: "The Lord of the Rings",
+            author: "J. R. R. Tolkien",
+            year: 1955
+          }, {
+            id: 2,
+            title: "The Lord of the Rings: The Fellowship of the Ring",
+            author: "John Ronald Reuel Tolkien",
+            year: 1955
+          }
+        ], [
+          {
+            id: 10,
+            title: "Harry Potter and the Prisoner of Azkaban",
+            author: "J.K. Rowling",
+            year: 1999
+          }, {
+            id: 10,
+            title: "Harry Potter and the Prisoner of Azkaban",
+            author: "Joanne Rowling",
+            year: 1999
+          }
+        ]
+      ]);
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      return books.get().should.be.eql(object.data);
     });
   });
 

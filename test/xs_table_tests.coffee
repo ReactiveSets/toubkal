@@ -100,7 +100,7 @@ describe 'Table():', ->
 
     books.get().should.be.eql object.data
   
-  it 'after bokks.add( objects ): books should be equal to object.data', ->
+  it 'after books.add( objects ): books should be equal to object.data', ->
     books.add [
       { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , sales:        39, year: 2000, language: "English" }
       { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , sales:        30, year: 2005, language: "Swedish" }
@@ -114,3 +114,24 @@ describe 'Table():', ->
       { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , sales:       100, year: undefined, language: "English" }
       { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , sales:        60, year: null, language: "English" }
     ]
+    
+    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+
+    books.get().should.be.eql object.data
+    
+  it 'after books.update( objects ): books should be equal to object.data', ->
+    books.update [
+      [
+        { id:  2, title: "The Lord of the Rings"                            , author: "J. R. R. Tolkien"         , year: 1955 }
+        { id:  2, title: "The Lord of the Rings: The Fellowship of the Ring", author: "John Ronald Reuel Tolkien", year: 1955 }
+      ]
+      [
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"  , year: 1999 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "Joanne Rowling", year: 1999 }
+      ]
+    ]
+
+    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+
+    books.get().should.be.eql object.data
+    
