@@ -140,17 +140,23 @@
           init_measures += id + ' = 0; ';
         }
         
-        id = ids[ i = 0 ];
+        m = measures[ i = 0 ];
+        id = m.id;
         
         if ( measures.length === 1 ) {
-          inner = '( g[ ++i ].' + id + ' || 0 )';
+          inner = 'g[ ++i ].' + id;
+          
+          if ( ! m.no_nulls ) inner = '( ' + inner + ' || 0 )';
+          
           first = '_' + id + ' += ' + inner;
           inner = '+ ' + inner;
         } else {
-          first = '_' + id + ' += ( o = g[ ++i ] ).' + id + ' || 0;';
+          first = '_' + id + ' += ( o = g[ ++i ] ).' + id + ( m.no_nulls ? ';' : ' || 0;' );
           
-          for ( ; ( id = ids[ ++i ] ) !== u; ) {
-            first += ' _' + id + ' += o.' + id + ' || 0;';
+          while ( m = measures[ ++i ] ) {
+            id = m.id;
+            
+            first += ' _' + id + ' += o.' + id + ( m.no_nulls ? ';' : ' || 0;' );
           }
         }
       }
@@ -178,12 +184,14 @@
             .add( 'o = groups[ key ][ 0 ]', 1 )
             
             .line( 'out.push( {' );
+              // Add dimensions' coordinates
               var indent = '    ';
               for ( i = -1; d = dimensions[ ++i ]; ) {
                 code.line( indent + d.id + ': o.' + d.id );
                 indent = '  , ';
               }
               
+              // Add aggregated measures
               for ( i = -1; ( id = ids[ ++i ] ) !== u; ) {
                 code.line( indent + id + ': _' + id );
                 indent = '  , ';
