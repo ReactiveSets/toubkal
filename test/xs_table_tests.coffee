@@ -93,3 +93,9 @@ describe 'Columns_Set():', ->
     object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
 
     columns.get().should.be.eql object.columns
+
+describe 'Table():', ->
+  it 'books should be equal to object.data', ->
+    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+
+    books.get().should.be.eql object.data

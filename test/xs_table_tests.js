@@ -179,4 +179,12 @@
     });
   });
 
+  describe('Table():', function() {
+    return it('books should be equal to object.data', function() {
+      var object;
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      return books.get().should.be.eql(object.data);
+    });
+  });
+
 }).call(this);
