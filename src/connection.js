@@ -48,7 +48,16 @@
       for ( var i = -1; ++i < l; ) {
         var a = transaction[ i ].action;
         
-        if ( ! this[ a ] ) throw( new Unsuported_Method( a ) );
+        switch( a ) {
+          case 'add':
+          case 'remove':
+          case 'update':
+            if ( this[ a ] ) break;
+          // fall-through
+          
+          default:
+            throw( new Unsuported_Action( a ) );
+        }
       }
       
       for ( var i = -1; ++i < l; ) {
@@ -59,15 +68,6 @@
       
       return this;
     }, // notify()
-    
-    notify_connections: function( transaction ) {
-    // ToDo: JHR, remove this unused
-      var connections = this.connections, l = connections.length;
-      
-      for ( var i = -1; ++i < l; ) connections[ i ].notify( transaction );
-      
-      return this;
-    }, // notify_connections()
     
     connections_add: function( added ) {
       var connections = this.connections, l = connections.length;
