@@ -130,12 +130,12 @@
   });
 
   describe('Columns_Set():', function() {
-    it('columns should be equal to object.columns:', function() {
+    it('columns should be equal to object.columns', function() {
       var object;
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return columns.get().should.be.eql(object.columns);
     });
-    it('after add 2 objects: columns.add( objects ) should be equal to object.columns:', function() {
+    it('after add 2 objects: columns.add( objects ) should be equal to object.columns', function() {
       var object;
       columns.add([
         {
@@ -150,13 +150,29 @@
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return columns.get().should.be.eql(object.columns);
     });
-    return it('after columns.remove( object ), columns should be equal to object.columns:', function() {
+    it('after columns.remove( object ), columns should be equal to object.columns', function() {
       var object;
       columns.remove([
         {
           id: "id",
           label: "ID"
         }
+      ]);
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      return columns.get().should.be.eql(object.columns);
+    });
+    return it('after columns.update( object ), columns should be equal to object.columns', function() {
+      var object;
+      columns.update([
+        [
+          {
+            id: "language",
+            label: "Language"
+          }, {
+            id: "sales",
+            label: "Sales by millions of copies"
+          }
+        ]
       ]);
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return columns.get().should.be.eql(object.columns);
