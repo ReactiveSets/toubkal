@@ -135,7 +135,7 @@
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
       return columns.get().should.be.eql(object.columns);
     });
-    return it('after add 2 objects: columns.add( objects ) should be equal to object.columns:', function() {
+    it('after add 2 objects: columns.add( objects ) should be equal to object.columns:', function() {
       var object;
       columns.add([
         {
@@ -145,6 +145,17 @@
         }, {
           id: "language",
           label: "Language"
+        }
+      ]);
+      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      return columns.get().should.be.eql(object.columns);
+    });
+    return it('after columns.remove( object ), columns should be equal to object.columns:', function() {
+      var object;
+      columns.remove([
+        {
+          id: "id",
+          label: "ID"
         }
       ]);
       object = from_HTML_to_object(document.getElementsByTagName("table")[0]);

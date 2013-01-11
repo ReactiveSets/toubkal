@@ -80,7 +80,12 @@ describe 'Columns_Set():', ->
     
     columns.get().should.be.eql object.columns
   
-  
+  it 'after columns.remove( object ), columns should be equal to object.columns:', ->
+    columns.remove [ { id: "id", label: "ID" } ]
+    
+    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    
+    columns.get().should.be.eql object.columns
   
   
   
