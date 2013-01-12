@@ -98,7 +98,7 @@
       
       this.connections.push( connection );
       
-      // connection.add( this.get() );
+      connection.add( this.get() );
       
       return this;
     }, // connect()

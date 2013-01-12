@@ -38,15 +38,17 @@
   Connection.prototype.filter = function( filter, options ) {
     var f = new Filter( this, filter, extend( { key: this.key }, options ) );
     
-    return f.out; // ToDo: Filter should not build a set
+    var out = new Set( [], { key: this.key } );
+    
+    f.connect( out )
+    
+    return out; // ToDo: Filter should not build a set
   } // filter()
   
   function Filter( set, filter, options ) {
     Connection.call( this, options );
     
     this.filter = filter;
-    
-    this.connect( this.out = new Set( [], { key: set.key } ) );
     
     set.connect( this );
     
@@ -97,7 +99,7 @@
     }, // filter_objects()
     
     get: function() {
-      return this.filter_objects( this.source.get() );
+      return this.source ? this.filter_objects( this.source.get() ) : [];
     }, // get()
     
     add: function( objects ) {
