@@ -41,19 +41,19 @@
     
     var s = f.toString();
     
-    var parsed = /function\s*\((.*)\)\s*{\s*(.*)\s*return\s*(.*);\s*}/.exec( s );
+    var parsed = /function\s*\((.*)\)\s*{\s*(.*)\s*return\s*([^;]*)[;\s]*}/.exec( s );
     
-    if ( f ) {
-      var parameters = /\s*([^, ]+)\s*(?:,\s*([^, ]+)\s*)*/.exec( parsed[ 1 ] ).slice( 1 );
-      
-      parsed = { parameters: parameters, code: parsed[ 2 ], condition: parsed[ 3 ], f: f };
-      
-      de&&ug( 'Code.decompile(), parsed:' + log.s( parsed ) + ', function: ' + s );
-      
-      return parsed;
-    }
+    if ( ! parsed || parsed.length < 4 ) return f;
     
-    return f;
+    var parameters = /\s*([^, ]+)?\s*(?:,\s*([^, ]+)\s*)*/.exec( parsed[ 1 ] ).slice( 1 ), l;
+    
+    while( ( l = parameters.length ) && parameters[ l - 1 ] === undefined ) parameters.pop();
+    
+    parsed = { parameters: parameters, code: parsed[ 2 ], condition: parsed[ 3 ], f: f };
+    
+    de&&ug( 'Code.decompile(), parsed:' + log.s( parsed ) + ', function: ' + s );
+    
+    return parsed;
   } // Code.decompile()
   
   extend( Code.prototype, {
