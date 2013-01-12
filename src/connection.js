@@ -153,6 +153,8 @@
     }, // get()
     
     connect: function( connection ) {
+      connection.source = this;
+      
       this.connections.push( connection );
       
       connection.add( this.get() );
