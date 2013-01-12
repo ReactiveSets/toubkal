@@ -15,7 +15,7 @@ Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-t
 
 Licence
 =======
-    Copyright (C) 2012, Connected Sets
+    Copyright (C) 2013, Connected Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
