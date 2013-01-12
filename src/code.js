@@ -44,7 +44,9 @@
     var parsed = /function\s*\((.*)\)\s*{\s*(.*)\s*return\s*(.*);\s*}/.exec( s );
     
     if ( f ) {
-      parsed = { parameters: parsed[ 1 ], code: parsed[ 2 ], condition: parsed[ 3 ], f: f };
+      var parameters = /\s*([^, ]+)\s*(?:,\s*([^, ]+)\s*)*/.exec( parsed[ 1 ] ).slice( 1 );
+      
+      parsed = { parameters: parameters, code: parsed[ 2 ], condition: parsed[ 3 ], f: f };
       
       de&&ug( 'Code.decompile(), parsed:' + log.s( parsed ) + ', function: ' + s );
       
