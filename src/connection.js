@@ -94,9 +94,11 @@
     }, // connections_remove()
     
     connect: function( connection ) {
+      connection.source = this;
+      
       this.connections.push( connection );
       
-      // connection.add( this.fetch() );
+      // connection.add( this.get() );
       
       return this;
     }, // connect()

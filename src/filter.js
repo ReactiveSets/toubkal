@@ -56,72 +56,64 @@
   subclass( Connection, Filter );
   
   extend( Filter.prototype, {
-    add: function( objects ) {
+    filter_objects: function( objects ) {
       var filter = this.filter = Code.decompile( this.filter )
-        , vars = [ 'i = -1', 'l = objects.length', 'added = []', 'o' ]
+        , vars = [ 'i = -1', 'l = objects.length', 'out = []', 'o' ]
         , first
       ;
       
       switch( typeof filter ) {
+        case 'object': // { parameters: [ 'o' ], code: 'o.country === "Morocco"', condition: '' }
+          var p = filter.parameters[ 0 ];
+          
+          if ( p !== void 0 ) {
+            first = p + ' = objects[ ++i ]; ' + filter.code + ' if ( ' + filter.condition + ' ) out.push( ' + p + ' );';
+            
+            break;
+          }
+          
+          filter = this.filter;
+        // fall-through
+        
         case 'function':
           vars.push( 'f = filter' );
           
-          first = 'if ( f( o = objects[ ++i ] ) ) added.push( o );';
-        break;
-        
-        case 'object': // { parameters: [], code: '', condition: '' }
-          first = 'o = objects[ ++i ]; ' + filter.code + ' if ( ' + filter.condition + ' ) added.push( o );'
+          first = 'if ( f( o = objects[ ++i ] ) ) out.push( o );';
         break;
       }
       
       eval( new Code()
-        ._function( 'this.add', null, [ 'objects' ] )
+        ._function( 'this.filter_objects', null, [ 'objects' ] )
           ._var( vars )
           
           .unrolled_while( first )
           
-          .add( 'added.length && this.connections_add( added )', 1 )
-          
-          .add( 'return this' )
-        .end( 'Filter.add()' )
+          .add( 'return out' )
+        .end( 'Filter.filter_objects()' )
         .get()
       );
       
-      return this.add( objects );
+      return this.filter_objects( objects );
+    }, // filter_objects()
+    
+    get: function() {
+      return this.filter_objects( this.source.get() );
+    }, // get()
+    
+    add: function( objects ) {
+      var added = this.filter_objects( objects );
+      
+      added.length && this.connections_add( added );
+      
+      return this;
     }, // add()
     
     remove: function( objects ) {
-      var filter = this.filter = Code.decompile( this.filter )
-        , vars = [ 'i = -1', 'l = objects.length', 'removed = []', 'o' ]
-        , first
-      ;
+      var removed = this.filter_objects( objects );
       
-      switch( typeof filter ) {
-        case 'function':
-          vars.push( 'f = filter' );
-          
-          first = 'if ( f( o = objects[ ++i ] ) ) removed.push( o );'
-        break;
-        
-        case 'object':
-           first = 'o = objects[ ++i ]; ' + filter.code + ' if ( ' + filter.condition + ' ) removed.push( o );'
-        break;
-      }
+      removed.length && this.connections_remove( removed );
       
-      eval( new Code()
-        ._function( 'this.remove', null, [ 'objects' ] )
-          ._var( 'i = -1', 'l = objects.length', 'filter = this.filter', 'removed = []', 'o' )
-          
-          .unrolled_while( first )
-          
-          .add( 'removed.length && this.connections_remove( removed )', 1 )
-
-          .add( 'return this' )
-        .end( 'Filter.remove()' )
-        .get()
-      );
-      
-      return this.remove( objects );
+      return this;
     }, // remove()
     
     update: function( updates ) {
