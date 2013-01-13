@@ -152,16 +152,6 @@
       return this.a;
     }, // get()
     
-    connect: function( connection ) {
-      connection.source = this;
-      
-      this.connections.push( connection );
-      
-      connection.add( this.get() );
-      
-      return this;
-    }, // connect()
-    
     add: function( objects ) {
       push.apply( this.a, objects );
       
