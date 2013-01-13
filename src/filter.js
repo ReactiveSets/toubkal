@@ -36,21 +36,15 @@
      Filter()
   */
   Connection.prototype.filter = function( filter, options ) {
-    var f = new Filter( this, filter, extend( { key: this.key }, options ) );
-    
-    var out = new Set( [], { key: this.key } );
-    
-    f.connect( out )
-    
-    return out; // ToDo: Filter should not build a set
+    return new Filter( this, filter, options );
   } // filter()
   
-  function Filter( set, filter, options ) {
-    Connection.call( this, options );
+  function Filter( source, filter, options ) {
+    Connection.call( this, extend( { key: source.key }, options ) );
     
     this.filter = filter;
     
-    set.connect( this );
+    source.connect( this );
     
     return this;
   } // Filter()
@@ -60,16 +54,23 @@
   extend( Filter.prototype, {
     filter_objects: function( objects ) {
       var filter = this.filter = Code.decompile( this.filter )
-        , vars = [ 'i = -1', 'l = objects.length', 'out = []', 'o' ]
-        , first
+        , vars = [ '_out = []' ]
+        , first, u, index = 'i', objects_variable = '_o'
       ;
       
       switch( typeof filter ) {
         case 'object': // { parameters: [ 'o' ], code: 'o.country === "Morocco"', condition: '' }
-          var p = filter.parameters[ 0 ];
+          var p = filter.parameters;
           
-          if ( p !== void 0 ) {
-            first = p + ' = objects[ ++i ]; ' + filter.code + ' if ( ' + filter.condition + ' ) out.push( ' + p + ' );';
+          if ( p.length ) {
+            if ( p.length > 1 ) index = p[ 1 ];
+            if ( p.length > 2 ) objects_variable = p[ 2 ];
+            
+            var o = p[ 0 ];
+            
+            vars.push( o );
+            
+            first = o + ' = ' + objects_variable + '[ ++' + index + ' ]; ' + filter.code + ' if ( ' + filter.condition + ' ) _out.push( ' + o + ' );';
             
             break;
           }
@@ -78,19 +79,21 @@
         // fall-through
         
         case 'function':
-          vars.push( 'f = filter' );
+          vars.push( 'f = filter', 'o' );
           
-          first = 'if ( f( o = objects[ ++i ] ) ) out.push( o );';
+          first = 'if ( f( o = _o[ ++i ], i, objects ) ) _out.push( o );';
         break;
       }
       
+      vars.push( index + ' = -1', 'l = ' + objects_variable + '.length' );
+      
       eval( new Code()
-        ._function( 'this.filter_objects', null, [ 'objects' ] )
+        ._function( 'this.filter_objects', null, [ objects_variable ] )
           ._var( vars )
           
-          .unrolled_while( first )
+          .unrolled_while( first, u, u, { index: index } )
           
-          .add( 'return out' )
+          .add( 'return _out' )
         .end( 'Filter.filter_objects()' )
         .get()
       );
@@ -131,16 +134,16 @@
             var l = updates.length, f = filter, removed = [], updated = [], added = [];
             
             for ( var i = -1; ++i < l; ) {
-              var u = updates[ i ];
+              var u = updates[ i ], u0 = u[ 0 ], u1 = u[ 1 ], fu1 = f( u1 );
               
-              if ( f( u[ 0 ] ) ) {
-                if ( f( u[ 1 ] ) ) {
+              if ( f( u0 ) ) {
+                if ( fu1 ) {
                   updated.push( u );
                 } else {
-                  removed.push( u[ 0 ] );
+                  removed.push( u0 );
                 }
-              } else if ( f( u[ 1 ] ) ) {
-                added.push( u[ 1 ] );
+              } else if ( fu1 ) {
+                added.push( u1 );
               }
             }
             

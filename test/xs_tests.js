@@ -520,12 +520,12 @@
       });
       describe('filter():', function() {
         var cities_in_usa, is_in_usa;
-        is_in_usa = function(o) {
-          return o.country === 'USA';
+        is_in_usa = function(city, c, cities) {
+          return city.country === 'USA';
         };
         cities_in_usa = cities.filter(is_in_usa);
-        it('cities_in_usa should be a Set', function() {
-          return cities_in_usa.should.be.an["instanceof"](Set);
+        it('cities_in_usa should be a Connection', function() {
+          return cities_in_usa.should.be.an["instanceof"](XS.Connection);
         });
         it('cities_in_usa should only contain cities in USA', function() {
           return cities_in_usa.get().should.be.eql([
@@ -676,15 +676,15 @@
                 country: "USA",
                 state: "California"
               }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }, {
                 id: 8,
                 name: "Detroit",
                 country: "USA",
                 state: "Michigan"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
               }
             ];
             cities.update([
@@ -712,15 +712,15 @@
                 country: "USA",
                 state: "California"
               }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }, {
                 id: 8,
                 name: "Detroit",
                 country: "USA",
                 state: "Michigan"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
               }
             ];
             cities.update([
@@ -744,15 +744,15 @@
             var result;
             result = [
               {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }, {
                 id: 8,
                 name: "Detroit",
                 country: "USA",
                 state: "Michigan"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
               }
             ];
             cities.remove([
@@ -769,15 +769,15 @@
             var result;
             result = [
               {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }, {
                 id: 8,
                 name: "Detroit",
                 country: "USA",
                 state: "Michigan"
+              }, {
+                id: 5,
+                name: "NY",
+                country: "USA",
+                state: "NY"
               }
             ];
             cities.remove([
