@@ -179,7 +179,7 @@
       return this._var( vars );
     }, // vars_from_object()
     
-    /* unrolled_while( first, inner, last, count )
+    /* unrolled_while( first, inner, last, options )
       
       Generates an unrolled while loop.
       
@@ -193,8 +193,9 @@
         - last (optional): the last line of the body, default is empty string, this code must
           NOT increment the variable 'i' - e.g. ') return i'
           
-        - count (optional): the number of iterations unrolled, default is calculated based on
-          the string size of the inner statement.
+        - options:
+          - count (optional): the number of iterations unrolled, default is calculated based on
+            the string size of the inner statement.
       
       The code generated requires that:
         - the variable 'l' contains the total number of iterations
@@ -245,9 +246,12 @@
           }
       
     */
-    unrolled_while: function( first, inner, last, count ) {
+    unrolled_while: function( first, inner, last, options ) {
+      options = options || {};
+      
       inner || ( inner = first );
-      count || ( count = 200 / inner.length >> 0 );
+      
+      var count = options.count || 200 / inner.length >> 0;
       
       if ( inner.charAt( inner.length - 1 ) === ';' ) {
         var inner_is_statement = true;
