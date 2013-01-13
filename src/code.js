@@ -45,9 +45,7 @@
     
     if ( ! parsed || parsed.length < 4 ) return f;
     
-    var parameters = /\s*([^, ]+)?\s*(?:,\s*([^, ]+)\s*)*/.exec( parsed[ 1 ] ).slice( 1 ), l;
-    
-    while( ( l = parameters.length ) && parameters[ l - 1 ] === undefined ) parameters.pop();
+    var parameters = parsed[ 1 ].replace( / /g, '' ).split( ',' );
     
     parsed = { parameters: parameters, code: parsed[ 2 ], condition: parsed[ 3 ], f: f };
     
@@ -194,8 +192,9 @@
           NOT increment the variable 'i' - e.g. ') return i'
           
         - options:
-          - count (optional): the number of iterations unrolled, default is calculated based on
+          - count: the number of iterations unrolled, default is calculated based on
             the string size of the inner statement.
+          - index: the name of the index variable, default is 'i' 
       
       The code generated requires that:
         - the variable 'l' contains the total number of iterations
@@ -252,6 +251,7 @@
       inner || ( inner = first );
       
       var count = options.count || 200 / inner.length >> 0;
+      var index = options.index || 'i';
       
       if ( inner.charAt( inner.length - 1 ) === ';' ) {
         var inner_is_statement = true;
@@ -263,7 +263,7 @@
         this
           ._var( 'ul = l - l % ' + count + ' - 1' )
           
-          .begin( 'while( i < ul )' );
+          .begin( 'while( ' + index + ' < ul )' );
           
             if ( inner_is_statement ) {
               this
@@ -285,7 +285,7 @@
       }
       
       this
-        .begin( 'while( i < ul )' )
+        .begin( 'while( ' + index + ' < ul )' )
           [ inner_is_statement ? 'line' : 'add' ]( first + ( last ? ' ' + last : '' ) )
         .end()
       ;
