@@ -1,12 +1,17 @@
-// table.js
+// proxy.js
 
 ( function( exports ) {
   var XS;
+  var l8;
   
   if ( typeof require === 'function' ) {
     XS = require( './xs.js' ).XS;
+    require( './connection.js' )
+    l8 = require( 'l8/lib/l8.js' )
+    require( 'l8/lib/actor.js' )
   } else {
     XS = exports.XS;
+    l8 = exports.l8
   }
   
   var log        = XS.log
@@ -40,26 +45,52 @@
   /* -------------------------------------------------------------------------------------------
      Proxy( name, options )
      
+     Data flow: node->proxy(->relay----->relay->)proxy->node
+     
      Parameters:
        - name: model name
        
        - options (optional)
   */
   function Proxy( name, options ) {
-    Connection.call( this, [], organizer, options );
+    //Connection.call( this, [], organizer, options );
+    Connection.call( this, options );
+    this.name = name;
     
-    this,name = name;
-    
-    if ( typeof require === 'function' ) { // ToDo: find more reliable method to detect server side
+    if ( l8.server ) {
       this.server = true;
     } else {
       this.client = true;
     }
     
     // Setup Socket server or client
-    
+    Proxy.register( this.name, this)
     return this;
   } // Proxy()
+  
+  Proxy.AllProxies = {}
+  Proxy.register = function( name, object ){ Proxy.AllProxies[name] = object }
+  Proxy.lookup   = function( name  ){ return Proxy.AllProxies[name] }
+  Proxy.url      = l8.client && document.url
+  Proxy.actor    = l8.Actor( "XS_Proxy", l8.role( { delegate: {
+    relay: function( action ){
+      var name = action.model
+      var proxy = Proxy.lookup( name )
+      if( !proxy ){
+        var stage = l8.actor.stage
+        if ( stage ) {
+          name = stage.name + "/" + name
+        }
+        proxy = Proxy.lookup( name ) || new Proxy( name )
+        if( stage ){
+          proxy.relay = l8.proxy( "XS_Proxy", stage )
+        }
+      }
+      proxy.receive( action)
+    }
+  } } ) )()
+  Proxy.relay = Proxy.url && l8.proxy( "XS_Proxy", url )
+  Proxy.stage = l8.stage( "local")
   
   subclass( Connection, Proxy );
   
@@ -77,15 +108,16 @@
     }, // update()
     
     send: function( action ) {
+    // Typically called by a source
       action.model = this.name;
       
       // Send action over socket
-      
+      (this.relay || Proxy.relay).send( ["relay", action] )
       return this;
     }, // send()
     
-    // receive() is called when an action is received on model this.name
-    receive: function( action ) {
+    receive: function( action, client ) {
+    // Called when an action is received on model this.name
       // forward action to connections
       
       switch ( action.name ) {
@@ -100,6 +132,42 @@
       return this;
     } // receive()
   } ); // Proxy instance methods
+  
+/*
+ *  test
+ */
+   
+var Http    = require( "http")
+var Connect = require( "connect")
+
+var de   = l8.de
+var bug  = l8.bug
+var mand = l8.mand
+
+
+/*
+ *  test http server
+ */
+
+var app    = Connect()
+app
+.use( Connect.static( 'public'))
+.use( function( req, res ){
+  res.end( 'hello world\n')
+})
+var server = Http.createServer( app)
+server.listen( process.env.PORT)
+
+l8.stage( "local", server)
+
+
+Proxy.relay = l8.proxy( "XS_Proxy", "http://localhost:" + process.env.PORT )
+var proxy = new Proxy( "test proxy node")
+require( "./connection.js")
+var set   = new XS.Set()
+set.connect( proxy)
+set.add( [{hello:"world"}])
+l8.countdown( 10)
   
   /* -------------------------------------------------------------------------------------------
      module exports
