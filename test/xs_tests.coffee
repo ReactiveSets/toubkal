@@ -304,13 +304,13 @@ describe 'XS test suite:', ->
         employee.get().should.be.eql result.get()
     
     describe 'filter():', ->
-      is_in_usa = ( o ) ->
-        return o.country is 'USA'
+      is_in_usa = ( city, c, cities ) ->
+        return city.country is 'USA'
       
       cities_in_usa = cities.filter is_in_usa
       
-      it 'cities_in_usa should be a Set', ->
-        cities_in_usa.should.be.an.instanceof Set
+      it 'cities_in_usa should be a Connection', ->
+        cities_in_usa.should.be.an.instanceof XS.Connection
       
       it 'cities_in_usa should only contain cities in USA', ->
         cities_in_usa.get().should.be.eql [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
@@ -362,8 +362,8 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', ->
           result = [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
           
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ]
@@ -373,8 +373,8 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', ->
           result = [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
           
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 9, name: "Madrid", country: "Spain" } ] ]
@@ -384,8 +384,8 @@ describe 'XS test suite:', ->
       describe 'remove()', ->
         it 'cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', ->
           result = [
-            { id: 5, name: "NY", country: "USA", state: "NY" }
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
           
           cities.remove [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
@@ -394,8 +394,8 @@ describe 'XS test suite:', ->
         
         it 'cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', ->
           result = [
-            { id: 5, name: "NY", country: "USA", state: "NY" }
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
           
           cities.remove [ { id: 7, name: "Venice", country: "Italy" } ]

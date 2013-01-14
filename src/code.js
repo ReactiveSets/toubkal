@@ -1,4 +1,20 @@
-// code.js
+/*  code.js
+
+    Copyright (C) 2013, Connected Sets
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 ( function( exports ) {
   var XS;
@@ -41,13 +57,11 @@
     
     var s = f.toString();
     
-    var parsed = /function\s*\((.*)\)\s*{\s*(.*)\s*return\s*([^;]*)[;\s]*}/.exec( s );
+    var parsed = /function\s*\(([^\)]*)\)\s*{\s*(.*)\s*return\s*([^;]*)[;\s]*}/.exec( s );
     
     if ( ! parsed || parsed.length < 4 ) return f;
     
-    var parameters = /\s*([^, ]+)?\s*(?:,\s*([^, ]+)\s*)*/.exec( parsed[ 1 ] ).slice( 1 ), l;
-    
-    while( ( l = parameters.length ) && parameters[ l - 1 ] === undefined ) parameters.pop();
+    var parameters = parsed[ 1 ].replace( / /g, '' ).split( ',' );
     
     parsed = { parameters: parameters, code: parsed[ 2 ], condition: parsed[ 3 ], f: f };
     
@@ -194,8 +208,9 @@
           NOT increment the variable 'i' - e.g. ') return i'
           
         - options:
-          - count (optional): the number of iterations unrolled, default is calculated based on
+          - count: the number of iterations unrolled, default is calculated based on
             the string size of the inner statement.
+          - index: the name of the index variable, default is 'i' 
       
       The code generated requires that:
         - the variable 'l' contains the total number of iterations
@@ -252,6 +267,7 @@
       inner || ( inner = first );
       
       var count = options.count || 200 / inner.length >> 0;
+      var index = options.index || 'i';
       
       if ( inner.charAt( inner.length - 1 ) === ';' ) {
         var inner_is_statement = true;
@@ -263,7 +279,7 @@
         this
           ._var( 'ul = l - l % ' + count + ' - 1' )
           
-          .begin( 'while( i < ul )' );
+          .begin( 'while( ' + index + ' < ul )' );
           
             if ( inner_is_statement ) {
               this
@@ -285,7 +301,7 @@
       }
       
       this
-        .begin( 'while( i < ul )' )
+        .begin( 'while( ' + index + ' < ul )' )
           [ inner_is_statement ? 'line' : 'add' ]( first + ( last ? ' ' + last : '' ) )
         .end()
       ;
