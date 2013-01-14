@@ -13,6 +13,21 @@ Incremental execution of queries allows to split large datasets into optimal chu
 
 Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-time data analysis and reporting over virtually unlimited size datasets.
 
+
+Data model
+==========
+
+XS implements a data flow mechanism where data items flow from node to node in a data graph where each node decide what to do with the data items it receives and what data will flow to dependent nodes.
+
+Some node stores data items. A Set has a key, a source node, dependent nodes and contains an array of items.
+
+When an action is performed (either add, remove or update), the set's dependent sets are notified about all the details about the action and can react as necessary.
+
+Some special sets, when they are notified of an action on a set they depend on, instead of duplicating the action on themselves, may decide to alter their own items in a different way or notify their dependant sets in special ways.
+
+For example, a set can filter or alter the operations fired by it's source set.
+
+
 Licence
 =======
     Copyright (C) 2013, Connected Sets
