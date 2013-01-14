@@ -1,20 +1,4 @@
-/*  connection.js
-
-    Copyright (C) 2013, Connected Sets
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// connection.js
 
 ( function( exports ) {
   var XS;
@@ -46,19 +30,36 @@
   
   /* -------------------------------------------------------------------------------------------
      Connection()
+     
+     A Connection depends on one or many source Connection (the last added
+     being called "the source") and may have dependent connections.
+     
+     ToDo: JHR. Connection is a confusing name. DataFlowNode or Node or
+     DataNeuron or Neuron or Cell or DataCell may help.
   */
   function Connection( options ) {
     this.options = options = options || {};
     
     this.key = options.key || [ "id" ];
     
+    // An array of dependent connections. See .connect()
     this.connections = [];
+    
+    // this.source = null // No source yet
     
     return this;
   } // Connection()
   
   extend( Connection.prototype, {
+    
+    //get: function(){
+    // Return the content (an array of items) of This connection.
+    // Subclasses typically redefines this.
+    //  return []
+    //}, // get()
+    
     notify: function( transaction ) {
+    // Batch add/update/remove operations
       var l = transaction.length;
       
       for ( var i = -1; ++i < l; ) {
@@ -85,7 +86,22 @@
       return this;
     }, // notify()
     
+    // add: function( added ){}
+    // Add items to this Connection and notify dependent connections about
+    // the effective additions.
+    // Defined by derived classes
+    
+    // update: function( updated )
+    // Update items of this Connection and notify dependent connections about
+    // the effective updates
+    // Defined by derived classes
+    
+    // remove: function( removed )
+    // Remove items from this Connection and notify dependent connections about
+    // the effective removals.
+    
     connections_add: function( added ) {
+    // Notify dependent connections about some "add" operation that was done
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].add( added );
@@ -94,6 +110,7 @@
     }, // connections_add()
     
     connections_update: function( updated ) {
+    // Notify dependent Connections about some "update" operation that was done
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].update( updated );
@@ -102,6 +119,7 @@
     }, // connections_update()
     
     connections_remove: function( removed ) {
+    // Notify dependent Connections about some "remove" operation that was one
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].remove( removed );
@@ -110,6 +128,11 @@
     }, // connections_remove()
     
     connect: function( connection ) {
+    // Connect a new dependent Connection to This Connection.
+    // "the source" for the added Connection becomes This Connection.
+    // The content of This Connections gets added to the dependent Connection.
+    
+      // Remember last source for this dependent Connection
       connection.source = this;
       
       this.connections.push( connection );
@@ -138,7 +161,10 @@
   /* -------------------------------------------------------------------------------------------
      Set( a [, options] )
   */
+  
   Connection.prototype.set = function( options ) {
+  // Add a new dependent Set to This Connection and initialize it with the
+  // content, if any, of This Connection.
     var s = new Set( extend( { key: this.key }, options ) );
     
     this.connect( s );
@@ -147,6 +173,7 @@
   } // set()
   
   function Set( a, options ) {
+  // Constructor for a new Set with some initial content
     options = Connection.call( this, options ).options;
     
     this.a = [];
@@ -164,17 +191,33 @@
      Set instance methods
   */
   extend( Set.prototype, {
+    
     get: function() {
+    // Return the content of the set, an array of items. Each item is a list
+    // of unique attributes/properties, aka "an object".
       return this.a;
     }, // get()
     
+    connect: function( connection ) {
+    // ToDo: JHR. This is a duplicate of Connection.connect(), get rid of it?
+      connection.source = this;
+      
+      this.connections.push( connection );
+      
+      connection.add( this.get() );
+      
+      return this;
+    }, // connect()
+    
     add: function( objects ) {
+    // Add items to the set and notify dependents.
       push.apply( this.a, objects );
       
       return this.connections_add( objects );
     }, // add()
     
     update: function( objects ) {
+    // Update items in the set and notify dependents.
       for ( var i = -1, l = objects.length, updated = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o[ 0 ] )
@@ -191,6 +234,7 @@
     }, // update()
     
     remove: function( objects ) {
+    // Remove items from the set and notify dependents
       for ( var i = -1, l = objects.length, removed = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o )
@@ -214,10 +258,16 @@
     }, // remove()
     
     index_of: function( o ) {
+    // Look for the position of an item in the set's array of items.
+    // -1 when not found.
       return this.make_index_of().index_of( o ); 
     }, // index_of()
     
     make_index_of: function() {
+    // Define index_of() to make it efficient both when comparing items and
+    // when iterating over items.
+    // ToDo: JHR, when the set grows, would it make sense to redefine again
+    // again to make index_of() even more efficient?
       var key = this.key, l = key.length;
       
       var vars = [ 'a = this.a', 'l = a.length', 'i = -1' ];
@@ -266,6 +316,12 @@
      CXXX(): template for Connection
   */
   function CXXX( set, options ) {
+  // Constructor for a connection that depends on what happens to it's
+  // initally empty initial original source Set (remembered as .out)
+  // ToDo: JHR, that the "input" set would be called "out" is confusing. Maybe
+  // "in" or "set" or "origin" or "pipe" or "channel" or "conduit" or "tube"...
+  // "out" makes sense from the point of view of the source not from the point
+  // of view of the dependent object itself. 
     Connection.call( this, options );
     
     this.out = new Set( [], { key: set.key } );
@@ -279,14 +335,17 @@
   
   extend( CXXX.prototype, {
     add: function( objects ) {
+    // Called when items were added to the original set
       return this;
     }, // add()
     
     remove: function( objects ) {
+    // Called when items were removed from the original set
       return this;
     }, // remove()
     
     update: function( updates ) {
+    // Called when items were update inside the original set
       return this;
     } // update()
   } ); // CXXX instance methods
