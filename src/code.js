@@ -41,7 +41,7 @@
     
     var s = f.toString();
     
-    var parsed = /function\s*\((.*)\)\s*{\s*(.*)\s*return\s*([^;]*)[;\s]*}/.exec( s );
+    var parsed = /function\s*\(([^\)]*)\)\s*{\s*(.*)\s*return\s*([^;]*)[;\s]*}/.exec( s );
     
     if ( ! parsed || parsed.length < 4 ) return f;
     
