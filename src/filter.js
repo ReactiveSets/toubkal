@@ -75,13 +75,13 @@
             break;
           }
           
-          filter = this.filter;
+          filter = filter.f;
         // fall-through
         
         case 'function':
           vars.push( 'f = filter', 'o' );
           
-          first = 'if ( f( o = _o[ ++i ], i, objects ) ) _out.push( o );';
+          first = 'if ( f( o = _o[ ++i ], i, _o ) ) _out.push( o );';
         break;
       }
       
