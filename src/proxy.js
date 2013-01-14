@@ -105,7 +105,7 @@
       proxy.receive( action)
     }
   } } ) )()
-  Proxy.relay = Proxy.url && l8.proxy( "XS_Proxy", url )
+  Proxy.relay = Proxy.url && l8.proxy( "XS_Proxy", Proxy.url )
   Proxy.stage = l8.stage( "local")
   
   subclass( Connection, Proxy );
