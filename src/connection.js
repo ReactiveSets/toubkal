@@ -316,7 +316,7 @@
      CXXX(): template for Connection
   */
   function CXXX( set, options ) {
-  // Constructor for a connection that depends on what happens to it's
+  // Constructor for a connection that depends on what happens to an
   // initally empty initial original source Set (remembered as .out)
   // ToDo: JHR, that the "input" set would be called "out" is confusing. Maybe
   // "in" or "set" or "origin" or "pipe" or "channel" or "conduit" or "tube"...

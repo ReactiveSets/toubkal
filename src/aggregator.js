@@ -261,6 +261,8 @@
   subclass( Set, Aggregator );
   
   extend( Aggregator.prototype, {
+    // ToDo: JHR. Is it ok to redefine aggreate(), with different formal
+    // parameters?  set.aggregate( m, d ).aggregate( items )
     aggregate: function( objects ) {
       this.groups = this.reduce_groups( this.group( objects ) );
       
@@ -270,7 +272,7 @@
     get: function() {
       var g = this.groups;
       
-      return g ? g.groups : g;
+      return g ? g.groups : g; // ToDo: JHR. should return null or [] ?
     }, // get()
     
     add: function( objects ) {
