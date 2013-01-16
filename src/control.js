@@ -21,6 +21,7 @@
 
   if ( typeof require === 'function' ) {
     XS = require( './xs.js' ).XS;
+    require( './ordered_set.js' );
   } else {
     XS = exports.XS;
   }
@@ -48,28 +49,28 @@
   */
   
   function Control( options ) {
-    Set.call( this, [], options );
+    Ordered_Set.call( this, [], options );
     
     return this;
   } // Control()
   
-  subclass( Set, Control );
+  subclass( Ordered_Set, Control );
   
   extend( Control.prototype, {
     add: function( objects ) {
-      Set.prototype.add.call( this, objects );
+      Ordered_Set.prototype.add.call( this, objects );
       
       return this;
     }, // add()
     
     remove: function( objects ) {
-      Set.prototype.remove.call( this, objects );
+      Ordered_Set.prototype.remove.call( this, objects );
       
       return this;
     }, // remove()
     
     update: function( updates ) {
-      Set.prototype.update.call( this, objects );
+      Ordered_Set.prototype.update.call( this, objects );
       
       return this;
     } // update
