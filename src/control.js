@@ -48,8 +48,15 @@
      Control()
   */
   
-  function Control( options ) {
-    Ordered_Set.call( this, [], options );
+  function Control( node, organizer, options ) {
+    Ordered_Set.call( this, [], organizer, options );
+    
+    this.set_node( node );
+    this.process_options( options );
+    this.get_default_value();
+    this.set_value( this.value );
+    this.get_value();
+    this.bind();
     
     return this;
   } // Control()
@@ -57,23 +64,95 @@
   subclass( Ordered_Set, Control );
   
   extend( Control.prototype, {
-    add: function( objects ) {
-      Ordered_Set.prototype.add.call( this, objects );
+    set_node: function( node ) {
+      if(
+           typeof HTMLElement === "object" ?  node instanceof HTMLElement : node
+        && typeof node        === "object" && node.nodeType === 1 && typeof node.nodeName === "string"
+      ) {
+        this.node = node;
+      } else {
+        throw( "the given node is not a DOM element" );
+      }
       
       return this;
-    }, // add()
+    }, // set_node()
     
-    remove: function( objects ) {
-      Ordered_Set.prototype.remove.call( this, objects );
+    process_options: function( options ) {
+      this.options = options = extend( {}, options );
       
       return this;
-    }, // remove()
+    }, // process_options
     
-    update: function( updates ) {
-      Ordered_Set.prototype.update.call( this, objects );
+    bind: function() {
+      return this;
+    }, // bind()
+    
+    get_default_value: function() {
+      var options       = this.options
+        , values        = this.get()
+        , default_value = options.default_value
+      ;
+      
+      this.value = default_value === undefined ? values[ 0 ] : default_value;
       
       return this;
-    } // update
+    }, // get_default_value()
+    
+    get_value: function() {
+      return this;
+    }, // get_value()
+    
+    set_value: function( v ) {
+      return this;
+    }, // set_value()
+    
+    update: function() {
+      this.get_value();
+      this.set_value( this.value );
+    } // update()
+  } );
+  
+  /* -------------------------------------------------------------------------------------------
+     Control.Checkbox()
+  */
+  Connection.prototype.checkbox = function( node, organizer, options ) {
+    var control = new Control.Checkbox( node, organizer, options );
+    
+    this.connect( control );
+    
+    return control;
+  };
+  
+  Control.Checkbox = function( node, organizer, options ) {
+    Control.call( this, node, organizer, options );
+    
+    return this;
+  }; // Control.Checkbox()
+  
+  subclass( Control, Control.Checkbox );
+  
+  extend( Control.Checkbox.prototype, {
+    bind: function() {
+      var that = this;
+      
+      this.node.onclick = function() {
+        that.update();
+      };
+      
+      return this;
+    }, // bind
+    
+    get_value: function() {
+      this.value = this.node.checked;
+      
+      return this;
+    }, // get_value()
+    
+    set_value: function( v ) {
+      this.node.checked = v;
+      
+      return this;
+    } // set_value()
   } );
   
   /* -------------------------------------------------------------------------------------------
