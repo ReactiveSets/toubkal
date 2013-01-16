@@ -31,11 +31,16 @@
   /* -------------------------------------------------------------------------------------------
      Connection()
      
-     A Connection depends on one or many source Connection (the last added
-     being called "the source") and may have dependent connections.
+     A Connection has one upstream source and is the source of many downstream Connections.
      
      ToDo: JHR. Connection is a confusing name. DataFlowNode or Node or
      DataNeuron or Neuron or Cell or DataCell may help.
+     
+     We need to change this name, I like Node or Cell, I find Neuron too loaded with potential
+     meaning that does not match this concept. A Neuron has many inputs and one output, which
+     is the opposite of this.
+     
+     The best analogy might be a river delta or a multiplexer.
   */
   function Connection( options ) {
     this.options = options = options || {};
@@ -45,7 +50,7 @@
     // An array of dependent connections. See .connect()
     this.connections = [];
     
-    // this.source = null // No source yet
+    // this.source = undefined // No source yet
     
     return this;
   } // Connection()
@@ -86,22 +91,23 @@
       return this;
     }, // notify()
     
-    // add: function( added ){}
-    // Add items to this Connection and notify dependent connections about
+    // Add items to this Connection then notify downsteam connections about
     // the effective additions.
     // Defined by derived classes
+    add: function( added ){ throw new Error( 'Missing add()' ) },
     
-    // update: function( updated )
-    // Update items of this Connection and notify dependent connections about
+    // Update items of this Connection then notify downsteam connections about
     // the effective updates
     // Defined by derived classes
+    update: function( added ){ throw new Error( 'Missing update()' ) },
     
     // remove: function( removed )
-    // Remove items from this Connection and notify dependent connections about
+    // Remove items from this Connection and notify downsteam connections about
     // the effective removals.
+    remove: function( added ){ throw new Error( 'Missing remove()' ) },
     
     connections_add: function( added ) {
-    // Notify dependent connections about some "add" operation that was done
+      // Notify downsteam connections about some "add" operation that was done
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].add( added );
@@ -110,7 +116,7 @@
     }, // connections_add()
     
     connections_update: function( updated ) {
-    // Notify dependent Connections about some "update" operation that was done
+      // Notify downsteam Connections about some "update" operation that was done
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].update( updated );
@@ -119,7 +125,7 @@
     }, // connections_update()
     
     connections_remove: function( removed ) {
-    // Notify dependent Connections about some "remove" operation that was one
+      // Notify downsteam Connections about some "remove" operation that was one
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].remove( removed );
@@ -128,15 +134,27 @@
     }, // connections_remove()
     
     connect: function( connection ) {
-    // Connect a new dependent Connection to This Connection.
-    // "the source" for the added Connection becomes This Connection.
-    // The content of This Connections gets added to the dependent Connection.
+      // Connect a new downstream Connection to This Connection.
+      // "the source" for the added Connection becomes This Connection.
+      // The content of This Connections gets added to the downsteam Connection.
     
-      // Remember last source for this dependent Connection
+      if ( connection.source ) {
+        throw new Error( 'A Connection can only have a single source' );
+      }
+      
+      // Remember the source of this downstream Connection
       connection.source = this;
       
       this.connections.push( connection );
       
+      // ToDo: replace by something like this.fetch( connection, query )
+      // get() is not scalable to large datasets, because it returns the
+      // entire set. get() should only be used on small sets, for testing
+      // or on clients.
+      //
+      // fetch( connection, query ) will solve this issue because it will
+      // allow the source to provided its content filtered and in chuncks
+      // via add()
       connection.add( this.get() );
       
       return this;
@@ -163,8 +181,9 @@
   */
   
   Connection.prototype.set = function( options ) {
-  // Add a new dependent Set to This Connection and initialize it with the
-  // content, if any, of This Connection.
+    // Add a new downsteam Set to This Connection and initialize it with the
+    // content, if any, of This Connection.
+    
     var s = new Set( extend( { key: this.key }, options ) );
     
     this.connect( s );
@@ -173,7 +192,8 @@
   } // set()
   
   function Set( a, options ) {
-  // Constructor for a new Set with some initial content
+    // Constructor for a new Set with some initial content
+    
     options = Connection.call( this, options ).options;
     
     this.a = [];
@@ -193,13 +213,14 @@
   extend( Set.prototype, {
     
     get: function() {
-    // Return the content of the set, an array of items. Each item is a list
-    // of unique attributes/properties, aka "an object".
+      // Return the content of the set, an array of items. Each item is a list
+      // of unique attributes/properties, aka "an object".
       return this.a;
     }, // get()
     
     connect: function( connection ) {
-    // ToDo: JHR. This is a duplicate of Connection.connect(), get rid of it?
+      // ToDo: JHR. This is a duplicate of Connection.connect(), get rid of it?
+      // I had removed it in a previous commit, but I guess it came back after some merge
       connection.source = this;
       
       this.connections.push( connection );
@@ -210,14 +231,14 @@
     }, // connect()
     
     add: function( objects ) {
-    // Add items to the set and notify dependents.
+      // Add items to the set and notify downsteam Connections.
       push.apply( this.a, objects );
       
       return this.connections_add( objects );
     }, // add()
     
     update: function( objects ) {
-    // Update items in the set and notify dependents.
+      // Update items in the set and notify downsteam Connections.
       for ( var i = -1, l = objects.length, updated = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o[ 0 ] )
@@ -234,7 +255,7 @@
     }, // update()
     
     remove: function( objects ) {
-    // Remove items from the set and notify dependents
+      // Remove items from the set and notify downsteam Connections
       for ( var i = -1, l = objects.length, removed = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o )
@@ -258,16 +279,17 @@
     }, // remove()
     
     index_of: function( o ) {
-    // Look for the position of an item in the set's array of items.
-    // -1 when not found.
+      // Look for the position of an item in the set's array of items.
+      // -1 when not found.
       return this.make_index_of().index_of( o ); 
     }, // index_of()
     
     make_index_of: function() {
-    // Define index_of() to make it efficient both when comparing items and
-    // when iterating over items.
-    // ToDo: JHR, when the set grows, would it make sense to redefine again
-    // again to make index_of() even more efficient?
+      // Define index_of() to make it efficient both when comparing items and
+      // when iterating over items.
+      // ToDo: JHR, when the set grows, would it make sense to redefine again
+      // again to make index_of() even more efficient?
+      // Jean: Absolutely ^^
       var key = this.key, l = key.length;
       
       var vars = [ 'a = this.a', 'l = a.length', 'i = -1' ];
@@ -315,18 +337,23 @@
   /* -------------------------------------------------------------------------------------------
      CXXX(): template for Connection
   */
-  function CXXX( set, options ) {
-  // Constructor for a connection that depends on what happens to an
-  // initally empty initial original source Set (remembered as .out)
-  // ToDo: JHR, that the "input" set would be called "out" is confusing. Maybe
-  // "in" or "set" or "origin" or "pipe" or "channel" or "conduit" or "tube"...
-  // "out" makes sense from the point of view of the source not from the point
-  // of view of the dependent object itself. 
+  function CXXX( source, options ) {
+    // Constructor for a Connection that depends on what happens to a source Connection
+    
+    // ToDo: JHR, that the "input" set would be called "out" is confusing. Maybe
+    // "in" or "set" or "origin" or "pipe" or "channel" or "conduit" or "tube"...
+    // "out" makes sense from the point of view of the source not from the point
+    // of view of the downsteam object itself. 
+    //
+    // Jean: you had misunderstood the code, 'out' it not the source, but the output of this
+    // Connection. to avoid the confusion, I have changed the firts parameter name from 'set'
+    // to 'source'.
+    
     Connection.call( this, options );
     
-    this.out = new Set( [], { key: set.key } );
+    this.out = new Set( [], { key: source.key } );
     
-    set.connect( this );
+    source.connect( this );
     
     return this;
   } // CXXX()
@@ -335,17 +362,20 @@
   
   extend( CXXX.prototype, {
     add: function( objects ) {
-    // Called when items were added to the original set
+      // Called when items were added to the source Connection
+      
       return this;
     }, // add()
     
     remove: function( objects ) {
-    // Called when items were removed from the original set
+      // Called when items were removed from the source Connection
+      
       return this;
     }, // remove()
     
     update: function( updates ) {
-    // Called when items were update inside the original set
+      // Called when items were update inside the source Connection
+      
       return this;
     } // update()
   } ); // CXXX instance methods
