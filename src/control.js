@@ -71,7 +71,7 @@
       ) {
         this.node = node;
       } else {
-        throw( "the given node is not a DOM element" );
+        throw( "node is not a DOM element" );
       }
       
       return this;
@@ -103,6 +103,8 @@
     }, // get_value()
     
     set_value: function( v ) {
+      this.value = v;
+      
       return this;
     }, // set_value()
     
@@ -124,6 +126,8 @@
   };
   
   Control.Checkbox = function( node, organizer, options ) {
+    de&&ug( "new Control.Checkbox()" );
+    
     Control.call( this, node, organizer, options );
     
     return this;
@@ -132,6 +136,14 @@
   subclass( Control, Control.Checkbox );
   
   extend( Control.Checkbox.prototype, {
+    get_default_value: function() {
+      Control.prototype.get_default_value.call( this );
+      
+      if( this.value === undefined ) this.value = this.get()[ 0 ] || { id: false };
+      
+      return this;
+    }, // get_default_value()
+    
     bind: function() {
       var that = this;
       
@@ -149,6 +161,8 @@
     }, // get_value()
     
     set_value: function( v ) {
+      Control.prototype.set_value.call( this, v );
+      
       this.node.checked = v;
       
       return this;
