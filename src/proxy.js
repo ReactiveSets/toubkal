@@ -34,10 +34,8 @@
   var log        = XS.log
     , subclass   = XS.subclass
     , extend     = XS.extend
-    , Code       = XS.Code
     , Connection = XS.Connection
     , Set        = XS.Set
-    , Ordered_Set= XS.Ordered_Set
   ;
   
   /* --------------------------------------------------------------------------
@@ -48,56 +46,99 @@
   function ug( m ) {
     log( "xs proxy, " + m );
   } // ug()
+
+
+  /* --------------------------------------------------------------------------
+     .broadcaster( options )
+     A broadcaster has one or many sources and will forward all operations from
+     these sources to its downsteam connections. It is state less.
+     
+     Usage:
+       var b = a_source.broadcaster();
+       b.from( additional_source)
+       b.to( destination1)
+       b.to( destination2)
+     
+     ToDo: move this to connection.js
+  */
+  
+  function Broadcaster( sources, options ) {
+    Connection.call( this, options );
+    // Make x.connect( broadcaster) invalid, please use broadcast.from( x)
+    this.source = this;
+    this.sources = sources || [];
+    var big_a = this.get();
+    this.add( big_a );
+    return this;
+  }
+  
+  Connection.subclass( "broadcaster", Broadcaster, {
+    factory: function( options ){ return new Broadcaster( [this] ); },
+    get: function(){
+      var sources = this.sources;
+      var all_get   = []
+      for( var source in sources ){
+        source = sources[source];
+        all_get = all_get.push( source.get() );
+      }
+      var big_a = Array.prototype.concat.apply( [], all_get);
+      return big_a;
+    },
+    from: function( source ) {
+      this.sources.push( source );
+      this.add( source.get() );
+      return this;
+    },
+    to:     function( target  ) { return this.connect( target);              },
+    add:    function( objects ) { return this.connections_add(    objects ); },
+    remove: function( objects ) { return this.connections_remove( objects ); },
+    update: function( objects ) { return this.connections_update( objects ); },
+  } );
+
   
   /* --------------------------------------------------------------------------
-     .proxy()
-     Connection pipelet for Proxy.
+     .proxy( system_wide_name, options )
+     Pipelet for Proxy.
      Proxies works in pairs, one proxy is local, the other is remote, they both
      have the same name.
      Any operation on the local proxy is signaled to the other side.
     
      Usage:
      
-       -- publisher side
+       -- source side
        daily_mirror.proxy( "daily_mirror.sub_id_xxx" )
        daily_mirror.add( [an_article, another_story] )
        
-       -- subscriber side
+       -- destination side
        daily_mirror = my_subscriptions.proxy( "daily_mirror.sub_id_xxx" )
        daily_mirror.connect( my_mail_box)
     
      ToDo: a reliable mechanism to destroy proxies and collect garbadge.
+     
+     Implementation: there is a XS_Proxy l8 actor in each client and each
+     server. When we need to talk to it, we use a l8 proxy. When the actor
+     receives the "relay" message, it relays the message's operation to a
+     local object based on the system wide name used to register that object.
+     
+     If such an object does not exist, the target object name is used to lookup
+     for a publisher that will handle the message.
   */
 
-  Connection.prototype.proxy = function( name, options ) {
-    var proxy = new Proxy( name, extend( { key: this.key }, options ) );
-    
-    // new proxy depends on this object and get notified of changes to it
-    this.connect( proxy );
-    
-    return proxy;
-  }; // proxy()
-  
-  /* --------------------------------------------------------------------------
-     Proxy( name, options )
-     
-     Data flow: node->proxy(x)->network->relay()->proxy(x)->node
-     
-     Parameters:
-       - name: model name
-       
-       - options (optional)
-  */
-  function Proxy( name, options ) {
+  function Proxy( source, name, options ) {
     Connection.call( this, options );
-    this.name = name;
+    this.name = name || source.name;
     
     // Maybe the remote proxy already contacted us
     var previous = Proxy.lookup( name)
     
+    // Operations are sent to a relay (using relay.send()) 
     this.relay        = (previous && previous.relay)        || null
     this.receiveQueue = (previous && previous.receiveQueue) || []
     this.sendQueue    = (previous && previous.sendQueue)    || []
+    
+    // When there is no remote relay yet, should we buffer the operations?
+    this.bufferize = this.options.buffer
+    this.bufferize = true // ToDo: implement false, ie: no buffering
     
     if ( !Proxy.url ) {
       this.server = true;  
@@ -108,71 +149,20 @@
     // Track all proxies
     Proxy.register( name, this )
     
+    // New proxy depends on source object and get notified of changes to it
+    source.connect( this );
+    
     return this;
   } // Proxy()
   
-  /*
-   *  RPC logic, implemented using l8 actors and proxies
-   */
-  
-  // When running client side, we know the url of the server
-  Proxy.url = null
-  if( l8.client ){
-    // Either a true browser client or a mock nodejs client
-    try{ Proxy.url = document.url }catch( e ){
-      try{ Proxy.url = "http://localhost:" + process.env.PORT }catch( e ){}
-    }
-  }
-  
-  // When running server side, there is an http server involved, app provided
-  Proxy.server = function( http_server ){ l8.stage( "local", http_server ); }
-  
-  // Manage a registry of all the known Proxy instances
-  Proxy.AllProxies = {}
-  
-  // Register a Proxy instance to enable future lookup by name for it
-  Proxy.register = function( name, object ){ Proxy.AllProxies[name] = object }
-  
-  // Lookup for a Proxy instance, typically when a publisher send a message
-  Proxy.lookup = function( name  ){ return Proxy.AllProxies[name] }
-  
-  // Start a local "XS_Proxy" relay actor that peers will talk to
-  Proxy.actor = l8.Actor( "XS_Proxy", l8.role( { delegate: {
-    relay: function( action ){
-      // Get the stage this actor's proxy plays on
-      var stage = l8.actor.stage || l8.stage( "local" )
-      var name = action.model;
-      // Check if a model proxy with that name was ever created locally
-      var model_proxy = Proxy.lookup( name );
-      if( !model_proxy ){
-        // oops, race condition, one side is ahead of the other, let's buffer
-        model_proxy = {
-          receiveQueue: [],
-          sendQueue:    [],
-          receive:      function( a ){ this.receiveQueue.push( a) }
-        }
-        Proxy.register( name, proxy )
-      }
-      // We may need to talk to that client, via it's own relay actor
-      model_proxy.relay = l8.proxy( "XS_Proxy", stage );
-      model_proxy.receive( action );
-    }
-  } } ) )()
-  
-  // When running client side, we know what relay actor to talk to.
-  // When running server side, we must wait until the client talks first.
-  Proxy.relay = Proxy.url && l8.proxy( "XS_Proxy", Proxy.url )
-  
-  /*
-   *  End of RPC logic. See .send() using it below
-   */
-  
-  subclass( Connection, Proxy );
-  
-  extend( Proxy.prototype, {
+  Connection.subclass( "proxy", Proxy, {
     
+    factory: function( name, options ) {
+      return new Proxy( this, name, options );
+    }, // factory()
+  
     contact: function() {
-    // Establish contact between client and server.
+    // Establish contact between client and server asap.
       if ( this.contacted ) return;
       // Client must contact server, server can't contact client, no address
       if ( this.server ) return;
@@ -258,7 +248,7 @@
         case 'remove'  : this.connections_remove( action.objects ); break;
         case 'update'  : this.connections_update( action.objects ); break;
         default:
-          de&&bug( "Unknown action: " + action.name + ", proxy: " + this.name )
+          log( "Unknown action: " + action.name + ", proxy: " + this.name )
         }
       }
       this.handlingQueues = false
@@ -269,63 +259,292 @@
     
   } ); // Proxy instance methods
   
+  /*
+   *  RPC logic, implemented using l8 actors and proxies
+   */
+  
+  // When running client side, we know the url of the server
+  Proxy.url = null
+  if( l8.client ){
+    // Either a true browser client or a mock nodejs client
+    try{ Proxy.url = document.url }catch( e ){
+      try{ Proxy.url = "http://localhost:" + process.env.PORT }catch( e ){}
+    }
+  }
+  
+  // When running client side, we know what relay actor to talk to.
+  // When running server side, we must wait until the client talks first.
+  Proxy.relay = Proxy.url && l8.proxy( "XS_Proxy", Proxy.url )
+  
+  // If that relay is/becomes unreachable, what do we do?
+  Proxy.keep = function(){
+    if( Proxy.relay ){
+      Proxy.relay.stage.defer( function(){
+        // ToDo: implement reconnect policy
+        try{ Proxy.reconnect() }catch( e ){ Proxy.relay = null }
+      })
+    }
+  }
+  
+  // When running server side, there is an http server involved, app provided
+  Proxy.server = function( http_server ){ l8.stage( "local", http_server ); }
+  
+  // Manage a registry of all the known Proxy instances
+  Proxy.AllProxies = {}
+  
+  // Register a Proxy instance to enable future lookup by name for it
+  Proxy.register = function( name, object ){ Proxy.AllProxies[name] = object }
+  
+  // Lookup for a Proxy instance, typically when a publisher send a message
+  Proxy.lookup = function( name  ){ return Proxy.AllProxies[name] }
+  
+  // Start a local "XS_Proxy" relay actor that peers will talk to
+  Proxy.actor = l8.Actor( "XS_Proxy", l8.role( { delegate: {
+    relay: function( action ){
+      // Get the stage this actor's proxy plays on
+      var stage = l8.actor.stage || l8.stage( "local" )
+      var name = action.model;
+      // Check if a model proxy with that name was ever created locally
+      var model_proxy = Proxy.lookup( name );
+      if( !model_proxy ){
+        // Are we handling a subscriber?
+        if ( name.substr( 0, 8 ) === "pub/sub." ) {
+          var pubsub = name;
+          var slash  = pubsub.indexOf( "/" );
+          var pub    = pubsub.substr( 0, slash - 1 );
+          var sub    = pubsub.substr( slash + 1 );
+          var publisher = Proxy.lookup( pub );
+          if ( publisher ){
+            return publisher.receive( action, sub, stage );
+          } else {
+            log( "Invalid publisher " + pub
+              + " for remote subscribtion " + sub
+              + " of client " + stage
+            );
+            return;
+          }
+        }
+        // oops, race condition, one side is ahead of the other, let's buffer
+        model_proxy = {
+          receiveQueue: [],
+          sendQueue:    [],
+          receive:      function( a ){ this.receiveQueue.push( a) }
+        }
+        Proxy.register( name, model_proxy )
+      }
+      // We may need to talk to that client, via it's own relay actor
+      model_proxy.relay = l8.proxy( "XS_Proxy", stage );
+      model_proxy.receive( action );
+    }
+  } } ) )()
+  
+  /*
+   *  End of RPC logic.
+   */
+  
+
   /* --------------------------------------------------------------------------
-     .tracer()
-     tracers simply display whatever happens on the object they observe
+     .publisher( name, options )
+     Pipelet for Publisher.
+     A Publisher connects a data source to subscribers. When a subscriber edit
+     the data, the change is forwarded to the other subscribers. Some 
+     subscribers are local, some are remote.
     
      Usage:
-       some_xs_object.tracer()
-  */
+     
+       -- publisher side
+       publisher = daily_mirror.publish( "daily_mirror")
+       daily_mirror.add( [an_article, another_story] )
+       
+       -- subscriber side
+       reader = root.subscribe( "daily_mirror")
+       reader.connect( xxx)
+       editor = reader
+       reader.update( [an_article])
 
-  Connection.prototype.tracer = function( options ) {
-    var tracer = new Tracer( this.name, extend( { key: this.key }, options ) );
-    
-    // new tracer depends on this object and get notified of changes to it
-    this.connect( tracer );
-    
+     Data flow: source->publisher->local_subscribers
+                source->publisher->remote_subscribers
+                subscriber->publisher.notify( t, initiator )
+  */
+  
+  function Publisher( source, name, options ) {
+    Connection.call( this, options );
+    this.name = name || source.name;
+    // New publisher depends on it's source and get notified of changes to it
+    source.connect( this );
     return this;
-  }; // tracer()
+  } // Publisher()
+
+  Connection.broadcaster.subclass( "publisher", Publisher, {
+    
+    factory: function( name, options ) {
+      var factory = options && options.factory
+      return factory
+      ? factory(       this, name, options )
+      : new Publisher( this, name, options );
+    },
+    
+    get: function(){ return this.source.get(); },
+    
+    notify: function( transaction, initiator ){
+      // Called by .receive() when a subscriber submit an operation.
+      // Default is to notify the source about the transaction.
+      return this.source.notify( transaction, initiator );
+      // If the source plays the transaction, as most do, as a result
+      // all subscribers, including the initiator of the action,
+      // will have the action notified to them.
+      // ToDo: loop detection?
+    },
+    
+    accept: function( stage, filter ){ return true; },
+    
+    receive: function( action, subscriber, stage ) {
+    // Called when an action is proposed by a subscriber, local or remote
+      if( stage ){
+        var name = "pub/sub" + this.name + "/" + subscriber + "." + stage.name;
+        var proxy = Proxy.lookup( name);
+        if ( !(subscriber = proxy ) ){
+          log( "new remote subscriber: " + name, action);
+          if ( action.name !== 'subscribe' ){
+            log( "bad subscriber " + name + " should subscribed first" );
+            return
+          }
+          if ( !this.accept( stage, action.filter ) ) {
+            return
+          }
+          subscriber
+          = this.subscriber( this, { filter: action.filter, stage: stage } );
+          subscriber.proxy( name);
+        }
+      }
+      // Actions from subscribers impact the publisher's source.
+      // It is up to the publisher to accept or ignore the action depending on
+      // the subscriber authorizations. Default is to accept the action and
+      // forward it to the publisher's source. See .notify()
+      this.notify( [action], subscriber );
+      return this;
+    }, // receive()
+    
+  } );
   
   /* --------------------------------------------------------------------------
-     Tracer( name, options )
+     .subscriber( publisher, options )
+     Attach a new subscriber to a publisher. Operations on the publisher are
+     forwarded to the subscriber. Publisher is either local or remote.
      
-     Data flow: node->tracer
+     options.filter is a filter sent to the publisher so that it can send only
+     the data that the subscriber desires.
      
-     Parameters:
-       - name: model name
-       
-       - options (optional)
+     options.stage is the stage where the remote subscriber operates.
   */
-  function Tracer( name, options ) {
+  
+  Proxy.NextSubscriberId    = 1;
+  Proxy.AllRemotePublishers = new XS.Set()
+  
+  function Subscriber( publisher, options ){
+    // If remote subscriber
+    if ( typeof publisher === 'string' ){
+      var name      = "pub/sub." + publisher;
+      publisher = Proxy.lookup( name );
+      if ( !publisher ) {
+        // Create a new proxy to talk to the remote publisher
+        publisher = Proxy.AllRemotePublishers.proxy( name );
+      }
+      // Create a new proxy to let the remote publisher talk to this subscriber
+      this.proxy( name + "/" + Proxy.NextSubscriberId++ );
+      publisher.send( [ { name: "subscribe", filter: options.filter } ] );
+    }
+    publisher.connect( this );
+    return this;
+  }
+  
+  Connection.broadcaster.subclass( "subscriber", Subscriber, {
+    factory: function(){ return new Subscriber( this, options); }
+  } )
+  
+  /* --------------------------------------------------------------------------
+     .tracer( options )
+     Tracers simply display whatever happens on the object they observe. 
+     Data flow: source->tracer
+     option log:   log function, defaults to XS.log()
+            usage: log( target, operation, objects )
+     Usage:
+       some_xs_object.tracer()
+       some_xs_object.tracer( { log: function( t ){ log( t)
+       
+    ToDo: the equivalent of Unix's tee.
+  */
+
+  function Tracer( source, options ) {
     Connection.call( this, options );
-    this.name  = name;
+    // new tracer depends on source object and get notified of changes to it
+    source.connect( this );
     this.log = options.log || log
     return this;
   } // Tracer()
-  
-  
-  subclass( Connection, Tracer );
-  extend( Tracer.prototype, {
+
+  Connection.subclass( "tracer", Tracer, {
+    factory: function( options ){ return new Tracer( this, options ) },
     add: function( objects ) {
       return this.trace( { name: 'add'  , objects: objects } );
     }, // add()
     remove: function( objects ) {
-      return this.send( { name: 'remove', objects: objects } );
+      return this.trace( { name: 'remove', objects: objects } );
     }, // remove()
     update: function( objects ) {
-      return this.send( { name: 'update', objects: objects } );
+      return this.trace( { name: 'update', objects: objects } );
     }, // update()
-    trace: function( action ) {
-      ( this.log || log )(
-        [ "tracer", this.name, action.name, action.objects ]
+    trace: function( operation ) {
+      ( this.log || log ).apply( this,
+        [ this.source, operation.name, operation.objects ]
       );
     } // trace()
   } ); // Tracer instance methods
   
-  /* -------------------------------------------------------------------------------------------
+  
+  /* --------------------------------------------------------------------------
+     .persistor( file_name, options )
+     A persistor will submit transactions stored in a file to it'source and
+     will after that log new transactions from that source in in the file.
+     
+     file_name defaults to the source's name.
+
+     When running client side, browser's local storage is used.
+     
+     options.filter tells the persistor that there is no need to replay stored
+     transactions when they don't pass the filter.
+          
+     options.clear when true means previous transactions are not replayed at
+     all.
+     
+     options.restore when set means the persistor only replays the stored
+     transactions but does not log new ones.
+     
+     options.sync when true means that a file system sync is required after
+     each write. Slow. When not set, writes are buffered and sync happens
+     every so often, as per OS's policy.
+     
+     options.callback is a nodejs style callback to call when all stored
+     transactions were replayed. Note: transactions replay is always run
+     asynchronously.
+     
+     Note: when using replicators (ie: remote persistors), the need for synced
+     writes is reduced because chances that both the source and the replicate
+     fail at once are reduced too. This is even more true when multiple
+     replicators exist.
+     
+     Usage:
+       a_set.persistor();
+       a_set.persisor( null, { local: true } );
+       persistor.compact()
+  */
+    
+  
+  /* --------------------------------------------------------------------------
      module exports
   */
-  eval( XS.export_code( 'XS', [ 'Proxy' ] ) );
+  // ToDo: JHR, export Tracer?
+  eval( XS.export_code( 'XS', [ 'Proxy', 'Publisher', 'Subscriber' ] ) );
   
   de&&ug( "module loaded" );
 } )( this ); // proxy.js

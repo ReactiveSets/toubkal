@@ -15,11 +15,16 @@ var server  = Http.createServer( app );
 server.listen( process.env.PORT );
 XS.Proxy.server( server );
 
-// The publisher of the daily mirror has only one subscriber: The Dude.
+// The fake publisher of the daily mirror has only one subscriber: The Dude.
 var daily_mirror = new XS.Set( null, "daily_mirror");
 daily_mirror.proxy( "daily_mirror_for_the_dude" );
+
+// The true publisher of the daily mirror has many subscribers
+daily_mirror.publisher( "daily_mirror")
+
+// Let's add articles to the daily_mirror
 daily_mirror.add( [
-  { id: 1, text: "an article" },
+  { id: 1, text: "a first article" },
   { id: 2, text: "another story" }
 ] );
 XS.l8.task( function(){
@@ -30,3 +35,6 @@ XS.l8.task( function(){
     this.sleep( 1000 );
   })
 })
+
+// daily_mirror.persistor( "daily_mirror.json")
+

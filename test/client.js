@@ -11,7 +11,7 @@ require( "../src/proxy.js" )
 
 // The Dude subscribe to the daily mirror
 var my_subscriptions = new XS.Set( null, "subscriptions" )
-var daily_mirror = my_subscriptions.proxy( "daily_mirror_for_the_dude" )
+var daily_mirror_for_the_dude = my_subscriptions.proxy( "daily_mirror_for_the_dude" )
 
 function trace( tracer, model, operation, objects ){
   var buf = ["["];
@@ -27,4 +27,9 @@ function trace( tracer, model, operation, objects ){
   l8.trace( tracer, model, operation, buf )
 }
 
-daily_mirror.tracer( { log: trace } )
+daily_mirror_for_the_dude.tracer( { log: trace } );
+
+var subscriber = my_subscriptions.subscriber( "daily_mirror" );
+subscriber.tracer( { log: trace } );
+
+// subscriber.persistor( "daily_mirror_backup" )
