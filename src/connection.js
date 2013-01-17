@@ -33,14 +33,7 @@
      
      A Connection has one upstream source and is the source of many downstream Connections.
      
-     ToDo: JHR. Connection is a confusing name. DataFlowNode or Node or
-     DataNeuron or Neuron or Cell or DataCell may help.
-     
-     We need to change this name, I like Node or Cell, I find Neuron too loaded with potential
-     meaning that does not match this concept. A Neuron has many inputs and one output, which
-     is the opposite of this.
-     
-     The best analogy might be a river delta or a multiplexer.
+     ToDo: JHR. Connection is a confusing name. DataFlowNode may help.
   */
   function Connection( options ) {
     this.options = options = options || {};
@@ -55,16 +48,19 @@
     return this;
   } // Connection()
   
+  var DataFlowNode = Connection;
+  
   extend( Connection.prototype, {
+        
+    get: function(){
+      // Return the content (an array of items) of This node.
+      // Subclasses typically redefines this.
+      return [];
+    }, // get()
     
-    //get: function(){
-    // Return the content (an array of items) of This connection.
-    // Subclasses typically redefines this.
-    //  return []
-    //}, // get()
-    
-    notify: function( transaction ) {
+    notify: function( transaction, initiator ) {
     // Batch add/update/remove operations
+      // ToDo: handle optional subscriber initiator
       var l = transaction.length;
       
       for ( var i = -1; ++i < l; ) {
@@ -91,23 +87,27 @@
       return this;
     }, // notify()
     
-    // Add items to this Connection then notify downsteam connections about
+    // Add items to this node then notify downsteam connections about
     // the effective additions.
-    // Defined by derived classes
-    add: function( added ){ throw new Error( 'Missing add()' ) },
+    // Typically redefined by derived classes.
+    // Default is to do store nothing and to notify downstream nodes.
+    add: function( added ){ return this.connections_remove()( added) },
     
-    // Update items of this Connection then notify downsteam connections about
-    // the effective updates
-    // Defined by derived classes
-    update: function( added ){ throw new Error( 'Missing update()' ) },
+    // Update items of this node, then notify downsteam destinations about
+    // the effective updates.
+    // Typically redefined by derived classes.
+    // Default is to do store nothing and to notify downstream nodes.
+    update: function( updated ){ return this.connections_update( updated ) },
     
     // remove: function( removed )
-    // Remove items from this Connection and notify downsteam connections about
+    // Remove items from this node and notify downsteam destinations about
     // the effective removals.
-    remove: function( added ){ throw new Error( 'Missing remove()' ) },
+    // Typically redefined by derived classes.
+    // Default is to do store nothing and to notify downstream nodes.
+    remove: function( removed ){ return this.connections_remove( removed ) },
     
     connections_add: function( added ) {
-      // Notify downsteam connections about some "add" operation that was done
+      // Notify downsteam destinations about some "add" operation that was done
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].add( added );
@@ -116,7 +116,7 @@
     }, // connections_add()
     
     connections_update: function( updated ) {
-      // Notify downsteam Connections about some "update" operation that was done
+      // Notify destinations about some "update" operation that was done
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].update( updated );
@@ -125,7 +125,7 @@
     }, // connections_update()
     
     connections_remove: function( removed ) {
-      // Notify downsteam Connections about some "remove" operation that was one
+      // Notify downsteam node about some "remove" operation that was one
       var connections = this.connections, l = connections.length;
       
       for ( var i = -1; ++i < l; ) connections[ i ].remove( removed );
@@ -133,32 +133,40 @@
       return this;
     }, // connections_remove()
     
-    connect: function( connection ) {
-      // Connect a new downstream Connection to This Connection.
-      // "the source" for the added Connection becomes This Connection.
-      // The content of This Connections gets added to the downsteam Connection.
+    connect: function( destination ) {
+      // Connect a new downstream destination to this source.
+      // The content of the source gets added to the downsteam destination.
     
-      if ( connection.source ) {
+      // ToDo: JHR, the destination should also decide if it is capable of
+      // accepting a source. this requires a ._from(), to be called by the
+      // source when it connects to the destination.
+      // Note: I have implemented a Broadcaster node that accepts multiple
+      // sources and multiple destinations.
+      
+      if ( destination.source ) {
         throw new Error( 'A Connection can only have a single source' );
       }
       
       // Remember the source of this downstream Connection
-      connection.source = this;
+      destination.source = this;
       
-      this.connections.push( connection );
+      this.connections.push( destination );
       
-      // ToDo: replace by something like this.fetch( connection, query )
+      // ToDo: replace by something like this.fetch( destination, query )
       // get() is not scalable to large datasets, because it returns the
       // entire set. get() should only be used on small sets, for testing
       // or on clients.
       //
-      // fetch( connection, query ) will solve this issue because it will
-      // allow the source to provided its content filtered and in chuncks
+      // fetch( destination, query ) will solve this issue because it will
+      // allow the source to provide its content filtered and in chuncks
       // via add()
-      connection.add( this.get() );
+      destination.add( this.get() );
       
       return this;
     }, // connect()
+    
+    to:   function( destination ) { return   this.connect( destination ); },
+    from: function( source      ) { return source.connect( this );        },
     
     make_key: function( o ) {
       var key = this.key, l = key.length, code = [];
@@ -176,6 +184,53 @@
     } // make_key()
   } ); // Connection instance methods
   
+  
+  /* --------------------------------------------------------------------------
+     DataFlowNode.subclass( name, class, methods )
+     Generic pipelet class builder. Makes class a subclass of This class and
+     defines DataFlowNode[name] using methods.factory. This is just a helper to
+     make it easier to implement the usual pattern for data flow node classes.
+     
+     Usage: -- implementers --
+        function Talker( source, msg ){
+          this.source = source
+          this.msg    = null;
+          msg && this.add( [ { msg: msg } ] );
+        }
+        DataFlowNode.subclass( "talker", Talker, {
+          factory: function( msg ) { return new Talker( this, msg) },
+          get:    function()    { return this.msg ? [ this.msg ] : []; }
+          add:    function( d ) { d && d[0] && this.msg = d[0];  return this; }
+          update: function( d ) { d && d[0] && this.msg = d[0];  return this; }
+          remove: function( d ) { this.msg = null; return this; }
+          talk: function() {
+            log( "a fool talks to it's creator" );
+            this.source.add( this.get() );
+            return this
+          }
+        })
+        
+     Usage: -- users --
+       var a_fool = obj.talker( "I'm a fool" );
+       a_fool.talk();
+       a_fool.add( [ { msg: "with memory issues" }, { msg: "big issues") } ] );
+       a_fool.talk();
+  */
+  
+  DataFlowNode.subclass = function( name, klass, methods ){
+    subclass( this, klass );
+    extend( klass.prototype, methods );
+    DataFlowNode[name] = {
+      class: klass,
+      subclass: function() {
+        return DataFlowNode.subclass.apply( klass, arguments );
+      }
+    };
+    DataFlowNode.prototype[name] = methods.factory;
+    return klass;
+  }
+  
+  
   /* -------------------------------------------------------------------------------------------
      Set( a [, options] )
   */
@@ -184,8 +239,10 @@
     // Add a new downsteam Set to This Connection and initialize it with the
     // content, if any, of This Connection.
     
-    var s = new Set( extend( { key: this.key }, options ) );
+    // ToDo: JHR, should send this instead of null, ctor would figure out
+    var s = new Set( null, extend( { key: this.key }, options ) );
     
+    // ToDo: JHR, move this to constructor
     this.connect( s );
     
     return s;
@@ -193,8 +250,20 @@
   
   function Set( a, options ) {
     // Constructor for a new Set with some initial content
+    // ToDo: initial content should be either an array or an existing source
     
     options = Connection.call( this, options ).options;
+    
+    // ToDo: JHR,
+    //
+    // if ( src ) {
+    //   if( typeof src === 'array' ){
+    //   this.a = []
+    //   this.add( src)
+    // } else {
+    //   src.connect( this )
+    // }
+    // return this
     
     this.a = [];
     
@@ -217,18 +286,6 @@
       // of unique attributes/properties, aka "an object".
       return this.a;
     }, // get()
-    
-    connect: function( connection ) {
-      // ToDo: JHR. This is a duplicate of Connection.connect(), get rid of it?
-      // I had removed it in a previous commit, but I guess it came back after some merge
-      connection.source = this;
-      
-      this.connections.push( connection );
-      
-      connection.add( this.get() );
-      
-      return this;
-    }, // connect()
     
     add: function( objects ) {
       // Add items to the set and notify downsteam Connections.
@@ -287,9 +344,8 @@
     make_index_of: function() {
       // Define index_of() to make it efficient both when comparing items and
       // when iterating over items.
-      // ToDo: JHR, when the set grows, would it make sense to redefine again
-      // again to make index_of() even more efficient?
-      // Jean: Absolutely ^^
+      // ToDo: JHR, when the set grows, it makes sense to redefine it again
+      // to make index_of() even more efficient?
       var key = this.key, l = key.length;
       
       var vars = [ 'a = this.a', 'l = a.length', 'i = -1' ];
@@ -335,19 +391,13 @@
   } ); // Set instance methods
   
   /* -------------------------------------------------------------------------------------------
-     CXXX(): template for Connection
+     CXXX(): template for data flow destination.
+     It connects to a source, builds an empty .out Set and leaves it up for the
+     derived class to decide what to do when an add/update/remove operation
+     happens.
   */
   function CXXX( source, options ) {
-    // Constructor for a Connection that depends on what happens to a source Connection
-    
-    // ToDo: JHR, that the "input" set would be called "out" is confusing. Maybe
-    // "in" or "set" or "origin" or "pipe" or "channel" or "conduit" or "tube"...
-    // "out" makes sense from the point of view of the source not from the point
-    // of view of the downsteam object itself. 
-    //
-    // Jean: you had misunderstood the code, 'out' it not the source, but the output of this
-    // Connection. to avoid the confusion, I have changed the firts parameter name from 'set'
-    // to 'source'.
+    // Constructor for a destination that depends on what happens to a source
     
     Connection.call( this, options );
     
@@ -362,19 +412,19 @@
   
   extend( CXXX.prototype, {
     add: function( objects ) {
-      // Called when items were added to the source Connection
+      // Called when items were added to the source
       
       return this;
     }, // add()
     
     remove: function( objects ) {
-      // Called when items were removed from the source Connection
+      // Called when items were removed from the source
       
       return this;
     }, // remove()
     
     update: function( updates ) {
-      // Called when items were update inside the source Connection
+      // Called when items were update inside the source
       
       return this;
     } // update()
