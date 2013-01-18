@@ -37,11 +37,8 @@
   </head>
   
   <body>
-    <div id="control">
-      <div>
-        <input name="over_100_sales" type="checkbox" />
-        <label>Over 100 Sales</label>
-      </div>
+    <div id="controls">
+      <div id="checkbox_control"></div>
     </div>
     
     <div id="demo"></div>
@@ -50,11 +47,15 @@
     <script src="xs_table_tests.js"></script>
     
     <script type="text/javascript" charset="utf-8">
-      var checkbox = new XS.Set( [ { id: false }, { id: true } ] )
-        .checkbox( document.getElementsByName( "over_100_sales" )[ 0 ], 
-          [ { id: "id" } ],
-          { default_value: true }
-        )
+      var organizer = [ { id: "id" } ]
+        , set       = new XS.Ordered_Set( [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ], organizer )
+        , checkbox  = set.checkbox( document.getElementById( "checkbox_control" ), 
+            [ { id: "id" } ],
+            {
+              // default_value: { id: true, label: "Label True" }
+              // label: "Over 100 Sales"
+            }
+          )
       ;
     </script>
   </body>

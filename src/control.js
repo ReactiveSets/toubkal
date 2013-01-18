@@ -49,14 +49,9 @@
   */
   
   function Control( node, organizer, options ) {
-    Ordered_Set.call( this, [], organizer, options );
+    this.init( node, options );
     
-    this.set_node( node );
-    this.process_options( options );
-    this.get_default_value();
-    this.set_value( this.value );
-    this.get_value();
-    this.bind();
+    Ordered_Set.call( this, [], organizer, options );
     
     return this;
   } // Control()
@@ -64,10 +59,22 @@
   subclass( Ordered_Set, Control );
   
   extend( Control.prototype, {
+    init: function( node, options ) {
+      this
+        .set_node( node )
+        .process_options( options )
+        //.get_default_value()
+      ;
+      
+      if( typeof this.draw === "function" ) this.draw();
+      
+      return this.bind();
+    }, // init()
+    
     set_node: function( node ) {
       if(
-           typeof HTMLElement === "object" ?  node instanceof HTMLElement : node
-        && typeof node        === "object" && node.nodeType === 1 && typeof node.nodeName === "string"
+           typeof HTMLElement === "object" ? node instanceof HTMLElement
+        : node && typeof node === "object" && node.nodeType === 1 && typeof node.nodeName === "string"
       ) {
         this.node = node;
       } else {
@@ -86,18 +93,19 @@
     bind: function() {
       return this;
     }, // bind()
-    
+    /*
     get_default_value: function() {
       var options       = this.options
         , values        = this.get()
         , default_value = options.default_value
+        , value         = values && values[ 0 ]
       ;
       
-      this.value = default_value === undefined ? values[ 0 ] : default_value;
+      this.value = default_value === undefined ? values : default_value;
       
       return this;
     }, // get_default_value()
-    
+    */
     get_value: function() {
       return this;
     }, // get_value()
@@ -136,18 +144,21 @@
   subclass( Control, Control.Checkbox );
   
   extend( Control.Checkbox.prototype, {
+    /*
     get_default_value: function() {
       Control.prototype.get_default_value.call( this );
       
-      if( this.value === undefined ) this.value = this.get()[ 0 ] || { id: false };
+      var a = this.get();
+      
+      if( this.value === undefined ) this.value = a && a[ 0 ] || { id: false };
       
       return this;
     }, // get_default_value()
-    
+    */
     bind: function() {
       var that = this;
       
-      this.node.onclick = function() {
+      this.checkbox.onclick = function() {
         that.update();
       };
       
@@ -155,7 +166,11 @@
     }, // bind
     
     get_value: function() {
-      this.value = this.node.checked;
+      var a = this.get();
+      
+      this.value = a[ 0 ].id === this.node.getElementsByTagName( "input" )[ 0 ].checked ? a[ 0 ] : a[ 1 ];
+      
+      de&&ug( "Checkbox::get_value(), value: " + log.s( this.value ) );
       
       return this;
     }, // get_value()
@@ -163,10 +178,52 @@
     set_value: function( v ) {
       Control.prototype.set_value.call( this, v );
       
-      this.node.checked = v;
+      de&&ug( "Checkbox::set_value(), value: " + log.s( this.value ) );
+      
+      this.checkbox.checked = v.id;
+      this.label.innerText  = this.options.label || v.label;
       
       return this;
-    } // set_value()
+    }, // set_value()
+    
+    draw: function() {
+      this.node.innerHTML = '<input type="checkbox" /><label></label>';
+      
+      this.checkbox = this.node.getElementsByTagName( "input" )[ 0 ];
+      this.label    = this.node.getElementsByTagName( "label" )[ 0 ];
+      
+      return this;
+    }, // draw
+    
+    add: function( objects ) {
+      Ordered_Set.prototype.add.call( this, objects );
+      
+      var a  = this.get()
+        , v  = this.value
+        , al = a.length
+        
+        , disable = true
+        , label   = "No Label"
+      ;
+      
+      switch( al ) {
+        case 1:
+          v = a[ 0 ];
+        break;
+        
+        case 2:
+          disable = false;
+          
+          if( v === undefined ) v = this.options.default_value || ( a[ 0 ].id === false ? a[ 0 ] : a[ 1 ] );
+        break;
+      }
+      
+      this.checkbox.disabled = ! v || al === 1 ? true : false;
+      this.label.innerText   = v ? v.label : "No Label";
+      v && this.set_value( v );
+      
+      return this;
+    } // add()
   } );
   
   /* -------------------------------------------------------------------------------------------
