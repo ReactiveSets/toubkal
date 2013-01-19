@@ -228,13 +228,14 @@
     
     add: function( objects ) {
       var body      = this.body
-        , columns   = this.columns.columns.get()
+        , columns   = this.columns.columns
         , locations = this.locate( objects )
         , l         = locations.length
-        , cl        = columns.length
       ;
       
-      for( var i = -1; ++i < l; ) {
+      if ( columns instanceof Set ) columns = columns.get();
+      
+      for( var i = -1, cl = columns.length; ++i < l; ) {
         var o = objects[ i ]
           , r = body.insertRow( locations[ i ].insert + i )
         ;
