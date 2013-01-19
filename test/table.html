@@ -40,6 +40,7 @@
     <div id="controls">
       <div id="checkbox_control"></div>
     </div>
+    <div id="checkbox_value"></div>
     
     <div id="demo"></div>
     <div id="mocha"></div>
@@ -57,9 +58,12 @@
             }
           )
       ;
+      
+      checkbox.table( document.getElementById( "checkbox_value" )
+        , [ { id: 'id' }, { id: 'label' } ]
+        , [ { id: 'id' } ]
+        , { caption: 'Checkbox Value' }
+      );
     </script>
   </body>
 </html>
-
-
-
