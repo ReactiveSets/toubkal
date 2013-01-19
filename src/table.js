@@ -79,7 +79,7 @@
           , align = c.align
         ;
         
-        th.innerHTML = c.label;
+        th.innerHTML = c.label || c.id;
         th.setAttribute( "column_id", c.id );
         
         header_row.appendChild( th );
@@ -136,7 +136,11 @@
         for( var j = cl; j; ) {
           var header_cell = header_cells[ --j ];
           
-          if(  u0.label !== u1.label && header_cell.innerHTML === u0.label ) header_cell.innerHTML = u1.label;
+          var u0_label = u0.label || u0.id
+            , u1_label = u1.label || u1.id
+          ;
+          
+          if(  u0_label !== u1_label && header_cell.innerHTML === u0_label ) header_cell.innerHTML = u1_label;
           
           if(  u0.id === u1.id || header_cell.getAttribute( "column_id" ) !== u0.id ) continue;
           
