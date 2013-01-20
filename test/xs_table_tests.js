@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Ordered_Set, Set, Table, XS, books, chai, columns, from_HTML_to_object, organizer;
+  var Ordered_Set, Set, Table, XS, books, chai, columns, from_HTML_to_object, node, organizer;
 
   from_HTML_to_object = function(node) {
     var align, cell, columns, data, i, j, o, rows, v, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2;
@@ -152,10 +152,12 @@
     caption: "List of the best-selling books (source: wikipedia)"
   });
 
+  node = document.getElementById("demo").firstChild;
+
   describe('Columns_Set():', function() {
     it('columns should be equal to object.columns', function() {
       var object;
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return columns.get().should.be.eql(object.columns);
     });
     it('after add 2 objects: columns.add( objects ) should be equal to object.columns', function() {
@@ -170,7 +172,7 @@
           label: "Language"
         }
       ]);
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return columns.get().should.be.eql(object.columns);
     });
     it('after columns.remove( object ), columns should be equal to object.columns', function() {
@@ -181,7 +183,7 @@
           label: "ID"
         }
       ]);
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return columns.get().should.be.eql(object.columns);
     });
     return it('after columns.update( object ), columns should be equal to object.columns', function() {
@@ -197,7 +199,7 @@
           }
         ]
       ]);
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return columns.get().should.be.eql(object.columns);
     });
   });
@@ -205,7 +207,7 @@
   describe('Table():', function() {
     it('books should be equal to object.data', function() {
       var object;
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return object.data.should.be.eql([
         {
           title: "A Tale of Two Cities",
@@ -311,7 +313,7 @@
           language: "English"
         }
       ]);
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return object.data.should.be.eql([
         {
           title: "A Tale of Two Cities",
@@ -415,7 +417,7 @@
           }
         ]
       ]);
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return object.data.should.be.eql([
         {
           title: "A Tale of Two Cities",
@@ -510,7 +512,7 @@
           year: 1853
         }
       ]);
-      object = from_HTML_to_object(document.getElementsByTagName("table")[0]);
+      object = from_HTML_to_object(node);
       return object.data.should.be.eql([
         {
           title: "And Then There Were None",
