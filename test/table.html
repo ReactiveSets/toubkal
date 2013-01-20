@@ -49,18 +49,18 @@
     
     <script type="text/javascript" charset="utf-8">
       var organizer = [ { id: "id" } ]
-        , set       = new XS.Ordered_Set( [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ], organizer )
+        , set       = new XS.Ordered_Set( [ { id: false, label: "Chart" }, { id: true, label: "Chart", column: "sales" } ], organizer )
         , checkbox  = set.checkbox( document.getElementById( "checkbox_control" ), 
             [ { id: "id" } ],
             {
               // default_value: { id: true, label: "Label True" }
-              // label: "Over 100 Sales"
+              label: "Charts"
             }
           )
       ;
       
       checkbox.table( document.getElementById( "checkbox_value" )
-        , [ { id: 'id' }, { id: 'label' } ]
+        , [ { id: 'id' }, { id: 'label' }, { id: 'column' } ]
         , [ { id: 'id' } ]
         , { caption: 'Checkbox Value' }
       );
