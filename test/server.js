@@ -38,3 +38,5 @@ XS.l8.task( function(){
 
 // daily_mirror.persistor( "daily_mirror.json")
 
+XS.l8.countdown( 100)
+

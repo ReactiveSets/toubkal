@@ -76,7 +76,7 @@
     factory: function( options ){ return new Broadcaster( [this] ); },
     get: function(){
       var sources = this.sources;
-      var all_get   = []
+      var all_get = [];
       for( var source in sources ){
         source = sources[source];
         all_get = all_get.push( source.get() );
@@ -89,7 +89,20 @@
       this.add( source.get() );
       return this;
     },
+    not_from: function( source ) {
+      var new_sources = [];
+      var sources     = this.sources;
+      var len         = sources.length;
+      for ( var ii = 0, item ; ii < len ; ii++ ) {
+        item = sources[ ii ];
+        if ( item !== source) { new_sources.push( item ) }
+        break;
+      }
+      this.sources = new_sources;
+      return this;
+    },
     to:     function( target  ) { return this.connect( target);              },
+    not_to: function( target  ) { return this.disconnect( target);           },
     add:    function( objects ) { return this.connections_add(    objects ); },
     remove: function( objects ) { return this.connections_remove( objects ); },
     update: function( objects ) { return this.connections_update( objects ); },
@@ -125,6 +138,7 @@
   */
 
   function Proxy( source, name, options ) {
+    
     Connection.call( this, options );
     this.name = name || source.name;
     
@@ -154,6 +168,7 @@
     
     return this;
   } // Proxy()
+  
   
   Connection.subclass( "proxy", Proxy, {
     
@@ -299,10 +314,11 @@
   Proxy.lookup = function( name  ){ return Proxy.AllProxies[name] }
   
   // Start a local "XS_Proxy" relay actor that peers will talk to
-  Proxy.actor = l8.Actor( "XS_Proxy", l8.role( { delegate: {
+  Proxy.actor = l8.Actor( "XS_Proxy", l8.role( {
     relay: function( action ){
       // Get the stage this actor's proxy plays on
       var stage = l8.actor.stage || l8.stage( "local" )
+      // ToDo: if new stage, register a disconnection callback to clean stuff
       var name = action.model;
       // Check if a model proxy with that name was ever created locally
       var model_proxy = Proxy.lookup( name );
@@ -335,8 +351,11 @@
       // We may need to talk to that client, via it's own relay actor
       model_proxy.relay = l8.proxy( "XS_Proxy", stage );
       model_proxy.receive( action );
+    },
+    catch: function( action ){
+      log( "Unsupported relay action: " + action );
     }
-  } } ) )()
+  } ) )()
   
   /*
    *  End of RPC logic.
@@ -378,7 +397,7 @@
   Connection.broadcaster.subclass( "publisher", Publisher, {
     
     factory: function( name, options ) {
-      var factory = options && options.factory
+      var factory = options && options.factory;
       return factory
       ? factory(       this, name, options )
       : new Publisher( this, name, options );
@@ -403,11 +422,11 @@
       if( stage ){
         var name = "pub/sub" + this.name + "/" + subscriber + "." + stage.name;
         var proxy = Proxy.lookup( name);
-        if ( !(subscriber = proxy ) ){
+        if ( !( subscriber = proxy ) ){
           log( "new remote subscriber: " + name, action);
           if ( action.name !== 'subscribe' ){
             log( "bad subscriber " + name + " should subscribed first" );
-            return
+            return;
           }
           if ( !this.accept( stage, action.filter ) ) {
             return
@@ -427,6 +446,7 @@
     
   } );
   
+  
   /* --------------------------------------------------------------------------
      .subscriber( publisher, options )
      Attach a new subscriber to a publisher. Operations on the publisher are
@@ -442,9 +462,10 @@
   Proxy.AllRemotePublishers = new XS.Set()
   
   function Subscriber( publisher, options ){
+    Connection.call( this, options );
     // If remote subscriber
     if ( typeof publisher === 'string' ){
-      var name      = "pub/sub." + publisher;
+      var name  = "pub/sub." + publisher;
       publisher = Proxy.lookup( name );
       if ( !publisher ) {
         // Create a new proxy to talk to the remote publisher
@@ -459,8 +480,9 @@
   }
   
   Connection.broadcaster.subclass( "subscriber", Subscriber, {
-    factory: function(){ return new Subscriber( this, options); }
+    factory: function( options ){ return new Subscriber( this, options); }
   } )
+  
   
   /* --------------------------------------------------------------------------
      .tracer( options )
@@ -479,7 +501,7 @@
     Connection.call( this, options );
     // new tracer depends on source object and get notified of changes to it
     source.connect( this );
-    this.log = options.log || log
+    this.log = options.log || log;
     return this;
   } // Tracer()
 
@@ -501,44 +523,7 @@
     } // trace()
   } ); // Tracer instance methods
   
-  
-  /* --------------------------------------------------------------------------
-     .persistor( file_name, options )
-     A persistor will submit transactions stored in a file to it'source and
-     will after that log new transactions from that source in in the file.
-     
-     file_name defaults to the source's name.
 
-     When running client side, browser's local storage is used.
-     
-     options.filter tells the persistor that there is no need to replay stored
-     transactions when they don't pass the filter.
-          
-     options.clear when true means previous transactions are not replayed at
-     all.
-     
-     options.restore when set means the persistor only replays the stored
-     transactions but does not log new ones.
-     
-     options.sync when true means that a file system sync is required after
-     each write. Slow. When not set, writes are buffered and sync happens
-     every so often, as per OS's policy.
-     
-     options.callback is a nodejs style callback to call when all stored
-     transactions were replayed. Note: transactions replay is always run
-     asynchronously.
-     
-     Note: when using replicators (ie: remote persistors), the need for synced
-     writes is reduced because chances that both the source and the replicate
-     fail at once are reduced too. This is even more true when multiple
-     replicators exist.
-     
-     Usage:
-       a_set.persistor();
-       a_set.persisor( null, { local: true } );
-       persistor.compact()
-  */
-    
   
   /* --------------------------------------------------------------------------
      module exports

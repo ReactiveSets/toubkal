@@ -165,8 +165,25 @@
       return this;
     }, // connect()
     
-    to:   function( destination ) { return   this.connect( destination ); },
-    from: function( source      ) { return source.connect( this );        },
+    disconnect: function( target ) {
+      var new_targets = [];
+      var targets     = this.connections;
+      var len         = targets.length;
+      for ( var ii = 0, item ; ii < len ; ii++ ) {
+        item = targets[ ii ];
+        if ( item !== target ) { new_targets.push( item ) }
+        break;
+      }
+      this.connections = new_targets;
+      // ToDo: target should be notified that it's source was disconnected
+      if( target.source === this ) { target.source = null }
+      return this;
+    }, // disconnect()
+    
+    to:       function( target ) { return   this.connect(    target ); },
+    not_to:   function( target ) { return   this.disconnect( target ); },
+    from:     function( source ) { return source.connect(    this );   },
+    not_from: function( source ) { return source.disconnect( this );   },
     
     make_key: function( o ) {
       var key = this.key, l = key.length, code = [];

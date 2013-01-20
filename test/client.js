@@ -33,3 +33,5 @@ var subscriber = my_subscriptions.subscriber( "daily_mirror" );
 subscriber.tracer( { log: trace } );
 
 // subscriber.persistor( "daily_mirror_backup" )
+
+l8.countdown( 10)
