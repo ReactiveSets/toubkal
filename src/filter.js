@@ -15,6 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict";
 
 ( function( exports ) {
   var XS;
@@ -53,7 +54,7 @@
   */
   Connection.prototype.filter = function( filter, options ) {
     return new Filter( this, filter, options );
-  } // filter()
+  }; // filter()
   
   function Filter( source, filter, options ) {
     Connection.call( this, extend( { key: source.key }, options ) );
