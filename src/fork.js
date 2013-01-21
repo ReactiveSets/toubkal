@@ -106,21 +106,21 @@
     // Default is to do store nothing and to notify downstream nodes.
     add: function( added ){ return this.forks_remove()( added) },
     
-    // Update items of this node, then notify downsteam destinations about
+    // Update items of this node, then notify downsteam forks about
     // the effective updates.
     // Typically redefined by derived classes.
     // Default is to do store nothing and to notify downstream nodes.
     update: function( updated ){ return this.forks_update( updated ) },
     
     // remove: function( removed )
-    // Remove items from this node and notify downsteam destinations about
+    // Remove items from this node and notify downsteam forks about
     // the effective removals.
     // Typically redefined by derived classes.
     // Default is to do store nothing and to notify downstream nodes.
     remove: function( removed ){ return this.forks_remove( removed ) },
     
+    // Notify downsteam forks about some "add" operation that was done
     forks_add: function( added ) {
-      // Notify downsteam destinations about some "add" operation that was done
       var forks = this.forks, l = forks.length;
       
       for ( var i = -1; ++i < l; ) forks[ i ].add( added );
@@ -128,8 +128,8 @@
       return this;
     }, // forks_add()
     
+    // Notify forks about some "update" operation that was done
     forks_update: function( updated ) {
-      // Notify destinations about some "update" operation that was done
       var forks = this.forks, l = forks.length;
       
       for ( var i = -1; ++i < l; ) forks[ i ].update( updated );
@@ -137,8 +137,8 @@
       return this;
     }, // forks_update()
     
+    // Notify downsteam node about some "remove" operation that was one
     forks_remove: function( removed ) {
-      // Notify downsteam node about some "remove" operation that was one
       var forks = this.forks, l = forks.length;
       
       for ( var i = -1; ++i < l; ) forks[ i ].remove( removed );
@@ -146,6 +146,58 @@
       return this;
     }, // forks_remove()
     
+    /* --------------------------------------------------------------------
+       set_source( source )
+       
+       Connect or disconnect from upstream source fork.
+       
+       The content of the source is then added to this fork.
+       
+       Parameters:
+         source (optional): the source fork to connect to.
+           If undefined, the current fork is removed from its source if any 
+         
+    */
+    set_source: function( source ) {
+      // ToDo: JHR, the fork should also decide if it is capable of
+      // accepting a source. this requires a ._from(), to be called by the
+      // source when it connects to the fork.
+      // Note: I have implemented a Broadcaster node that accepts multiple
+      // sources and multiple destinations.
+      
+      if ( this.source ) {
+        // disconnect from upstream source fork
+        var forks = this.source.forks
+          , p = forks.indexOf( this )
+          , u
+        ;
+        
+        if ( p !== -1 ) forks.splice( p, 1 );
+        
+        this.source = u;
+      }
+      
+      if ( source ) {
+        // Remember the source of this downstream Fork
+        this.source = source;
+        
+        source.forks.push( this );
+        
+        // ToDo: JV replace source.get() by something like source.fetch( this, query )
+        // get() is not scalable to large datasets, because it returns the
+        // entire set. get() should only be used on small sets, for testing
+        // or on clients.
+        //
+        // fetch( destination, query ) will solve this issue because it will
+        // allow the source to provide its content filtered and in chuncks
+        // via add()
+        this.add( source.get() );
+      }
+      
+      return this;
+    }, // set_source()
+    
+    /* this is now an alias of to()
     connect: function( destination ) {
       // Connect a new downstream destination to this source.
       // The content of the source gets added to the downsteam destination.
@@ -175,28 +227,59 @@
       // via add()
       destination.add( this.get() );
       
+      destination.set_source( this );
+      
       return this;
     }, // connect()
+    */
     
-    disconnect: function( target ) {
-      var new_targets = [];
-      var targets     = this.forks;
-      var len         = targets.length;
+    disconnect: function( fork ) {
+      if ( fork.source !== this ) throw new Error( "This is not the source of fork, cannot be disconnected" );
+      
+      fork.set_source();
+      /*
+      var new_forks = [];
+      var forks     = this.forks;
+      var len         = forks.length;
       for ( var ii = 0, item ; ii < len ; ii++ ) {
-        item = targets[ ii ];
-        if ( item !== target ) { new_targets.push( item ) }
+        item = forks[ ii ];
+        if ( item !== fork ) { new_forks.push( item ) }
         break;
       }
-      this.forks = new_targets;
-      // ToDo: target should be notified that it's source was disconnected
-      if( target.source === this ) { target.source = null }
+      this.forks = new_forks;
+      // ToDo: fork should be notified that it's source was disconnected
+      if( fork.source === this ) { fork.source = null }
+      */
       return this;
     }, // disconnect()
     
-    to:       function( target ) { return   this.connect(    target ); },
-    not_to:   function( target ) { return   this.disconnect( target ); },
-    from:     function( source ) { return source.connect(    this );   },
-    not_from: function( source ) { return source.disconnect( this );   },
+    to: function( destination ) {
+      destination.set_source( this );
+      
+      return this;
+    }, // to()
+    
+    /* This is now an alias of disconnect()
+    not_to: function( fork   ) {
+      if ( fork.source !== this ) throw new Error( "This is not the source of fork, cannot be disconnected" );
+      
+      fork.set_source();
+      
+      return this;
+    }, // not_to()
+    */
+    
+    /* This is now an alias of set_source()
+    from: function( source ) {
+      return this.set_source( source );
+    }, // from()
+    */
+    
+    not_from: function( source ) {
+      if ( this.source !== source ) throw new Error( "Source is not the source of this fork, cannot be disconnected" );
+      
+      return this.set_source();
+    }, // not_from()
     
     make_key: function( o ) {
       var key = this.key, l = key.length, code = [];
@@ -214,11 +297,16 @@
     } // make_key()
   } ); // Fork instance methods
   
+  // Instance Methods aliases
+  Fork.prototype.connect = Fork.prototype.to;
+  Fork.prototype.from    = Fork.prototype.set_source;
+  Fork.prototype.not_to  = Fork.prototype.disconnect;
   
   /* --------------------------------------------------------------------------
      Fork.subclass( name, class, methods )
+     
      Generic pipelet class builder. Makes class a subclass of This class and
-     defines Fork[name] using methods.factory. This is just a helper to
+     defines Fork[ name ] using methods.factory. This is just a helper to
      make it easier to implement the usual pattern for data flow node classes.
      
      Usage: -- implementers --
@@ -227,43 +315,56 @@
           this.msg    = null;
           msg && this.add( [ { msg: msg } ] );
         }
+        
         Fork.subclass( "talker", Talker, {
-          factory: function( msg ) { return new Talker( this, msg) },
+          factory: function( msg ) { return new Talker( this, msg ); },
+          
           get:    function()    { return this.msg ? [ this.msg ] : []; }
-          add:    function( d ) { d && d[0] && this.msg = d[0];  return this; }
-          update: function( d ) { d && d[0] && this.msg = d[0];  return this; }
+          
+          add:    function( d ) { d && d[0] && this.msg = d[0]; return this; }
+          update: function( d ) { d && d[0] && this.msg = d[0]; return this; }
           remove: function( d ) { this.msg = null; return this; }
+          
           talk: function() {
             log( "a fool talks to it's creator" );
+            
             this.source.add( this.get() );
-            return this
+            
+            return this;
           }
         })
         
      Usage: -- users --
        var a_fool = obj.talker( "I'm a fool" );
-       a_fool.talk();
-       a_fool.add( [ { msg: "with memory issues" }, { msg: "big issues") } ] );
-       a_fool.talk();
+       
+       a_fool
+         .talk()
+         .add( [ { msg: "with memory issues" }, { msg: "big issues") } ] );
+         .talk()
+       ;
   */
   
   Fork.subclass = function( name, klass, methods ){
     subclass( this, klass );
+    
     extend( klass.prototype, methods );
-    Fork[name] = {
+    
+    Fork[ name ] = {
       class: klass,
+      
       subclass: function() {
         return Fork.subclass.apply( klass, arguments );
       }
     };
+    
     Fork.prototype[name] = methods.factory;
+    
     return klass;
-  }
+  }; // Fork.subclass()
   
   /* -------------------------------------------------------------------------------------------
      Set( a [, options] )
   */
-  
   Fork.prototype.set = function( options ) {
     // Add a new downsteam Set to This Fork and initialize it with the
     // content, if any, of This Fork.
@@ -280,10 +381,11 @@
   function Set( a, options ) {
     // Constructor for a new Set with some initial content
     // ToDo: initial content should be either an array or an existing source
+    // JV: if you have an initial source, use: source.set( options )
     
     options = Fork.call( this, options ).options;
     
-    // ToDo: JHR,
+    // ToDo: JHR, JV: I do not think this is necessary, read above
     //
     // if ( src ) {
     //   if( typeof src === 'array' ){
