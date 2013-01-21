@@ -29,12 +29,12 @@
     XS = exports.XS;
   }
   
-  var log        = XS.log
-    , extend     = XS.extend
-    , subclass   = XS.subclass
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
+  var log      = XS.log
+    , extend   = XS.extend
+    , subclass = XS.subclass
+    , Code     = XS.Code
+    , Fork     = XS.Fork
+    , Set      = XS.Set
   ;
   
   var push = Array.prototype.push;
@@ -52,7 +52,7 @@
      Ordered_Set_Organizer()
   */
   function Ordered_Set_Organizer( organizer, ordered_set, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     
     this.ordered_set = ordered_set;
     this.organizer = organizer;
@@ -66,7 +66,7 @@
     return this;
   } // Ordered_Set_Organizer()
   
-  subclass( Connection, Ordered_Set_Organizer );
+  subclass( Fork, Ordered_Set_Organizer );
   
   var p = Ordered_Set_Organizer.prototype;
   
@@ -134,7 +134,7 @@
   /* -------------------------------------------------------------------------------------------
      Ordered_Set()
   */
-  Connection.prototype.order = function( organizer, options ) {
+  Fork.prototype.order = function( organizer, options ) {
     var s = new Ordered_Set( [], organizer, extend( { key: this.key }, options ) );
     
     this.connect( s );

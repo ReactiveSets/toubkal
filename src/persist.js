@@ -27,11 +27,11 @@
     XS = exports.XS;
   }
 
-  var log        = XS.log
-    , subclass   = XS.subclass
-    , extend     = XS.extend
-    , Connection = XS.Connection
-    , Set        = XS.Set
+  var log      = XS.log
+    , subclass = XS.subclass
+    , extend   = XS.extend
+    , Fork     = XS.Fork
+    , Set      = XS.Set
   ;
   
   /* --------------------------------------------------------------------------
@@ -86,14 +86,14 @@
   }
   
   function Persistor( source, name, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     this.name = name || source.name;
     // New persistor depends on it's source and get notified of changes to it
     source.connect( this );
     return this;
   } // Persistor()
   
-  Connection.subclass( "persistor", Persistor, {
+  Fork.subclass( "persistor", Persistor, {
     
     factory: function( name, options ) {
       var factory = options && options.factory;

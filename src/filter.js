@@ -29,16 +29,15 @@
     XS = exports.XS;
   }
   
-  var log        = XS.log
-    , extend     = XS.extend
-    , subclass   = XS.subclass
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
+  var log      = XS.log
+    , extend   = XS.extend
+    , subclass = XS.subclass
+    , Code     = XS.Code
+    , Fork     = XS.Fork
+    , Set      = XS.Set
   ;
   
-  var push = Array.prototype.push
-  ;
+  var push = Array.prototype.push;
   
   /* -------------------------------------------------------------------------------------------
      de&&ug()
@@ -52,12 +51,12 @@
   /* -------------------------------------------------------------------------------------------
      Filter()
   */
-  Connection.prototype.filter = function( filter, options ) {
+  Fork.prototype.filter = function( filter, options ) {
     return new Filter( this, filter, options );
   }; // filter()
   
   function Filter( source, filter, options ) {
-    Connection.call( this, extend( { key: source.key }, options ) );
+    Fork.call( this, extend( { key: source.key }, options ) );
     
     this.filter = filter;
     
@@ -66,7 +65,7 @@
     return this;
   } // Filter()
   
-  subclass( Connection, Filter );
+  subclass( Fork, Filter );
   
   extend( Filter.prototype, {
     filter_objects: function( objects ) {

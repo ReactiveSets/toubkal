@@ -32,11 +32,11 @@
   }
   XS.l8 = l8
   
-  var log        = XS.log
-    , subclass   = XS.subclass
-    , extend     = XS.extend
-    , Connection = XS.Connection
-    , Set        = XS.Set
+  var log      = XS.log
+    , subclass = XS.subclass
+    , extend   = XS.extend
+    , Fork     = XS.Fork
+    , Set      = XS.Set
   ;
   
   /* --------------------------------------------------------------------------
@@ -64,7 +64,7 @@
   */
   
   function Broadcaster( sources, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     // Make x.connect( broadcaster) invalid, please use broadcast.from( x)
     this.source = this;
     this.sources = sources || [];
@@ -73,7 +73,7 @@
     return this;
   }
   
-  Connection.subclass( "broadcaster", Broadcaster, {
+  Fork.subclass( "broadcaster", Broadcaster, {
     factory: function( options ){ return new Broadcaster( [this] ); },
     get: function(){
       var sources = this.sources;
@@ -140,7 +140,7 @@
 
   function Proxy( source, name, options ) {
     
-    Connection.call( this, options );
+    Fork.call( this, options );
     this.name = name || source.name;
     
     // Maybe the remote proxy already contacted us
@@ -171,7 +171,7 @@
   } // Proxy()
   
   
-  Connection.subclass( "proxy", Proxy, {
+  Fork.subclass( "proxy", Proxy, {
     
     factory: function( name, options ) {
       return new Proxy( this, name, options );
@@ -195,7 +195,7 @@
     
     connect: function( subscriber ) {
       this.contact();
-      var result = Connection.prototype.connect.call( this, subscriber );
+      var result = Fork.prototype.connect.call( this, subscriber );
       // Handle case where messages were received before .connect() is called
       if ( this.receiveQueue.length
       &&  !this.handlingQueues
@@ -388,14 +388,14 @@
   */
   
   function Publisher( source, name, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     this.name = name || source.name;
     // New publisher depends on it's source and get notified of changes to it
     source.connect( this );
     return this;
   } // Publisher()
 
-  Connection.broadcaster.subclass( "publisher", Publisher, {
+  Fork.broadcaster.subclass( "publisher", Publisher, {
     
     factory: function( name, options ) {
       var factory = options && options.factory;
@@ -463,7 +463,7 @@
   Proxy.AllRemotePublishers = new XS.Set()
   
   function Subscriber( publisher, options ){
-    Connection.call( this, options );
+    Fork.call( this, options );
     // If remote subscriber
     if ( typeof publisher === 'string' ){
       var name  = "pub/sub." + publisher;
@@ -480,7 +480,7 @@
     return this;
   }
   
-  Connection.broadcaster.subclass( "subscriber", Subscriber, {
+  Fork.broadcaster.subclass( "subscriber", Subscriber, {
     factory: function( options ){ return new Subscriber( this, options); }
   } )
   
@@ -499,14 +499,14 @@
   */
 
   function Tracer( source, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     // new tracer depends on source object and get notified of changes to it
     source.connect( this );
     this.log = options.log || log;
     return this;
   } // Tracer()
 
-  Connection.subclass( "tracer", Tracer, {
+  Fork.subclass( "tracer", Tracer, {
     factory: function( options ){ return new Tracer( this, options ) },
     add: function( objects ) {
       return this.trace( { name: 'add'  , objects: objects } );
@@ -523,8 +523,6 @@
       );
     } // trace()
   } ); // Tracer instance methods
-  
-
   
   /* --------------------------------------------------------------------------
      module exports

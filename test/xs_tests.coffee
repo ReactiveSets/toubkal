@@ -329,8 +329,8 @@ describe 'XS test suite:', ->
       
       cities_in_usa = cities.filter is_in_usa
       
-      it 'cities_in_usa should be a Connection', ->
-        cities_in_usa.should.be.an.instanceof XS.Connection
+      it 'cities_in_usa should be a Fork', ->
+        cities_in_usa.should.be.an.instanceof XS.Fork
       
       it 'cities_in_usa should only contain cities in USA', ->
         cities_in_usa.get().should.be.eql [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]

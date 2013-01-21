@@ -545,8 +545,8 @@
           return city.country === 'USA';
         };
         cities_in_usa = cities.filter(is_in_usa);
-        it('cities_in_usa should be a Connection', function() {
-          return cities_in_usa.should.be.an["instanceof"](XS.Connection);
+        it('cities_in_usa should be a Fork', function() {
+          return cities_in_usa.should.be.an["instanceof"](XS.Fork);
         });
         it('cities_in_usa should only contain cities in USA', function() {
           return cities_in_usa.get().should.be.eql([

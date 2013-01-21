@@ -26,13 +26,13 @@
     XS = exports.XS;
   }
   
-  var log        = XS.log
-    , subclass   = XS.subclass
-    , extend     = XS.extend
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
-    , Ordered_Set= XS.Ordered_Set
+  var log         = XS.log
+    , subclass    = XS.subclass
+    , extend      = XS.extend
+    , Code        = XS.Code
+    , Fork        = XS.Fork
+    , Set         = XS.Set
+    , Ordered_Set = XS.Ordered_Set
   ;
   
   /* -------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@
      Table_Columns()
   */
   function Table_Columns( columns, table, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     
     this.table   = table;
     this.columns = columns;
@@ -62,7 +62,7 @@
     return this;
   } // Table_Colunns()
   
-  subclass( Connection, Table_Columns );
+  subclass( Fork, Table_Columns );
   
   extend( Table_Columns.prototype, {
     add: function( objects ) {
@@ -163,8 +163,7 @@
   /* -------------------------------------------------------------------------------------------
      Table()
   */
-  
-  Connection.prototype.table = function( node, columns, organizer, options ) {
+  Fork.prototype.table = function( node, columns, organizer, options ) {
     var t = new Table( node, columns, organizer, extend( { key: this.key }, options ) );
     
     this.connect( t );

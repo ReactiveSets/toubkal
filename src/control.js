@@ -27,13 +27,13 @@
     XS = exports.XS;
   }
 
-  var log        = XS.log
-    , subclass   = XS.subclass
-    , extend     = XS.extend
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
-    , Ordered_Set= XS.Ordered_Set
+  var log         = XS.log
+    , subclass    = XS.subclass
+    , extend      = XS.extend
+    , Code        = XS.Code
+    , Fork        = XS.Fork
+    , Set         = XS.Set
+    , Ordered_Set = XS.Ordered_Set
   ;
 
   /* -------------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@
   /* -------------------------------------------------------------------------------------------
      Control.Checkbox()
   */
-  Connection.prototype.checkbox = function( node, organizer, options ) {
+  Fork.prototype.checkbox = function( node, organizer, options ) {
     var control = new Control.Checkbox( node, organizer, options );
     
     this.connect( control );
