@@ -54,7 +54,7 @@
             [ { id: "id" } ],
             {
               // default_value: { id: true, label: "Label True" }
-              label: "Charts"
+              // label: "Charts"
             }
           )
       ;
@@ -64,6 +64,8 @@
         , [ { id: 'id' } ]
         , { caption: 'Checkbox Value' }
       );
+      
+      set.update( [ [ { id: false, label: "Chart" }, { id: false, label: "No Chart" } ] ] );
     </script>
   </body>
 </html>
