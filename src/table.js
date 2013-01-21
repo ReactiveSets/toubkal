@@ -53,13 +53,7 @@
     this.table   = table;
     this.columns = columns;
     
-    if ( columns instanceof Set ) {
-      columns.connect( this );
-    } else {
-      this.add( columns );
-    }
-    
-    return this;
+    return this[ columns instanceof Set ? "set_source" : "add" ]( columns );
   } // Table_Colunns()
   
   subclass( Fork, Table_Columns );
