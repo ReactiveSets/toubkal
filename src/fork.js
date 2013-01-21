@@ -380,6 +380,7 @@
     }, // connect()
     */
     
+    // deprecated, use fork.set_source() instead
     disconnect: function( fork ) {
       if ( fork.source !== this ) throw new Error( "This is not the source of fork, cannot be disconnected" );
       
@@ -400,6 +401,7 @@
       return this;
     }, // disconnect()
     
+    // deprecated, use destination.set_source( this )
     to: function( destination ) {
       destination.set_source( this );
       
@@ -422,6 +424,7 @@
     }, // from()
     */
     
+    // deprecated, use set_source() instead
     not_from: function( source ) {
       if ( this.source !== source ) throw new Error( "Source is not the source of this fork, cannot be disconnected" );
       
@@ -444,11 +447,10 @@
     } // make_key()
   } ); // Fork instance methods
   
-  // Instance Methods aliases
-  Fork.prototype.connect = Fork.prototype.to;
-  Fork.prototype.from    = Fork.prototype.set_source;
-  Fork.prototype.not_to  = Fork.prototype.disconnect;
-  
+  // Deprecated Instance Methods aliases
+  Fork.prototype.connect = Fork.prototype.to; // deprecated, use destination.set_source( this ) instead
+  Fork.prototype.from    = Fork.prototype.set_source; // deprecated, use set_source( source ) instead
+  Fork.prototype.not_to  = Fork.prototype.disconnect; // deprecated, use set_source() instead
   
   // Fork Class methods
   
@@ -460,14 +462,18 @@
      make it easier to implement the usual pattern for data flow node classes.
      
      Usage: -- implementers --
-        function Talker( source, msg ){
-          this.source = source
-          this.msg    = null;
+        function Talker( msg ) {
+          this.msg = undefined;
+          
           msg && this.add( [ { msg: msg } ] );
-        }
+          
+          return this;
+        } // Talker()
         
         Fork.subclass( "talker", Talker, {
-          factory: function( msg ) { return new Talker( this, msg ); },
+          factory: function( msg ) {
+            return new Talker( msg ).set_source( this );
+          },
           
           get:    function()    { return this.msg ? [ this.msg ] : []; }
           
