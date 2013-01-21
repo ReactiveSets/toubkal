@@ -57,13 +57,7 @@
     this.ordered_set = ordered_set;
     this.organizer = organizer;
     
-    if ( organizer instanceof Set ) {
-      organizer.connect( this );
-    } else {
-      this.add( organizer );
-    }
-    
-    return this;
+    return this[ organizer instanceof Set ? "set_source" : "add" ]( organizer );
   } // Ordered_Set_Organizer()
   
   subclass( Fork, Ordered_Set_Organizer );
@@ -135,11 +129,7 @@
      Ordered_Set()
   */
   Fork.prototype.order = function( organizer, options ) {
-    var s = new Ordered_Set( [], organizer, extend( { key: this.key }, options ) );
-    
-    this.connect( s );
-    
-    return s;
+    return new Ordered_Set( [], organizer, extend( { key: this.key }, options ) ).set_source( this );
   } // order()
   
   function Ordered_Set( a, organizer, options ) {
