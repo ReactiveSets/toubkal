@@ -272,12 +272,13 @@
     update: function( updates ) {
       var rows      = this.body.getElementsByTagName( "tr" )
         , locations = this.locate( updates )
-        , columns   = this.columns.columns.get()
+        , columns   = this.columns.columns
         , l         = locations.length
-        , cl        = columns.length
       ;
       
-      for( var i = l; i; ) {
+      if ( columns instanceof Set ) columns = columns.get();
+      
+      for( var i = l, cl = columns.length; i; ) {
         var cells  = rows[ locations[ --i ].insert - 1 ].cells
           , update = updates[ i ]
           , u0     = update [ 0 ]
@@ -287,7 +288,7 @@
         for( var j = cl; j; ) {
           var c = columns[ --j ];
           
-          if( u0[ c.id ] !== u1[ c.id ] ) cells[ j ].innerHTML = u1[ c.id ];
+          if( u0[ c.id ] !== u1[ c.id ] ) cells[ j ].innerHTML = u1[ c.id ] || "";
         }
       }
       
@@ -340,6 +341,8 @@
         td.innerHTML = v = "";
         
       break;
+      
+      case "boolean":
       
       case "number":
         if( td.style.textAlign == "" ) td.style.textAlign = "right";
