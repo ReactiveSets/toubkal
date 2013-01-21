@@ -55,25 +55,50 @@
     
     this.key = options.key || [ "id" ];
     
-    // An array of dependent forks. See .connect()
+    // downstream forks.
     this.forks = [];
     
-    // this.source = undefined // No source yet
+    this.source = undefined; // No source yet
     
     return this;
   } // Fork()
   
   extend( Fork.prototype, {
-        
-    get: function(){
-      // Return the content (an array of items) of This node.
-      // Subclasses typically redefines this.
-      return [];
-    }, // get()
+    /* -----------------------------------------------------------------------------
+       get()
     
-    notify: function( transaction, initiator ) {
-    // Batch add/update/remove operations
-      // ToDo: handle optional subscriber initiator
+       Returns the current full state of the set, in the form of an Array of
+       objects.
+       
+       This method should only be used for debugging and testing purposes and when
+       the full state is known to be 'small' (can fit entirely in memory).
+       
+       For large sets, use fetch() instead that allows retreive the content by
+       smaller increments that all fit in memory. fetch() also allows to use a
+       query to filter the set.
+       
+       This method must be defined by subclasses, or an exception will be triggered.
+    */
+    
+    /* -----------------------------------------------------------------------------
+       notify( transaction, options )
+       
+       Executes a transaction, eventually atomically (everything succeeds or
+       everything fails).
+       
+       Parameters:
+         - transaction: Array of actions. Each action has attributes:
+           - action: string 'add', or 'remove', or 'update'
+           - objects: Array of objects for 'add' and 'remove' or updates. An update
+             is an Array where the first item is the previous object value and the
+             second item is the new object value
+
+         - options: optional object of optional attributes
+         
+       ToDo: JV manage atomic transcations, will rollback capability
+       ToDo: JHR handle subscriber initiator option
+    */
+    notify: function( transaction, options ) {
       var l = transaction.length;
       
       for ( var i = -1; ++i < l; ) {
@@ -100,29 +125,38 @@
       return this;
     }, // notify()
     
-    // Add items to this node then notify downsteam forks about
-    // the effective additions.
-    // Typically redefined by derived classes.
-    // Default is to do store nothing and to notify downstream nodes.
-    add: function( added ){ return this.forks_remove()( added) },
+    /* -----------------------------------------------------------------------------
+       add( added )
+       
+       Add objects to this fork then notify downstream forks.
+       
+       This method should only be called by the source fork.
+       
+       Unless there is no source, this function should not be called directly by
+       users.
+       
+       This method istypically overloaded by derived classes, the default behavior
+       is to only notify downstream forks.
+       
+       Parameters:
+         added: Array of object values to add
+    */
+    add: function( added ) {
+      return this.forks_remove()( added );
+    }, // add()
     
-    // Update items of this node, then notify downsteam forks about
-    // the effective updates.
-    // Typically redefined by derived classes.
-    // Default is to do store nothing and to notify downstream nodes.
-    update: function( updated ){ return this.forks_update( updated ) },
-    
-    // remove: function( removed )
-    // Remove items from this node and notify downsteam forks about
-    // the effective removals.
-    // Typically redefined by derived classes.
-    // Default is to do store nothing and to notify downstream nodes.
-    remove: function( removed ){ return this.forks_remove( removed ) },
-    
-    // clear the content of this Fork and downstream forks
-    clear: function(){ return this.forks_clear(); },
-    
-    // Notify downsteam forks about some "add" operation that was done
+    /* -----------------------------------------------------------------------------
+       forks_add( added )
+       
+       Notify downsteam forks about added objects.
+       
+       This method is typically called by add() after adding objects.
+       
+       Users should not call this method directly.
+       
+       Parameters:
+         added: Array of added objects
+    */
     forks_add: function( added ) {
       var forks = this.forks, l = forks.length;
       
@@ -131,7 +165,42 @@
       return this;
     }, // forks_add()
     
-    // Notify forks about some "update" operation that was done
+    /* -----------------------------------------------------------------------------
+       update( updated )
+       
+       Updates objects from this fork then notify downstream forks.
+       
+       This method should only be called by the source fork.
+       
+       Unless there is no source, this function should not be called directly by
+       users.
+       
+       This method is typically overloaded by derived classes, the default behavior
+       is to only notify downstream forks using forks_update().
+       
+       Parameters:
+         updated: Array of updates, each update is an Array of two objects:
+           - the first is the previous object value,
+           - the second is the updated object value.
+    */
+    update: function( updated ) {
+      return this.forks_update( updated );
+    }, // update()
+    
+    /* -----------------------------------------------------------------------------
+       forks_update( updated )
+        
+       Notify downsteam forks of updated object values.
+       
+       This method is typically called by update() after updating objects.
+       
+       Users should not call this method directly.
+       
+       Parameters:
+         updated: Array of updates, each update is an Array of two objects:
+           - the first is the previous object value,
+           - the second is the updated object value.
+    */
     forks_update: function( updated ) {
       var forks = this.forks, l = forks.length;
       
@@ -140,7 +209,38 @@
       return this;
     }, // forks_update()
     
-    // Notify downsteam node about some "remove" operation that was one
+    /* -----------------------------------------------------------------------------
+       remove( removed )
+       
+       Removes objects from this fork then notify downstream forks.
+       
+       This method should only be called by the source fork.
+       
+       Unless there is no source, this function should not be called directly by
+       users.
+       
+       This method is typically overloaded by derived classes, the default behavior
+       is to only notify downstream forks using forks_remove().
+       
+       Parameters:
+         removed: Array of object values to remove
+    */
+    remove: function( removed ) {
+      return this.forks_remove( removed );
+    }, // remove()
+    
+    /* -----------------------------------------------------------------------------
+       forks_remove( removed )
+       
+       Notify downsteam forks of removed object.
+       
+       This method is typically called by remove() after removing objects.
+       
+       Users should not call this method directly.
+       
+       Parameters:
+         - removed: Array of removed object values.
+    */
     forks_remove: function( removed ) {
       var forks = this.forks, l = forks.length;
       
@@ -149,6 +249,29 @@
       return this;
     }, // forks_remove()
     
+    /* -----------------------------------------------------------------------------
+       clear()
+       
+       Clears the content of this Fork and downstream forks.
+       
+       clear() is usually called when an update requires to clear the state of all
+       downstream objects. This is typically done when:
+         - when a stream is no longer needed and memory can be reclaimed;
+         - all or most values will change and it is more efficient to clear;
+         - the state of downstream objects cannot be updated incremetally;
+       .
+    */
+    clear: function(){ return this.forks_clear(); },
+    
+    /* -----------------------------------------------------------------------------
+       forks_clear()
+       
+       Notify downsteam forks that all object values should be cleared.
+       
+       This method is typically called by clear() for clearing downstream objects.
+       
+       Users should not call this method directly.
+    */
     forks_clear: function() {
       var forks = this.forks, l = forks.length;
       
@@ -157,7 +280,7 @@
       return this;
     }, // forks_clear()
     
-    /* -------------------------------------------------------------------------
+    /* -----------------------------------------------------------------------------
        set_source( source )
        
        Connect and/or disconnect from upstream source fork.
@@ -173,28 +296,35 @@
            function.
            
            If undefined, the current source fork is only removed from its source
-           if any. 
+           if any.
     */
     set_source: function( source ) {
-      if ( this.source ) {
-        // disconnect from upstream source fork
-        var forks = this.source.forks
-          , p = forks.indexOf( this )
-          , u
-        ;
-        
-        if ( p !== -1 ) forks.splice( p, 1 );
+      var u, s = this.source;
+      
+      if ( s ) {
+        if ( s instanceof Fork ) {
+          // disconnect from upstream source fork
+          var forks = s.forks
+            , p = forks.indexOf( this )
+          ;
+          
+          if ( p === -1 ) throw new Error( "Fork, set_source(), this not found in this.source" );
+          
+          forks.splice( p, 1 );
+        }
         
         this.source = u;
         
+        // After disconnection from its source, all downstream forks should be cleared
+        // New content will be provided if this is attached to a new source
         this.clear();
       }
       
       if ( source ) {
+        // Remember the source of this Fork
+        this.source = source;
+        
         if ( source instanceof Fork ) {
-          // Remember the source of this downstream Fork
-          this.source = source;
-          
           source.forks.push( this );
           
           // ToDo: JV replace source.get() by something like source.fetch( this, query )
@@ -319,6 +449,9 @@
   Fork.prototype.from    = Fork.prototype.set_source;
   Fork.prototype.not_to  = Fork.prototype.disconnect;
   
+  
+  // Fork Class methods
+  
   /* --------------------------------------------------------------------------
      Fork.subclass( name, class, methods )
      
@@ -360,7 +493,6 @@
          .talk()
        ;
   */
-  
   Fork.subclass = function( name, klass, methods ){
     subclass( this, klass );
     
@@ -374,7 +506,7 @@
       }
     };
     
-    Fork.prototype[name] = methods.factory;
+    Fork.prototype[ name ] = methods.factory;
     
     return klass;
   }; // Fork.subclass()
