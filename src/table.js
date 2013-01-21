@@ -158,11 +158,7 @@
      Table()
   */
   Fork.prototype.table = function( node, columns, organizer, options ) {
-    var t = new Table( node, columns, organizer, extend( { key: this.key }, options ) );
-    
-    this.connect( t );
-    
-    return t;
+    return new Table( node, columns, organizer, extend( { key: this.key }, options ) ).set_source( this );
   };
   
   function Table( node, columns, organizer, options ) {
