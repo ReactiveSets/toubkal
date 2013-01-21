@@ -52,9 +52,8 @@
     Fork.call( this, options );
     
     this.aggregator = aggregator;
-    this.dimensions = dimensions;
     
-    return this[ dimensions instanceof Set ? "set_source" : "add" ]( dimensions );
+    return this.set_source( this.dimensions = dimensions );
   } // Aggregator_Dimensions()
   
   subclass( Fork, Aggregator_Dimensions );
@@ -116,9 +115,8 @@
     Fork.call( this, options );
     
     this.aggregator = aggregator;
-    this.measures   = measures;
     
-    return this[ measures instanceof Set ? "set_source" : "add" ]( measures );
+    return this.set_source( this.measures = measures );
   } // Aggregator_Measures()
   
   subclass( Fork, Aggregator_Measures );

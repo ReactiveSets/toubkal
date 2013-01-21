@@ -55,9 +55,8 @@
     Fork.call( this, options );
     
     this.ordered_set = ordered_set;
-    this.organizer = organizer;
     
-    return this[ organizer instanceof Set ? "set_source" : "add" ]( organizer );
+    return this.set_source( this.organizer = organizer );
   } // Ordered_Set_Organizer()
   
   subclass( Fork, Ordered_Set_Organizer );

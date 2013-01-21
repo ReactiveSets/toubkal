@@ -51,9 +51,8 @@
     Fork.call( this, options );
     
     this.table   = table;
-    this.columns = columns;
     
-    return this[ columns instanceof Set ? "set_source" : "add" ]( columns );
+    return this.set_source( this.columns = columns );
   } // Table_Colunns()
   
   subclass( Fork, Table_Columns );
