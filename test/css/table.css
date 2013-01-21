@@ -2,3 +2,8 @@
   table.css
 */
 
+.xs_table { width: 100%; }
+
+.xs_table td {
+  border: 1px solid #000;
+}
