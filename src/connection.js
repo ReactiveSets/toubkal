@@ -46,13 +46,11 @@
   } // ug()
   
   /* -------------------------------------------------------------------------------------------
-     Connection()
+     Fork()
      
-     A Connection has one upstream source and is the source of many downstream Connections.
-     
-     ToDo: JHR. Connection is a confusing name. DataFlowNode may help.
+     A Fork has one upstream source and is the source of many downstream Forks.
   */
-  function Connection( options ) {
+  function Fork( options ) {
     this.options = options = options || {};
     
     this.key = options.key || [ "id" ];
@@ -63,11 +61,11 @@
     // this.source = undefined // No source yet
     
     return this;
-  } // Connection()
+  } // Fork()
   
-  var DataFlowNode = Connection;
+  var Connection = Fork;
   
-  extend( Connection.prototype, {
+  extend( Fork.prototype, {
         
     get: function(){
       // Return the content (an array of items) of This node.
@@ -161,10 +159,10 @@
       // sources and multiple destinations.
       
       if ( destination.source ) {
-        throw new Error( 'A Connection can only have a single source' );
+        throw new Error( 'A Fork can only have a single source' );
       }
       
-      // Remember the source of this downstream Connection
+      // Remember the source of this downstream Fork
       destination.source = this;
       
       this.connections.push( destination );
@@ -216,13 +214,13 @@
       
       return this.make_key( o );
     } // make_key()
-  } ); // Connection instance methods
+  } ); // Fork instance methods
   
   
   /* --------------------------------------------------------------------------
-     DataFlowNode.subclass( name, class, methods )
+     Fork.subclass( name, class, methods )
      Generic pipelet class builder. Makes class a subclass of This class and
-     defines DataFlowNode[name] using methods.factory. This is just a helper to
+     defines Fork[name] using methods.factory. This is just a helper to
      make it easier to implement the usual pattern for data flow node classes.
      
      Usage: -- implementers --
@@ -231,7 +229,7 @@
           this.msg    = null;
           msg && this.add( [ { msg: msg } ] );
         }
-        DataFlowNode.subclass( "talker", Talker, {
+        Fork.subclass( "talker", Talker, {
           factory: function( msg ) { return new Talker( this, msg) },
           get:    function()    { return this.msg ? [ this.msg ] : []; }
           add:    function( d ) { d && d[0] && this.msg = d[0];  return this; }
@@ -251,27 +249,26 @@
        a_fool.talk();
   */
   
-  DataFlowNode.subclass = function( name, klass, methods ){
+  Fork.subclass = function( name, klass, methods ){
     subclass( this, klass );
     extend( klass.prototype, methods );
-    DataFlowNode[name] = {
+    Fork[name] = {
       class: klass,
       subclass: function() {
-        return DataFlowNode.subclass.apply( klass, arguments );
+        return Fork.subclass.apply( klass, arguments );
       }
     };
-    DataFlowNode.prototype[name] = methods.factory;
+    Fork.prototype[name] = methods.factory;
     return klass;
   }
-  
   
   /* -------------------------------------------------------------------------------------------
      Set( a [, options] )
   */
   
-  Connection.prototype.set = function( options ) {
-    // Add a new downsteam Set to This Connection and initialize it with the
-    // content, if any, of This Connection.
+  Fork.prototype.set = function( options ) {
+    // Add a new downsteam Set to This Fork and initialize it with the
+    // content, if any, of This Fork.
     
     // ToDo: JHR, should send this instead of null, ctor would figure out
     var s = new Set( null, extend( { key: this.key }, options ) );
@@ -286,7 +283,7 @@
     // Constructor for a new Set with some initial content
     // ToDo: initial content should be either an array or an existing source
     
-    options = Connection.call( this, options ).options;
+    options = Fork.call( this, options ).options;
     
     // ToDo: JHR,
     //
@@ -308,7 +305,7 @@
     return this;
   } // Set()
   
-  subclass( Connection, Set );
+  subclass( Fork, Set );
   
   /* -------------------------------------------------------------------------------------------
      Set instance methods
@@ -322,14 +319,14 @@
     }, // get()
     
     add: function( objects ) {
-      // Add items to the set and notify downsteam Connections.
+      // Add items to the set and notify downsteam Forks.
       push.apply( this.a, objects );
       
       return this.connections_add( objects );
     }, // add()
     
     update: function( objects ) {
-      // Update items in the set and notify downsteam Connections.
+      // Update items in the set and notify downsteam Forks.
       for ( var i = -1, l = objects.length, updated = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o[ 0 ] )
@@ -346,7 +343,7 @@
     }, // update()
     
     remove: function( objects ) {
-      // Remove items from the set and notify downsteam Connections
+      // Remove items from the set and notify downsteam Forks
       for ( var i = -1, l = objects.length, removed = []; ++i < l; ) {
         var o = objects[ i ]
           , p = this.index_of( o )
@@ -433,7 +430,7 @@
   function CXXX( source, options ) {
     // Constructor for a destination that depends on what happens to a source
     
-    Connection.call( this, options );
+    Fork.call( this, options );
     
     this.out = new Set( [], { key: source.key } );
     
@@ -442,7 +439,7 @@
     return this;
   } // CXXX()
   
-  subclass( Connection, CXXX );
+  subclass( Fork, CXXX );
   
   extend( CXXX.prototype, {
     add: function( objects ) {
@@ -467,7 +464,7 @@
   /* -------------------------------------------------------------------------------------------
      module exports
   */
-  eval( XS.export_code( 'XS', [ 'Connection', 'Set' ] ) );
+  eval( XS.export_code( 'XS', [ 'Fork', 'Connection', 'Set' ] ) );
   
   de&&ug( "module loaded" );
 } )( this ); // connection.js
