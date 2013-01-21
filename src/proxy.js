@@ -23,7 +23,7 @@
   
   if ( typeof require === 'function' ) {
     XS = require( './xs.js' ).XS;
-    require( './connection.js' )
+    require( './fork.js' )
     l8 = require( 'l8/lib/l8.js' )
     require( 'l8/lib/actor.js' )
   } else {
@@ -60,7 +60,7 @@
        b.to( destination1)
        b.to( destination2)
      
-     ToDo: move this to connection.js
+     ToDo: move this to fork.js
   */
   
   function Broadcaster( sources, options ) {

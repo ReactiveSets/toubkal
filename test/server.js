@@ -2,7 +2,7 @@
 //  http server for tests
 
 var XS = require( "../src/xs.js" ).XS;
-require( "../src/connection.js" );
+require( "../src/fork.js" );
 require( "../src/proxy.js");
 
 // Set the stage

@@ -6,7 +6,7 @@ l8.server = false
 l8.client = true
 
 var XS = require( "../src/xs.js" ).XS
-require( "../src/connection.js" )
+require( "../src/fork.js" )
 require( "../src/proxy.js" )
 
 // The Dude subscribe to the daily mirror

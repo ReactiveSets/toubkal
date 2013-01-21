@@ -1,4 +1,4 @@
-/*  connection.js
+/*  fork.js
 
     Copyright (C) 2013, Connected Sets
 
@@ -422,12 +422,12 @@
   } ); // Set instance methods
   
   /* -------------------------------------------------------------------------------------------
-     CXXX(): template for data flow destination.
+     FXXX(): template for data flow destination.
      It connects to a source, builds an empty .out Set and leaves it up for the
      derived class to decide what to do when an add/update/remove operation
      happens.
   */
-  function CXXX( source, options ) {
+  function FXXX( source, options ) {
     // Constructor for a destination that depends on what happens to a source
     
     Fork.call( this, options );
@@ -437,11 +437,11 @@
     source.connect( this );
     
     return this;
-  } // CXXX()
+  } // FXXX()
   
-  subclass( Fork, CXXX );
+  subclass( Fork, FXXX );
   
-  extend( CXXX.prototype, {
+  extend( FXXX.prototype, {
     add: function( objects ) {
       // Called when items were added to the source
       
@@ -459,7 +459,7 @@
       
       return this;
     } // update()
-  } ); // CXXX instance methods
+  } ); // FXXX instance methods
   
   /* -------------------------------------------------------------------------------------------
      module exports
@@ -467,4 +467,4 @@
   eval( XS.export_code( 'XS', [ 'Fork', 'Connection', 'Set' ] ) );
   
   de&&ug( "module loaded" );
-} )( this ); // connection.js
+} )( this ); // fork.js

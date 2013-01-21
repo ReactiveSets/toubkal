@@ -55,7 +55,7 @@ XS = if require? then ( require '../src/xs.js' ).XS else this.XS
 
 if require?
   require '../src/code.js'
-  require '../src/connection.js'
+  require '../src/fork.js'
   require '../src/filter.js'
   require '../src/ordered_set.js'
   require '../src/aggregator.js'

@@ -22,7 +22,7 @@
   
   if ( typeof require === 'function' ) {
     XS = require( './xs.js' ).XS;
-    require( './connection.js' )
+    require( './fork.js' )
   } else {
     XS = exports.XS;
   }

@@ -24,7 +24,7 @@
     XS = require( './xs.js' ).XS;
     
     require( './code.js' );
-    require( './connection.js' );
+    require( './fork.js' );
   } else {
     XS = exports.XS;
   }
