@@ -54,13 +54,7 @@
     this.aggregator = aggregator;
     this.dimensions = dimensions;
     
-    if ( dimensions instanceof Set ) {
-      dimensions.connect( this );
-    } else {
-      this.add( dimensions );
-    }
-    
-    return this;
+    return this[ dimensions instanceof Set ? "set_source" : "add" ]( dimensions );
   } // Aggregator_Dimensions()
   
   subclass( Fork, Aggregator_Dimensions );
@@ -124,13 +118,7 @@
     this.aggregator = aggregator;
     this.measures   = measures;
     
-    if ( measures instanceof Set ) {
-      measures.connect( this );
-    } else {
-      this.add( measures );
-    }
-    
-    return this;
+    return this[ measures instanceof Set ? "set_source" : "add" ]( measures );
   } // Aggregator_Measures()
   
   subclass( Fork, Aggregator_Measures );
@@ -243,11 +231,7 @@
      Aggregator()
   */
   Fork.prototype.aggregate = function( measures, dimensions, options ) {
-    var a = new Aggregator( measures, dimensions, options );
-    
-    this.connect( a );
-    
-    return a;
+    return new Aggregator( measures, dimensions, options ).set_source( this );
   }; // Fork.prototype.aggregate()
   
   function Aggregator( measures, dimensions, options ) {
