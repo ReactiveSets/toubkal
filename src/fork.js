@@ -119,6 +119,9 @@
     // Default is to do store nothing and to notify downstream nodes.
     remove: function( removed ){ return this.forks_remove( removed ) },
     
+    // clear the content of this Fork and downstream forks
+    clear: function(){ return this.forks_clear(); },
+    
     // Notify downsteam forks about some "add" operation that was done
     forks_add: function( added ) {
       var forks = this.forks, l = forks.length;
@@ -146,25 +149,33 @@
       return this;
     }, // forks_remove()
     
-    /* --------------------------------------------------------------------
+    forks_clear: function() {
+      var forks = this.forks, l = forks.length;
+      
+      for ( var i = -1; ++i < l; ) forks[ i ].clear();
+      
+      return this;
+    }, // forks_clear()
+    
+    /* -------------------------------------------------------------------------
        set_source( source )
        
-       Connect or disconnect from upstream source fork.
+       Connect and/or disconnect from upstream source fork.
        
-       The content of the source is then added to this fork.
+       The content of the source is then "added" to this fork using this.add().
        
        Parameters:
-         source (optional): the source fork to connect to.
-           If undefined, the current fork is removed from its source if any 
+         source (optional): the source fork or any other object to connect to.
          
+           If source is an not an instance of Fork, it's content is only added
+           to the current fork using this.add(). It is typically an Array but
+           could be any other object type that this.add() supports such as a
+           function.
+           
+           If undefined, the current source fork is only removed from its source
+           if any. 
     */
     set_source: function( source ) {
-      // ToDo: JHR, the fork should also decide if it is capable of
-      // accepting a source. this requires a ._from(), to be called by the
-      // source when it connects to the fork.
-      // Note: I have implemented a Broadcaster node that accepts multiple
-      // sources and multiple destinations.
-      
       if ( this.source ) {
         // disconnect from upstream source fork
         var forks = this.source.forks
@@ -175,23 +186,29 @@
         if ( p !== -1 ) forks.splice( p, 1 );
         
         this.source = u;
+        
+        this.clear();
       }
       
       if ( source ) {
-        // Remember the source of this downstream Fork
-        this.source = source;
-        
-        source.forks.push( this );
-        
-        // ToDo: JV replace source.get() by something like source.fetch( this, query )
-        // get() is not scalable to large datasets, because it returns the
-        // entire set. get() should only be used on small sets, for testing
-        // or on clients.
-        //
-        // fetch( destination, query ) will solve this issue because it will
-        // allow the source to provide its content filtered and in chuncks
-        // via add()
-        this.add( source.get() );
+        if ( source instanceof Fork ) {
+          // Remember the source of this downstream Fork
+          this.source = source;
+          
+          source.forks.push( this );
+          
+          // ToDo: JV replace source.get() by something like source.fetch( this, query )
+          // get() is not scalable to large datasets, because it returns the
+          // entire set. get() should only be used on small sets, for testing
+          // or on clients.
+          //
+          // fetch( destination, query ) will solve this issue because it will
+          // allow the source to provide its content filtered and in chuncks
+          // via add()
+          this.add( source.get() );
+        } else {
+          this.add( source );
+        }
       }
       
       return this;
