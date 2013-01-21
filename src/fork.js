@@ -42,7 +42,7 @@
   var de = true;
   
   function ug( m ) {
-    log( "xs connection, " + m );
+    log( "xs fork, " + m );
   } // ug()
   
   /* -------------------------------------------------------------------------------------------
@@ -55,8 +55,8 @@
     
     this.key = options.key || [ "id" ];
     
-    // An array of dependent connections. See .connect()
-    this.connections = [];
+    // An array of dependent forks. See .connect()
+    this.forks = [];
     
     // this.source = undefined // No source yet
     
@@ -102,51 +102,51 @@
       return this;
     }, // notify()
     
-    // Add items to this node then notify downsteam connections about
+    // Add items to this node then notify downsteam forks about
     // the effective additions.
     // Typically redefined by derived classes.
     // Default is to do store nothing and to notify downstream nodes.
-    add: function( added ){ return this.connections_remove()( added) },
+    add: function( added ){ return this.forks_remove()( added) },
     
     // Update items of this node, then notify downsteam destinations about
     // the effective updates.
     // Typically redefined by derived classes.
     // Default is to do store nothing and to notify downstream nodes.
-    update: function( updated ){ return this.connections_update( updated ) },
+    update: function( updated ){ return this.forks_update( updated ) },
     
     // remove: function( removed )
     // Remove items from this node and notify downsteam destinations about
     // the effective removals.
     // Typically redefined by derived classes.
     // Default is to do store nothing and to notify downstream nodes.
-    remove: function( removed ){ return this.connections_remove( removed ) },
+    remove: function( removed ){ return this.forks_remove( removed ) },
     
-    connections_add: function( added ) {
+    forks_add: function( added ) {
       // Notify downsteam destinations about some "add" operation that was done
-      var connections = this.connections, l = connections.length;
+      var forks = this.forks, l = forks.length;
       
-      for ( var i = -1; ++i < l; ) connections[ i ].add( added );
+      for ( var i = -1; ++i < l; ) forks[ i ].add( added );
       
       return this;
-    }, // connections_add()
+    }, // forks_add()
     
-    connections_update: function( updated ) {
+    forks_update: function( updated ) {
       // Notify destinations about some "update" operation that was done
-      var connections = this.connections, l = connections.length;
+      var forks = this.forks, l = forks.length;
       
-      for ( var i = -1; ++i < l; ) connections[ i ].update( updated );
+      for ( var i = -1; ++i < l; ) forks[ i ].update( updated );
       
       return this;
-    }, // connections_update()
+    }, // forks_update()
     
-    connections_remove: function( removed ) {
+    forks_remove: function( removed ) {
       // Notify downsteam node about some "remove" operation that was one
-      var connections = this.connections, l = connections.length;
+      var forks = this.forks, l = forks.length;
       
-      for ( var i = -1; ++i < l; ) connections[ i ].remove( removed );
+      for ( var i = -1; ++i < l; ) forks[ i ].remove( removed );
       
       return this;
-    }, // connections_remove()
+    }, // forks_remove()
     
     connect: function( destination ) {
       // Connect a new downstream destination to this source.
@@ -165,7 +165,7 @@
       // Remember the source of this downstream Fork
       destination.source = this;
       
-      this.connections.push( destination );
+      this.forks.push( destination );
       
       // ToDo: replace by something like this.fetch( destination, query )
       // get() is not scalable to large datasets, because it returns the
@@ -182,14 +182,14 @@
     
     disconnect: function( target ) {
       var new_targets = [];
-      var targets     = this.connections;
+      var targets     = this.forks;
       var len         = targets.length;
       for ( var ii = 0, item ; ii < len ; ii++ ) {
         item = targets[ ii ];
         if ( item !== target ) { new_targets.push( item ) }
         break;
       }
-      this.connections = new_targets;
+      this.forks = new_targets;
       // ToDo: target should be notified that it's source was disconnected
       if( target.source === this ) { target.source = null }
       return this;
@@ -322,7 +322,7 @@
       // Add items to the set and notify downsteam Forks.
       push.apply( this.a, objects );
       
-      return this.connections_add( objects );
+      return this.forks_add( objects );
     }, // add()
     
     update: function( objects ) {
@@ -339,7 +339,7 @@
         updated.push( o );
       }
       
-      return this.connections_update( updated );
+      return this.forks_update( updated );
     }, // update()
     
     remove: function( objects ) {
@@ -363,7 +363,7 @@
         removed.push( o ); 
       }
       
-      return this.connections_remove( removed );
+      return this.forks_remove( removed );
     }, // remove()
     
     index_of: function( o ) {

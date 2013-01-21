@@ -326,7 +326,7 @@
         a.splice( l.insert, 0, l.o );
       }
       
-      return this.connections_add( objects );
+      return this.forks_add( objects );
     }, // add()
     
     remove: function( objects ) {
@@ -342,7 +342,7 @@
         if ( f !== u ) a.splice( f, 1 );
       }
       
-      return this.connections_remove( objects );
+      return this.forks_remove( objects );
     }, // remove()
     
     update: function( updates ) {
@@ -459,7 +459,7 @@
         }
       }
       
-      return this.connections_update( updates );
+      return this.forks_update( updates );
     } // update()
   } ); // Ordered_Set instance methods
   

@@ -125,7 +125,7 @@
     add: function( objects ) {
       var added = this.filter_objects( objects );
       
-      added.length && this.connections_add( added );
+      added.length && this.forks_add( added );
       
       return this;
     }, // add()
@@ -133,7 +133,7 @@
     remove: function( objects ) {
       var removed = this.filter_objects( objects );
       
-      removed.length && this.connections_remove( removed );
+      removed.length && this.forks_remove( removed );
       
       return this;
     }, // remove()
@@ -164,9 +164,9 @@
               }
             }
             
-            removed.length && this.connections_remove( removed );
-            updated.length && this.connections_update( updated );
-            added  .length && this.connections_add   ( added   );
+            removed.length && this.forks_remove( removed );
+            updated.length && this.forks_update( updated );
+            added  .length && this.forks_add   ( added   );
             
             return this;
           };

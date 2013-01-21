@@ -52,7 +52,7 @@
   /* --------------------------------------------------------------------------
      .broadcaster( options )
      A broadcaster has one or many sources and will forward all operations from
-     these sources to its downsteam connections. It is state less.
+     these sources to its downsteam forks. It is state less.
      
      Usage:
        var b = a_source.broadcaster();
@@ -104,9 +104,9 @@
     },
     to:     function( target  ) { return this.connect( target);              },
     not_to: function( target  ) { return this.disconnect( target);           },
-    add:    function( objects ) { return this.connections_add(    objects ); },
-    remove: function( objects ) { return this.connections_remove( objects ); },
-    update: function( objects ) { return this.connections_update( objects ); },
+    add:    function( objects ) { return this.forks_add(    objects ); },
+    remove: function( objects ) { return this.forks_remove( objects ); },
+    update: function( objects ) { return this.forks_update( objects ); },
   } );
 
   
@@ -260,9 +260,9 @@
         something = true
         switch ( action.name ) {
         case 'contact' :                                            break;
-        case 'add'     : this.connections_add   ( action.objects ); break;
-        case 'remove'  : this.connections_remove( action.objects ); break;
-        case 'update'  : this.connections_update( action.objects ); break;
+        case 'add'     : this.forks_add   ( action.objects ); break;
+        case 'remove'  : this.forks_remove( action.objects ); break;
+        case 'update'  : this.forks_update( action.objects ); break;
         default:
           log( "Unknown action: " + action.name + ", proxy: " + this.name )
         }
