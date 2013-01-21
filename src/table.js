@@ -323,22 +323,28 @@
   
   // add cell
   function _add_cell( td, v, align ) {
-    if( align ) td.style.textAlign = align;
-    
     switch( typeof v ) {
       case "undefined":
-        td.innerHTML = v = "";
-        
+        v = "";
       break;
       
       case "boolean":
+        if( ! align ) align = "center";
+      break;
       
       case "number":
-        if( td.style.textAlign == "" ) td.style.textAlign = "right";
-        
+        if( ! align ) align = "right";
+      break;
+      
       case "string":
-        td.innerHTML = v;
+      break;
+      
+      default: return;
     }
+    
+    if ( align ) td.style.textAlign = align;
+    
+    td.innerHTML = v;
   } // _add_cell()
   
   de&&ug( "module loaded" );
