@@ -63,8 +63,6 @@
     return this;
   } // Fork()
   
-  var Connection = Fork;
-  
   extend( Fork.prototype, {
         
     get: function(){
@@ -464,7 +462,7 @@
   /* -------------------------------------------------------------------------------------------
      module exports
   */
-  eval( XS.export_code( 'XS', [ 'Fork', 'Connection', 'Set' ] ) );
+  eval( XS.export_code( 'XS', [ 'Fork', 'Set' ] ) );
   
   de&&ug( "module loaded" );
 } )( this ); // fork.js
