@@ -60,9 +60,7 @@
     
     this.filter = filter;
     
-    source.connect( this );
-    
-    return this;
+    return this.set_source( source );
   } // Filter()
   
   subclass( Fork, Filter );
