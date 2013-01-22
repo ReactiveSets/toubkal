@@ -1,9 +1,9 @@
 // server.js
 //  http server for tests
 
-var XS = require( "../src/xs.js" ).XS;
-require( "../src/fork.js" );
-require( "../src/proxy.js");
+var XS = require( "../lib/xs.js" ).XS;
+require( "../lib/fork.js" );
+require( "../lib/proxy.js");
 
 // Set the stage
 var Http    = require( "http" );

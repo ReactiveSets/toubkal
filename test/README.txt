@@ -26,7 +26,7 @@ Example: test if XS is a function
 
 First we have to import the Chai library and enabling the BDD syntax
 
-XS   = require '../src/xs.js' if require?
+XS   = require '../lib/xs.js' if require?
 chai = require 'chai' if require?
 chai?.should()
 

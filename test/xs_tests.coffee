@@ -51,14 +51,14 @@ describe 'clone():', ->
 # ------------------
 
 # include modules
-XS = if require? then ( require '../src/xs.js' ).XS else this.XS
+XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
 
 if require?
-  require '../src/code.js'
-  require '../src/fork.js'
-  require '../src/filter.js'
-  require '../src/ordered_set.js'
-  require '../src/aggregator.js'
+  require '../lib/code.js'
+  require '../lib/fork.js'
+  require '../lib/filter.js'
+  require '../lib/ordered_set.js'
+  require '../lib/aggregator.js'
 
 chai = require 'chai' if require?
 chai?.should()

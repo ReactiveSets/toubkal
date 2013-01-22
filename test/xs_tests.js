@@ -60,14 +60,14 @@
     });
   });
 
-  XS = typeof require !== "undefined" && require !== null ? (require('../src/xs.js')).XS : this.XS;
+  XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
   if (typeof require !== "undefined" && require !== null) {
-    require('../src/code.js');
-    require('../src/fork.js');
-    require('../src/filter.js');
-    require('../src/ordered_set.js');
-    require('../src/aggregator.js');
+    require('../lib/code.js');
+    require('../lib/fork.js');
+    require('../lib/filter.js');
+    require('../lib/ordered_set.js');
+    require('../lib/aggregator.js');
   }
 
   if (typeof require !== "undefined" && require !== null) {
