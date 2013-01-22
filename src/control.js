@@ -114,11 +114,14 @@
      Control.Checkbox()
   */
   Fork.prototype.checkbox = function( node, organizer, options ) {
+    /*
     var control = new Control.Checkbox( node, organizer, options );
     
     this.connect( control );
     
     return control;
+    */
+    return new Control.Checkbox( node, organizer, extend( { key: this.key }, options ) ).set_source( this );
   };
   
   Control.Checkbox = function( node, organizer, options ) {
@@ -133,6 +136,8 @@
   
   extend( Control.Checkbox.prototype, {
     bind: function() {
+      de&&ug( "Checkbox::bind()" );
+      
       var that = this;
       
       this.checkbox.onclick = function() {
@@ -142,7 +147,7 @@
         
         value = that.value;
         
-        Ordered_Set.prototype.update.call( that, [ [ previous, value ] ] );
+        that.update( [ [ previous, value ] ] );
       };
       
       return this;
@@ -182,6 +187,8 @@
     }, // draw
     
     add: function( objects ) {
+      de&&ug( "Checkbox::add(), objects: " + log.s( objects ) );
+      
       var l = objects.length, v = this.value;
       
       switch( l ) {
@@ -201,7 +208,22 @@
       return this;
     }, // add()
     
+    remove: function( objects ) {
+      var s = this.source.get()
+        , l = s.length
+      ;
+      
+      // Ordered_Set.prototype.remove.call( this, objects );
+      
+      this.set_value( s[ 0 ] );
+      
+      
+      return this;
+    }, // remove()
+    
     update: function( updates ) {
+      de&&ug( "Checkbox::update(), objects: " + log.s( updates ) );
+      
       Ordered_Set.prototype.update.call( this, updates );
       
       updates.length && this.set_value( updates[ 0 ][ 1 ] );
