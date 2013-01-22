@@ -310,7 +310,7 @@
         break;
         case 'subscribe' : this.send( action );                       break;
         case 'add'       : this.connections_add(    action.objects ); break;
-        case 'remove'    : this.connections_add(    action.objects ); break;
+        case 'remove'    : this.connections_remove( action.objects ); break;
         case 'update'    : this.connections_update( action.objects ); break;
         default:
           log( "Unknown action: " + action.name + ", proxy: " + this.name );
