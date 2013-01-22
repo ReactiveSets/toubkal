@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" media="all" type="text/css" href="css/table.css" />
+    <link rel="stylesheet" href="css/mocha.css" />
+    
+    <script src="javascript/es5.js"></script>
+
+    <script src="javascript/mocha.js"></script>
+    <script src="javascript/chai.js"></script>
+    <script>
+      mocha.setup( 'bdd' );
+
+      chai.should();
+    </script>
+    
+    <script src="javascript/es5.js"></script>
+    
+    <title>XS Control</title>
+    
+    <script type="text/javascript" charset="utf-8" src="../src/xs.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/code.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/fork.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/filter.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/ordered_set.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/aggregator.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/table.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../src/control.js"></script>
+    
+    <script>
+      window.onload = function() { mocha.run() };
+    </script>
+    
+  </head>
+  
+  <body>
+    <div id="controls">
+      <div id="checkbox_control"></div>
+    </div>
+    <div id="checkbox_value"></div>
+    
+    <div id="demo"></div>
+    <div id="mocha"></div>
+    
+    <script src="xs_control_tests.js"></script>
+    
+    <script type="text/javascript" charset="utf-8">
+      /*
+      var organizer = [ { id: "id" } ]
+        , set       = new XS.Ordered_Set( [ { id: false, label: "Chart" }, { id: true, label: "Chart", column: "sales" } ], organizer )
+        , checkbox  = set.checkbox( document.getElementById( "checkbox_control" ), 
+            [ { id: "id" } ],
+            {
+              // default_value: { id: true, label: "Label True" }
+              // label: "Charts"
+            }
+          )
+      ;
+      
+      checkbox.table( document.getElementById( "checkbox_value" )
+        , [ { id: 'id' }, { id: 'label' }, { id: 'column' } ]
+        , [ { id: 'id' } ]
+        , { caption: 'Checkbox Value' }
+      );
+      
+      set.update( [ [ { id: false, label: "Chart" }, { id: false, label: "No Chart" } ] ] );
+      // set.remove( [ { id: false, label: "No Chart" } ] );
+      */
+    </script>
+  </body>
+</html>
