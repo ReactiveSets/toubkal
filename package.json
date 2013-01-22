@@ -1,0 +1,44 @@
+{
+  "name": "excess",
+  "version": "0.0.1",
+  "description": "Excess brings big data to the client side",
+  "main": "lib/xs.js",
+  "files": [ 
+    "lib",
+    "test"
+  ],
+  "directories": {
+    "lib":  "lib",
+    "test": "test"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "dependencies": {
+    "l8": "latest"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.4.0",
+    "mocha": "latest",
+    "chai":  "latest"
+  },
+  "scripts": {
+    "test": "ln -s ../. node_modules/excess ; echo \"run tests...\" ; mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url":  "git://github.com/ConnectedSets/ConnectedSets.git"
+  },
+  "keywords": [
+    "flow",
+    "data",
+    "dataflow",
+    "database",
+    "flow control",
+    "real time",
+    "realtime"
+  ],
+  "author": "ConnectedSets",
+  "license": "AGPLv3"
+}
+
