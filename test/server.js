@@ -17,10 +17,10 @@ XS.Proxy.server( server );
 
 // The fake publisher of the daily mirror has only one subscriber: The Dude.
 var daily_mirror = new XS.Set( null, "daily_mirror");
-daily_mirror.proxy( "daily_mirror_for_the_dude" );
+// daily_mirror.proxy( "daily_mirror_for_the_dude" );
 
 // The true publisher of the daily mirror has many subscribers
-daily_mirror.publisher( "daily_mirror")
+daily_mirror.publisher( "daily_mirror" );
 
 // Let's add articles to the daily_mirror
 daily_mirror.add( [
@@ -28,15 +28,42 @@ daily_mirror.add( [
   { id: 2, text: "another story" }
 ] );
 XS.l8.task( function(){
-  var next_id = 3
+  var next_id = 3;
   this.repeat( function(){
+    XS.l8.trace( "NEW ARTICLE, " + next_id );
     daily_mirror.add( [ { id: next_id, text: "article " + next_id } ] );
     next_id++;
-    this.sleep( 1000 );
-  })
-})
+    this.sleep( 10 * 1000 );
+  });
+});
 
 // daily_mirror.persistor( "daily_mirror.json")
 
-XS.l8.countdown( 100)
+XS.l8.countdown( 1000);
+
+var server_url = "http://localhost:" + (process.env.PORT || 8080);
+
+// The Dude subscribe to the daily mirror
+//var daily_mirror_for_the_dude = XS.void.proxy( "daily_mirror_for_the_dude", { url: server_url } );
+
+function trace( tracer, model, operation, objects ){
+  var buf = [ "[" ];
+  for( var item in objects ){
+    buf.push( "{" );
+    item = objects[ item ];
+    for( var property in item ){
+      buf.push( "" + property + ":" + item[ property ] );
+    }
+    buf.push( "}");
+  }
+  buf = buf.join( ", " );
+  XS.l8.trace( tracer.toString(), model.toString(), operation, buf );
+}
+
+//daily_mirror_for_the_dude.tracer( { log: trace } );
+
+var subscriber = XS.void.subscriber( "daily_mirror", { url: server_url } );
+subscriber.source.tracer( { log: trace } );
+
+// subscriber.persistor( "daily_mirror_backup" )
 

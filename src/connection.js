@@ -51,6 +51,8 @@
   var DataFlowNode = Connection;
   
   extend( Connection.prototype, {
+    
+    toString: function(){ return "Node/" + this.name; },
         
     get: function(){
       // Return the content (an array of items) of This node.
@@ -166,17 +168,12 @@
     }, // connect()
     
     disconnect: function( target ) {
-      var new_targets = [];
-      var targets     = this.connections;
-      var len         = targets.length;
-      for ( var ii = 0, item ; ii < len ; ii++ ) {
-        item = targets[ ii ];
-        if ( item !== target ) { new_targets.push( item ) }
-        break;
+      var index = this.connections.indexOf( target );
+      if ( index  >= 0 ) {
+        this.connections.splice( index, 1 );
+        // ToDo: target should be notified that it's source was disconnected
+        if( target.source === this ) { target.source = null }
       }
-      this.connections = new_targets;
-      // ToDo: target should be notified that it's source was disconnected
-      if( target.source === this ) { target.source = null }
       return this;
     }, // disconnect()
     
@@ -297,6 +294,8 @@
      Set instance methods
   */
   extend( Set.prototype, {
+    
+    toString: function(){ return "Set/" + this.name; },
     
     get: function() {
       // Return the content of the set, an array of items. Each item is a list
