@@ -62,7 +62,7 @@ XS = if require? then ( require '../src/xs.js' ).XS else this.XS
 
 if require?
   require '../src/code.js'
-  require '../src/connection.js'
+  require '../src/fork.js'
   require '../src/filter.js'
   require '../src/ordered_set.js'
   require '../src/aggregator.js'
@@ -87,36 +87,38 @@ books = new Ordered_Set [
 
 books.table document.getElementById( "demo" ), columns, organizer, {caption: "List of the best-selling books (source: wikipedia)" }
 
+node = document.getElementById( "demo" ).firstChild
+
 describe 'Columns_Set():', ->
   it 'columns should be equal to object.columns', ->
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
     
     columns.get().should.be.eql object.columns
   
   it 'after add 2 objects: columns.add( objects ) should be equal to object.columns', ->
     columns.add [ { id: "year" , label: "Year", align: "center" }, { id: "language", label: "Language" } ]
     
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
     
     columns.get().should.be.eql object.columns
   
   it 'after columns.remove( object ), columns should be equal to object.columns', ->
     columns.remove [ { id: "id", label: "ID" } ]
     
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
     
     columns.get().should.be.eql object.columns
   
   it 'after columns.update( object ), columns should be equal to object.columns', ->
     columns.update [ [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ] ]
     
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
 
     columns.get().should.be.eql object.columns
 
 describe 'Table():', ->
   it 'books should be equal to object.data', ->
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
 
     object.data.should.be.eql [
       { title: "A Tale of Two Cities"             , author: "Charles Dickens" , year: 1859, sales:       200 }
@@ -140,7 +142,7 @@ describe 'Table():', ->
       { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , sales:        60, year: null, language: "English" }
     ]
     
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
 
     object.data.should.be.eql [
       { title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859, sales:       200 }
@@ -172,7 +174,7 @@ describe 'Table():', ->
       ]
     ]
 
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
 
     object.data.should.be.eql [
       { title: "A Tale of Two Cities"                             , author: "Charles Dickens"          , year: 1859, sales:       200 }
@@ -199,7 +201,7 @@ describe 'Table():', ->
       { id:  7, title: "The McGuffey Readers", author: "William Holmes McGuffey", year: 1853 }
     ]
     
-    object = from_HTML_to_object document.getElementsByTagName( "table" )[ 0 ]
+    object = from_HTML_to_object node
     
     object.data.should.be.eql [
       { title: "And Then There Were None"                         , author: "Agatha Christie"                      , sales:  100      }

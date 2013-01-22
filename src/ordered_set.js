@@ -15,6 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict";
 
 ( function( exports ) {
   var XS;
@@ -23,17 +24,17 @@
     XS = require( './xs.js' ).XS;
     
     require( './code.js' );
-    require( './connection.js' );
+    require( './fork.js' );
   } else {
     XS = exports.XS;
   }
   
-  var log        = XS.log
-    , extend     = XS.extend
-    , subclass   = XS.subclass
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
+  var log      = XS.log
+    , extend   = XS.extend
+    , subclass = XS.subclass
+    , Code     = XS.Code
+    , Fork     = XS.Fork
+    , Set      = XS.Set
   ;
   
   var push = Array.prototype.push;
@@ -51,21 +52,14 @@
      Ordered_Set_Organizer()
   */
   function Ordered_Set_Organizer( organizer, ordered_set, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     
     this.ordered_set = ordered_set;
-    this.organizer = organizer;
     
-    if ( organizer instanceof Set ) {
-      organizer.connect( this );
-    } else {
-      this.add( organizer );
-    }
-    
-    return this;
+    return this.set_source( this.organizer = organizer );
   } // Ordered_Set_Organizer()
   
-  subclass( Connection, Ordered_Set_Organizer );
+  subclass( Fork, Ordered_Set_Organizer );
   
   var p = Ordered_Set_Organizer.prototype;
   
@@ -133,12 +127,8 @@
   /* -------------------------------------------------------------------------------------------
      Ordered_Set()
   */
-  Connection.prototype.order = function( organizer, options ) {
-    var s = new Ordered_Set( [], organizer, extend( { key: this.key }, options ) );
-    
-    this.connect( s );
-    
-    return s;
+  Fork.prototype.order = function( organizer, options ) {
+    return new Ordered_Set( [], organizer, extend( { key: this.key }, options ) ).set_source( this );
   } // order()
   
   function Ordered_Set( a, organizer, options ) {
@@ -325,7 +315,7 @@
         a.splice( l.insert, 0, l.o );
       }
       
-      return this.connections_add( objects );
+      return this.forks_add( objects );
     }, // add()
     
     remove: function( objects ) {
@@ -341,7 +331,7 @@
         if ( f !== u ) a.splice( f, 1 );
       }
       
-      return this.connections_remove( objects );
+      return this.forks_remove( objects );
     }, // remove()
     
     update: function( updates ) {
@@ -458,7 +448,7 @@
         }
       }
       
-      return this.connections_update( updates );
+      return this.forks_update( updates );
     } // update()
   } ); // Ordered_Set instance methods
   

@@ -15,6 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict";
 
 ( function( exports ) {
   var XS;
@@ -27,12 +28,12 @@
     XS = exports.XS;
   }
   
-  var log        = XS.log
-    , extend     = XS.extend
-    , subclass   = XS.subclass
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
+  var log      = XS.log
+    , extend   = XS.extend
+    , subclass = XS.subclass
+    , Code     = XS.Code
+    , Fork     = XS.Fork
+    , Set      = XS.Set
   ;
   
   /* -------------------------------------------------------------------------------------------
@@ -48,21 +49,14 @@
      Aggregator_Dimensions()
   */
   function Aggregator_Dimensions( aggregator, dimensions, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     
     this.aggregator = aggregator;
-    this.dimensions = dimensions;
     
-    if ( dimensions instanceof Set ) {
-      dimensions.connect( this );
-    } else {
-      this.add( dimensions );
-    }
-    
-    return this;
+    return this.set_source( this.dimensions = dimensions );
   } // Aggregator_Dimensions()
   
-  subclass( Connection, Aggregator_Dimensions );
+  subclass( Fork, Aggregator_Dimensions );
   
   extend( Aggregator_Dimensions.prototype, {
     get: function() {
@@ -118,21 +112,14 @@
      Aggregator_Measures()
   */
   function Aggregator_Measures( aggregator, measures, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     
     this.aggregator = aggregator;
-    this.measures   = measures;
     
-    if ( measures instanceof Set ) {
-      measures.connect( this );
-    } else {
-      this.add( measures );
-    }
-    
-    return this;
+    return this.set_source( this.measures = measures );
   } // Aggregator_Measures()
   
-  subclass( Connection, Aggregator_Measures );
+  subclass( Fork, Aggregator_Measures );
   
   extend( Aggregator_Measures.prototype, {
     get: function() {
@@ -241,13 +228,9 @@
   /* -------------------------------------------------------------------------------------------
      Aggregator()
   */
-  Connection.prototype.aggregate = function( measures, dimensions, options ) {
-    var a = new Aggregator( measures, dimensions, options );
-    
-    this.connect( a );
-    
-    return a;
-  }; // Connection.prototype.aggregate()
+  Fork.prototype.aggregate = function( measures, dimensions, options ) {
+    return new Aggregator( measures, dimensions, options ).set_source( this );
+  }; // Fork.prototype.aggregate()
   
   function Aggregator( measures, dimensions, options ) {
     Set.call( this, options );

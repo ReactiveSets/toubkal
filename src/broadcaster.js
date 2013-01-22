@@ -24,14 +24,24 @@
  
   if ( typeof require === 'function' ) {
     XS = require( './xs.js' ).XS;
-    require( './connection.js' );
+    require( './fork.js' );
   } else {
     XS = exports.XS;
   }
   
   var log         = XS.log
-    , Connection  = XS.Connection
+    , Connection  = XS.Fork
   ;
+
+/*
+ *  Monkey patching, until terminology get stable.
+ */
+
+var ProtoConnection = Connection.prototype;
+ProtoConnection.connections_add    = ProtoConnection.forks_add;
+ProtoConnection.connections_update = ProtoConnection.forks_update;
+ProtoConnection.connections_remove = ProtoConnection.forks_remove;
+
   
  /* --------------------------------------------------------------------------
      de&&ug()
@@ -57,7 +67,7 @@
    */
 
   function Void(){
-    Connection.call();
+    Connection.call( this );
     this.source = null;
     return this;
   }

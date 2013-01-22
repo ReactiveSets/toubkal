@@ -11,9 +11,9 @@ try{
   l8.client = true
 }
 
-var XS = require( "../src/xs.js" ).XS;
-require( "../src/connection.js" );
-require( "../src/proxy.js" );
+var XS = require( "../src/xs.js" ).XS
+require( "../src/fork.js" )
+require( "../src/proxy.js" )
 
 // The Dude subscribe to the daily mirror
 //var daily_mirror_for_the_dude = XS.void.proxy( "daily_mirror_for_the_dude" );

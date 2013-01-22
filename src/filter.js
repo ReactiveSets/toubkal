@@ -15,6 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict";
 
 ( function( exports ) {
   var XS;
@@ -23,21 +24,20 @@
     XS = require( './xs.js' ).XS;
     
     require( './code.js' );
-    require( './connection.js' );    
+    require( './fork.js' );    
   } else {
     XS = exports.XS;
   }
   
-  var log        = XS.log
-    , extend     = XS.extend
-    , subclass   = XS.subclass
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
+  var log      = XS.log
+    , extend   = XS.extend
+    , subclass = XS.subclass
+    , Code     = XS.Code
+    , Fork     = XS.Fork
+    , Set      = XS.Set
   ;
   
-  var push = Array.prototype.push
-  ;
+  var push = Array.prototype.push;
   
   /* -------------------------------------------------------------------------------------------
      de&&ug()
@@ -51,21 +51,19 @@
   /* -------------------------------------------------------------------------------------------
      Filter()
   */
-  Connection.prototype.filter = function( filter, options ) {
+  Fork.prototype.filter = function( filter, options ) {
     return new Filter( this, filter, options );
-  } // filter()
+  }; // filter()
   
   function Filter( source, filter, options ) {
-    Connection.call( this, extend( { key: source.key }, options ) );
+    Fork.call( this, extend( { key: source.key }, options ) );
     
     this.filter = filter;
     
-    source.connect( this );
-    
-    return this;
+    return this.set_source( source );
   } // Filter()
   
-  subclass( Connection, Filter );
+  subclass( Fork, Filter );
   
   extend( Filter.prototype, {
     filter_objects: function( objects ) {
@@ -124,7 +122,7 @@
     add: function( objects ) {
       var added = this.filter_objects( objects );
       
-      added.length && this.connections_add( added );
+      added.length && this.forks_add( added );
       
       return this;
     }, // add()
@@ -132,7 +130,7 @@
     remove: function( objects ) {
       var removed = this.filter_objects( objects );
       
-      removed.length && this.connections_remove( removed );
+      removed.length && this.forks_remove( removed );
       
       return this;
     }, // remove()
@@ -163,9 +161,9 @@
               }
             }
             
-            removed.length && this.connections_remove( removed );
-            updated.length && this.connections_update( updated );
-            added  .length && this.connections_add   ( added   );
+            removed.length && this.forks_remove( removed );
+            updated.length && this.forks_update( updated );
+            added  .length && this.forks_add   ( added   );
             
             return this;
           };

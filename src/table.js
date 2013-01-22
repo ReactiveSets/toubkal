@@ -15,6 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict";
 
 ( function( exports ) {
   var XS;
@@ -25,13 +26,13 @@
     XS = exports.XS;
   }
   
-  var log        = XS.log
-    , subclass   = XS.subclass
-    , extend     = XS.extend
-    , Code       = XS.Code
-    , Connection = XS.Connection
-    , Set        = XS.Set
-    , Ordered_Set= XS.Ordered_Set
+  var log         = XS.log
+    , subclass    = XS.subclass
+    , extend      = XS.extend
+    , Code        = XS.Code
+    , Fork        = XS.Fork
+    , Set         = XS.Set
+    , Ordered_Set = XS.Ordered_Set
   ;
   
   /* -------------------------------------------------------------------------------------------
@@ -47,21 +48,14 @@
      Table_Columns()
   */
   function Table_Columns( columns, table, options ) {
-    Connection.call( this, options );
+    Fork.call( this, options );
     
     this.table   = table;
-    this.columns = columns;
     
-    if ( columns instanceof Set ) {
-      columns.connect( this );
-    } else {
-      this.add( columns );
-    }
-    
-    return this;
+    return this.set_source( this.columns = columns );
   } // Table_Colunns()
   
-  subclass( Connection, Table_Columns );
+  subclass( Fork, Table_Columns );
   
   extend( Table_Columns.prototype, {
     add: function( objects ) {
@@ -162,13 +156,8 @@
   /* -------------------------------------------------------------------------------------------
      Table()
   */
-  
-  Connection.prototype.table = function( node, columns, organizer, options ) {
-    var t = new Table( node, columns, organizer, extend( { key: this.key }, options ) );
-    
-    this.connect( t );
-    
-    return t;
+  Fork.prototype.table = function( node, columns, organizer, options ) {
+    return new Table( node, columns, organizer, extend( { key: this.key }, options ) ).set_source( this );
   };
   
   function Table( node, columns, organizer, options ) {
@@ -272,12 +261,13 @@
     update: function( updates ) {
       var rows      = this.body.getElementsByTagName( "tr" )
         , locations = this.locate( updates )
-        , columns   = this.columns.columns.get()
+        , columns   = this.columns.columns
         , l         = locations.length
-        , cl        = columns.length
       ;
       
-      for( var i = l; i; ) {
+      if ( columns instanceof Set ) columns = columns.get();
+      
+      for( var i = l, cl = columns.length; i; ) {
         var cells  = rows[ locations[ --i ].insert - 1 ].cells
           , update = updates[ i ]
           , u0     = update [ 0 ]
@@ -287,7 +277,7 @@
         for( var j = cl; j; ) {
           var c = columns[ --j ];
           
-          if( u0[ c.id ] !== u1[ c.id ] ) cells[ j ].innerHTML = u1[ c.id ];
+          if( u0[ c.id ] !== u1[ c.id ] ) cells[ j ].innerHTML = u1[ c.id ] || "";
         }
       }
       
@@ -333,20 +323,28 @@
   
   // add cell
   function _add_cell( td, v, align ) {
-    if( align ) td.style.textAlign = align;
-    
     switch( typeof v ) {
       case "undefined":
-        td.innerHTML = v = "";
-        
+        v = "";
+      break;
+      
+      case "boolean":
+        if( ! align ) align = "center";
       break;
       
       case "number":
-        if( td.style.textAlign == "" ) td.style.textAlign = "right";
-        
+        if( ! align ) align = "right";
+      break;
+      
       case "string":
-        td.innerHTML = v;
+      break;
+      
+      default: return;
     }
+    
+    if ( align ) td.style.textAlign = align;
+    
+    td.innerHTML = v;
   } // _add_cell()
   
   de&&ug( "module loaded" );

@@ -23,6 +23,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict";
 
 ( function( exports ) {
   /* -------------------------------------------------------------------------------------------
@@ -179,12 +180,12 @@
     for ( var s = '', i = -1; ++i < max; ) s += ' ';
     
     exports.unshift(
-      '\n  var ' + namespace + ' = exports.' + namespace + ' = ' + namespace + ' || {};\n'
+      '\n  var _' + namespace + ' = exports.' + namespace + ' = typeof( ' + namespace + ' ) === "object" ? ' + namespace + ' : {};\n'
     );
     
     var export_code = exports.reduce(
       function( r, f ) {
-        return r + '\n  XS.' + ( f + s ).substr( 0, max ) + " = " + f + ';'
+        return r + '\n  _' + namespace + '.' + ( f + s ).substr( 0, max ) + " = " + f + ';'
       }
     );
     

@@ -15,6 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict";
 
 ( function( exports ) {
   var XS;
@@ -22,22 +23,25 @@
   
   if ( typeof require === 'function' ) {
     XS = require( './xs.js' ).XS;
-    require( './connection.js' );
+    require( './fork.js' );
     require( './broadcaster.js');
     l8 = require( 'l8/lib/l8.js' );
     require( 'l8/lib/actor.js' );
+
   } else {
     XS = exports.XS;
     l8 = exports.l8;
   }
+
   XS.l8 = l8;
   
   var log         = XS.log
     , subclass    = XS.subclass
     , extend      = XS.extend
-    , Connection  = XS.Connection
+    , Connection  = XS.Fork
     , Set         = XS.Set
     , Broadcaster = XS.Broadcaster
+
   ;
   
   /* --------------------------------------------------------------------------
@@ -306,7 +310,7 @@
         break;
         case 'subscribe' : this.send( action );                       break;
         case 'add'       : this.connections_add(    action.objects ); break;
-        case 'remove'    : this.connections_remove( action.objects ); break;
+        case 'remove'    : this.connections_add(    action.objects ); break;
         case 'update'    : this.connections_update( action.objects ); break;
         default:
           log( "Unknown action: " + action.name + ", proxy: " + this.name );
@@ -824,6 +828,7 @@
   Proxy.AllRemotePublishers = new XS.Set();
   
   function Subscriber( publisher, options ){
+
     Connection.call( this, options );
     this.filter = this.options.filter;
     this.stage  = this.options.stage || l8.stage( "local" );
@@ -906,7 +911,7 @@
     }
     
   } ); // subscriber
-  
+
   
   /* --------------------------------------------------------------------------
      .tracer( options )
@@ -949,7 +954,7 @@
     } // trace()
   } ); // Tracer instance methods
   
-  
+
   /* --------------------------------------------------------------------------
      module exports
   */
