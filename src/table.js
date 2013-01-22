@@ -277,20 +277,20 @@
         for( var j = cl; j; ) {
           var c = columns[ --j ];
           
-          if( u0[ c.id ] !== u1[ c.id ] ) cells[ j ].innerHTML = u1[ c.id ] || "";
+          if( u0[ c.id ] !== u1[ c.id ] ) _add_cell( cells[ j ], u1[ c.id ], c.align );
         }
       }
       
       Ordered_Set.prototype.update.call( this, updates );
       
       return this;
-    }, // update()
-    
+    } // update()
+    /*
     sort: function( organizer ) {
       // var a = this.get(), copy = []; for( var i = -1; ++i < a.length; ) copy.push( a[ i ] );
       
       Ordered_Set.prototype.sort.call( this, organizer );
-      /*
+      
       var locations = this.locate( a );
       
       var rows = this.body.getElementsByTagName( "tr" );
@@ -303,9 +303,10 @@
       }
       
       console.log( locations );
-      */
+      
       return this;
     } // order()
+    */
   } ); // Table instance methods
   
   /* -------------------------------------------------------------------------------------------
