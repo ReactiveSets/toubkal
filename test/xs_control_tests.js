@@ -58,7 +58,7 @@
   ];
 
   options = {
-    label: "Chart"
+    label: "Charts"
   };
 
   checkbox_source = new Ordered_Set([], organizer, {
@@ -124,32 +124,64 @@
         });
       });
     });
+    describe('update():', function() {
+      return it('after checkbox_source.update( objects ) checkbox should be equal to [ { id: false, label: "Charts" }, { id: true, label: "Charts" } ]', function() {
+        checkbox_source.update([
+          [
+            {
+              id: true,
+              label: "Label True"
+            }, {
+              id: true,
+              label: "Charts"
+            }
+          ], [
+            {
+              id: false,
+              label: "Label False"
+            }, {
+              id: false,
+              label: "Charts"
+            }
+          ]
+        ]);
+        return checkbox.get().should.be.eql([
+          {
+            id: false,
+            label: "Charts"
+          }, {
+            id: true,
+            label: "Charts"
+          }
+        ]);
+      });
+    });
     return describe('remove():', function() {
-      it('after checkbox_source.remove( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
+      it('after checkbox_source.remove( object ), checkbox should be equal to [ { id: true, label: "Charts" } ]', function() {
         checkbox_source.remove([
           {
             id: false,
-            label: "Label False"
+            label: "Charts"
           }
         ]);
         return checkbox.get().should.be.eql([
           {
             id: true,
-            label: "Label True"
+            label: "Charts"
           }
         ]);
       });
-      it('checkbox.value should be equal to { id: true, label: "Label True" }', function() {
+      it('checkbox.value should be equal to { id: true, label: "Charts" }', function() {
         return checkbox.value.should.be.eql({
           id: true,
-          label: "Label True"
+          label: "Charts"
         });
       });
       return it('after checkbox_source.remove( object ), checkbox should be empty', function() {
         checkbox_source.remove([
           {
             id: true,
-            label: "Label True"
+            label: "Charts"
           }
         ]);
         return checkbox.get().should.be.empty;
