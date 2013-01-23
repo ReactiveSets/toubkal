@@ -43,7 +43,7 @@ Ordered_Set = XS.Ordered_Set
 Control     = XS.Control
 
 organizer       = [ { id: "id" } ]
-options         = {}
+options         = { label: "Chart" }
 checkbox_source = new Ordered_Set [], organizer, { name: "Checkbox Source" }
 checkbox        = checkbox_source.checkbox document.getElementById( "checkbox_control" ), organizer, options
 
@@ -52,22 +52,37 @@ describe 'Checkbox():', ->
     checkbox.get().should.be.empty
   
   describe 'add():', ->
-    it 'after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Chart", column: "sales" } ]', ->
-      checkbox_source.add [ { id: true, label: "Chart", column: "sales" } ]
+    it 'after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', ->
+      checkbox_source.add [ { id: true, label: "Label True" } ]
       
-      checkbox_source.get().should.be.eql [ { id: true, label: "Chart", column: "sales" } ]
+      checkbox_source.get().should.be.eql [ { id: true, label: "Label True" } ]
+    
+    it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', ->
+      checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
+    
+    it 'checkbox.value should be equal to { id: true, label: "Label True" }', ->
+      checkbox.value.should.be.eql { id: true, label: "Label True" }
+    
+    it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]', ->
+      checkbox_source.add [ { id: false, label: "Label False" } ]
       
-    it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Chart", column: "sales" } ]', ->
-      checkbox.get().should.be.eql [ { id: true, label: "Chart", column: "sales" } ]
+      checkbox.get().should.be.eql [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]
     
-    it 'checkbox.value should be equal to { id: true, label: "Chart", column: "sales" }', ->
-      checkbox.value.should.be.eql { id: true, label: "Chart", column: "sales" }
-    
-    it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Chart" }, { id: true, label: "Chart", column: "sales" } ]', ->
-      checkbox_source.add [ { id: false, label: "Chart" } ]
+    it 'checkbox.value should be equal to { id: true, label: "Label True" }', ->
+      checkbox.value.should.be.eql { id: true, label: "Label True" }
+  
+  describe 'remove():', ->
+    it 'after checkbox_source.remove( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', ->
+      checkbox_source.remove [ { id: false, label: "Label False" } ]
       
-      checkbox.get().should.be.eql [ { id: false, label: "Chart" }, { id: true, label: "Chart", column: "sales" } ]
+      checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
     
-    it 'checkbox.value should be equal to { id: true, label: "Chart", column: "sales" }', ->
-      checkbox.value.should.be.eql { id: true, label: "Chart", column: "sales" }
+    it 'checkbox.value should be equal to { id: true, label: "Label True" }', ->
+      checkbox.value.should.be.eql { id: true, label: "Label True" }
+    
+    it 'after checkbox_source.remove( object ), checkbox should be empty', ->
+      checkbox_source.remove [ { id: true, label: "Label True" } ]
+      
+      checkbox.get().should.be.empty
+    
     
