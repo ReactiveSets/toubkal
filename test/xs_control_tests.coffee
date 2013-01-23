@@ -52,9 +52,12 @@ describe 'Checkbox():', ->
     checkbox.get().should.be.empty
   
   describe 'add():', ->
-    it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Chart", column: "sales" } ]', ->
+    it 'after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Chart", column: "sales" } ]', ->
       checkbox_source.add [ { id: true, label: "Chart", column: "sales" } ]
       
+      checkbox_source.get().should.be.eql [ { id: true, label: "Chart", column: "sales" } ]
+      
+    it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Chart", column: "sales" } ]', ->
       checkbox.get().should.be.eql [ { id: true, label: "Chart", column: "sales" } ]
     
     it 'checkbox.value should be equal to { id: true, label: "Chart", column: "sales" }', ->

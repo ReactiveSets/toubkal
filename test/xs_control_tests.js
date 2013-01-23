@@ -70,7 +70,7 @@
       return checkbox.get().should.be.empty;
     });
     return describe('add():', function() {
-      it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Chart", column: "sales" } ]', function() {
+      it('after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Chart", column: "sales" } ]', function() {
         checkbox_source.add([
           {
             id: true,
@@ -78,6 +78,15 @@
             column: "sales"
           }
         ]);
+        return checkbox_source.get().should.be.eql([
+          {
+            id: true,
+            label: "Chart",
+            column: "sales"
+          }
+        ]);
+      });
+      it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Chart", column: "sales" } ]', function() {
         return checkbox.get().should.be.eql([
           {
             id: true,
