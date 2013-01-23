@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Set, XS, chai, clone;
+  var Set, XS, chai, clone, xs;
 
   clone = function(o) {
     var p, r;
@@ -77,6 +77,8 @@
   if (chai != null) {
     chai.should();
   }
+
+  xs = XS.xs;
 
   Set = XS.Set;
 
@@ -193,11 +195,11 @@
     });
     describe('XS.Set():', function() {
       var cars, cities, employee, set;
-      set = new Set([]);
+      set = xs.set();
       it('set should be a Set', function() {
         return set.should.be.an["instanceof"](Set);
       });
-      cities = new Set([
+      cities = xs.set([
         {
           id: 1,
           name: "Marrakech",
@@ -213,7 +215,7 @@
           country: "France"
         }
       ]);
-      cars = new Set([
+      cars = xs.set([
         {
           id: 1,
           brand: "Mercedes",
@@ -230,7 +232,7 @@
       ], {
         key: ["id", "model"]
       });
-      employee = new XS.Set([
+      employee = xs.set([
         {
           id: 1,
           name: "Stephen C. Cox",
@@ -305,7 +307,7 @@
         it('cities.add( object ) should be a Set', function() {
           return cities.should.be.an["instanceof"](Set);
         });
-        result = new Set([
+        result = xs.set([
           {
             id: 1,
             name: "Marrakech",
@@ -371,7 +373,7 @@
         });
         it('employee.remove( [ { id: 1 } ] ) should be equal to result: first record', function() {
           var result;
-          result = new Set([
+          result = xs.set([
             {
               id: 2,
               name: "Josephin Tan",
@@ -413,7 +415,7 @@
         });
         it('employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', function() {
           var result;
-          result = new Set([
+          result = xs.set([
             {
               id: 2,
               name: "Josephin Tan",
@@ -449,7 +451,7 @@
         });
         return it('employee.remove( [ { id: 6 } ] ) should be equal to result: last record', function() {
           var result;
-          result = new Set([
+          result = xs.set([
             {
               id: 2,
               name: "Josephin Tan",
@@ -502,7 +504,7 @@
         });
         return it('employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', function() {
           var result;
-          result = new Set([
+          result = xs.set([
             {
               id: 2,
               name: "Josephin Tan",
@@ -1084,7 +1086,7 @@
       });
       return describe('order():', function() {
         var books, books_ordered_by_ascending_author, books_ordered_by_descending_author, books_ordered_by_descending_year, books_ordered_by_year, by_ascending_author, by_descending_author, organizer;
-        books = new Set([
+        books = xs.set([
           {
             id: 1,
             title: "A Tale of Two Cities",
@@ -1112,7 +1114,7 @@
             year: 2000
           }
         ]);
-        organizer = new Set([
+        organizer = xs.set([
           {
             id: "year"
           }
@@ -1147,7 +1149,7 @@
         books_ordered_by_year = books.order(organizer, {
           name: 'books_ordered_by_year'
         });
-        books_ordered_by_descending_year = books.order(new Set([
+        books_ordered_by_descending_year = books.order(xs.set([
           {
             id: "year",
             descending: true
@@ -3145,7 +3147,7 @@
     });
     return describe('XS.Aggregator():', function() {
       var books_sales, books_sales_by_author, books_sales_by_year, by_author, by_year, sales;
-      books_sales = new Set([
+      books_sales = xs.set([
         {
           id: 1,
           title: "A Tale of Two Cities",
@@ -3243,17 +3245,17 @@
           sales: 13
         }
       ]);
-      sales = new Set([
+      sales = xs.set([
         {
           id: "sales"
         }
       ]);
-      by_author = new Set([
+      by_author = xs.set([
         {
           id: "author"
         }
       ]);
-      by_year = new Set([
+      by_year = xs.set([
         {
           id: "year"
         }

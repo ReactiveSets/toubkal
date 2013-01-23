@@ -63,6 +63,8 @@ if require?
 chai = require 'chai' if require?
 chai?.should()
 
+xs = XS.xs
+
 Set = XS.Set
 
 describe 'XS test suite:', ->
@@ -189,25 +191,25 @@ describe 'XS test suite:', ->
       g( 1 ).should.be.eql 8
   
   describe 'XS.Set():', ->
-    set = new Set []
+    set = xs.set();
     
     it 'set should be a Set', ->
       set.should.be.an.instanceof Set
     
-    cities = new Set [
+    cities = xs.set [
       { id: 1, name: "Marrakech", country: "Morocco"  }
       { id: 2, name: "Mountain View", country: "USA", state: "California" }
       { id: 3, name: "Paris", country: "France" }
     ]
     
-    cars = new Set [
+    cars = xs.set [
           { id: 1, brand: "Mercedes", model: "C Class" }
           { id: 2, brand: "Mercedes", model: "S Class" }
           { id: 3, brand: "BMW"     , model: "M Serie" }
         ]
       , { key: [ "id", "model" ] }
     
-    employee = new XS.Set [
+    employee = xs.set [
       { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
       { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
       { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
@@ -235,7 +237,7 @@ describe 'XS test suite:', ->
       it 'cities.add( object ) should be a Set', ->
         cities.should.be.an.instanceof Set
       
-      result = new Set [
+      result = xs.set [
         { id: 1, name: "Marrakech", country: "Morocco"  }
         { id: 2, name: "Mountain View", country: "USA", state: "California" }
         { id: 3, name: "Paris", country: "France" }
@@ -268,7 +270,7 @@ describe 'XS test suite:', ->
         employee.get().should.be.equal employee.get()
       
       it 'employee.remove( [ { id: 1 } ] ) should be equal to result: first record', ->
-        result = new Set [
+        result = xs.set [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -281,7 +283,7 @@ describe 'XS test suite:', ->
         employee.get().should.be.eql result.get()
 
       it 'employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', ->
-        result = new Set [
+        result = xs.set [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -293,7 +295,7 @@ describe 'XS test suite:', ->
         employee.get().should.be.eql result.get()
       
       it 'employee.remove( [ { id: 6 } ] ) should be equal to result: last record', ->
-        result = new Set [
+        result = xs.set [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -313,7 +315,7 @@ describe 'XS test suite:', ->
         employee.get().should.be.equal employee.get()
       
       it 'employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', ->
-        result = new Set [
+        result = xs.set [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -531,7 +533,7 @@ describe 'XS test suite:', ->
         cities_in_morocco.get().should.be.eql result
       
     describe 'order():', ->
-      books = new Set [
+      books = xs.set [
         { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
         { id: 2, title: "The Lord of the Rings", author: "J. R. R. Tolkien", year: 1955 }
         { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
@@ -539,7 +541,7 @@ describe 'XS test suite:', ->
         { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
       ]
       
-      organizer = new Set [ { id: "year" } ]
+      organizer = xs.set [ { id: "year" } ]
       
       by_ascending_author  = ( a, b ) ->
         if ( a = a.author ) == ( b = b.author ) then return 0
@@ -559,7 +561,7 @@ describe 'XS test suite:', ->
       
       books_ordered_by_year = books.order organizer, { name: 'books_ordered_by_year' };
       
-      books_ordered_by_descending_year = books.order new Set( [ { id: "year", descending: true } ] ), { name: 'books_ordered_by_descending_year', insert_before: true };
+      books_ordered_by_descending_year = books.order xs.set( [ { id: "year", descending: true } ] ), { name: 'books_ordered_by_descending_year', insert_before: true };
       
       books_ordered_by_ascending_author  = books.order by_ascending_author , { name: 'books_ordered_by_ascending_author'  }
       books_ordered_by_descending_author = books.order by_descending_author, { name: 'books_ordered_by_descending_author', insert_before: true }
@@ -1089,7 +1091,7 @@ describe 'XS test suite:', ->
           ]
   
   describe 'XS.Aggregator():', ->
-    books_sales = new Set [
+    books_sales = xs.set [
       { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year: 1859 }
       { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year: 1955 }
       { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        80, year: 2003 }
@@ -1108,9 +1110,9 @@ describe 'XS test suite:', ->
       { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13             }
     ]
     
-    sales  = new Set [ { id: "sales"  } ]
-    by_author = new Set [ { id: "author" } ]
-    by_year   = new Set [ { id: "year"   } ]
+    sales  = xs.set [ { id: "sales"  } ]
+    by_author = xs.set [ { id: "author" } ]
+    by_year   = xs.set [ { id: "year"   } ]
     
     books_sales_by_author = books_sales.aggregate sales, by_author
     books_sales_by_year   = books_sales.aggregate sales, by_year
