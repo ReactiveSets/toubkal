@@ -3,6 +3,7 @@
 
 var XS = require( "../lib/xs.js" ).XS;
 require( "../lib/fork.js" );
+var xs = XS.xs;
 require( "../lib/proxy.js");
 
 // Set the stage
@@ -16,11 +17,11 @@ server.listen( process.env.PORT );
 XS.Proxy.server( server );
 
 // The fake publisher of the daily mirror has only one subscriber: The Dude.
-var daily_mirror = new XS.Set( null, "daily_mirror");
+var daily_mirror = new xs.set( null, "daily_mirror");
 // daily_mirror.proxy( "daily_mirror_for_the_dude" );
 
 // The true publisher of the daily mirror has many subscribers
-daily_mirror.publisher( "daily_mirror" );
+daily_mirror.publish( "daily_mirror" );
 
 // Let's add articles to the daily_mirror
 daily_mirror.add( [
@@ -35,7 +36,7 @@ XS.l8.task( function(){
     next_id++;
     this.sleep( 10 * 1000 );
   });
-});
+}).label = "daily_mirror acticle generator task"
 
 // daily_mirror.persistor( "daily_mirror.json")
 
@@ -62,7 +63,7 @@ function trace( tracer, model, operation, objects ){
 
 //daily_mirror_for_the_dude.tracer( { log: trace } );
 
-var subscriber = XS.void.subscriber( "daily_mirror", { url: server_url } );
+var subscriber = xs.subscribe( "daily_mirror", { url: server_url } );
 subscriber.source.tracer( { log: trace } );
 
 // subscriber.persistor( "daily_mirror_backup" )

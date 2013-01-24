@@ -1,6 +1,6 @@
 {
   "name": "excess",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Excess brings big data to the client side",
   "main": "lib/xs.js",
   "files": [ 
