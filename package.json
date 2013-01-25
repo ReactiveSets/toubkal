@@ -1,6 +1,6 @@
 {
   "name": "excess",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Excess brings big data to the client side",
   "main": "lib/xs.js",
   "files": [ 
@@ -23,7 +23,7 @@
     "chai":  "latest"
   },
   "scripts": {
-    "test": "ln -s ../. node_modules/excess ; echo \"run tests...\" ; mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee"
+    "test": "ln -s ../. node_modules/excess ; echo \"run tests...\" ; node test/server.js && mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee && node test/server.js"
   },
   "repository": {
     "type": "git",
