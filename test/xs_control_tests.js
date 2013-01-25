@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Control, Ordered_Set, Set, Table, XS, chai, checkbox, checkbox_source, options, organizer;
+  var Control, Ordered_Set, Set, Table, XS, chai, checkbox, checkbox_group, checkbox_group_source, checkbox_source, options, organizer;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -66,6 +66,12 @@
   });
 
   checkbox = checkbox_source.checkbox(document.getElementById("checkbox_control"), organizer, options);
+
+  checkbox_group_source = new Set([], {
+    name: "Checkbox Group Source"
+  });
+
+  checkbox_group = checkbox_group_source.checkbox_group(document.getElementById("checkbox_group_control"), organizer, {});
 
   describe('Checkbox():', function() {
     it('checkbox should be empty', function() {
@@ -185,6 +191,50 @@
           }
         ]);
         return checkbox.get().should.be.empty;
+      });
+    });
+  });
+
+  describe('Checkbox_Group():', function() {
+    it('checkbox_group should be empty', function() {
+      return checkbox_group.get().should.be.empty;
+    });
+    return describe('add():', function() {
+      return it('after checkbox_group_source.add( objects ), checkbox_group should be equal to result', function() {
+        checkbox_group_source.add([
+          {
+            id: 1,
+            label: "Photography",
+            checked: true
+          }, {
+            id: 2,
+            label: "Fishing"
+          }, {
+            id: 3,
+            label: "Playing Computer Games"
+          }, {
+            id: 4,
+            label: "Traveling"
+          }, {
+            id: 5,
+            label: "Cooking"
+          }, {
+            id: 6,
+            label: "Stamp / Coin Collection",
+            checked: true
+          }
+        ]);
+        return checkbox_group.get().should.be.eql([
+          {
+            id: 1,
+            label: "Photography",
+            checked: true
+          }, {
+            id: 6,
+            label: "Stamp / Coin Collection",
+            checked: true
+          }
+        ]);
       });
     });
   });
