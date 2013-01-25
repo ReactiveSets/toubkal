@@ -47,6 +47,9 @@ options         = { label: "Charts" }
 checkbox_source = new Ordered_Set [], organizer, { name: "Checkbox Source" }
 checkbox        = checkbox_source.checkbox document.getElementById( "checkbox_control" ), organizer, options
 
+checkbox_group_source = new Set [], { name: "Checkbox Group Source" }
+checkbox_group  = checkbox_group_source.checkbox_group document.getElementById( "checkbox_group_control" ), organizer, {}
+
 describe 'Checkbox():', ->
   it 'checkbox should be empty', ->
     checkbox.get().should.be.empty
@@ -93,5 +96,25 @@ describe 'Checkbox():', ->
       checkbox_source.remove [ { id: true, label: "Charts" } ]
       
       checkbox.get().should.be.empty
-  
+
+describe 'Checkbox_Group():', ->
+  it 'checkbox_group should be empty', ->
     
+    checkbox_group.get().should.be.empty
+  
+  describe 'add():', ->
+    it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
+      checkbox_group_source.add [
+        { id: 1, label: "Photography"            , checked: true }
+        { id: 2, label: "Fishing"                                }
+        { id: 3, label: "Playing Computer Games"                 }
+        { id: 4, label: "Traveling"                              }
+        { id: 5, label: "Cooking"                                }
+        { id: 6, label: "Stamp / Coin Collection", checked: true }
+      ]
+      
+      checkbox_group.get().should.be.eql [
+        { id: 1, label: "Photography"            , checked: true }
+        { id: 6, label: "Stamp / Coin Collection", checked: true }
+      ]
+      
