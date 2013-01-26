@@ -3341,12 +3341,6 @@
           }, {
             sales: 0,
             year: 1999
-          }, {
-            sales: 113,
-            year: void 0
-          }, {
-            sales: 60,
-            year: null
           }
         ]);
       });
