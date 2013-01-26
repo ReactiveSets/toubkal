@@ -48,9 +48,10 @@
     <script src="xs_table_tests.js"></script>
     
     <script type="text/javascript" charset="utf-8">
-      var organizer = [ { id: "id" } ]
-        , set       = new XS.Ordered_Set( [ { id: false, label: "Chart" }, { id: true, label: "Chart", column: "sales" } ], organizer )
-        , checkbox  = set.checkbox( document.getElementById( "checkbox_control" ), 
+      var xs = XS.xs
+        , organizer = [ { id: "id" } ]
+        , set       = xs.order( [ { id: false, label: "Chart" }, { id: true, label: "Chart", column: "sales" } ], organizer )
+        , checkbox  = set.checkbox( document.getElementById( "checkbox_control" ),
             [ { id: "id" } ],
             {
               // default_value: { id: true, label: "Label True" }
