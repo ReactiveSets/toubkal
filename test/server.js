@@ -1,10 +1,9 @@
 // server.js
 //  http server for tests
 
-var XS = require( "../lib/xs.js" ).XS;
-require( "../lib/fork.js" );
-var xs = XS.xs;
+var xs = require( "../lib/xs.js" ).XS;
 require( "../lib/proxy.js");
+var fluid = xs.fluid;
 
 // Set the stage
 var Http    = require( "http" );
@@ -14,12 +13,18 @@ app.use( Connect.static( 'public') );
 app.use( function( req, res ){ res.end( 'hello world\n' ) } );
 var server  = Http.createServer( app );
 server.listen( process.env.PORT );
-XS.Proxy.server( server );
+xs.Proxy.server( server );
 
-var debug_mode = false;
+var de   = xs.l8.de;
+var mand = xs.l8.mand;
+
+var debug_mode = false; // Interactive debug mode, ie when using a debugger
 
 // The fake publisher of the daily mirror has only one subscriber: The Dude.
-var daily_mirror = new xs.set( null, "daily_mirror");
+var daily_mirror = fluid.set( null, { name: "daily_mirror" } );
+de&&mand( daily_mirror.xs_class.name === "Set" );
+xs.l8.trace( "daily mirror is " + daily_mirror );
+de&&mand( !daily_mirror.is_void );
 // daily_mirror.proxy( "daily_mirror_for_the_dude" );
 
 // The true publisher of the daily mirror has many subscribers
@@ -31,13 +36,15 @@ daily_mirror.add( [
   { id: 2, text: "another story" }
 ] );
 
+var TEST_GOAL      = 25;
 var Articles_Count = 2;
 
-XS.l8.task( function(){
+xs.l8.task( function(){
+  this.set( "label", "daily_mirror acticle generator task" );
   var next_id = 3;  
   this.repeat( function(){
-    if( next_id >  100 ) this.break;
-    XS.l8.trace( "NEW ARTICLE (by publisher), " + next_id );
+    if( next_id > TEST_GOAL ) this.break;
+    xs.l8.trace( "NEW ARTICLE (by publisher), " + next_id );
     daily_mirror.add( [ { id: next_id, text: "article " + next_id } ] );
     Articles_Count++;
     next_id++;
@@ -46,8 +53,8 @@ XS.l8.task( function(){
     } else {
       this.sleep( 10 );
     }
-  }).failure( function( e ) { l8.trace( "Error on the publisher: ", e ); } );
-}).label = "daily_mirror acticle generator task";
+  }).failure( function( e ) { xs.log( "Error on the publisher:", e ); } );
+});
 
 // daily_mirror.persistor( "daily_mirror.json")
 
@@ -72,46 +79,57 @@ function trace( tracer, model, operation, objects ){
   }
   buf.push( "]" );
   buf = buf.join( "" );
-  XS.l8.trace( "!!!!! " + tracer, model.toString(), operation, buf );
+  xs.l8.trace( "!!!!! " + tracer, model.toString(), operation, buf );
 }
 
 //daily_mirror_for_the_dude.tracer( { log: trace } );
 
-var subscriber = xs.subscribe( "daily_mirror", { url: server_url } );
-subscriber.source.tracer( {
+var subscriber = fluid.subscribe( "daily_mirror", { url: server_url } );
+subscriber.tracer( {
   log:   trace,
   label: "Tracer for subscriber " + subscriber.source
 } );
 
-!debug_mode && XS.l8.task( function(){
+!debug_mode && xs.l8.task( function(){
+  this.set( "label", "subsciber additions task" );
   var next_id = 1;
-  this.step( function(){ this.sleep( 2000 ); } )
+  this.step( function(){ this.sleep( 2000 ); } );
   this.repeat( function(){
     if( next_id > 10 ) this.break;
     // ToDo: JHR, this does not work yet and may never be implemented.
     subscriber.propose_add( [ { id: next_id, text: "article oops " + next_id } ] );
     Articles_Count++;
-    XS.l8.trace( "NEW ARTICLE (by subscriber), " + next_id );
+    xs.l8.trace( "NEW ARTICLE (by subscriber), " + next_id );
     next_id++;
     this.sleep( 10 );
-  }).failure( function( e ) { XS.l8.trace( "Error on the subscriber: ", e ); } );
+  }).failure( function( e ){
+    xs.l8.trace( "Error on the subscriber's additions", e );
+  });
 });
 
-!debug_mode && XS.l8.task( function() {
-  this.step( function(){ this.sleep( 9 * 1000 ) } )
+!debug_mode && xs.l8.task( function() {
+  this.step( function(){ this.sleep( (TEST_GOAL / 5) * 1000 ) } );
   this.step( function(){
-    XS.l8.trace( "OK, let's check what the subscriber got: " + total_traces );
-    XS.l8.trace( "I was expecting " + Articles_Count );
+    xs.l8.trace( "OK, let's check what the subscriber got: " + total_traces );
+    xs.l8.trace( "I was expecting " + Articles_Count );
     if( total_traces === Articles_Count ){
-      XS.l8.trace( "SUCCESS!" );
+      xs.l8.trace( "SUCCESS!" );
       process.exit( 0 );
     }
-    XS.l8.trace( "FAILURE! too bad..." )
+    xs.l8.trace( "FAILURE! too bad..." );
     process.exit( 1 );
-  })
-})
+  } );
+} );
 
-XS.l8.countdown( debug_mode ? 1000 : 10 );
+xs.l8.countdown( debug_mode ? 1000 : TEST_GOAL / 4 );
+
+process.on( 'exit', function () {
+  xs.log( 'Bye bye.' );
+} );
+ 
+process.on( 'uncaughtException', function( err ) {
+  xs.log( err.stack.replace( /^    /gm, '                  ') );
+});
 
 // subscriber.persistor( "daily_mirror_backup" )
 
