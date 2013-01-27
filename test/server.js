@@ -12,7 +12,8 @@ var app     = Connect();
 app.use( Connect.static( 'public') );
 app.use( function( req, res ){ res.end( 'hello world\n' ) } );
 var server  = Http.createServer( app );
-server.listen( process.env.PORT );
+xs.l8.http_port = parseInt( process.env.PORT, 10) || 8080; // 80 requires sudo
+server.listen( xs.l8.http_port);
 xs.Proxy.server( server );
 
 var de   = xs.l8.de;
