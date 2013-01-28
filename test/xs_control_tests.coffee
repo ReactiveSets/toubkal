@@ -102,19 +102,53 @@ describe 'Checkbox_Group():', ->
     
     checkbox_group.get().should.be.empty
   
-  describe 'add():', ->
-    it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
-      checkbox_group_source.add [
-        { id: 1, label: "Photography"            , checked: true }
-        { id: 2, label: "Fishing"                                }
-        { id: 3, label: "Playing Computer Games"                 }
-        { id: 4, label: "Traveling"                              }
-        { id: 5, label: "Cooking"                                }
-        { id: 6, label: "Stamp / Coin Collection", checked: true }
-      ]
-      
-      checkbox_group.get().should.be.eql [
-        { id: 1, label: "Photography"            , checked: true }
-        { id: 6, label: "Stamp / Coin Collection", checked: true }
-      ]
+  it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
+    checkbox_group_source.add [
+      { id: 1, label: "Photography"            , checked: true }
+      { id: 2, label: "Fishing"                                }
+      { id: 3, label: "Playing Computer Games"                 }
+      { id: 4, label: "Traveling"              , checked: true }
+      { id: 5, label: "Cooking"                                }
+      { id: 6, label: "Stamp / Coin Collection", checked: true }
+    ]
+    
+    checkbox_group.get().should.be.eql [
+      { id: 1, label: "Photography"            , checked: true }
+      { id: 4, label: "Traveling"              , checked: true }
+      { id: 6, label: "Stamp / Coin Collection", checked: true }
+    ]
+  
+  it 'after checkbox_group_source.remove( object ), checkbox_group should be equal to result', ->
+    checkbox_group_source.remove [
+      { id: 3, label: "Playing Computer Games"                }
+      { id: 4, label: "Traveling"             , checked: true }
+    ]
+    
+    checkbox_group.get().should.be.eql [
+      { id: 1, label: "Photography"            , checked: true }
+      { id: 6, label: "Stamp / Coin Collection", checked: true }
+    ]
+  
+  it 'after checkbox_group_source.add( object ), checkbox_group should be equal to result', ->
+    checkbox_group_source.add [ { id: 7, label: "Pottery", checked: true }, { id: 8, label: "Gardening" } ]
+    
+    checkbox_group.get().should.be.eql [
+      { id: 1, label: "Photography"            , checked: true }
+      { id: 6, label: "Stamp / Coin Collection", checked: true }
+      { id: 7, label: "Pottery"                , checked: true }
+    ]
+  
+  it 'after checkbox_group_source.update( objects ), checkbox_group should be equal to result', ->
+    checkbox_group_source.update [
+      [ { id: 3, label: "Playing Computer Games" }, { id: 3, label: "Playing Video Games" } ]
+      [ { id: 7, label: "Pottery", checked: true }, { id: 7, label: "Pottery", checked: false } ]
+      [ { id: 8, label: "Gardening" }, { id: 8, label: "Gardening and Plants", checked: true } ]
+    ]
+    
+    checkbox_group.get().should.be.eql [
+      { id: 1, label: "Photography"            , checked: true }
+      { id: 6, label: "Stamp / Coin Collection", checked: true }
+      #{ id: 7, label: "Pottery"                , checked: true }
+      { id: 8, label: "Gardening and Plants"   , checked: true }
+    ]
       

@@ -199,43 +199,143 @@
     it('checkbox_group should be empty', function() {
       return checkbox_group.get().should.be.empty;
     });
-    return describe('add():', function() {
-      return it('after checkbox_group_source.add( objects ), checkbox_group should be equal to result', function() {
-        checkbox_group_source.add([
+    it('after checkbox_group_source.add( objects ), checkbox_group should be equal to result', function() {
+      checkbox_group_source.add([
+        {
+          id: 1,
+          label: "Photography",
+          checked: true
+        }, {
+          id: 2,
+          label: "Fishing"
+        }, {
+          id: 3,
+          label: "Playing Computer Games"
+        }, {
+          id: 4,
+          label: "Traveling",
+          checked: true
+        }, {
+          id: 5,
+          label: "Cooking"
+        }, {
+          id: 6,
+          label: "Stamp / Coin Collection",
+          checked: true
+        }
+      ]);
+      return checkbox_group.get().should.be.eql([
+        {
+          id: 1,
+          label: "Photography",
+          checked: true
+        }, {
+          id: 4,
+          label: "Traveling",
+          checked: true
+        }, {
+          id: 6,
+          label: "Stamp / Coin Collection",
+          checked: true
+        }
+      ]);
+    });
+    it('after checkbox_group_source.remove( object ), checkbox_group should be equal to result', function() {
+      checkbox_group_source.remove([
+        {
+          id: 3,
+          label: "Playing Computer Games"
+        }, {
+          id: 4,
+          label: "Traveling",
+          checked: true
+        }
+      ]);
+      return checkbox_group.get().should.be.eql([
+        {
+          id: 1,
+          label: "Photography",
+          checked: true
+        }, {
+          id: 6,
+          label: "Stamp / Coin Collection",
+          checked: true
+        }
+      ]);
+    });
+    it('after checkbox_group_source.add( object ), checkbox_group should be equal to result', function() {
+      checkbox_group_source.add([
+        {
+          id: 7,
+          label: "Pottery",
+          checked: true
+        }, {
+          id: 8,
+          label: "Gardening"
+        }
+      ]);
+      return checkbox_group.get().should.be.eql([
+        {
+          id: 1,
+          label: "Photography",
+          checked: true
+        }, {
+          id: 6,
+          label: "Stamp / Coin Collection",
+          checked: true
+        }, {
+          id: 7,
+          label: "Pottery",
+          checked: true
+        }
+      ]);
+    });
+    return it('after checkbox_group_source.update( objects ), checkbox_group should be equal to result', function() {
+      checkbox_group_source.update([
+        [
           {
-            id: 1,
-            label: "Photography",
-            checked: true
-          }, {
-            id: 2,
-            label: "Fishing"
-          }, {
             id: 3,
             label: "Playing Computer Games"
           }, {
-            id: 4,
-            label: "Traveling"
-          }, {
-            id: 5,
-            label: "Cooking"
-          }, {
-            id: 6,
-            label: "Stamp / Coin Collection",
-            checked: true
+            id: 3,
+            label: "Playing Video Games"
           }
-        ]);
-        return checkbox_group.get().should.be.eql([
+        ], [
           {
-            id: 1,
-            label: "Photography",
+            id: 7,
+            label: "Pottery",
             checked: true
           }, {
-            id: 6,
-            label: "Stamp / Coin Collection",
+            id: 7,
+            label: "Pottery",
+            checked: false
+          }
+        ], [
+          {
+            id: 8,
+            label: "Gardening"
+          }, {
+            id: 8,
+            label: "Gardening and Plants",
             checked: true
           }
-        ]);
-      });
+        ]
+      ]);
+      return checkbox_group.get().should.be.eql([
+        {
+          id: 1,
+          label: "Photography",
+          checked: true
+        }, {
+          id: 6,
+          label: "Stamp / Coin Collection",
+          checked: true
+        }, {
+          id: 8,
+          label: "Gardening and Plants",
+          checked: true
+        }
+      ]);
     });
   });
 
