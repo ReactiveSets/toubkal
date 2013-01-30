@@ -100,13 +100,7 @@
           }
         ]);
       });
-      it('checkbox.value should be equal to { id: true, label: "Label True" }', function() {
-        return checkbox.value.should.be.eql({
-          id: true,
-          label: "Label True"
-        });
-      });
-      it('after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]', function() {
+      return it('after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]', function() {
         checkbox_source.add([
           {
             id: false,
@@ -115,19 +109,10 @@
         ]);
         return checkbox.get().should.be.eql([
           {
-            id: false,
-            label: "Label False"
-          }, {
             id: true,
             label: "Label True"
           }
         ]);
-      });
-      return it('checkbox.value should be equal to { id: true, label: "Label True" }', function() {
-        return checkbox.value.should.be.eql({
-          id: true,
-          label: "Label True"
-        });
       });
     });
     describe('update():', function() {
@@ -153,9 +138,6 @@
         ]);
         return checkbox.get().should.be.eql([
           {
-            id: false,
-            label: "Charts"
-          }, {
             id: true,
             label: "Charts"
           }
@@ -176,12 +158,6 @@
             label: "Charts"
           }
         ]);
-      });
-      it('checkbox.value should be equal to { id: true, label: "Charts" }', function() {
-        return checkbox.value.should.be.eql({
-          id: true,
-          label: "Charts"
-        });
       });
       return it('after checkbox_source.remove( object ), checkbox should be empty', function() {
         checkbox_source.remove([

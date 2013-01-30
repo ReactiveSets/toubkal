@@ -63,17 +63,11 @@ describe 'Checkbox():', ->
     it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', ->
       checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
     
-    it 'checkbox.value should be equal to { id: true, label: "Label True" }', ->
-      checkbox.value.should.be.eql { id: true, label: "Label True" }
-    
     it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]', ->
       checkbox_source.add [ { id: false, label: "Label False" } ]
       
-      checkbox.get().should.be.eql [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]
+      checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
     
-    it 'checkbox.value should be equal to { id: true, label: "Label True" }', ->
-      checkbox.value.should.be.eql { id: true, label: "Label True" }
-  
   describe 'update():', ->
     it 'after checkbox_source.update( objects ) checkbox should be equal to [ { id: false, label: "Charts" }, { id: true, label: "Charts" } ]', ->
       checkbox_source.update [
@@ -81,16 +75,13 @@ describe 'Checkbox():', ->
         [ { id: false, label: "Label False" }, { id: false, label: "Charts" } ]
       ]
       
-      checkbox.get().should.be.eql [ { id: false, label: "Charts" }, { id: true, label: "Charts" } ]
+      checkbox.get().should.be.eql [ { id: true, label: "Charts" } ]
   
   describe 'remove():', ->
     it 'after checkbox_source.remove( object ), checkbox should be equal to [ { id: true, label: "Charts" } ]', ->
       checkbox_source.remove [ { id: false, label: "Charts" } ]
       
       checkbox.get().should.be.eql [ { id: true, label: "Charts" } ]
-    
-    it 'checkbox.value should be equal to { id: true, label: "Charts" }', ->
-      checkbox.value.should.be.eql { id: true, label: "Charts" }
     
     it 'after checkbox_source.remove( object ), checkbox should be empty', ->
       checkbox_source.remove [ { id: true, label: "Charts" } ]
