@@ -16,9 +16,6 @@
       chai.should();
     </script>
     
-    <script type="text/javascript" charset="utf-8" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="javascript/es5.js"></script>
-    
     <title>XS Table</title>
     
     <script type="text/javascript" charset="utf-8" src="../lib/xs.js"></script>
@@ -37,36 +34,12 @@
   </head>
   
   <body>
-    <div id="controls">
-      <div id="checkbox_control"></div>
-    </div>
-    <div id="checkbox_value"></div>
-    
     <div id="demo"></div>
     <div id="mocha"></div>
     
     <script src="xs_table_tests.js"></script>
     
     <script type="text/javascript" charset="utf-8">
-      var xs = XS.xs
-        , organizer = [ { id: "id" } ]
-        , set       = xs.order( [ { id: false, label: "Chart" }, { id: true, label: "Chart", column: "sales" } ], organizer )
-        , checkbox  = set.checkbox( document.getElementById( "checkbox_control" ),
-            [ { id: "id" } ],
-            {
-              // default_value: { id: true, label: "Label True" }
-              // label: "Charts"
-            }
-          )
-      ;
-      
-      checkbox.table( document.getElementById( "checkbox_value" )
-        , [ { id: 'id' }, { id: 'label' }, { id: 'column' } ]
-        , [ { id: 'id' } ]
-        , { caption: 'Checkbox Value' }
-      );
-      
-      set.update( [ [ { id: false, label: "Chart" }, { id: false, label: "No Chart" } ] ] );
     </script>
   </body>
 </html>
