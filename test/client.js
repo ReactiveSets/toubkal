@@ -1,5 +1,12 @@
 // client.js
-//  test http client, uses server.js defined http server
+//  test http client, uses server.js defined http server.
+//  this is a manual test, not an automatized one (for now).
+//  It can be use when server.js's debug_mode is set to true.
+//  usage:
+//    node test/server.js
+//    node test/client.js
+//  When things are ok, the client should display the articles published by
+//  the server.
 
 var l8 = require( "l8/lib/l8.js" );
 
@@ -11,10 +18,9 @@ try{
   l8.client = true;
 }
 
-var XS = require( "../lib/xs.js" ).XS;
-require( "../lib/fork.js" );
-require( "../lib/proxy.js" );
-var xs = XS.xs;
+var XS = require( "excess/lib/xs.js" ).XS;
+require( "excess/lib/proxy.js" );
+var xs = XS.fluid;
 
 // The Dude subscribe to the daily mirror
 //var daily_mirror_for_the_dude = XS.void.proxy( "daily_mirror_for_the_dude" );
@@ -42,6 +48,8 @@ var subscriber = xs.subscribe(
 );
 subscriber.tracer( { log: trace } );
 
+// Unimplemeted, propose_add() was a dead end attempt to have subscriber
+// change the content of their source.
 XS.l8.task( function(){
   var next_id = 1;
   this.repeat( function(){
@@ -54,4 +62,14 @@ XS.l8.task( function(){
 
 // subscriber.file( "daily_mirror_backup" )
 
-l8.countdown( 100 );
+// Exits with error after a while
+l8.countdown( 100, true );
+
+process.on( 'exit', function () {
+  xs.log( 'Client says "Bye bye."' );
+});
+ 
+process.on( 'uncaughtException', function( err ) {
+  xs.log( err.stack.replace( /^    /gm, '                  ') );
+});
+
