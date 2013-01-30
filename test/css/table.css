@@ -2,7 +2,9 @@
   table.css
 */
 
-.xs_table { width: 100%; }
+.xs_table {
+  border-collapse: collapse;
+}
 
 .xs_table td {
   border: 1px solid #000;
