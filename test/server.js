@@ -157,7 +157,7 @@ subscriber.trace( {
 l8.countdown( debug_mode ? 1000 : TEST_GOAL / 4, true );
 
 process.on( 'exit', function () {
-  xs.log( 'Server says "Bye bye."' );
+  xs.log( 'Publish/Subscribe test server says "Bye bye."' );
 } );
  
 process.on( 'uncaughtException', function( err ) {
