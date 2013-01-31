@@ -1,7 +1,7 @@
 {
   "name": "excess",
-  "version": "0.0.6",
-  "description": "Excess brings big data to the client side. It's push all the way down! Excess is a dataflow programming inspired client/server tool with a twist: it implements a unique game changing push solution, all the way from the database down to the client and back to the database. As a result, changes to the data are pushed to the clients in realtime, according to filters and authorizations, enabling fully reactive fast UIs.",
+  "version": "0.0.8",
+  "description": "Excess brings big data to the client side. It's push all the way down! Excess is a dataflow programming inspired client/server tool with a twist: it implements a unique game changing push solution, all the way from the database down to the client and back to the database. As a result, data changes  are pushed to the clients in realtime, according to filters and authorizations, enabling fully reactive fast UIs.",
   "main": "lib/xs.js",
   "files": [ 
     "lib",
@@ -12,7 +12,7 @@
     "test": "test"
   },
   "engines": {
-    "node": ">=0.6.0"
+    "node": ">=0.8.0"
   },
   "dependencies": {
     "connect":  ">=2.7.1",
@@ -25,7 +25,7 @@
   },
   "scripts": {
     "postinstall": "ln -s ../. node_modules/excess || true",
-    "test": "node test/server.js && mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee"
+    "test": "node test/server.js && node test/file.js && mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee"
   },
   "repository": {
     "type": "git",
@@ -39,12 +39,18 @@
     "flow control",
     "real time",
     "realtime",
-    "reactive",
-    "socketIo",
     "big data",
-    "push"
+    "push",
+    "pipe",
+    "stream",
+    "reactive",
+    "functional",
+    "functional reactive programming",
+    "socketio",
+    "websocket"
   ],
   "author": "ConnectedSets",
   "license": "AGPLv3"
 }
+
 
