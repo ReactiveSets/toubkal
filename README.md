@@ -1,6 +1,8 @@
 Connected Sets Excess
 =====================
 
+This is a work in progress, not ready for beta testing yet.
+
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
 Excess brings big data to the client side. It's push all the way down! Excess is a dataflow programming inspired client/server database with a twist: it implements a unique game changing push solution, all the way from the database down to the client and back to the database. As a result, changes to the data are pushed to the clients in realtime, according to filters and authorizations, enabling fully reactive fast UIs.
