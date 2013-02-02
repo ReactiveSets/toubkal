@@ -35,6 +35,8 @@ var de   = l8.de;
 var mand = l8.mand;
 
 var debug_mode = false; // Interactive debug mode, ie when using a debugger
+// In debug mode I increases all delays so that the test does not finish
+// early, while I am still using the debugger.
 
 /*
  *  Server side
@@ -50,7 +52,10 @@ de&&mand( !daily_mirror.is_void );
 // daily_mirror.proxy( "daily_mirror_for_the_dude" );
 
 // The true publisher of the daily mirror has many subscribers
-daily_mirror.publish( "daily_mirror" );
+var pub = daily_mirror.publish( "daily_mirror" );
+
+//var local_sub = pub.subscribe();
+//local_sub.trace( {name:"----- YEAH -----------"} );
 
 // Let's add initial articles to the daily_mirror
 daily_mirror.add( [
@@ -65,7 +70,8 @@ var Articles_Count = 2;
 l8.task( function(){
   this.set( "label", "daily_mirror acticle generator task" );
   var next_id = 3;  
-  l8.repeat( function(){
+  l8.step(function(){ l8.sleep( debug_mode ? 2000 : 100 );
+  }).repeat(function(){
     if( next_id > TEST_GOAL ) this.break;
     log( "NEW ARTICLE (by publisher), " + next_id );
     daily_mirror.add( [ { id: next_id, text: "article " + next_id } ] );
@@ -105,7 +111,7 @@ function trace( tracer, model, operation, objects ){
   }
   buf.push( "]" );
   buf = buf.join( "" );
-  log( "TRACER " + tracer, model.toString(), operation, buf );
+  l8.trace( "TRACER " + tracer, model.toString(), operation, buf );
 }
 
 //daily_mirror_for_the_dude.tracer( { log: trace } );
@@ -114,20 +120,22 @@ function trace( tracer, model, operation, objects ){
 var subscriber = fluid.subscribe( "daily_mirror", { url: server_url } );
 subscriber.trace( {
   log:   trace,
-  label: "Tracer for subscriber " + subscriber.source
+  label: "Tracer for subscriber " + subscriber
 } );
 
 // When publisher task is done, start a task where subscriber edit the
 // data. ToDo: this does not work yet, .propose_add() is not the correct
 // solution.
 !debug_mode && l8.task( function(){
-  this.set( "label", "subsciber additions task" );
+  this.set( "label", "subscriber additions task" );
   var next_id = 1;
   this.step( function(){ this.sleep( 2000 ); } );
   this.repeat( function(){
     if( next_id > 10 ) this.break;
     // ToDo: JHR, this does not work yet and may never be implemented.
-    subscriber.propose_add( [ { id: next_id, text: "article oops " + next_id } ] );
+    // subscriber.propose_add( [ { id: next_id, text: "article oops " + next_id } ] );
+    throw "Not fully implemented yet";
+    subscriber.add( [ { id: next_id, text: "article oops " + next_id } ] );
     Articles_Count++;
     log( "NEW ARTICLE (by subscriber), " + next_id );
     next_id++;
@@ -139,7 +147,7 @@ subscriber.trace( {
 
 // When every thing is done, check if test passed
 !debug_mode && l8.task( function() {
-  this.step( function(){ this.sleep( (TEST_GOAL / 5) * 1000 ) } );
+  this.step( function(){ this.sleep( (TEST_GOAL / 4) * 1000 ) } );
   this.step( function(){
     log( "OK, let's check what the subscriber got: " + total_traces );
     log( "the publisher says " + Articles_Count );
@@ -154,7 +162,7 @@ subscriber.trace( {
 } );
 
 // Start a countdown in case things go wrong silently
-l8.countdown( debug_mode ? 1000 : TEST_GOAL / 4, true );
+l8.countdown( debug_mode ? 1000 : TEST_GOAL / 3, true );
 
 process.on( 'exit', function () {
   xs.log( 'Publish/Subscribe test server says "Bye bye."' );
