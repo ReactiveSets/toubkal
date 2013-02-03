@@ -124,17 +124,13 @@ subscriber.trace( {
 } );
 
 // When publisher task is done, start a task where subscriber edit the
-// data. ToDo: this does not work yet, .propose_add() is not the correct
-// solution.
 !debug_mode && l8.task( function(){
   this.set( "label", "subscriber additions task" );
   var next_id = 1;
   this.step( function(){ this.sleep( 2000 ); } );
   this.repeat( function(){
     if( next_id > 10 ) this.break;
-    // ToDo: JHR, this does not work yet and may never be implemented.
-    // subscriber.propose_add( [ { id: next_id, text: "article oops " + next_id } ] );
-    throw "Not fully implemented yet";
+    throw "Not implemented yet";
     subscriber.add( [ { id: next_id, text: "article oops " + next_id } ] );
     Articles_Count++;
     log( "NEW ARTICLE (by subscriber), " + next_id );
