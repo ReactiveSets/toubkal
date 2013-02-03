@@ -25,7 +25,7 @@
   },
   "scripts": {
     "postinstall": "ln -s ../. node_modules/excess || true",
-    "test": "node test/server.js && node test/file.js && mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee"
+    "test": "mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee"
   },
   "repository": {
     "type": "git",
