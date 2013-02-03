@@ -64,7 +64,7 @@
 
   if (typeof require !== "undefined" && require !== null) {
     require('../lib/code.js');
-    require('../lib/fork.js');
+    require('../lib/pipelet.js');
     require('../lib/filter.js');
     require('../lib/ordered_set.js');
     require('../lib/aggregator.js');

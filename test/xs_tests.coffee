@@ -55,7 +55,7 @@ XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
 
 if require?
   require '../lib/code.js'
-  require '../lib/fork.js'
+  require '../lib/pipelet.js'
   require '../lib/filter.js'
   require '../lib/ordered_set.js'
   require '../lib/aggregator.js'
