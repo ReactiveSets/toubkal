@@ -15,8 +15,7 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "connect":  ">=2.7.1",
-    "l8":       "latest"
+    "connect":  ">=2.7.1"
   },
   "devDependencies": {
     "coffee-script": "~1.4.0",
