@@ -369,7 +369,45 @@
               id: 15
             }
           ]);
-          return employee.get().should.be.equal(employee.get());
+          return employee.get().should.be.eql([
+            {
+              id: 1,
+              name: "Stephen C. Cox",
+              salary: "$3000",
+              customer_id: "222",
+              order_id: "1222"
+            }, {
+              id: 2,
+              name: "Josephin Tan",
+              salary: "$1500",
+              customer_id: "223",
+              order_id: "1223"
+            }, {
+              id: 3,
+              name: "Joyce Ming",
+              salary: "$2000",
+              customer_id: "224",
+              order_id: "1224"
+            }, {
+              id: 4,
+              name: "James A. Pentel",
+              salary: "$1750",
+              customer_id: "225",
+              order_id: "1225"
+            }, {
+              id: 5,
+              name: "Alex Frog",
+              salary: "$3000",
+              customer_id: "226",
+              order_id: "1226"
+            }, {
+              id: 6,
+              name: "Tim Hancook",
+              salary: "$1500",
+              customer_id: "227",
+              order_id: "1227"
+            }
+          ]);
         });
         it('employee.remove( [ { id: 1 } ] ) should be equal to result: first record', function() {
           var result;
@@ -500,7 +538,27 @@
               }
             ]
           ]);
-          return employee.get().should.be.equal(employee.get());
+          return employee.get().should.be.eql([
+            {
+              id: 2,
+              name: "Josephin Tan",
+              salary: "$1500",
+              customer_id: "223",
+              order_id: "1223"
+            }, {
+              id: 3,
+              name: "Joyce Ming",
+              salary: "$2000",
+              customer_id: "224",
+              order_id: "1224"
+            }, {
+              id: 4,
+              name: "James A. Pentel",
+              salary: "$1750",
+              customer_id: "225",
+              order_id: "1225"
+            }
+          ]);
         });
         return it('employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', function() {
           var result;
