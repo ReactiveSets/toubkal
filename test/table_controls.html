@@ -25,6 +25,10 @@
     <div id="checkbox"></div>
     <div id="checkbox_table"></div>
     
+    <h3>Radio</h3>
+    <div id="radio"></div>
+    <div id="radio_table"></div>
+    
     <h3>Checkbox Group</h3>
     <div id="checkbox_group"></div>
     <div id="books"></div>
@@ -62,9 +66,23 @@
           ], { name: "Columns" } )
           
         , columns = columns_set.checkbox_group( document.getElementById( "checkbox_group" ), organizer )
+        
+        , radio_set = new XS.Set( [
+            { id: 1, label: "Islam"        },
+            { id: 2, label: "Christianity" },
+            { id: 3, label: "Judaism"      },
+            { id: 4, label: "Buddhism"     },
+            { id: 5, label: "Hinduism"     },
+            { id: 6, label: "Satanism"     },
+            { id: 7, label: "Atheism"      },
+            { id: 8, label: "Rastafari"    }
+          ] )
+        
+        , radio = radio_set.radio( document.getElementById( "radio" ), organizer, {} )
       ;
       
       checkbox.table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Checkbox Value" } );
+      radio.table( document.getElementById( "radio_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Radio Value" } );
       
       books.table( document.getElementById( "books" ), columns, organizer, { caption: "List of the best-selling books (source: wikipedia)" } );
     </script>

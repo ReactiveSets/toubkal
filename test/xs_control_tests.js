@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Control, Ordered_Set, Set, Table, XS, chai, checkbox, checkbox_group, checkbox_group_source, checkbox_source, options, organizer;
+  var Control, Ordered_Set, Set, Table, XS, chai, checkbox, checkbox_group, checkbox_group_source, checkbox_source, options, organizer, radio, radio_source;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -72,6 +72,17 @@
   });
 
   checkbox_group = checkbox_group_source.checkbox_group(document.getElementById("checkbox_group_control"), organizer, {});
+
+  radio_source = new Set([], {
+    name: "Radio Source"
+  });
+
+  radio = radio_source.radio(document.getElementById("radio_control"), organizer, {
+    default_value: {
+      id: 1,
+      label: "Islam"
+    }
+  });
 
   describe('Checkbox():', function() {
     it('checkbox should be empty', function() {
@@ -216,7 +227,7 @@
         }
       ]);
     });
-    it('after checkbox_group_source.remove( object ), checkbox_group should be equal to result', function() {
+    it('after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', function() {
       checkbox_group_source.remove([
         {
           id: 3,
@@ -309,6 +320,103 @@
         }, {
           id: 8,
           label: "Gardening and Plants",
+          checked: true
+        }
+      ]);
+    });
+  });
+
+  describe('Radio():', function() {
+    it('radio should be empty', function() {
+      return radio.get().should.be.empty;
+    });
+    it('after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', function() {
+      radio_source.add([
+        {
+          id: 1,
+          label: "Islam",
+          checked: true
+        }, {
+          id: 2,
+          label: "Christianity"
+        }, {
+          id: 3,
+          label: "Judaism"
+        }, {
+          id: 4,
+          label: "Buddhism"
+        }, {
+          id: 5,
+          label: "Hinduism"
+        }, {
+          id: 6,
+          label: "Satanism"
+        }, {
+          id: 7,
+          label: "Atheism"
+        }, {
+          id: 8,
+          label: "Rastafari"
+        }
+      ]);
+      return radio.get().should.be.eql([
+        {
+          id: 1,
+          label: "Islam",
+          checked: true
+        }
+      ]);
+    });
+    it('after radio_source.remove( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', function() {
+      radio_source.remove([
+        {
+          id: 5,
+          label: "Hinduism"
+        }
+      ]);
+      return radio.get().should.be.eql([
+        {
+          id: 1,
+          label: "Islam",
+          checked: true
+        }
+      ]);
+    });
+    return it('after radio_source.update( objects ), radio should be equal to [ { id: 8, label: "Rastafari", checked: true } ]', function() {
+      radio_source.update([
+        [
+          {
+            id: 6,
+            label: "Satanism"
+          }, {
+            id: 6,
+            label: "Hinduism"
+          }
+        ], [
+          {
+            id: 8,
+            label: "Rastafari"
+          }, {
+            id: 8,
+            label: "Rastafari",
+            checked: true
+          }
+        ], [
+          {
+            id: 1,
+            label: "Islam",
+            checked: true
+          }, {
+            id: 1,
+            label: "Islam",
+            checked: false
+          }
+        ]
+      ]);
+      return radio.get().should.be.eql([
+        {
+          id: 8,
+          label: "Rastafari",
           checked: true
         }
       ]);

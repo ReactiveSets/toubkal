@@ -50,6 +50,9 @@ checkbox        = checkbox_source.checkbox document.getElementById( "checkbox_co
 checkbox_group_source = new Set [], { name: "Checkbox Group Source" }
 checkbox_group  = checkbox_group_source.checkbox_group document.getElementById( "checkbox_group_control" ), organizer, {}
 
+radio_source = new Set [], { name: "Radio Source" }
+radio        = radio_source.radio document.getElementById( "radio_control" ), organizer, { default_value: { id: 1, label: "Islam" } }
+
 describe 'Checkbox():', ->
   it 'checkbox should be empty', ->
     checkbox.get().should.be.empty
@@ -109,7 +112,7 @@ describe 'Checkbox_Group():', ->
       { id: 6, label: "Stamp / Coin Collection", checked: true }
     ]
   
-  it 'after checkbox_group_source.remove( object ), checkbox_group should be equal to result', ->
+  it 'after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.remove [
       { id: 3, label: "Playing Computer Games"                }
       { id: 4, label: "Traveling"             , checked: true }
@@ -142,4 +145,37 @@ describe 'Checkbox_Group():', ->
       #{ id: 7, label: "Pottery"                , checked: true }
       { id: 8, label: "Gardening and Plants"   , checked: true }
     ]
-      
+
+describe 'Radio():', ->
+  it 'radio should be empty', ->
+  
+    radio.get().should.be.empty
+  
+  it 'after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
+    radio_source.add [
+      { id: 1, label: "Islam"       , checked: true }
+      { id: 2, label: "Christianity" }
+      { id: 3, label: "Judaism"      }
+      { id: 4, label: "Buddhism"     }
+      { id: 5, label: "Hinduism"     }
+      { id: 6, label: "Satanism"     }
+      { id: 7, label: "Atheism"      }
+      { id: 8, label: "Rastafari"    }
+    ]
+    
+    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
+  
+  it 'after radio_source.remove( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
+    radio_source.remove [ { id: 5, label: "Hinduism" } ]
+    
+    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
+  
+  it 'after radio_source.update( objects ), radio should be equal to [ { id: 8, label: "Rastafari", checked: true } ]', ->
+    radio_source.update [
+      [ { id: 6, label: "Satanism" }, { id: 6, label: "Hinduism" } ]
+      [ { id: 8, label: "Rastafari" }, { id: 8, label: "Rastafari", checked: true } ]
+      [ { id: 1, label: "Islam", checked: true }, { id: 1, label: "Islam", checked: false } ]
+    ]
+    
+    radio.get().should.be.eql [ { id: 8, label: "Rastafari", checked: true } ]
+  
