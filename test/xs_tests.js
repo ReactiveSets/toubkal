@@ -3204,7 +3204,7 @@
       });
     });
     return describe('XS.Aggregator():', function() {
-      var books_sales, books_sales_by_author, books_sales_by_year, by_author, by_year, sales;
+      var aggregate_from, books_sales, books_sales_by_author, books_sales_by_year, by_author, by_year, sales, tolkien_books, tolkien_sales_by_year;
       books_sales = xs.set([
         {
           id: 1,
@@ -3320,6 +3320,14 @@
       ]);
       books_sales_by_author = books_sales.aggregate(sales, by_author);
       books_sales_by_year = books_sales.aggregate(sales, by_year);
+      aggregate_from = function(source, from, measures, dimensions, options) {
+        return source.filter(from, options).aggregate(measures, dimensions, options);
+      };
+      XS.Compose('aggregate_from', aggregate_from);
+      tolkien_books = function(book, options) {
+        return book.author === 'J. R. R. Tolkien';
+      };
+      tolkien_sales_by_year = books_sales.aggregate_from(tolkien_books, sales, by_year);
       it('books_sales_by_author should by grouped by author', function() {
         return books_sales_by_author.get().should.be.eql([
           {
@@ -3367,7 +3375,7 @@
           }
         ]);
       });
-      return it('books_sales_by_year should by grouped by year', function() {
+      it('books_sales_by_year should by grouped by year', function() {
         return books_sales_by_year.get().should.be.eql([
           {
             sales: 200,
@@ -3399,6 +3407,17 @@
           }, {
             sales: 0,
             year: 1999
+          }
+        ]);
+      });
+      return it('tolkien_sales_by_year should by grouped by year', function() {
+        return tolkien_sales_by_year.get().should.be.eql([
+          {
+            sales: 150,
+            year: 1955
+          }, {
+            sales: 100,
+            year: 1937
           }
         ]);
       });

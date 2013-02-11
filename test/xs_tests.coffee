@@ -1128,7 +1128,17 @@ describe 'XS test suite:', ->
     books_sales_by_author = books_sales.aggregate sales, by_author
     books_sales_by_year   = books_sales.aggregate sales, by_year
     
-    it 'books_sales_by_author should by grouped by author', ->
+    aggregate_from = ( source, from, measures, dimensions, options ) ->
+      return source.filter( from, options ).aggregate( measures, dimensions, options )
+    
+    XS.Compose 'aggregate_from', aggregate_from
+    
+    tolkien_books = ( book, options ) ->
+      return book.author is 'J. R. R. Tolkien'
+    
+    tolkien_sales_by_year = books_sales.aggregate_from tolkien_books, sales, by_year 
+    
+    it 'books_sales_by_author should be grouped by author', ->
       books_sales_by_author.get().should.be.eql [
         { author: "Charles Dickens"        , sales: 200 }
         { author: "J. R. R. Tolkien"       , sales: 250 }
@@ -1146,7 +1156,7 @@ describe 'XS test suite:', ->
         { author: "Roald Dahl"             , sales:  13 }
       ]
     
-    it 'books_sales_by_year should by grouped by year', ->
+    it 'books_sales_by_year should be grouped by year', ->
       books_sales_by_year.get().should.be.eql [
         { sales:       200, year: 1859 }
         { sales:       200, year: 1955 }
@@ -1163,5 +1173,8 @@ describe 'XS test suite:', ->
       #  { sales:        60, year: null }
       ]
     
-    
-    
+    it 'tolkien_sales_by_year should be grouped by year', ->
+      tolkien_sales_by_year.get().should.be.eql [
+        { sales:       150, year: 1955 }
+        { sales:       100, year: 1937 }
+      ]
