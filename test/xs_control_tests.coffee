@@ -59,7 +59,6 @@ radio        = radio_source.radio document.getElementById( "radio_control" )
 drop_down_source = xs.order [ { id: "id" } ], { name: "Drop Down Source" }
 drop_down        = drop_down_source.drop_down document.getElementById( "drop_down_control" )
 
-
 describe 'Checkbox():', ->
   it 'checkbox should be empty', ->
     checkbox.get().should.be.empty
@@ -227,7 +226,7 @@ describe 'Drop_Down():', ->
   it 'after drop_down_source.update( objects ), drop_down should be equal to [ { id: 7, label: "Madagascar" } ]', ->
     drop_down_source.update [
       [ { id: 8, label: "Madagascar" }, { id: 8, label: "Madagascar", selected: true } ]
-      [ { id: 6, label: "Portugal"   }, { id: 9, label: "Germany" } ]
+      [ { id: 6, label: "Portugal"   }, { id: 5, label: "Germany" } ]
       [ { id: 4, label: "Japan"      }, { id: 4, label: "Italy" } ]
     ]
     
