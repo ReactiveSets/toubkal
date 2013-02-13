@@ -89,247 +89,101 @@
 
   drop_down = drop_down_source.drop_down(document.getElementById("drop_down_control"));
 
-  describe('Checkbox():', function() {
-    it('checkbox should be empty', function() {
-      return checkbox.get().should.be.empty;
-    });
-    describe('add():', function() {
-      it('after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', function() {
-        checkbox_source.add([
-          {
-            id: true,
-            label: "Label True"
-          }
-        ]);
-        return checkbox_source.get().should.be.eql([
-          {
-            id: true,
-            label: "Label True"
-          }
-        ]);
-      });
-      it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
-        return checkbox.get().should.be.eql([
-          {
-            id: true,
-            label: "Label True"
-          }
-        ]);
-      });
-      return it('after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]', function() {
-        checkbox_source.add([
-          {
-            id: false,
-            label: "Label False"
-          }
-        ]);
-        return checkbox.get().should.be.eql([
-          {
-            id: true,
-            label: "Label True"
-          }
-        ]);
-      });
-    });
-    describe('update():', function() {
-      return it('after checkbox_source.update( objects ) checkbox should be equal to [ { id: false, label: "Charts" }, { id: true, label: "Charts" } ]', function() {
-        checkbox_source.update([
-          [
-            {
-              id: true,
-              label: "Label True"
-            }, {
-              id: true,
-              label: "Charts"
-            }
-          ], [
-            {
-              id: false,
-              label: "Label False"
-            }, {
-              id: false,
-              label: "Charts"
-            }
-          ]
-        ]);
-        return checkbox.get().should.be.eql([
-          {
-            id: true,
-            label: "Charts"
-          }
-        ]);
-      });
-    });
-    return describe('remove():', function() {
-      it('after checkbox_source.remove( object ), checkbox should be equal to [ { id: true, label: "Charts" } ]', function() {
-        checkbox_source.remove([
-          {
-            id: false,
-            label: "Charts"
-          }
-        ]);
-        return checkbox.get().should.be.eql([
-          {
-            id: true,
-            label: "Charts"
-          }
-        ]);
-      });
-      return it('after checkbox_source.remove( object ), checkbox should be empty', function() {
-        checkbox_source.remove([
-          {
-            id: true,
-            label: "Charts"
-          }
-        ]);
-        return checkbox.get().should.be.empty;
-      });
-    });
-  });
-
-  describe('Checkbox_Group():', function() {
-    it('checkbox_group should be empty', function() {
-      return checkbox_group.get().should.be.empty;
-    });
-    it('after checkbox_group_source.add( objects ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.add([
-        {
-          id: 1,
-          label: "Photography",
-          checked: true
-        }, {
-          id: 2,
-          label: "Fishing"
-        }, {
-          id: 3,
-          label: "Playing Computer Games"
-        }, {
-          id: 4,
-          label: "Traveling",
-          checked: true
-        }, {
-          id: 5,
-          label: "Cooking"
-        }, {
-          id: 6,
-          label: "Stamp / Coin Collection",
-          checked: true
-        }
-      ]);
-      return checkbox_group.get().should.be.eql([
-        {
-          id: 1,
-          label: "Photography",
-          checked: true
-        }, {
-          id: 4,
-          label: "Traveling",
-          checked: true
-        }, {
-          id: 6,
-          label: "Stamp / Coin Collection",
-          checked: true
-        }
-      ]);
-    });
-    it('after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.remove([
-        {
-          id: 3,
-          label: "Playing Computer Games"
-        }, {
-          id: 4,
-          label: "Traveling",
-          checked: true
-        }
-      ]);
-      return checkbox_group.get().should.be.eql([
-        {
-          id: 1,
-          label: "Photography",
-          checked: true
-        }, {
-          id: 6,
-          label: "Stamp / Coin Collection",
-          checked: true
-        }
-      ]);
-    });
-    it('after checkbox_group_source.add( object ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.add([
-        {
-          id: 7,
-          label: "Pottery",
-          checked: true
-        }, {
-          id: 8,
-          label: "Gardening"
-        }
-      ]);
-      return checkbox_group.get().should.be.eql([
-        {
-          id: 1,
-          label: "Photography",
-          checked: true
-        }, {
-          id: 6,
-          label: "Stamp / Coin Collection",
-          checked: true
-        }, {
-          id: 7,
-          label: "Pottery",
-          checked: true
-        }
-      ]);
-    });
-    return it('after checkbox_group_source.update( objects ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.update([
-        [
-          {
-            id: 3,
-            label: "Playing Computer Games"
-          }, {
-            id: 3,
-            label: "Playing Video Games"
-          }
-        ], [
-          {
-            id: 7,
-            label: "Pottery",
-            checked: true
-          }, {
-            id: 7,
-            label: "Pottery",
-            checked: false
-          }
-        ], [
-          {
-            id: 8,
-            label: "Gardening"
-          }, {
-            id: 8,
-            label: "Gardening and Plants",
-            checked: true
-          }
+  /*
+  describe 'Checkbox():', ->
+    it 'checkbox should be empty', ->
+      checkbox.get().should.be.empty
+    
+    describe 'add():', ->
+      it 'after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', ->
+        checkbox_source.add [ { id: true, label: "Label True" } ]
+        
+        checkbox_source.get().should.be.eql [ { id: true, label: "Label True" } ]
+      
+      it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', ->
+        checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
+      
+      it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]', ->
+        checkbox_source.add [ { id: false, label: "Label False" } ]
+        
+        checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
+      
+    describe 'update():', ->
+      it 'after checkbox_source.update( objects ) checkbox should be equal to [ { id: false, label: "Charts" }, { id: true, label: "Charts" } ]', ->
+        checkbox_source.update [
+          [ { id: true, label: "Label True" }, { id: true, label: "Charts" } ]
+          [ { id: false, label: "Label False" }, { id: false, label: "Charts" } ]
         ]
-      ]);
-      return checkbox_group.get().should.be.eql([
-        {
-          id: 1,
-          label: "Photography",
-          checked: true
-        }, {
-          id: 6,
-          label: "Stamp / Coin Collection",
-          checked: true
-        }, {
-          id: 8,
-          label: "Gardening and Plants",
-          checked: true
-        }
-      ]);
-    });
-  });
+        
+        checkbox.get().should.be.eql [ { id: true, label: "Charts" } ]
+    
+    describe 'remove():', ->
+      it 'after checkbox_source.remove( object ), checkbox should be equal to [ { id: true, label: "Charts" } ]', ->
+        checkbox_source.remove [ { id: false, label: "Charts" } ]
+        
+        checkbox.get().should.be.eql [ { id: true, label: "Charts" } ]
+      
+      it 'after checkbox_source.remove( object ), checkbox should be empty', ->
+        checkbox_source.remove [ { id: true, label: "Charts" } ]
+        
+        checkbox.get().should.be.empty
+  
+  describe 'Checkbox_Group():', ->
+    it 'checkbox_group should be empty', ->
+      
+      checkbox_group.get().should.be.empty
+    
+    it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
+      checkbox_group_source.add [
+        { id: 1, label: "Photography"            , checked: true }
+        { id: 2, label: "Fishing"                                }
+        { id: 3, label: "Playing Computer Games"                 }
+        { id: 4, label: "Traveling"              , checked: true }
+        { id: 5, label: "Cooking"                                }
+        { id: 6, label: "Stamp / Coin Collection", checked: true }
+      ]
+      
+      checkbox_group.get().should.be.eql [
+        { id: 1, label: "Photography"            , checked: true }
+        { id: 4, label: "Traveling"              , checked: true }
+        { id: 6, label: "Stamp / Coin Collection", checked: true }
+      ]
+    
+    it 'after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', ->
+      checkbox_group_source.remove [
+        { id: 3, label: "Playing Computer Games"                }
+        { id: 4, label: "Traveling"             , checked: true }
+      ]
+      
+      checkbox_group.get().should.be.eql [
+        { id: 1, label: "Photography"            , checked: true }
+        { id: 6, label: "Stamp / Coin Collection", checked: true }
+      ]
+    
+    it 'after checkbox_group_source.add( object ), checkbox_group should be equal to result', ->
+      checkbox_group_source.add [ { id: 7, label: "Pottery", checked: true }, { id: 8, label: "Gardening" } ]
+      
+      checkbox_group.get().should.be.eql [
+        { id: 1, label: "Photography"            , checked: true }
+        { id: 6, label: "Stamp / Coin Collection", checked: true }
+        { id: 7, label: "Pottery"                , checked: true }
+      ]
+    
+    it 'after checkbox_group_source.update( objects ), checkbox_group should be equal to result', ->
+      checkbox_group_source.update [
+        [ { id: 3, label: "Playing Computer Games" }, { id: 3, label: "Playing Video Games" } ]
+        [ { id: 7, label: "Pottery", checked: true }, { id: 7, label: "Pottery", checked: false } ]
+        [ { id: 8, label: "Gardening" }, { id: 8, label: "Gardening and Plants", checked: true } ]
+      ]
+      
+      checkbox_group.get().should.be.eql [
+        { id: 1, label: "Photography"            , checked: true }
+        { id: 6, label: "Stamp / Coin Collection", checked: true }
+        #{ id: 7, label: "Pottery"                , checked: true }
+        { id: 8, label: "Gardening and Plants"   , checked: true }
+      ]
+  */
+
 
   describe('Radio():', function() {
     it('radio should be empty', function() {
@@ -347,12 +201,6 @@
         }, {
           id: 3,
           label: "Judaism"
-        }, {
-          id: 4,
-          label: "Buddhism"
-        }, {
-          id: 5,
-          label: "Hinduism"
         }, {
           id: 6,
           label: "Satanism"
@@ -375,6 +223,21 @@
     it('after radio_source.remove( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', function() {
       radio_source.remove([
         {
+          id: 6,
+          label: "Satanism"
+        }
+      ]);
+      return radio.get().should.be.eql([
+        {
+          id: 1,
+          label: "Islam",
+          checked: true
+        }
+      ]);
+    });
+    it('after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', function() {
+      radio_source.add([
+        {
           id: 5,
           label: "Hinduism"
         }
@@ -391,37 +254,18 @@
       radio_source.update([
         [
           {
-            id: 6,
-            label: "Satanism"
-          }, {
-            id: 6,
+            id: 5,
             label: "Hinduism"
-          }
-        ], [
-          {
-            id: 8,
-            label: "Rastafari"
           }, {
-            id: 8,
-            label: "Rastafari",
-            checked: true
-          }
-        ], [
-          {
-            id: 1,
-            label: "Islam",
-            checked: true
-          }, {
-            id: 1,
-            label: "Islam",
-            checked: false
+            id: 5,
+            label: "Buddhism"
           }
         ]
       ]);
       return radio.get().should.be.eql([
         {
-          id: 8,
-          label: "Rastafari",
+          id: 1,
+          label: "Islam",
           checked: true
         }
       ]);

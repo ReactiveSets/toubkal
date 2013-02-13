@@ -162,8 +162,6 @@ describe 'Radio():', ->
       { id: 1, label: "Islam"       , checked: true }
       { id: 2, label: "Christianity" }
       { id: 3, label: "Judaism"      }
-      { id: 4, label: "Buddhism"     }
-      { id: 5, label: "Hinduism"     }
       { id: 6, label: "Satanism"     }
       { id: 7, label: "Atheism"      }
       { id: 8, label: "Rastafari"    }
@@ -172,18 +170,25 @@ describe 'Radio():', ->
     radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
   
   it 'after radio_source.remove( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
-    radio_source.remove [ { id: 5, label: "Hinduism" } ]
+    radio_source.remove [ { id: 6, label: "Satanism" } ]
+    
+    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
+  
+  it 'after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
+    radio_source.add [
+      { id: 5, label: "Hinduism"     }
+    ]
     
     radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
   
   it 'after radio_source.update( objects ), radio should be equal to [ { id: 8, label: "Rastafari", checked: true } ]', ->
     radio_source.update [
-      [ { id: 6, label: "Satanism" }, { id: 6, label: "Hinduism" } ]
-      [ { id: 8, label: "Rastafari" }, { id: 8, label: "Rastafari", checked: true } ]
-      [ { id: 1, label: "Islam", checked: true }, { id: 1, label: "Islam", checked: false } ]
+      [ { id: 5, label: "Hinduism" }, { id: 5, label: "Buddhism" } ]
+      #[ { id: 8, label: "Rastafari" }, { id: 4, label: "Rastafari" } ]
+      #[ { id: 1, label: "Islam", checked: true }, { id: 1, label: "Islam", checked: false } ]
     ]
     
-    radio.get().should.be.eql [ { id: 8, label: "Rastafari", checked: true } ]
+    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
 
 describe 'Drop_Down():', ->
   it 'drop_down should be empty', ->
