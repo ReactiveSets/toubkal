@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Control, Ordered_Set, Set, Table, XS, chai, checkbox, checkbox_group, checkbox_group_source, checkbox_source, options, organizer, radio, radio_source;
+  var Ordered_Set, Set, Table, XS, chai, checkbox, checkbox_group, checkbox_group_source, checkbox_source, drop_down, drop_down_source, options, organizer, radio, radio_source, xs;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -49,7 +49,7 @@
 
   Ordered_Set = XS.Ordered_Set;
 
-  Control = XS.Control;
+  xs = XS.xs;
 
   organizer = [
     {
@@ -61,28 +61,33 @@
     label: "Charts"
   };
 
-  checkbox_source = new Ordered_Set([], organizer, {
+  checkbox_source = xs.order(organizer, {
     name: "Checkbox Source"
   });
 
-  checkbox = checkbox_source.checkbox(document.getElementById("checkbox_control"), organizer, options);
+  checkbox = checkbox_source.checkbox(document.getElementById("checkbox_control"), options);
 
-  checkbox_group_source = new Set([], {
+  checkbox_group_source = xs.order(organizer, {
     name: "Checkbox Group Source"
   });
 
-  checkbox_group = checkbox_group_source.checkbox_group(document.getElementById("checkbox_group_control"), organizer, {});
+  checkbox_group = checkbox_group_source.checkbox_group(document.getElementById("checkbox_group_control"));
 
-  radio_source = new Set([], {
+  radio_source = xs.order(organizer, {
     name: "Radio Source"
   });
 
-  radio = radio_source.radio(document.getElementById("radio_control"), organizer, {
-    default_value: {
-      id: 1,
-      label: "Islam"
+  radio = radio_source.radio(document.getElementById("radio_control"));
+
+  drop_down_source = xs.order([
+    {
+      id: "id"
     }
+  ], {
+    name: "Drop Down Source"
   });
+
+  drop_down = drop_down_source.drop_down(document.getElementById("drop_down_control"));
 
   describe('Checkbox():', function() {
     it('checkbox should be empty', function() {
@@ -418,6 +423,126 @@
           id: 8,
           label: "Rastafari",
           checked: true
+        }
+      ]);
+    });
+  });
+
+  describe('Drop_Down():', function() {
+    it('drop_down should be empty', function() {
+      return drop_down.get().should.be.empty;
+    });
+    it('after drop_down_source.add( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', function() {
+      drop_down_source.add([
+        {
+          id: 1,
+          label: "USA"
+        }, {
+          id: 2,
+          label: "Morocco"
+        }, {
+          id: 3,
+          label: "France"
+        }, {
+          id: 4,
+          label: "Japan"
+        }, {
+          id: 5,
+          label: "Spain"
+        }, {
+          id: 6,
+          label: "Portugal"
+        }, {
+          id: 8,
+          label: "Madagascar"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 1,
+          label: "USA"
+        }
+      ]);
+    });
+    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', function() {
+      drop_down_source.remove([
+        {
+          id: 2,
+          label: "Morocco"
+        }, {
+          id: 5,
+          label: "Spain"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 1,
+          label: "USA"
+        }
+      ]);
+    });
+    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]: remove selected object', function() {
+      drop_down_source.remove([
+        {
+          id: 1,
+          label: "USA"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 3,
+          label: "France"
+        }
+      ]);
+    });
+    it('after drop_down_source.add( object ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
+      drop_down_source.add([
+        {
+          id: 7,
+          label: "China"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 3,
+          label: "France"
+        }
+      ]);
+    });
+    return it('after drop_down_source.update( objects ), drop_down should be equal to [ { id: 7, label: "Madagascar" } ]', function() {
+      drop_down_source.update([
+        [
+          {
+            id: 8,
+            label: "Madagascar"
+          }, {
+            id: 8,
+            label: "Madagascar",
+            selected: true
+          }
+        ], [
+          {
+            id: 6,
+            label: "Portugal"
+          }, {
+            id: 5,
+            label: "Germany"
+          }
+        ], [
+          {
+            id: 4,
+            label: "Japan"
+          }, {
+            id: 4,
+            label: "Italy"
+          }
+        ]
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 8,
+          label: "Madagascar",
+          selected: true
         }
       ]);
     });
