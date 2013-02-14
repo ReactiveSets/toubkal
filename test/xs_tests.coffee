@@ -1101,7 +1101,7 @@ describe 'XS test suite:', ->
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
           ]
   
-  describe 'XS.Aggregator():', ->
+  describe 'xs.aggregate() and XS.Compose():', ->
     books_sales = xs.set [
       { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year: 1859 }
       { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year: 1955 }

@@ -3203,7 +3203,7 @@
         });
       });
     });
-    return describe('XS.Aggregator():', function() {
+    return describe('xs.aggregate() and XS.Compose():', function() {
       var aggregate_from, books_sales, books_sales_by_author, books_sales_by_year, by_author, by_year, sales, tolkien_books, tolkien_sales_by_year;
       books_sales = xs.set([
         {
