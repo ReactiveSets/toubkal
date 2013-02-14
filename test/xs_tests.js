@@ -271,11 +271,11 @@
           order_id: "1227"
         }
       ]);
-      describe('get():', function() {
-        it('set.get() should be empty', function() {
-          return set.get().should.be.eql([]);
+      describe('fetch_all():', function() {
+        it('set.fetch_all() should be empty', function() {
+          return set.fetch_all().should.be.eql([]);
         });
-        return it('cars.get() should be equal to result', function() {
+        return it('cars.fetch_all() should be equal to result', function() {
           var result;
           result = [
             {
@@ -292,7 +292,7 @@
               model: "M Serie"
             }
           ];
-          return cars.get().should.be.eql(result);
+          return cars.fetch_all().should.be.eql(result);
         });
       });
       describe('add():', function() {
@@ -328,7 +328,7 @@
           }
         ]);
         return it('cities.add( object ) should be equal to result', function() {
-          return cities.get().should.be.eql(result.get());
+          return cities.fetch_all().should.be.eql(result.fetch_all());
         });
       });
       describe('index_of():', function() {
@@ -361,7 +361,7 @@
             {
               id: 1
             }
-          ]).get().should.be.eql(set.get());
+          ]).fetch_all().should.be.eql(set.fetch_all());
         });
         it('employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', function() {
           employee.remove([
@@ -369,7 +369,7 @@
               id: 15
             }
           ]);
-          return employee.get().should.be.eql([
+          return employee.fetch_all().should.be.eql([
             {
               id: 1,
               name: "Stephen C. Cox",
@@ -449,7 +449,7 @@
               id: 1
             }
           ]);
-          return employee.get().should.be.eql(result.get());
+          return employee.fetch_all().should.be.eql(result.fetch_all());
         });
         it('employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', function() {
           var result;
@@ -485,7 +485,7 @@
               id: 5
             }
           ]);
-          return employee.get().should.be.eql(result.get());
+          return employee.fetch_all().should.be.eql(result.fetch_all());
         });
         return it('employee.remove( [ { id: 6 } ] ) should be equal to result: last record', function() {
           var result;
@@ -515,7 +515,7 @@
               id: 6
             }
           ]);
-          return employee.get().should.be.eql(result.get());
+          return employee.fetch_all().should.be.eql(result.fetch_all());
         });
       });
       describe('update():', function() {
@@ -526,7 +526,7 @@
                 id: 1
               }
             ]
-          ]).get().should.be.eql(set.get());
+          ]).fetch_all().should.be.eql(set.fetch_all());
         });
         it('employee.update( [ [ { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ] ] ) should be equal to employee: record with id 15 doesn\'t exist', function() {
           employee.update([
@@ -538,7 +538,7 @@
               }
             ]
           ]);
-          return employee.get().should.be.eql([
+          return employee.fetch_all().should.be.eql([
             {
               id: 2,
               name: "Josephin Tan",
@@ -596,7 +596,7 @@
               }
             ]
           ]);
-          return employee.get().should.be.eql(result.get());
+          return employee.fetch_all().should.be.eql(result.fetch_all());
         });
       });
       describe('filter():', function() {
@@ -609,7 +609,7 @@
           return cities_in_usa.should.be.an["instanceof"](XS.Pipelet);
         });
         it('cities_in_usa should only contain cities in USA', function() {
-          return cities_in_usa.get().should.be.eql([
+          return cities_in_usa.fetch_all().should.be.eql([
             {
               id: 2,
               name: "Mountain View",
@@ -642,7 +642,7 @@
                 state: "New York"
               }
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
           return it('cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', function() {
             var result;
@@ -676,7 +676,7 @@
                 state: 'Texas'
               }
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
         });
         describe('update', function() {
@@ -715,7 +715,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
           it('cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', function() {
             var result;
@@ -746,7 +746,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
           it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', function() {
             var result;
@@ -782,7 +782,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
           return it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', function() {
             var result;
@@ -817,7 +817,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
         });
         return describe('remove()', function() {
@@ -844,7 +844,7 @@
                 state: "California"
               }
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
           return it('cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', function() {
             var result;
@@ -868,7 +868,7 @@
                 country: "Italy"
               }
             ]);
-            return cities_in_usa.get().should.be.eql(result);
+            return cities_in_usa.fetch_all().should.be.eql(result);
           });
         });
       });
@@ -929,7 +929,7 @@
             }
           ];
           employee.notify(transaction);
-          return employee.get().should.be.eql(result);
+          return employee.fetch_all().should.be.eql(result);
         });
         it('remove(): employee.notify( transaction ) should be equal to result', function() {
           var result, transaction;
@@ -971,7 +971,7 @@
             }
           ];
           employee.notify(transaction);
-          return employee.get().should.be.eql(result);
+          return employee.fetch_all().should.be.eql(result);
         });
         it('update(): employee.notify( transaction ) should be equal to result', function() {
           var result, transaction;
@@ -1039,7 +1039,7 @@
             }
           ];
           employee.notify(transaction);
-          return employee.get().should.be.eql(result);
+          return employee.fetch_all().should.be.eql(result);
         });
         return it('filter(): cities.filter( is_in_morocco ) should be equal to result', function() {
           var cities_in_morocco, is_in_morocco, result, transaction;
@@ -1139,7 +1139,7 @@
               country: "Morocco"
             }
           ];
-          return cities_in_morocco.get().should.be.eql(result);
+          return cities_in_morocco.fetch_all().should.be.eql(result);
         });
       });
       return describe('order():', function() {
@@ -1224,7 +1224,7 @@
           insert_before: true
         });
         it('books_ordered_by_year should be ordered by ascending year', function() {
-          return books_ordered_by_year.get().should.be.eql([
+          return books_ordered_by_year.fetch_all().should.be.eql([
             {
               id: 1,
               title: "A Tale of Two Cities",
@@ -1254,7 +1254,7 @@
           ]);
         });
         it('books_ordered_by_descending_year should be ordered by descending year', function() {
-          return books_ordered_by_descending_year.get().should.be.eql([
+          return books_ordered_by_descending_year.fetch_all().should.be.eql([
             {
               id: 3,
               title: "The Da Vinci Code",
@@ -1284,7 +1284,7 @@
           ]);
         });
         it('books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', function() {
-          return books_ordered_by_ascending_author.get().should.be.eql([
+          return books_ordered_by_ascending_author.fetch_all().should.be.eql([
             {
               id: 1,
               title: "A Tale of Two Cities",
@@ -1314,7 +1314,7 @@
           ]);
         });
         it('books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', function() {
-          return books_ordered_by_descending_author.get().should.be.eql([
+          return books_ordered_by_descending_author.fetch_all().should.be.eql([
             {
               id: 4,
               title: "The Alchemist",
@@ -1353,7 +1353,7 @@
                 year: 2005
               }
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -1388,7 +1388,7 @@
             ]);
           });
           it('after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', function() {
-            return books_ordered_by_descending_year.get().should.be.eql([
+            return books_ordered_by_descending_year.fetch_all().should.be.eql([
               {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
@@ -1423,7 +1423,7 @@
             ]);
           });
           it('after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
-            return books_ordered_by_ascending_author.get().should.be.eql([
+            return books_ordered_by_ascending_author.fetch_all().should.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -1458,7 +1458,7 @@
             ]);
           });
           it('after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', function() {
-            return books_ordered_by_descending_author.get().should.be.eql([
+            return books_ordered_by_descending_author.fetch_all().should.be.eql([
               {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
@@ -1516,7 +1516,7 @@
                 year: 1999
               }
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -1571,7 +1571,7 @@
             ]);
           });
           it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', function() {
-            return books_ordered_by_descending_year.get().should.be.eql([
+            return books_ordered_by_descending_year.fetch_all().should.be.eql([
               {
                 id: 9,
                 title: "The Hunger Games",
@@ -1626,7 +1626,7 @@
             ]);
           });
           it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
-            return books_ordered_by_ascending_author.get().should.be.eql([
+            return books_ordered_by_ascending_author.fetch_all().should.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -1699,7 +1699,7 @@
                 year: 1955
               }
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -1769,7 +1769,7 @@
             ]);
           });
           it('after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', function() {
-            return books_ordered_by_descending_year.get().should.be.eql([
+            return books_ordered_by_descending_year.fetch_all().should.be.eql([
               {
                 id: 12,
                 title: "Breaking Dawn",
@@ -1856,7 +1856,7 @@
                 author: "Roald Dahl"
               }
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 14,
                 title: "And Then There Were None",
@@ -1940,7 +1940,7 @@
             ]);
           });
           it('after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function() {
-            return books_ordered_by_descending_year.get().should.be.eql([
+            return books_ordered_by_descending_year.fetch_all().should.be.eql([
               {
                 id: 12,
                 title: "Breaking Dawn",
@@ -2033,7 +2033,7 @@
                 }
               ]
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -2138,7 +2138,7 @@
                 ]
               }
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 14,
                 title: "And Then There Were None",
@@ -2222,7 +2222,7 @@
             ]);
           });
           it('books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
-            return books_ordered_by_ascending_author.get().should.be.eql([
+            return books_ordered_by_ascending_author.fetch_all().should.be.eql([
               {
                 id: 14,
                 title: "And Then There Were None",
@@ -2306,7 +2306,7 @@
             ]);
           });
           it('books_ordered_by_descending_author should be ordered by descending auhtor', function() {
-            return books_ordered_by_descending_author.get().should.be.eql([
+            return books_ordered_by_descending_author.fetch_all().should.be.eql([
               {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -2396,7 +2396,7 @@
                 id: "id"
               }
             ]);
-            return books_ordered_by_ascending_id.get().should.be.eql([
+            return books_ordered_by_ascending_id.fetch_all().should.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -2487,7 +2487,7 @@
                 descending: true
               }
             ]);
-            return books_ordered_by_ascending_id.get().should.be.eql([
+            return books_ordered_by_ascending_id.fetch_all().should.be.eql([
               {
                 id: 16,
                 title: "Charlie and the Chocolate Factory",
@@ -2588,7 +2588,7 @@
                 }
               ]
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 14,
                 title: "And Then There Were None",
@@ -2672,7 +2672,7 @@
             ]);
           });
           it('after books.update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', function() {
-            return books_ordered_by_descending_year.get().should.be.eql([
+            return books_ordered_by_descending_year.fetch_all().should.be.eql([
               {
                 id: 12,
                 title: "Breaking Dawn",
@@ -2871,7 +2871,7 @@
                 ]
               }
             ]);
-            return books_ordered_by_year.get().should.be.eql([
+            return books_ordered_by_year.fetch_all().should.be.eql([
               {
                 id: 15,
                 title: "Steps to Christ",
@@ -2956,7 +2956,7 @@
             ]);
           });
           return it('after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', function() {
-            return books_ordered_by_descending_year.get().should.be.eql([
+            return books_ordered_by_descending_year.fetch_all().should.be.eql([
               {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
@@ -3061,7 +3061,7 @@
                 year: void 0
               }
             ]);
-            return books_ordered_by_ascending_author.get().should.be.eql([
+            return books_ordered_by_ascending_author.fetch_all().should.be.eql([
               {
                 id: 14,
                 title: "And Then There Were None",
@@ -3131,7 +3131,7 @@
             ]);
           });
           return it('after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', function() {
-            return books_ordered_by_descending_author.get().should.be.eql([
+            return books_ordered_by_descending_author.fetch_all().should.be.eql([
               {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -3328,8 +3328,8 @@
         return book.author === 'J. R. R. Tolkien';
       };
       tolkien_sales_by_year = books_sales.aggregate_from(tolkien_books, sales, by_year);
-      it('books_sales_by_author should by grouped by author', function() {
-        return books_sales_by_author.get().should.be.eql([
+      it('books_sales_by_author should be grouped by author', function() {
+        return books_sales_by_author.fetch_all().should.be.eql([
           {
             author: "Charles Dickens",
             sales: 200
@@ -3375,8 +3375,8 @@
           }
         ]);
       });
-      it('books_sales_by_year should by grouped by year', function() {
-        return books_sales_by_year.get().should.be.eql([
+      it('books_sales_by_year should be grouped by year', function() {
+        return books_sales_by_year.fetch_all().should.be.eql([
           {
             sales: 200,
             year: 1859
@@ -3410,8 +3410,8 @@
           }
         ]);
       });
-      return it('tolkien_sales_by_year should by grouped by year', function() {
-        return tolkien_sales_by_year.get().should.be.eql([
+      return it('tolkien_sales_by_year should be grouped by year', function() {
+        return tolkien_sales_by_year.fetch_all().should.be.eql([
           {
             sales: 150,
             year: 1955
