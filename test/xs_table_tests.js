@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Ordered_Set, Set, Table, XS, books, chai, columns, from_HTML_to_object, node, organizer;
+  var XS, books, chai, columns, from_HTML_to_object, node, organizer, xs;
 
   from_HTML_to_object = function(node) {
     var align, cell, columns, data, i, j, o, rows, v, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2;
@@ -86,13 +86,9 @@
     chai.should();
   }
 
-  Set = XS.Set;
+  xs = XS.xs;
 
-  Table = XS.Table;
-
-  Ordered_Set = XS.Ordered_Set;
-
-  columns = new Set([
+  columns = xs.set([
     {
       id: "id",
       label: "ID"
@@ -107,7 +103,7 @@
     name: "Columns Set"
   });
 
-  organizer = new Set([
+  organizer = xs.set([
     {
       id: "title"
     }
@@ -115,7 +111,7 @@
     name: "Organizer: by title ascending"
   });
 
-  books = new Ordered_Set([
+  books = xs.set([
     {
       id: 1,
       title: "A Tale of Two Cities",
@@ -144,7 +140,7 @@
       year: 2003,
       language: "English"
     }
-  ], organizer, {
+  ]).order(organizer, {
     name: "Books"
   });
 

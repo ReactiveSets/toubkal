@@ -71,19 +71,17 @@ if require?
 chai = require 'chai' if require?
 chai?.should()
 
-Set         = XS.Set
-Table       = XS.Table
-Ordered_Set = XS.Ordered_Set
+xs = XS.xs
 
-columns   = new Set [ { id: "id", label: "ID" }, { id: "title", label: "Title" }, { id: "author", label: "Author" } ], { name: "Columns Set" }
-organizer = new Set [ { id: "title" } ], { name: "Organizer: by title ascending" }
+columns   = xs.set [ { id: "id", label: "ID" }, { id: "title", label: "Title" }, { id: "author", label: "Author" } ], { name: "Columns Set" }
+organizer = xs.set [ { id: "title" } ], { name: "Organizer: by title ascending" }
 
-books = new Ordered_Set [
+books = xs.set( [
   { id: 1, title: "A Tale of Two Cities"             , author: "Charles Dickens" , sales:       200, year: 1859, language: "English" }
   { id: 2, title: "The Lord of the Rings"            , author: "J. R. R. Tolkien", sales:       150, year: 1955, language: "English" }
   { id: 3, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"      , sales:        13            , language: "English" }
   { id: 4, title: "The Da Vinci Code"                , author: "Dan Brown"       , sales:        80, year: 2003, language: "English" }
-], organizer, { name: "Books" }
+] ).order( organizer, { name: "Books" } )
 
 books.table document.getElementById( "demo" ), columns, organizer, {caption: "List of the best-selling books (source: wikipedia)" }
 
