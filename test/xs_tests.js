@@ -67,7 +67,7 @@
     require('../lib/pipelet.js');
     require('../lib/filter.js');
     require('../lib/ordered_set.js');
-    require('../lib/aggregator.js');
+    require('../lib/aggregate.js');
   }
 
   if (typeof require !== "undefined" && require !== null) {

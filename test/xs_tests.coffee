@@ -58,7 +58,7 @@ if require?
   require '../lib/pipelet.js'
   require '../lib/filter.js'
   require '../lib/ordered_set.js'
-  require '../lib/aggregator.js'
+  require '../lib/aggregate.js'
 
 chai = require 'chai' if require?
 chai?.should()

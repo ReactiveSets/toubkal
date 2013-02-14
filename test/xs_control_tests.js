@@ -30,7 +30,7 @@
     require('../lib/pipelet.js');
     require('../lib/filter.js');
     require('../lib/ordered_set.js');
-    require('../lib/aggregator.js');
+    require('../lib/aggregate.js');
     require('../lib/table.js');
     require('../lib/control.js');
   }
@@ -81,7 +81,7 @@
 
   drop_down_source = xs.order([
     {
-      id: "label"
+      id: "id"
     }
   ], {
     name: "Drop Down Source"
@@ -371,9 +371,6 @@
         {
           id: 6,
           label: "Satanism"
-        }, {
-          id: 3,
-          label: "Judaism"
         }
       ]);
       return radio.get().should.be.eql([
@@ -403,35 +400,17 @@
       radio_source.update([
         [
           {
-            id: 8,
-            label: "Rastafari"
+            id: 5,
+            label: "Hinduism"
           }, {
-            id: 4,
-            label: "Rastafari"
-          }
-        ], [
-          {
-            id: 7,
-            label: "Atheism"
-          }, {
-            id: 7,
+            id: 5,
             label: "Buddhism"
-          }
-        ], [
-          {
-            id: 1,
-            label: "Islam",
-            checked: true
-          }, {
-            id: 10,
-            label: "Islam",
-            checked: true
           }
         ]
       ]);
       return radio.get().should.be.eql([
         {
-          id: 10,
+          id: 1,
           label: "Islam",
           checked: true
         }
@@ -443,12 +422,11 @@
     it('drop_down should be empty', function() {
       return drop_down.get().should.be.empty;
     });
-    it('after drop_down_source.add( objects ), drop_down should be equal to [ { id: 1, label: "USA", selected: true } ]', function() {
+    it('after drop_down_source.add( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', function() {
       drop_down_source.add([
         {
           id: 1,
-          label: "USA",
-          selected: true
+          label: "USA"
         }, {
           id: 2,
           label: "Morocco"
@@ -472,31 +450,11 @@
       return drop_down.get().should.be.eql([
         {
           id: 1,
-          label: "USA",
-          selected: true
+          label: "USA"
         }
       ]);
     });
-    it('after drop_down_source.add( objects ), drop_down should be equal to [ { id: 9, label: "Russia", selected: true } ]', function() {
-      drop_down_source.add([
-        {
-          id: 10,
-          label: "Canada"
-        }, {
-          id: 9,
-          label: "Russia",
-          selected: true
-        }
-      ]);
-      return drop_down.get().should.be.eql([
-        {
-          id: 9,
-          label: "Russia",
-          selected: true
-        }
-      ]);
-    });
-    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 10, label: "Canada" } ]', function() {
+    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', function() {
       drop_down_source.remove([
         {
           id: 2,
@@ -504,20 +462,30 @@
         }, {
           id: 5,
           label: "Spain"
-        }, {
-          id: 9,
-          label: "Russia",
-          selected: true
         }
       ]);
       return drop_down.get().should.be.eql([
         {
-          id: 10,
-          label: "Canada"
+          id: 1,
+          label: "USA"
         }
       ]);
     });
-    it('after drop_down_source.add( object ), drop_down should be equal to [ { id: 10, label: "Canada" } ]', function() {
+    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]: remove selected object', function() {
+      drop_down_source.remove([
+        {
+          id: 1,
+          label: "USA"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 3,
+          label: "France"
+        }
+      ]);
+    });
+    it('after drop_down_source.add( object ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
       drop_down_source.add([
         {
           id: 7,
@@ -526,12 +494,12 @@
       ]);
       return drop_down.get().should.be.eql([
         {
-          id: 10,
-          label: "Canada"
+          id: 3,
+          label: "France"
         }
       ]);
     });
-    return it('after drop_down_source.update( objects ), drop_down should be equal to [ { id: 8, label: "Madagascar" } ]', function() {
+    return it('after drop_down_source.update( objects ), drop_down should be equal to [ { id: 7, label: "Madagascar" } ]', function() {
       drop_down_source.update([
         [
           {
@@ -548,8 +516,7 @@
             label: "Portugal"
           }, {
             id: 5,
-            label: "Germany",
-            selected: true
+            label: "Germany"
           }
         ], [
           {
