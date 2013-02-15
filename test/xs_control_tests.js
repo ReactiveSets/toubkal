@@ -73,7 +73,11 @@
 
   checkbox_group = checkbox_group_source.checkbox_group(document.getElementById("checkbox_group_control"));
 
-  radio_source = xs.order(organizer, {
+  radio_source = xs.order([
+    {
+      id: "label"
+    }
+  ], {
     name: "Radio Source"
   });
 
@@ -81,7 +85,7 @@
 
   drop_down_source = xs.order([
     {
-      id: "id"
+      id: "label"
     }
   ], {
     name: "Drop Down Source"
@@ -449,8 +453,8 @@
       ]);
       return drop_down.get().should.be.eql([
         {
-          id: 1,
-          label: "USA"
+          id: 3,
+          label: "France"
         }
       ]);
     });
@@ -466,26 +470,26 @@
       ]);
       return drop_down.get().should.be.eql([
         {
-          id: 1,
-          label: "USA"
-        }
-      ]);
-    });
-    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]: remove selected object', function() {
-      drop_down_source.remove([
-        {
-          id: 1,
-          label: "USA"
-        }
-      ]);
-      return drop_down.get().should.be.eql([
-        {
           id: 3,
           label: "France"
         }
       ]);
     });
-    it('after drop_down_source.add( object ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
+    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', function() {
+      drop_down_source.remove([
+        {
+          id: 3,
+          label: "France"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 4,
+          label: "Japan"
+        }
+      ]);
+    });
+    it('after drop_down_source.add( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]', function() {
       drop_down_source.add([
         {
           id: 7,
@@ -494,8 +498,8 @@
       ]);
       return drop_down.get().should.be.eql([
         {
-          id: 3,
-          label: "France"
+          id: 4,
+          label: "Japan"
         }
       ]);
     });

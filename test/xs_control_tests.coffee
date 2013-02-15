@@ -40,9 +40,7 @@ chai?.should()
 Set         = XS.Set
 Table       = XS.Table
 Ordered_Set = XS.Ordered_Set
-#Control    = XS.Control
 xs          = XS.xs
-
 
 organizer       = [ { id: "id" } ]
 options         = { label: "Charts" }
@@ -52,11 +50,10 @@ checkbox        = checkbox_source.checkbox document.getElementById( "checkbox_co
 checkbox_group_source = xs.order organizer, { name: "Checkbox Group Source" }
 checkbox_group  = checkbox_group_source.checkbox_group document.getElementById( "checkbox_group_control" )
 
-radio_source = xs.order organizer, { name: "Radio Source" }
+radio_source = xs.order [ { id: "label" } ], { name: "Radio Source" }
 radio        = radio_source.radio document.getElementById( "radio_control" )
 
-
-drop_down_source = xs.order [ { id: "id" } ], { name: "Drop Down Source" }
+drop_down_source = xs.order [ { id: "label" } ], { name: "Drop Down Source" }
 drop_down        = drop_down_source.drop_down document.getElementById( "drop_down_control" )
 
 describe 'Checkbox():', ->
@@ -206,7 +203,7 @@ describe 'Drop_Down():', ->
       { id: 8, label: "Madagascar" }
     ]
     
-    drop_down.get().should.be.eql [ { id: 1, label: "USA" } ]  
+    drop_down.get().should.be.eql [ { id: 3, label: "France" } ]  
   
   it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', ->
     drop_down_source.remove [
@@ -214,19 +211,19 @@ describe 'Drop_Down():', ->
       { id: 5, label: "Spain"   }
     ]
     
-    drop_down.get().should.be.eql [ { id: 1, label: "USA" } ]
+    drop_down.get().should.be.eql [ { id: 3, label: "France" } ]
   
-  it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]: remove selected object', ->
+  it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', ->
     drop_down_source.remove [
-      { id: 1, label: "USA" }
+      { id: 3, label: "France" }
     ]
     
-    drop_down.get().should.be.eql [ { id: 3, label: "France" } ]
+    drop_down.get().should.be.eql [ { id: 4, label: "Japan" } ]
   
-  it 'after drop_down_source.add( object ), drop_down should be equal to [ { id: 3, label: "France" } ]', ->
+  it 'after drop_down_source.add( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]', ->
     drop_down_source.add [ { id: 7, label: "China" } ]
   
-    drop_down.get().should.be.eql [ { id: 3, label: "France" } ]
+    drop_down.get().should.be.eql [ { id: 4, label: "Japan" } ]
   
   it 'after drop_down_source.update( objects ), drop_down should be equal to [ { id: 7, label: "Madagascar" } ]', ->
     drop_down_source.update [
