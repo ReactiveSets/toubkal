@@ -64,7 +64,7 @@ if require?
   require '../lib/code.js'
   require '../lib/pipelet.js'
   require '../lib/filter.js'
-  require '../lib/ordered_set.js'
+  require '../lib/order.js'
   require '../lib/aggregate.js'
   require '../lib/table.js'
 
