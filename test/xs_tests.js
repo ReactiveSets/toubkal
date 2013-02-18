@@ -1206,7 +1206,7 @@
         };
         books_ordered_by_year = books.order(organizer, {
           name: 'books_ordered_by_year'
-        }).ordered();
+        }).ordered().ordered();
         books_ordered_by_descending_year = books.order(xs.set([
           {
             id: "year",
@@ -1215,14 +1215,14 @@
         ]), {
           name: 'books_ordered_by_descending_year',
           insert_before: true
-        }).ordered();
+        }).ordered().ordered();
         books_ordered_by_ascending_author = books.order(by_ascending_author, {
           name: 'books_ordered_by_ascending_author'
-        }).ordered();
+        }).ordered().ordered();
         books_ordered_by_descending_author = books.order(by_descending_author, {
           name: 'books_ordered_by_descending_author',
           insert_before: true
-        }).ordered();
+        }).ordered().ordered();
         it('books_ordered_by_year should be ordered by ascending year', function() {
           return books_ordered_by_year.fetch_all().should.be.eql([
             {
@@ -2395,7 +2395,7 @@
               {
                 id: "id"
               }
-            ]).ordered();
+            ]).ordered().ordered();
             return books_ordered_by_ascending_id.fetch_all().should.be.eql([
               {
                 id: 1,
@@ -2486,7 +2486,7 @@
                 id: "id",
                 descending: true
               }
-            ]).ordered();
+            ]).ordered().ordered();
             return books_ordered_by_ascending_id.fetch_all().should.be.eql([
               {
                 id: 16,

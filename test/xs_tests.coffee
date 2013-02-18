@@ -572,19 +572,19 @@ describe 'XS test suite:', ->
       
       books_ordered_by_year = books
         .order( organizer, { name: 'books_ordered_by_year' } )
-        .ordered()
+        .ordered().ordered()
       
       books_ordered_by_descending_year = books
         .order( xs.set( [ { id: "year", descending: true } ] ), { name: 'books_ordered_by_descending_year', insert_before: true } )
-        .ordered()
+        .ordered().ordered()
       
       books_ordered_by_ascending_author  = books
         .order( by_ascending_author , { name: 'books_ordered_by_ascending_author'  } )
-        .ordered()
+        .ordered().ordered()
 
       books_ordered_by_descending_author = books
         .order( by_descending_author, { name: 'books_ordered_by_descending_author', insert_before: true } )
-        .ordered()
+        .ordered().ordered()
       
       it 'books_ordered_by_year should be ordered by ascending year', ->
         books_ordered_by_year.fetch_all().should.be.eql [
@@ -888,7 +888,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'books_ordered_by_ascending_id should be ordered by ascending id: organizer is an objects', ->
-          books_ordered_by_ascending_id = books.order( [ { id: "id" } ] ).ordered()
+          books_ordered_by_ascending_id = books.order( [ { id: "id" } ] ).ordered().ordered()
           
           books_ordered_by_ascending_id.fetch_all().should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
@@ -910,7 +910,7 @@ describe 'XS test suite:', ->
           ]
 
         it 'books_ordered_by_descending should be ordered by descending id: organizer is an objects', ->
-          books_ordered_by_ascending_id = books.order( [ { id: "id", descending: true } ] ).ordered()
+          books_ordered_by_ascending_id = books.order( [ { id: "id", descending: true } ] ).ordered().ordered()
           
           books_ordered_by_ascending_id.fetch_all().should.be.eql [
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
