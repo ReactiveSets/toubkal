@@ -37,25 +37,22 @@ if require?
 chai = require 'chai' if require?
 chai?.should()
 
-Set         = XS.Set
-Table       = XS.Table
-Ordered_Set = XS.Ordered_Set
-xs          = XS.xs
+xs    = XS.xs
 
-organizer       = [ { id: "id" } ]
+organizer       = [ { id: "label" } ]
 options         = { label: "Charts" }
-checkbox_source = xs.order organizer, { name: "Checkbox Source" }
-checkbox        = checkbox_source.checkbox document.getElementById( "checkbox_control" ), options
+#checkbox_source = xs.order organizer, { name: "Checkbox Source" }
+#checkbox        = checkbox_source.checkbox document.getElementById( "checkbox_control" ), options
 
-checkbox_group_source = xs.order organizer, { name: "Checkbox Group Source" }
-checkbox_group  = checkbox_group_source.checkbox_group document.getElementById( "checkbox_group_control" )
+#checkbox_group_source = xs.order organizer, { name: "Checkbox Group Source" }
+#checkbox_group  = checkbox_group_source.checkbox_group document.getElementById( "checkbox_group_control" )
 
-radio_source = xs.order [ { id: "label" } ], { name: "Radio Source" }
-radio        = radio_source.radio document.getElementById( "radio_control" )
+radio_source = xs.order organizer, { name: "Radio Source" }
+radio        = radio_source.radio document.getElementById( "radio_control" ), organizer
 
-drop_down_source = xs.order [ { id: "label" } ], { name: "Drop Down Source" }
-drop_down        = drop_down_source.drop_down document.getElementById( "drop_down_control" )
-
+#drop_down_source = xs.order [ { id: "label" } ], { name: "Drop Down Source" }
+#drop_down        = drop_down_source.drop_down document.getElementById( "drop_down_control" )
+###
 describe 'Checkbox():', ->
   it 'checkbox should be empty', ->
     checkbox.get().should.be.empty
@@ -148,7 +145,7 @@ describe 'Checkbox_Group():', ->
       #{ id: 7, label: "Pottery"                , checked: true }
       { id: 8, label: "Gardening and Plants"   , checked: true }
     ]
-
+###
 describe 'Radio():', ->
   it 'radio should be empty', ->
   
@@ -165,7 +162,7 @@ describe 'Radio():', ->
     ]
     
     radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
-  
+  ###
   it 'after radio_source.remove( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
     radio_source.remove [ { id: 6, label: "Satanism" } ]
     
@@ -233,4 +230,4 @@ describe 'Drop_Down():', ->
     ]
     
     drop_down.get().should.be.eql [ { id: 8, label: "Madagascar", selected: true } ]
-  
+###	  
