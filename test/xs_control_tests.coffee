@@ -48,10 +48,10 @@ options         = { label: "Charts" }
 #checkbox_group  = checkbox_group_source.checkbox_group document.getElementById( "checkbox_group_control" )
 
 radio_source = xs.order organizer, { name: "Radio Source" }
-radio        = radio_source.radio document.getElementById( "radio_control" ), organizer
+radio        = radio_source.radio( document.getElementById( "radio_control" ) ).set()
 
 #drop_down_source = xs.order [ { id: "label" } ], { name: "Drop Down Source" }
-#drop_down        = drop_down_source.drop_down document.getElementById( "drop_down_control" )
+#drop_down        = drop_down_source.drop_down document.getElementById( "drop_down_control" ).set()
 ###
 describe 'Checkbox():', ->
   it 'checkbox should be empty', ->
@@ -98,52 +98,52 @@ describe 'Checkbox_Group():', ->
   
   it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.add [
-      { id: 1, label: "Photography"            , checked: true }
+      { id: 1, label: "Photography"            , selected: true }
       { id: 2, label: "Fishing"                                }
       { id: 3, label: "Playing Computer Games"                 }
-      { id: 4, label: "Traveling"              , checked: true }
+      { id: 4, label: "Traveling"              , selected: true }
       { id: 5, label: "Cooking"                                }
-      { id: 6, label: "Stamp / Coin Collection", checked: true }
+      { id: 6, label: "Stamp / Coin Collection", selected: true }
     ]
     
     checkbox_group.get().should.be.eql [
-      { id: 1, label: "Photography"            , checked: true }
-      { id: 4, label: "Traveling"              , checked: true }
-      { id: 6, label: "Stamp / Coin Collection", checked: true }
+      { id: 1, label: "Photography"            , selected: true }
+      { id: 4, label: "Traveling"              , selected: true }
+      { id: 6, label: "Stamp / Coin Collection", selected: true }
     ]
   
   it 'after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.remove [
       { id: 3, label: "Playing Computer Games"                }
-      { id: 4, label: "Traveling"             , checked: true }
+      { id: 4, label: "Traveling"             , selected: true }
     ]
     
     checkbox_group.get().should.be.eql [
-      { id: 1, label: "Photography"            , checked: true }
-      { id: 6, label: "Stamp / Coin Collection", checked: true }
+      { id: 1, label: "Photography"            , selected: true }
+      { id: 6, label: "Stamp / Coin Collection", selected: true }
     ]
   
   it 'after checkbox_group_source.add( object ), checkbox_group should be equal to result', ->
-    checkbox_group_source.add [ { id: 7, label: "Pottery", checked: true }, { id: 8, label: "Gardening" } ]
+    checkbox_group_source.add [ { id: 7, label: "Pottery", selected: true }, { id: 8, label: "Gardening" } ]
     
     checkbox_group.get().should.be.eql [
-      { id: 1, label: "Photography"            , checked: true }
-      { id: 6, label: "Stamp / Coin Collection", checked: true }
-      { id: 7, label: "Pottery"                , checked: true }
+      { id: 1, label: "Photography"            , selected: true }
+      { id: 6, label: "Stamp / Coin Collection", selected: true }
+      { id: 7, label: "Pottery"                , selected: true }
     ]
   
   it 'after checkbox_group_source.update( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.update [
       [ { id: 3, label: "Playing Computer Games" }, { id: 3, label: "Playing Video Games" } ]
-      [ { id: 7, label: "Pottery", checked: true }, { id: 7, label: "Pottery", checked: false } ]
-      [ { id: 8, label: "Gardening" }, { id: 8, label: "Gardening and Plants", checked: true } ]
+      [ { id: 7, label: "Pottery", selected: true }, { id: 7, label: "Pottery", selected: false } ]
+      [ { id: 8, label: "Gardening" }, { id: 8, label: "Gardening and Plants", selected: true } ]
     ]
     
     checkbox_group.get().should.be.eql [
-      { id: 1, label: "Photography"            , checked: true }
-      { id: 6, label: "Stamp / Coin Collection", checked: true }
-      #{ id: 7, label: "Pottery"                , checked: true }
-      { id: 8, label: "Gardening and Plants"   , checked: true }
+      { id: 1, label: "Photography"            , selected: true }
+      { id: 6, label: "Stamp / Coin Collection", selected: true }
+      #{ id: 7, label: "Pottery"                , selected: true }
+      { id: 8, label: "Gardening and Plants"   , selected: true }
     ]
 ###
 describe 'Radio():', ->
@@ -151,9 +151,9 @@ describe 'Radio():', ->
   
     radio.get().should.be.empty
   
-  it 'after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
+  it 'after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", selected: true } ]', ->
     radio_source.add [
-      { id: 1, label: "Islam"       , checked: true }
+      { id: 1, label: "Islam"       , selected: true }
       { id: 2, label: "Christianity" }
       { id: 3, label: "Judaism"      }
       { id: 6, label: "Satanism"     }
@@ -161,29 +161,30 @@ describe 'Radio():', ->
       { id: 8, label: "Rastafari"    }
     ]
     
-    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
-  ###
-  it 'after radio_source.remove( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
-    radio_source.remove [ { id: 6, label: "Satanism" } ]
-    
-    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
+    radio.get().should.be.eql [ { id: 1, label: "Islam", selected: true } ]
   
-  it 'after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", checked: true } ]', ->
-    radio_source.add [
-      { id: 5, label: "Hinduism"     }
+  it 'after radio_source.remove( objects ), radio should be empty', ->
+    radio_source.remove [
+      { id: 6, label: "Satanism" }
+      { id: 1, label: "Islam", selected: true }
     ]
     
-    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
+    radio.get().should.be.empty
   
-  it 'after radio_source.update( objects ), radio should be equal to [ { id: 8, label: "Rastafari", checked: true } ]', ->
+  it 'after radio_source.add( objects ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', ->
+    radio_source.add [ { id: 5, label: "Hinduism", selected: true } ]
+    
+    radio.get().should.be.eql [ { id: 5, label: "Hinduism", selected: true } ]
+  
+  it 'after radio_source.update( objects ), radio should be equal to [ { id: 4, label: "Rastafari", selected: true } ]', ->
     radio_source.update [
-      [ { id: 5, label: "Hinduism" }, { id: 5, label: "Buddhism" } ]
-      #[ { id: 8, label: "Rastafari" }, { id: 4, label: "Rastafari" } ]
-      #[ { id: 1, label: "Islam", checked: true }, { id: 1, label: "Islam", checked: false } ]
+      [ { id: 8, label: "Rastafari" }, { id: 4, label: "Rastafari", selected: true } ]
+      [ { id: 5, label: "Hinduism"  }, { id: 5, label: "Buddhism" } ]
+      [ { id: 7, label: "Atheism"   }, { id: 7, label: "Islam"    } ]
     ]
     
-    radio.get().should.be.eql [ { id: 1, label: "Islam", checked: true } ]
-
+    radio.get().should.be.eql [ { id: 4, label: "Rastafari", selected: true } ]
+###
 describe 'Drop_Down():', ->
   it 'drop_down should be empty', ->
   
