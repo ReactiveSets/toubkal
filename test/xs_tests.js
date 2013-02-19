@@ -3041,7 +3041,7 @@
             ]);
           });
         });
-        return describe('remove():', function() {
+        return describe('remove( books 12, 13, 15 ):', function() {
           it('after books.remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function() {
             books.remove([
               {
@@ -3318,108 +3318,306 @@
           id: "year"
         }
       ]);
-      books_sales_by_author = books_sales.aggregate(sales, by_author);
-      books_sales_by_year = books_sales.aggregate(sales, by_year);
+      books_sales_by_author = books_sales.aggregate(sales, by_author).order(by_author).ordered();
+      books_sales_by_year = books_sales.aggregate(sales, by_year).order(by_year).ordered();
       aggregate_from = function(source, from, measures, dimensions, options) {
-        return source.filter(from, options).aggregate(measures, dimensions, options);
+        return source.filter(from, options).aggregate(measures, dimensions, options).order(dimensions).ordered();
       };
       XS.Compose('aggregate_from', aggregate_from);
       tolkien_books = function(book, options) {
         return book.author === 'J. R. R. Tolkien';
       };
       tolkien_sales_by_year = books_sales.aggregate_from(tolkien_books, sales, by_year);
-      it('books_sales_by_author should be grouped by author', function() {
+      it('should group and order books_sales_by_author by author', function() {
         return books_sales_by_author.fetch_all().should.be.eql([
           {
+            author: "Agatha Christie",
+            sales: 100
+          }, {
             author: "Charles Dickens",
             sales: 200
-          }, {
-            author: "J. R. R. Tolkien",
-            sales: 250
           }, {
             author: "Dan Brown",
             sales: 119
           }, {
-            author: "Paulo Coelho",
-            sales: 65
+            author: "Ellen G. White",
+            sales: 60
           }, {
-            author: "Stieg Larsson",
-            sales: 30
-          }, {
-            author: "William Holmes McGuffey",
-            sales: 125
-          }, {
-            author: "Suzanne Collins",
-            sales: 23
+            author: "J. R. R. Tolkien",
+            sales: 250
           }, {
             author: "J.K. Rowling",
             sales: 0
           }, {
+            author: "Paulo Coelho",
+            sales: 65
+          }, {
             author: "Pierre Dukan",
             sales: 10
+          }, {
+            author: "Roald Dahl",
+            sales: 13
           }, {
             author: "Stephenie Meyer",
             sales: 0
           }, {
+            author: "Stieg Larsson",
+            sales: 30
+          }, {
+            author: "Suzanne Collins",
+            sales: 23
+          }, {
             author: "Vladimir Nabokov",
             sales: 50
           }, {
-            author: "Agatha Christie",
-            sales: 100
-          }, {
-            author: "Ellen G. White",
-            sales: 60
-          }, {
-            author: "Roald Dahl",
-            sales: 13
+            author: "William Holmes McGuffey",
+            sales: 125
           }
         ]);
       });
-      it('books_sales_by_year should be grouped by year', function() {
+      it('should group and order books_sales_by_year by year', function() {
         return books_sales_by_year.fetch_all().should.be.eql([
           {
+            sales: 125,
+            year: 1853
+          }, {
             sales: 200,
             year: 1859
           }, {
+            sales: 100,
+            year: 1937
+          }, {
             sales: 200,
             year: 1955
-          }, {
-            sales: 80,
-            year: 2003
           }, {
             sales: 65,
             year: 1988
           }, {
+            sales: 0,
+            year: 1999
+          }, {
             sales: 49,
             year: 2000
+          }, {
+            sales: 80,
+            year: 2003
           }, {
             sales: 30,
             year: 2005
           }, {
-            sales: 125,
-            year: 1853
-          }, {
-            sales: 100,
-            year: 1937
-          }, {
             sales: 23,
             year: 2008
-          }, {
-            sales: 0,
-            year: 1999
           }
         ]);
       });
-      return it('tolkien_sales_by_year should be grouped by year', function() {
-        return tolkien_sales_by_year.fetch_all().should.be.eql([
+      return it('should group and order tolkien_sales_by_year by year', function() {
+        tolkien_sales_by_year.fetch_all().should.be.eql([
           {
-            sales: 150,
-            year: 1955
-          }, {
             sales: 100,
             year: 1937
+          }, {
+            sales: 150,
+            year: 1955
           }
         ]);
+        describe('add sales for "Dan Brown" in 2004', function() {
+          books_sales.add([
+            {
+              id: 17,
+              title: "The Da Vinci Code",
+              author: "Dan Brown",
+              sales: 125,
+              year: 2004
+            }
+          ]);
+          it('should increase books_sales_by_author for "Dan Brown"', function() {
+            return books_sales_by_author.fetch_all().should.be.eql([
+              {
+                author: "Agatha Christie",
+                sales: 100
+              }, {
+                author: "Charles Dickens",
+                sales: 200
+              }, {
+                author: "Dan Brown",
+                sales: 244
+              }, {
+                author: "Ellen G. White",
+                sales: 60
+              }, {
+                author: "J. R. R. Tolkien",
+                sales: 250
+              }, {
+                author: "J.K. Rowling",
+                sales: 0
+              }, {
+                author: "Paulo Coelho",
+                sales: 65
+              }, {
+                author: "Pierre Dukan",
+                sales: 10
+              }, {
+                author: "Roald Dahl",
+                sales: 13
+              }, {
+                author: "Stephenie Meyer",
+                sales: 0
+              }, {
+                author: "Stieg Larsson",
+                sales: 30
+              }, {
+                author: "Suzanne Collins",
+                sales: 23
+              }, {
+                author: "Vladimir Nabokov",
+                sales: 50
+              }, {
+                author: "William Holmes McGuffey",
+                sales: 125
+              }
+            ]);
+          });
+          return it('should add books_sales_by_year for 2004', function() {
+            return books_sales_by_year.fetch_all().should.be.eql([
+              {
+                sales: 125,
+                year: 1853
+              }, {
+                sales: 200,
+                year: 1859
+              }, {
+                sales: 100,
+                year: 1937
+              }, {
+                sales: 200,
+                year: 1955
+              }, {
+                sales: 65,
+                year: 1988
+              }, {
+                sales: 0,
+                year: 1999
+              }, {
+                sales: 49,
+                year: 2000
+              }, {
+                sales: 80,
+                year: 2003
+              }, {
+                sales: 125,
+                year: 2004
+              }, {
+                sales: 30,
+                year: 2005
+              }, {
+                sales: 23,
+                year: 2008
+              }
+            ]);
+          });
+        });
+        return describe("remove Stephenie Meyer's sales in 2008 and Pierre Dukan's sales in 2000", function() {
+          it('should zero Stephenie Meyer and Pierre Dukan sales from books_sales_by_author', function() {
+            books_sales.remove([
+              {
+                id: 11,
+                title: "The Dukan Diet",
+                author: "Pierre Dukan",
+                sales: 10,
+                year: 2000
+              }, {
+                id: 12,
+                title: "Breaking Dawn",
+                author: "Stephenie Meyer",
+                sales: void 0,
+                year: 2008
+              }
+            ]);
+            return books_sales_by_author.fetch_all().should.be.eql([
+              {
+                author: "Agatha Christie",
+                sales: 100
+              }, {
+                author: "Charles Dickens",
+                sales: 200
+              }, {
+                author: "Dan Brown",
+                sales: 244
+              }, {
+                author: "Ellen G. White",
+                sales: 60
+              }, {
+                author: "J. R. R. Tolkien",
+                sales: 250
+              }, {
+                author: "J.K. Rowling",
+                sales: 0
+              }, {
+                author: "Paulo Coelho",
+                sales: 65
+              }, {
+                author: "Pierre Dukan",
+                sales: 0
+              }, {
+                author: "Roald Dahl",
+                sales: 13
+              }, {
+                author: "Stephenie Meyer",
+                sales: 0
+              }, {
+                author: "Stieg Larsson",
+                sales: 30
+              }, {
+                author: "Suzanne Collins",
+                sales: 23
+              }, {
+                author: "Vladimir Nabokov",
+                sales: 50
+              }, {
+                author: "William Holmes McGuffey",
+                sales: 125
+              }
+            ]);
+          });
+          return it('should remove 10 from sales in 2000 from books_sales_by_year', function() {
+            return books_sales_by_year.fetch_all().should.be.eql([
+              {
+                sales: 125,
+                year: 1853
+              }, {
+                sales: 200,
+                year: 1859
+              }, {
+                sales: 100,
+                year: 1937
+              }, {
+                sales: 200,
+                year: 1955
+              }, {
+                sales: 65,
+                year: 1988
+              }, {
+                sales: 0,
+                year: 1999
+              }, {
+                sales: 39,
+                year: 2000
+              }, {
+                sales: 80,
+                year: 2003
+              }, {
+                sales: 125,
+                year: 2004
+              }, {
+                sales: 30,
+                year: 2005
+              }, {
+                sales: 23,
+                year: 2008
+              }
+            ]);
+          });
+        });
       });
     });
   });
