@@ -1153,43 +1153,43 @@ describe 'XS test suite:', ->
     
     it 'should group and order books_sales_by_author by author', ->
       books_sales_by_author.fetch_all().should.be.eql [
-        { author: "Agatha Christie"        , sales: 100 }
-        { author: "Charles Dickens"        , sales: 200 }
-        { author: "Dan Brown"              , sales: 119 }
-        { author: "Ellen G. White"         , sales:  60 }
-        { author: "J. R. R. Tolkien"       , sales: 250 }
-        { author: "J.K. Rowling"           , sales:   0 }
-        { author: "Paulo Coelho"           , sales:  65 }
-        { author: "Pierre Dukan"           , sales:  10 }
-        { author: "Roald Dahl"             , sales:  13 }
-        { author: "Stephenie Meyer"        , sales:   0 }
-        { author: "Stieg Larsson"          , sales:  30 }
-        { author: "Suzanne Collins"        , sales:  23 }
-        { author: "Vladimir Nabokov"       , sales:  50 }
-        { author: "William Holmes McGuffey", sales: 125 }
+        { author: "Agatha Christie"        , sales: 100, _count: 1 }
+        { author: "Charles Dickens"        , sales: 200, _count: 1 }
+        { author: "Dan Brown"              , sales: 119, _count: 2 }
+        { author: "Ellen G. White"         , sales:  60, _count: 1 }
+        { author: "J. R. R. Tolkien"       , sales: 250, _count: 2 }
+        { author: "J.K. Rowling"           , sales:   0, _count: 1 }
+        { author: "Paulo Coelho"           , sales:  65, _count: 1 }
+        { author: "Pierre Dukan"           , sales:  10, _count: 1 }
+        { author: "Roald Dahl"             , sales:  13, _count: 1 }
+        { author: "Stephenie Meyer"        , sales:   0, _count: 1 }
+        { author: "Stieg Larsson"          , sales:  30, _count: 1 }
+        { author: "Suzanne Collins"        , sales:  23, _count: 1 }
+        { author: "Vladimir Nabokov"       , sales:  50, _count: 1 }
+        { author: "William Holmes McGuffey", sales: 125, _count: 1 }
       ]
     
     it 'should group and order books_sales_by_year by year', ->
       books_sales_by_year.fetch_all().should.be.eql [
       # ToDo: undefined and null groups are not supported at this time
-      #  { sales:       113, year: undefined }
-      #  { sales:        60, year: null }
-        { sales:       125, year: 1853 }
-        { sales:       200, year: 1859 }
-        { sales:       100, year: 1937 }
-        { sales:       200, year: 1955 }
-        { sales:        65, year: 1988 }
-        { sales:         0, year: 1999 }
-        { sales:        49, year: 2000 }
-        { sales:        80, year: 2003 }
-        { sales:        30, year: 2005 }
-        { sales:        23, year: 2008 }
+      #  { sales:       113, year: undefined, _count: 1 }
+      #  { sales:        60, year: null, _count: 1 }
+        { sales:       125, year: 1853, _count: 1 }
+        { sales:       200, year: 1859, _count: 1 }
+        { sales:       100, year: 1937, _count: 1 }
+        { sales:       200, year: 1955, _count: 2 }
+        { sales:        65, year: 1988, _count: 1 }
+        { sales:         0, year: 1999, _count: 1 }
+        { sales:        49, year: 2000, _count: 2 }
+        { sales:        80, year: 2003, _count: 1 }
+        { sales:        30, year: 2005, _count: 1 }
+        { sales:        23, year: 2008, _count: 2 }
       ]
     
     it 'should group and order tolkien_sales_by_year by year', ->
       tolkien_sales_by_year.fetch_all().should.be.eql [
-        { sales:       100, year: 1937 }
-        { sales:       150, year: 1955 }
+        { sales:       100, year: 1937, _count: 1 }
+        { sales:       150, year: 1955, _count: 1 }
       ]
 
       describe 'add sales for "Dan Brown" in 2004', ->
@@ -1199,74 +1199,72 @@ describe 'XS test suite:', ->
 
         it 'should increase books_sales_by_author for "Dan Brown"', ->
           books_sales_by_author.fetch_all().should.be.eql [
-            { author: "Agatha Christie"        , sales: 100 }
-            { author: "Charles Dickens"        , sales: 200 }
-            { author: "Dan Brown"              , sales: 244 }
-            { author: "Ellen G. White"         , sales:  60 }
-            { author: "J. R. R. Tolkien"       , sales: 250 }
-            { author: "J.K. Rowling"           , sales:   0 }
-            { author: "Paulo Coelho"           , sales:  65 }
-            { author: "Pierre Dukan"           , sales:  10 }
-            { author: "Roald Dahl"             , sales:  13 }
-            { author: "Stephenie Meyer"        , sales:   0 }
-            { author: "Stieg Larsson"          , sales:  30 }
-            { author: "Suzanne Collins"        , sales:  23 }
-            { author: "Vladimir Nabokov"       , sales:  50 }
-            { author: "William Holmes McGuffey", sales: 125 }
+            { author: "Agatha Christie"        , sales: 100, _count: 1 }
+            { author: "Charles Dickens"        , sales: 200, _count: 1 }
+            { author: "Dan Brown"              , sales: 244, _count: 3 }
+            { author: "Ellen G. White"         , sales:  60, _count: 1 }
+            { author: "J. R. R. Tolkien"       , sales: 250, _count: 2 }
+            { author: "J.K. Rowling"           , sales:   0, _count: 1 }
+            { author: "Paulo Coelho"           , sales:  65, _count: 1 }
+            { author: "Pierre Dukan"           , sales:  10, _count: 1 }
+            { author: "Roald Dahl"             , sales:  13, _count: 1 }
+            { author: "Stephenie Meyer"        , sales:   0, _count: 1 }
+            { author: "Stieg Larsson"          , sales:  30, _count: 1 }
+            { author: "Suzanne Collins"        , sales:  23, _count: 1 }
+            { author: "Vladimir Nabokov"       , sales:  50, _count: 1 }
+            { author: "William Holmes McGuffey", sales: 125, _count: 1 }
           ]      
          
         it 'should add books_sales_by_year for 2004', ->
           books_sales_by_year.fetch_all().should.be.eql [
-            { sales:       125, year: 1853 }
-            { sales:       200, year: 1859 }
-            { sales:       100, year: 1937 }
-            { sales:       200, year: 1955 }
-            { sales:        65, year: 1988 }
-            { sales:         0, year: 1999 }
-            { sales:        49, year: 2000 }
-            { sales:        80, year: 2003 }
-            { sales:       125, year: 2004 }
-            { sales:        30, year: 2005 }
-            { sales:        23, year: 2008 }
+            { sales:       125, year: 1853, _count: 1 }
+            { sales:       200, year: 1859, _count: 1 }
+            { sales:       100, year: 1937, _count: 1 }
+            { sales:       200, year: 1955, _count: 2 }
+            { sales:        65, year: 1988, _count: 1 }
+            { sales:         0, year: 1999, _count: 1 }
+            { sales:        49, year: 2000, _count: 2 }
+            { sales:        80, year: 2003, _count: 1 }
+            { sales:       125, year: 2004, _count: 1 }
+            { sales:        30, year: 2005, _count: 1 }
+            { sales:        23, year: 2008, _count: 2 }
           ]
 
       describe "remove Stephenie Meyer's sales in 2008 and Pierre Dukan's sales in 2000", ->
-        it 'should zero Stephenie Meyer and Pierre Dukan sales from books_sales_by_author', ->
+        it 'should remove Stephenie Meyer and Pierre Dukan sales from books_sales_by_author', ->
           books_sales.remove [
             { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , sales:        10, year: 2000 }
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , sales: undefined, year: 2008 }
           ]
 
           books_sales_by_author.fetch_all().should.be.eql [
-            { author: "Agatha Christie"        , sales: 100 }
-            { author: "Charles Dickens"        , sales: 200 }
-            { author: "Dan Brown"              , sales: 244 }
-            { author: "Ellen G. White"         , sales:  60 }
-            { author: "J. R. R. Tolkien"       , sales: 250 }
-            { author: "J.K. Rowling"           , sales:   0 }
-            { author: "Paulo Coelho"           , sales:  65 }
-            { author: "Pierre Dukan"           , sales:   0 }
-            { author: "Roald Dahl"             , sales:  13 }
-            { author: "Stephenie Meyer"        , sales:   0 }
-            { author: "Stieg Larsson"          , sales:  30 }
-            { author: "Suzanne Collins"        , sales:  23 }
-            { author: "Vladimir Nabokov"       , sales:  50 }
-            { author: "William Holmes McGuffey", sales: 125 }
+            { author: "Agatha Christie"        , sales: 100, _count: 1 }
+            { author: "Charles Dickens"        , sales: 200, _count: 1 }
+            { author: "Dan Brown"              , sales: 244, _count: 3 }
+            { author: "Ellen G. White"         , sales:  60, _count: 1 }
+            { author: "J. R. R. Tolkien"       , sales: 250, _count: 2 }
+            { author: "J.K. Rowling"           , sales:   0, _count: 1 }
+            { author: "Paulo Coelho"           , sales:  65, _count: 1 }
+            { author: "Roald Dahl"             , sales:  13, _count: 1 }
+            { author: "Stieg Larsson"          , sales:  30, _count: 1 }
+            { author: "Suzanne Collins"        , sales:  23, _count: 1 }
+            { author: "Vladimir Nabokov"       , sales:  50, _count: 1 }
+            { author: "William Holmes McGuffey", sales: 125, _count: 1 }
           ]      
          
         it 'should remove 10 from sales in 2000 from books_sales_by_year', ->
           books_sales_by_year.fetch_all().should.be.eql [
-            { sales:       125, year: 1853 }
-            { sales:       200, year: 1859 }
-            { sales:       100, year: 1937 }
-            { sales:       200, year: 1955 }
-            { sales:        65, year: 1988 }
-            { sales:         0, year: 1999 }
-            { sales:        39, year: 2000 }
-            { sales:        80, year: 2003 }
-            { sales:       125, year: 2004 }
-            { sales:        30, year: 2005 }
-            { sales:        23, year: 2008 }
+            { sales:       125, year: 1853, _count: 1 }
+            { sales:       200, year: 1859, _count: 1 }
+            { sales:       100, year: 1937, _count: 1 }
+            { sales:       200, year: 1955, _count: 2 }
+            { sales:        65, year: 1988, _count: 1 }
+            { sales:         0, year: 1999, _count: 1 }
+            { sales:        39, year: 2000, _count: 1 }
+            { sales:        80, year: 2003, _count: 1 }
+            { sales:       125, year: 2004, _count: 1 }
+            { sales:        30, year: 2005, _count: 1 }
+            { sales:        23, year: 2008, _count: 1 }
           ]
 
 
