@@ -40,11 +40,17 @@
     <script type="text/javascript" charset="utf-8">
       var xs = XS.xs
         , organizer = xs.set( [ { id: 'label' } ], { name: 'by label' } )
-        /*
-        , checkbox_set = new XS.Set( [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ], { name: "Checkbox Source" } )
-        , checkbox     = checkbox_set.checkbox( document.getElementById( "checkbox" ), organizer, { default_value : { id: true, label: "Label True" }, label: "Chart" } )
-          
-        , books = new XS.Ordered_Set( [
+      ;
+      
+      /*
+        // Checkbox
+        xs.set( [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ], { name: "Checkbox Source" } )
+          .checkbox( document.getElementById( "checkbox" ), organizer, { default_value : { id: true, label: "Label True" }, label: "Chart" } )
+          .table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Checkbox Value" } )
+        ;
+        
+        // Books table
+        xs.set( [
             { id:  1, title: "A Tale of Two Cities"                             , author: "Charles Dickens"          , year: 1859, sales:       200 },
             { id:  2, title: "And Then There Were None"                         , author: "Agatha Christie"                      , sales:  100      },
             { id:  3, title: "Angels and Demons"                                , author: "Dan Brown"                , year: 2000, sales:        39 },
@@ -60,49 +66,53 @@
             { id: 13, title: "The Hunger Games"                                 , author: "Suzanne Collins"          , year: 2008, sales:        23 },
             { id: 14, title: "The Lord of the Rings: The Fellowship of the Ring", author: "John Ronald Reuel Tolkien", year: 1955, sales:       150 },
             { id: 15, title: "The McGuffey Readers"                             , author: "William Holmes McGuffey"  , year: 1853, sales:       125 }
-          ], organizer, { name: "Books" } )
-          
-        , columns_set = new XS.Set( [
+          ], { name: 'Books' } )
+          .order( organizer )
+          .table( document.getElementById( "books" ), columns, organizer, { caption: "List of the best-selling books (source: wikipedia)" } )
+        ;
+        
+        // Columns Checkbox group
+        xs.set( [
             { id: "id"    , label: "ID"                         },
             { id: "title" , label: "Title" , checked: true      },
             { id: "author", label: "Author", checked: true      },
             { id: "year"  , label: "Year"  , checked: true      },
             { id: "sales" , label: "Sales By Million of Copies" }
           ], { name: "Columns" } )
-          
-        , columns = columns_set.checkbox_group( document.getElementById( "checkbox_group" ), organizer )
-        */
-        , radio = xs.set( [
-              { id: 1, label: "Islam"        },
-              { id: 2, label: "Christianity" },
-              { id: 3, label: "Judaism"      },
-              { id: 4, label: "Buddhism"     },
-              { id: 5, label: "Hinduism"     },
-              { id: 6, label: "Satanism"     },
-              { id: 7, label: "Atheism"      },
-              { id: 8, label: "Rastafari"    }
-            ] )
-            .order( organizer )
-            .radio( document.getElementById( "radio" ) )
-            .table( document.getElementById( "radio_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Radio Value" } )
-        
-        , drop_down = xs.set( [
-              { id: 1, label: "USA"        },
-              { id: 2, label: "Morocco"    },
-              { id: 3, label: "France"     },
-              { id: 4, label: "Japan"      },
-              { id: 5, label: "Spain"      },
-              { id: 6, label: "Portugal"   },
-              { id: 8, label: "Madagascar" }
-            ] )
-            .order( organizer )
-            .drop_down( document.getElementById( "drop_down" ) )
-            .table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Drop Down Value" } )
+          .checkbox_group( document.getElementById( "checkbox_group" ), organizer )
+        ;
+      */
+      
+      // Religions Radio button
+      xs.set( [
+          { id: 1, label: "Islam"        },
+          { id: 2, label: "Christianity" },
+          { id: 3, label: "Judaism"      },
+          { id: 4, label: "Buddhism"     },
+          { id: 5, label: "Hinduism"     },
+          { id: 6, label: "Satanism"     },
+          { id: 7, label: "Atheism"      },
+          { id: 8, label: "Rastafari"    }
+        ] )
+        .order( organizer )
+        .radio( document.getElementById( "radio" ) )
+        .table( document.getElementById( "radio_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Radio Value" } )
       ;
       
-      // checkbox.table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Checkbox Value" } );
-      
-      // books.table( document.getElementById( "books" ), columns, organizer, { caption: "List of the best-selling books (source: wikipedia)" } );
+      // Countries Drop-Down
+      xs.set( [
+          { id: 1, label: "USA"        },
+          { id: 2, label: "Morocco"    },
+          { id: 3, label: "France"     },
+          { id: 4, label: "Japan"      },
+          { id: 5, label: "Spain"      },
+          { id: 6, label: "Portugal"   },
+          { id: 8, label: "Madagascar" }
+        ], { name: 'Countries' } )
+        .order( organizer )
+        .drop_down( document.getElementById( "drop_down" ) )
+        .table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Drop Down Value" } )
+      ;
     </script>
   </body>
 </html>
