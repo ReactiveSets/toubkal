@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, chai, options, organizer, radio, radio_source, xs;
+  var XS, chai, drop_down, drop_down_source, options, organizer, radio, radio_source, xs;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -60,6 +60,12 @@
   });
 
   radio = radio_source.radio(document.getElementById("radio_control")).set();
+
+  drop_down_source = xs.order(organizer, {
+    name: "Drop Down Source"
+  });
+
+  drop_down = drop_down_source.drop_down(document.getElementById("drop_down_control")).set();
 
   /*
   describe 'Checkbox():', ->
@@ -205,7 +211,7 @@
       ]);
       return radio.get().should.be.empty;
     });
-    it('after radio_source.add( objects ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', function() {
+    it('after radio_source.add( object ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', function() {
       radio_source.add([
         {
           id: 5,
@@ -260,54 +266,124 @@
     });
   });
 
-  /*
-  describe 'Drop_Down():', ->
-    it 'drop_down should be empty', ->
-    
-      drop_down.get().should.be.empty
-    
-    it 'after drop_down_source.add( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', ->
-      drop_down_source.add [
-        { id: 1, label: "USA"        }
-        { id: 2, label: "Morocco"    }
-        { id: 3, label: "France"     }
-        { id: 4, label: "Japan"      }
-        { id: 5, label: "Spain"      }
-        { id: 6, label: "Portugal"   }
-        { id: 8, label: "Madagascar" }
-      ]
-      
-      drop_down.get().should.be.eql [ { id: 3, label: "France" } ]  
-    
-    it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', ->
-      drop_down_source.remove [
-        { id: 2, label: "Morocco" }
-        { id: 5, label: "Spain"   }
-      ]
-      
-      drop_down.get().should.be.eql [ { id: 3, label: "France" } ]
-    
-    it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', ->
-      drop_down_source.remove [
-        { id: 3, label: "France" }
-      ]
-      
-      drop_down.get().should.be.eql [ { id: 4, label: "Japan" } ]
-    
-    it 'after drop_down_source.add( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]', ->
-      drop_down_source.add [ { id: 7, label: "China" } ]
-    
-      drop_down.get().should.be.eql [ { id: 4, label: "Japan" } ]
-    
-    it 'after drop_down_source.update( objects ), drop_down should be equal to [ { id: 7, label: "Madagascar" } ]', ->
-      drop_down_source.update [
-        [ { id: 8, label: "Madagascar" }, { id: 8, label: "Madagascar", selected: true } ]
-        [ { id: 6, label: "Portugal"   }, { id: 5, label: "Germany" } ]
-        [ { id: 4, label: "Japan"      }, { id: 4, label: "Italy" } ]
-      ]
-      
-      drop_down.get().should.be.eql [ { id: 8, label: "Madagascar", selected: true } ]
-  */
-
+  describe('Drop_Down():', function() {
+    it('drop_down should be empty', function() {
+      return drop_down.get().should.be.empty;
+    });
+    it('after drop_down_source.add( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
+      drop_down_source.add([
+        {
+          id: 1,
+          label: "USA"
+        }, {
+          id: 2,
+          label: "Morocco"
+        }, {
+          id: 3,
+          label: "France"
+        }, {
+          id: 4,
+          label: "Japan"
+        }, {
+          id: 5,
+          label: "Spain"
+        }, {
+          id: 6,
+          label: "Portugal"
+        }, {
+          id: 8,
+          label: "Madagascar"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 3,
+          label: "France"
+        }
+      ]);
+    });
+    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
+      drop_down_source.remove([
+        {
+          id: 2,
+          label: "Morocco"
+        }, {
+          id: 5,
+          label: "Spain"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 3,
+          label: "France"
+        }
+      ]);
+    });
+    it('after drop_down_source.remove( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', function() {
+      drop_down_source.remove([
+        {
+          id: 3,
+          label: "France"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 4,
+          label: "Japan"
+        }
+      ]);
+    });
+    it('after drop_down_source.add( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]', function() {
+      drop_down_source.add([
+        {
+          id: 7,
+          label: "China"
+        }
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 4,
+          label: "Japan"
+        }
+      ]);
+    });
+    return it('after drop_down_source.update( objects ), drop_down should be equal to [ { id: 8, label: "Madagascar" } ]', function() {
+      drop_down_source.update([
+        [
+          {
+            id: 6,
+            label: "Portugal"
+          }, {
+            id: 5,
+            label: "Germany"
+          }
+        ], [
+          {
+            id: 8,
+            label: "Madagascar"
+          }, {
+            id: 8,
+            label: "Madagascar",
+            selected: true
+          }
+        ], [
+          {
+            id: 4,
+            label: "Japan"
+          }, {
+            id: 4,
+            label: "Italy"
+          }
+        ]
+      ]);
+      return drop_down.get().should.be.eql([
+        {
+          id: 8,
+          label: "Madagascar",
+          selected: true
+        }
+      ]);
+    });
+  });
 
 }).call(this);

@@ -37,7 +37,7 @@ if require?
 chai = require 'chai' if require?
 chai?.should()
 
-xs    = XS.xs
+xs = XS.xs
 
 organizer       = [ { id: "label" } ]
 options         = { label: "Charts" }
@@ -50,8 +50,8 @@ options         = { label: "Charts" }
 radio_source = xs.order organizer, { name: "Radio Source" }
 radio        = radio_source.radio( document.getElementById( "radio_control" ) ).set()
 
-#drop_down_source = xs.order [ { id: "label" } ], { name: "Drop Down Source" }
-#drop_down        = drop_down_source.drop_down document.getElementById( "drop_down_control" ).set()
+drop_down_source = xs.order organizer, { name: "Drop Down Source" }
+drop_down        = drop_down_source.drop_down( document.getElementById( "drop_down_control" ) ).set()
 ###
 describe 'Checkbox():', ->
   it 'checkbox should be empty', ->
@@ -171,7 +171,7 @@ describe 'Radio():', ->
     
     radio.get().should.be.empty
   
-  it 'after radio_source.add( objects ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', ->
+  it 'after radio_source.add( object ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', ->
     radio_source.add [ { id: 5, label: "Hinduism", selected: true } ]
     
     radio.get().should.be.eql [ { id: 5, label: "Hinduism", selected: true } ]
@@ -184,13 +184,13 @@ describe 'Radio():', ->
     ]
     
     radio.get().should.be.eql [ { id: 4, label: "Rastafari", selected: true } ]
-###
+
 describe 'Drop_Down():', ->
   it 'drop_down should be empty', ->
   
     drop_down.get().should.be.empty
   
-  it 'after drop_down_source.add( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', ->
+  it 'after drop_down_source.add( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', ->
     drop_down_source.add [
       { id: 1, label: "USA"        }
       { id: 2, label: "Morocco"    }
@@ -203,7 +203,7 @@ describe 'Drop_Down():', ->
     
     drop_down.get().should.be.eql [ { id: 3, label: "France" } ]  
   
-  it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 1, label: "USA" } ]', ->
+  it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', ->
     drop_down_source.remove [
       { id: 2, label: "Morocco" }
       { id: 5, label: "Spain"   }
@@ -211,7 +211,7 @@ describe 'Drop_Down():', ->
     
     drop_down.get().should.be.eql [ { id: 3, label: "France" } ]
   
-  it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', ->
+  it 'after drop_down_source.remove( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', ->
     drop_down_source.remove [
       { id: 3, label: "France" }
     ]
@@ -223,12 +223,11 @@ describe 'Drop_Down():', ->
   
     drop_down.get().should.be.eql [ { id: 4, label: "Japan" } ]
   
-  it 'after drop_down_source.update( objects ), drop_down should be equal to [ { id: 7, label: "Madagascar" } ]', ->
+  it 'after drop_down_source.update( objects ), drop_down should be equal to [ { id: 8, label: "Madagascar" } ]', ->
     drop_down_source.update [
-      [ { id: 8, label: "Madagascar" }, { id: 8, label: "Madagascar", selected: true } ]
       [ { id: 6, label: "Portugal"   }, { id: 5, label: "Germany" } ]
+      [ { id: 8, label: "Madagascar" }, { id: 8, label: "Madagascar", selected: true } ]
       [ { id: 4, label: "Japan"      }, { id: 4, label: "Italy" } ]
     ]
     
     drop_down.get().should.be.eql [ { id: 8, label: "Madagascar", selected: true } ]
-###	  
