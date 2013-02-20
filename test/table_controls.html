@@ -39,7 +39,7 @@
     
     <script type="text/javascript" charset="utf-8">
       var xs = XS.xs
-        , organizer = new xs.set( [ { id: "label" } ], { name: "Oganizer" } )
+        , organizer = xs.set( [ { id: 'label' } ], { name: 'by label' } )
         /*
         , checkbox_set = new XS.Set( [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ], { name: "Checkbox Source" } )
         , checkbox     = checkbox_set.checkbox( document.getElementById( "checkbox" ), organizer, { default_value : { id: true, label: "Label True" }, label: "Chart" } )
@@ -84,9 +84,8 @@
             ] )
             .order( organizer )
             .radio( document.getElementById( "radio" ) )
+            .table( document.getElementById( "radio_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Radio Value" } )
         
-        
-        // , drop_down_set = xs.order( organizer )
         , drop_down = xs.set( [
               { id: 1, label: "USA"        },
               { id: 2, label: "Morocco"    },
@@ -98,11 +97,10 @@
             ] )
             .order( organizer )
             .drop_down( document.getElementById( "drop_down" ) )
+            .table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Drop Down Value" } )
       ;
       
       // checkbox.table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Checkbox Value" } );
-      radio.table( document.getElementById( "radio_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Radio Value" } );
-      drop_down.table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Drop Down Value" } )
       
       // books.table( document.getElementById( "books" ), columns, organizer, { caption: "List of the best-selling books (source: wikipedia)" } );
     </script>
