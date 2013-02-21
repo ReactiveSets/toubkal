@@ -154,7 +154,7 @@
     it('columns should be equal to object.columns', function() {
       var object;
       object = from_HTML_to_object(node);
-      return columns.get().should.be.eql(object.columns);
+      return columns.fetch_all().should.be.eql(object.columns);
     });
     it('after add 2 objects: columns.add( objects ) should be equal to object.columns', function() {
       var object;
@@ -169,7 +169,7 @@
         }
       ]);
       object = from_HTML_to_object(node);
-      return columns.get().should.be.eql(object.columns);
+      return columns.fetch_all().should.be.eql(object.columns);
     });
     it('after columns.remove( object ), columns should be equal to object.columns', function() {
       var object;
@@ -180,7 +180,7 @@
         }
       ]);
       object = from_HTML_to_object(node);
-      return columns.get().should.be.eql(object.columns);
+      return columns.fetch_all().should.be.eql(object.columns);
     });
     return it('after columns.update( object ), columns should be equal to object.columns', function() {
       var object;
@@ -196,7 +196,7 @@
         ]
       ]);
       object = from_HTML_to_object(node);
-      return columns.get().should.be.eql(object.columns);
+      return columns.fetch_all().should.be.eql(object.columns);
     });
   });
 

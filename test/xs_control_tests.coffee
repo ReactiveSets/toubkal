@@ -56,35 +56,35 @@ drop_down        = drop_down_source.drop_down( document.getElementById( "drop_do
 
 describe 'Checkbox():', ->
   it 'checkbox should be empty', ->
-    checkbox.get().should.be.empty
+    checkbox.fetch_all().should.be.empty
   
   it 'after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', ->
     checkbox_source.add [ { id: true, label: "Label True" } ]
     
-    checkbox_source.get().should.be.eql [ { id: true, label: "Label True" } ]
+    checkbox_source.fetch_all().should.be.eql [ { id: true, label: "Label True" } ]
   
   it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', ->
-    checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
+    checkbox.fetch_all().should.be.eql [ { id: true, label: "Label True" } ]
   
   it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', ->
     checkbox_source.add [ { id: false, label: "Label False" } ]
     
-    checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
+    checkbox.fetch_all().should.be.eql [ { id: true, label: "Label True" } ]
   
   it 'after checkbox_source.remove( object ), checkbox should be equal to [ { id: false, label: "Label False" } ]', ->
     checkbox_source.remove [ { id: true, label: "Label True" } ]
     
-    checkbox.get().should.be.eql [ { id: false, label: "Label False" } ]
+    checkbox.fetch_all().should.be.eql [ { id: false, label: "Label False" } ]
   
   it 'after checkbox_source.remove( object ), checkbox should be empty', ->
     checkbox_source.remove [ { id: false, label: "Label False" } ]
     
-    checkbox.get().should.be.empty
+    checkbox.fetch_all().should.be.empty
   
   it 'after checkbox_source.add( objects ), checkbox should be equal to [ { id: false, label: "Label False", selected: true } ]', ->
     checkbox_source.add [ { id: true, label: "Label True" }, { id: false, label: "Label False", selected: true } ]
     
-    checkbox.get().should.be.eql [ { id: false, label: "Label False", selected: true } ]
+    checkbox.fetch_all().should.be.eql [ { id: false, label: "Label False", selected: true } ]
   
   it 'after checkbox_source.update( objects ) checkbox should be equal to [ { id: true, label: "Charts", selected: true } ]', ->
     checkbox_source.update [
@@ -92,12 +92,12 @@ describe 'Checkbox():', ->
       [ { id: false, label: "Label False", selected: true }, { id: false, label: "Charts"                 } ]
     ]
     
-    checkbox.get().should.be.eql [ { id: true, label: "Charts", selected: true } ]
+    checkbox.fetch_all().should.be.eql [ { id: true, label: "Charts", selected: true } ]
 ###
 describe 'Checkbox_Group():', ->
   it 'checkbox_group should be empty', ->
     
-    checkbox_group.get().should.be.empty
+    checkbox_group.fetch_all().should.be.empty
   
   it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.add [
@@ -109,7 +109,7 @@ describe 'Checkbox_Group():', ->
       { id: 6, label: "Stamp / Coin Collection", selected: true }
     ]
     
-    checkbox_group.get().should.be.eql [
+    checkbox_group.fetch_all().should.be.eql [
       { id: 1, label: "Photography"            , selected: true }
       { id: 4, label: "Traveling"              , selected: true }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
@@ -121,7 +121,7 @@ describe 'Checkbox_Group():', ->
       { id: 4, label: "Traveling"             , selected: true }
     ]
     
-    checkbox_group.get().should.be.eql [
+    checkbox_group.fetch_all().should.be.eql [
       { id: 1, label: "Photography"            , selected: true }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
     ]
@@ -129,7 +129,7 @@ describe 'Checkbox_Group():', ->
   it 'after checkbox_group_source.add( object ), checkbox_group should be equal to result', ->
     checkbox_group_source.add [ { id: 7, label: "Pottery", selected: true }, { id: 8, label: "Gardening" } ]
     
-    checkbox_group.get().should.be.eql [
+    checkbox_group.fetch_all().should.be.eql [
       { id: 1, label: "Photography"            , selected: true }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
       { id: 7, label: "Pottery"                , selected: true }
@@ -142,7 +142,7 @@ describe 'Checkbox_Group():', ->
       [ { id: 8, label: "Gardening" }, { id: 8, label: "Gardening and Plants", selected: true } ]
     ]
     
-    checkbox_group.get().should.be.eql [
+    checkbox_group.fetch_all().should.be.eql [
       { id: 1, label: "Photography"            , selected: true }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
       #{ id: 7, label: "Pottery"                , selected: true }
@@ -152,7 +152,7 @@ describe 'Checkbox_Group():', ->
 describe 'Radio():', ->
   it 'radio should be empty', ->
   
-    radio.get().should.be.empty
+    radio.fetch_all().should.be.empty
   
   it 'after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", selected: true } ]', ->
     radio_source.add [
@@ -164,7 +164,7 @@ describe 'Radio():', ->
       { id: 8, label: "Rastafari"    }
     ]
     
-    radio.get().should.be.eql [ { id: 1, label: "Islam", selected: true } ]
+    radio.fetch_all().should.be.eql [ { id: 1, label: "Islam", selected: true } ]
   
   it 'after radio_source.remove( objects ), radio should be empty', ->
     radio_source.remove [
@@ -172,12 +172,12 @@ describe 'Radio():', ->
       { id: 1, label: "Islam", selected: true }
     ]
     
-    radio.get().should.be.empty
+    radio.fetch_all().should.be.empty
   
   it 'after radio_source.add( object ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', ->
     radio_source.add [ { id: 5, label: "Hinduism", selected: true } ]
     
-    radio.get().should.be.eql [ { id: 5, label: "Hinduism", selected: true } ]
+    radio.fetch_all().should.be.eql [ { id: 5, label: "Hinduism", selected: true } ]
   
   it 'after radio_source.update( objects ), radio should be equal to [ { id: 4, label: "Rastafari", selected: true } ]', ->
     radio_source.update [
@@ -186,12 +186,12 @@ describe 'Radio():', ->
       [ { id: 7, label: "Atheism"   }, { id: 7, label: "Islam"    } ]
     ]
     
-    radio.get().should.be.eql [ { id: 4, label: "Rastafari", selected: true } ]
+    radio.fetch_all().should.be.eql [ { id: 4, label: "Rastafari", selected: true } ]
 
 describe 'Drop_Down():', ->
   it 'drop_down should be empty', ->
   
-    drop_down.get().should.be.empty
+    drop_down.fetch_all().should.be.empty
   
   it 'after drop_down_source.add( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', ->
     drop_down_source.add [
@@ -204,7 +204,7 @@ describe 'Drop_Down():', ->
       { id: 8, label: "Madagascar" }
     ]
     
-    drop_down.get().should.be.eql [ { id: 3, label: "France" } ]  
+    drop_down.fetch_all().should.be.eql [ { id: 3, label: "France" } ]  
   
   it 'after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', ->
     drop_down_source.remove [
@@ -212,19 +212,19 @@ describe 'Drop_Down():', ->
       { id: 5, label: "Spain"   }
     ]
     
-    drop_down.get().should.be.eql [ { id: 3, label: "France" } ]
+    drop_down.fetch_all().should.be.eql [ { id: 3, label: "France" } ]
   
   it 'after drop_down_source.remove( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', ->
     drop_down_source.remove [
       { id: 3, label: "France" }
     ]
     
-    drop_down.get().should.be.eql [ { id: 4, label: "Japan" } ]
+    drop_down.fetch_all().should.be.eql [ { id: 4, label: "Japan" } ]
   
   it 'after drop_down_source.add( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]', ->
     drop_down_source.add [ { id: 7, label: "China" } ]
   
-    drop_down.get().should.be.eql [ { id: 4, label: "Japan" } ]
+    drop_down.fetch_all().should.be.eql [ { id: 4, label: "Japan" } ]
   
   it 'after drop_down_source.update( objects ), drop_down should be equal to [ { id: 8, label: "Madagascar" } ]', ->
     drop_down_source.update [
@@ -233,4 +233,4 @@ describe 'Drop_Down():', ->
       [ { id: 4, label: "Japan"      }, { id: 4, label: "Italy" } ]
     ]
     
-    drop_down.get().should.be.eql [ { id: 8, label: "Madagascar", selected: true } ]
+    drop_down.fetch_all().should.be.eql [ { id: 8, label: "Madagascar", selected: true } ]

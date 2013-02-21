@@ -75,7 +75,7 @@
 
   describe('Checkbox():', function() {
     it('checkbox should be empty', function() {
-      return checkbox.get().should.be.empty;
+      return checkbox.fetch_all().should.be.empty;
     });
     it('after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', function() {
       checkbox_source.add([
@@ -84,7 +84,7 @@
           label: "Label True"
         }
       ]);
-      return checkbox_source.get().should.be.eql([
+      return checkbox_source.fetch_all().should.be.eql([
         {
           id: true,
           label: "Label True"
@@ -92,7 +92,7 @@
       ]);
     });
     it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
-      return checkbox.get().should.be.eql([
+      return checkbox.fetch_all().should.be.eql([
         {
           id: true,
           label: "Label True"
@@ -106,7 +106,7 @@
           label: "Label False"
         }
       ]);
-      return checkbox.get().should.be.eql([
+      return checkbox.fetch_all().should.be.eql([
         {
           id: true,
           label: "Label True"
@@ -120,7 +120,7 @@
           label: "Label True"
         }
       ]);
-      return checkbox.get().should.be.eql([
+      return checkbox.fetch_all().should.be.eql([
         {
           id: false,
           label: "Label False"
@@ -134,7 +134,7 @@
           label: "Label False"
         }
       ]);
-      return checkbox.get().should.be.empty;
+      return checkbox.fetch_all().should.be.empty;
     });
     it('after checkbox_source.add( objects ), checkbox should be equal to [ { id: false, label: "Label False", selected: true } ]', function() {
       checkbox_source.add([
@@ -147,7 +147,7 @@
           selected: true
         }
       ]);
-      return checkbox.get().should.be.eql([
+      return checkbox.fetch_all().should.be.eql([
         {
           id: false,
           label: "Label False",
@@ -177,7 +177,7 @@
           }
         ]
       ]);
-      return checkbox.get().should.be.eql([
+      return checkbox.fetch_all().should.be.eql([
         {
           id: true,
           label: "Charts",
@@ -191,7 +191,7 @@
   describe 'Checkbox_Group():', ->
     it 'checkbox_group should be empty', ->
       
-      checkbox_group.get().should.be.empty
+      checkbox_group.fetch_all().should.be.empty
     
     it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
       checkbox_group_source.add [
@@ -203,7 +203,7 @@
         { id: 6, label: "Stamp / Coin Collection", selected: true }
       ]
       
-      checkbox_group.get().should.be.eql [
+      checkbox_group.fetch_all().should.be.eql [
         { id: 1, label: "Photography"            , selected: true }
         { id: 4, label: "Traveling"              , selected: true }
         { id: 6, label: "Stamp / Coin Collection", selected: true }
@@ -215,7 +215,7 @@
         { id: 4, label: "Traveling"             , selected: true }
       ]
       
-      checkbox_group.get().should.be.eql [
+      checkbox_group.fetch_all().should.be.eql [
         { id: 1, label: "Photography"            , selected: true }
         { id: 6, label: "Stamp / Coin Collection", selected: true }
       ]
@@ -223,7 +223,7 @@
     it 'after checkbox_group_source.add( object ), checkbox_group should be equal to result', ->
       checkbox_group_source.add [ { id: 7, label: "Pottery", selected: true }, { id: 8, label: "Gardening" } ]
       
-      checkbox_group.get().should.be.eql [
+      checkbox_group.fetch_all().should.be.eql [
         { id: 1, label: "Photography"            , selected: true }
         { id: 6, label: "Stamp / Coin Collection", selected: true }
         { id: 7, label: "Pottery"                , selected: true }
@@ -236,7 +236,7 @@
         [ { id: 8, label: "Gardening" }, { id: 8, label: "Gardening and Plants", selected: true } ]
       ]
       
-      checkbox_group.get().should.be.eql [
+      checkbox_group.fetch_all().should.be.eql [
         { id: 1, label: "Photography"            , selected: true }
         { id: 6, label: "Stamp / Coin Collection", selected: true }
         #{ id: 7, label: "Pottery"                , selected: true }
@@ -247,7 +247,7 @@
 
   describe('Radio():', function() {
     it('radio should be empty', function() {
-      return radio.get().should.be.empty;
+      return radio.fetch_all().should.be.empty;
     });
     it('after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", selected: true } ]', function() {
       radio_source.add([
@@ -272,7 +272,7 @@
           label: "Rastafari"
         }
       ]);
-      return radio.get().should.be.eql([
+      return radio.fetch_all().should.be.eql([
         {
           id: 1,
           label: "Islam",
@@ -291,7 +291,7 @@
           selected: true
         }
       ]);
-      return radio.get().should.be.empty;
+      return radio.fetch_all().should.be.empty;
     });
     it('after radio_source.add( object ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', function() {
       radio_source.add([
@@ -301,7 +301,7 @@
           selected: true
         }
       ]);
-      return radio.get().should.be.eql([
+      return radio.fetch_all().should.be.eql([
         {
           id: 5,
           label: "Hinduism",
@@ -338,7 +338,7 @@
           }
         ]
       ]);
-      return radio.get().should.be.eql([
+      return radio.fetch_all().should.be.eql([
         {
           id: 4,
           label: "Rastafari",
@@ -350,7 +350,7 @@
 
   describe('Drop_Down():', function() {
     it('drop_down should be empty', function() {
-      return drop_down.get().should.be.empty;
+      return drop_down.fetch_all().should.be.empty;
     });
     it('after drop_down_source.add( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
       drop_down_source.add([
@@ -377,7 +377,7 @@
           label: "Madagascar"
         }
       ]);
-      return drop_down.get().should.be.eql([
+      return drop_down.fetch_all().should.be.eql([
         {
           id: 3,
           label: "France"
@@ -394,7 +394,7 @@
           label: "Spain"
         }
       ]);
-      return drop_down.get().should.be.eql([
+      return drop_down.fetch_all().should.be.eql([
         {
           id: 3,
           label: "France"
@@ -408,7 +408,7 @@
           label: "France"
         }
       ]);
-      return drop_down.get().should.be.eql([
+      return drop_down.fetch_all().should.be.eql([
         {
           id: 4,
           label: "Japan"
@@ -422,7 +422,7 @@
           label: "China"
         }
       ]);
-      return drop_down.get().should.be.eql([
+      return drop_down.fetch_all().should.be.eql([
         {
           id: 4,
           label: "Japan"
@@ -458,7 +458,7 @@
           }
         ]
       ]);
-      return drop_down.get().should.be.eql([
+      return drop_down.fetch_all().should.be.eql([
         {
           id: 8,
           label: "Madagascar",

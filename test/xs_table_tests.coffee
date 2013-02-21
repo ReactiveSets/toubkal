@@ -91,28 +91,28 @@ describe 'Columns_Set():', ->
   it 'columns should be equal to object.columns', ->
     object = from_HTML_to_object node
     
-    columns.get().should.be.eql object.columns
+    columns.fetch_all().should.be.eql object.columns
   
   it 'after add 2 objects: columns.add( objects ) should be equal to object.columns', ->
     columns.add [ { id: "year" , label: "Year", align: "center" }, { id: "language", label: "Language" } ]
     
     object = from_HTML_to_object node
     
-    columns.get().should.be.eql object.columns
+    columns.fetch_all().should.be.eql object.columns
   
   it 'after columns.remove( object ), columns should be equal to object.columns', ->
     columns.remove [ { id: "id", label: "ID" } ]
     
     object = from_HTML_to_object node
     
-    columns.get().should.be.eql object.columns
+    columns.fetch_all().should.be.eql object.columns
   
   it 'after columns.update( object ), columns should be equal to object.columns', ->
     columns.update [ [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ] ]
     
     object = from_HTML_to_object node
 
-    columns.get().should.be.eql object.columns
+    columns.fetch_all().should.be.eql object.columns
 
 describe 'Table():', ->
   it 'books should be equal to object.data', ->
