@@ -83,6 +83,16 @@
         ;
       */
       
+      // Charts Checkbox
+      xs.set( [
+          { id: false, label: "No Chart" },
+          { id: true , label: "Chart"    }
+        ] )
+        .order( organizer )
+        .checkbox( document.getElementById( "checkbox" ) )
+        .table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Checkbox Value" } )
+      ;
+      
       // Religions Radio button
       xs.set( [
           { id: 1, label: "Islam"        },

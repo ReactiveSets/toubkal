@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, chai, drop_down, drop_down_source, options, organizer, radio, radio_source, xs;
+  var XS, chai, checkbox, checkbox_source, drop_down, drop_down_source, options, organizer, radio, radio_source, xs;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -55,6 +55,12 @@
     label: "Charts"
   };
 
+  checkbox_source = xs.order(organizer, {
+    name: "Checkbox Source"
+  });
+
+  checkbox = checkbox_source.checkbox(document.getElementById("checkbox_control"), {}).set();
+
   radio_source = xs.order(organizer, {
     name: "Radio Source"
   });
@@ -67,45 +73,121 @@
 
   drop_down = drop_down_source.drop_down(document.getElementById("drop_down_control")).set();
 
-  /*
-  describe 'Checkbox():', ->
-    it 'checkbox should be empty', ->
-      checkbox.get().should.be.empty
-    
-    describe 'add():', ->
-      it 'after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', ->
-        checkbox_source.add [ { id: true, label: "Label True" } ]
-        
-        checkbox_source.get().should.be.eql [ { id: true, label: "Label True" } ]
-      
-      it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', ->
-        checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
-      
-      it 'after checkbox_source.add( object ), checkbox should be equal to [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ]', ->
-        checkbox_source.add [ { id: false, label: "Label False" } ]
-        
-        checkbox.get().should.be.eql [ { id: true, label: "Label True" } ]
-      
-    describe 'update():', ->
-      it 'after checkbox_source.update( objects ) checkbox should be equal to [ { id: false, label: "Charts" }, { id: true, label: "Charts" } ]', ->
-        checkbox_source.update [
-          [ { id: true, label: "Label True" }, { id: true, label: "Charts" } ]
-          [ { id: false, label: "Label False" }, { id: false, label: "Charts" } ]
+  describe('Checkbox():', function() {
+    it('checkbox should be empty', function() {
+      return checkbox.get().should.be.empty;
+    });
+    it('after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', function() {
+      checkbox_source.add([
+        {
+          id: true,
+          label: "Label True"
+        }
+      ]);
+      return checkbox_source.get().should.be.eql([
+        {
+          id: true,
+          label: "Label True"
+        }
+      ]);
+    });
+    it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
+      return checkbox.get().should.be.eql([
+        {
+          id: true,
+          label: "Label True"
+        }
+      ]);
+    });
+    it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
+      checkbox_source.add([
+        {
+          id: false,
+          label: "Label False"
+        }
+      ]);
+      return checkbox.get().should.be.eql([
+        {
+          id: true,
+          label: "Label True"
+        }
+      ]);
+    });
+    it('after checkbox_source.remove( object ), checkbox should be equal to [ { id: false, label: "Label False" } ]', function() {
+      checkbox_source.remove([
+        {
+          id: true,
+          label: "Label True"
+        }
+      ]);
+      return checkbox.get().should.be.eql([
+        {
+          id: false,
+          label: "Label False"
+        }
+      ]);
+    });
+    it('after checkbox_source.remove( object ), checkbox should be empty', function() {
+      checkbox_source.remove([
+        {
+          id: false,
+          label: "Label False"
+        }
+      ]);
+      return checkbox.get().should.be.empty;
+    });
+    it('after checkbox_source.add( objects ), checkbox should be equal to [ { id: false, label: "Label False", selected: true } ]', function() {
+      checkbox_source.add([
+        {
+          id: true,
+          label: "Label True"
+        }, {
+          id: false,
+          label: "Label False",
+          selected: true
+        }
+      ]);
+      return checkbox.get().should.be.eql([
+        {
+          id: false,
+          label: "Label False",
+          selected: true
+        }
+      ]);
+    });
+    return it('after checkbox_source.update( objects ) checkbox should be equal to [ { id: true, label: "Charts", selected: true } ]', function() {
+      checkbox_source.update([
+        [
+          {
+            id: true,
+            label: "Label True"
+          }, {
+            id: true,
+            label: "Charts",
+            selected: true
+          }
+        ], [
+          {
+            id: false,
+            label: "Label False",
+            selected: true
+          }, {
+            id: false,
+            label: "Charts"
+          }
         ]
-        
-        checkbox.get().should.be.eql [ { id: true, label: "Charts" } ]
-    
-    describe 'remove():', ->
-      it 'after checkbox_source.remove( object ), checkbox should be equal to [ { id: true, label: "Charts" } ]', ->
-        checkbox_source.remove [ { id: false, label: "Charts" } ]
-        
-        checkbox.get().should.be.eql [ { id: true, label: "Charts" } ]
-      
-      it 'after checkbox_source.remove( object ), checkbox should be empty', ->
-        checkbox_source.remove [ { id: true, label: "Charts" } ]
-        
-        checkbox.get().should.be.empty
-  
+      ]);
+      return checkbox.get().should.be.eql([
+        {
+          id: true,
+          label: "Charts",
+          selected: true
+        }
+      ]);
+    });
+  });
+
+  /*
   describe 'Checkbox_Group():', ->
     it 'checkbox_group should be empty', ->
       
