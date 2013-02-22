@@ -261,8 +261,20 @@ describe 'XS test suite:', ->
         cars.index_of( { id: 3, model: "S Class" } ).should.be.eql -1
     
     describe 'remove():', ->
-      it 'set.remove( [ { id: 1 } ] ) should be equal to set: empty set', ->
-        set.remove( [ { id: 1 } ] ).fetch_all().should.be.eql set.fetch_all()
+      it 'set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', ->
+        set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ).fetch_all().should.be.eql [ { id: 2 } ]
+      
+      it 'should have an one value in the anti-state', ->
+        set.b.should.be.eql [ { id: 1 } ]
+      
+      it 'adding back this element should not change the set', ->
+        set.add( [ { id: 1 } ] ).fetch_all().should.be.eql [ { id: 2 } ]
+      
+      it 'anti-state should be empty again', ->
+        set.b.should.be.eql []
+        
+      it 'removing id 2 should left set empty again', ->
+        set.remove( [ { id: 2 } ] ).fetch_all().should.be.eql []
       
       it 'employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', ->
         employee.remove( [ { id: 15 } ] )
@@ -314,27 +326,34 @@ describe 'XS test suite:', ->
     
     describe 'update():', ->
       it 'set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', ->
-        set.update( [ [ { id: 1 } ] ] ).fetch_all().should.be.eql set.fetch_all()
+        set
+          .update( [ [ { id: 1 }, { id: 1, v: 'test' } ] ] )
+          .fetch_all().should.be.eql [ { id: 1, v: 'test' } ]
       
-      it 'employee.update( [ [ { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ] ] ) should be equal to employee: record with id 15 doesn\'t exist', ->
-        employee.update( [ [ { id: 15, name: "Khalifa P Nassik", Salary: "$1500" } ] ] )
-	
-        employee.fetch_all().should.be.eql [
-          { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
-          { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
-          { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
-        ]
+      it 'employee with add, update and remove inverted should end with update done', ->
+        employee
+          .remove(   [ { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] )
+          .update( [ [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" }
+                       { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] ] )
+          .add(      [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" } ] )
+          .fetch_all().should.be.eql [
+            { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+            { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+            { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+            #{ id: 15, name: "Khalifa P Nassik", salary: "$2500" }
+          ]
       
       it 'employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', ->
-        result = xs.set [
+        result = [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+          #{ id: 15, name: "Khalifa P Nassik", salary: "$2500" }
         ]
 
         employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ] ] )
 
-        employee.fetch_all().should.be.eql result.fetch_all()
+        employee.fetch_all().should.be.eql result
     
     describe 'filter():', ->
       is_in_usa = ( city, c, cities ) ->
@@ -1152,22 +1171,23 @@ describe 'XS test suite:', ->
     tolkien_sales_by_year = books_sales.aggregate_from tolkien_books, sales, by_year 
     
     it 'should group and order books_sales_by_author by author', ->
-      books_sales_by_author.fetch_all().should.be.eql [
-        { author: "Agatha Christie"        , sales: 100, _count: 1 }
-        { author: "Charles Dickens"        , sales: 200, _count: 1 }
-        { author: "Dan Brown"              , sales: 119, _count: 2 }
-        { author: "Ellen G. White"         , sales:  60, _count: 1 }
-        { author: "J. R. R. Tolkien"       , sales: 250, _count: 2 }
-        { author: "J.K. Rowling"           , sales:   0, _count: 1 }
-        { author: "Paulo Coelho"           , sales:  65, _count: 1 }
-        { author: "Pierre Dukan"           , sales:  10, _count: 1 }
-        { author: "Roald Dahl"             , sales:  13, _count: 1 }
-        { author: "Stephenie Meyer"        , sales:   0, _count: 1 }
-        { author: "Stieg Larsson"          , sales:  30, _count: 1 }
-        { author: "Suzanne Collins"        , sales:  23, _count: 1 }
-        { author: "Vladimir Nabokov"       , sales:  50, _count: 1 }
-        { author: "William Holmes McGuffey", sales: 125, _count: 1 }
-      ]
+      books_sales_by_author.fetch_all ( values ) -> 
+        values.should.be.eql [
+          { author: "Agatha Christie"        , sales: 100, _count: 1 }
+          { author: "Charles Dickens"        , sales: 200, _count: 1 }
+          { author: "Dan Brown"              , sales: 119, _count: 2 }
+          { author: "Ellen G. White"         , sales:  60, _count: 1 }
+          { author: "J. R. R. Tolkien"       , sales: 250, _count: 2 }
+          { author: "J.K. Rowling"           , sales:   0, _count: 1 }
+          { author: "Paulo Coelho"           , sales:  65, _count: 1 }
+          { author: "Pierre Dukan"           , sales:  10, _count: 1 }
+          { author: "Roald Dahl"             , sales:  13, _count: 1 }
+          { author: "Stephenie Meyer"        , sales:   0, _count: 1 }
+          { author: "Stieg Larsson"          , sales:  30, _count: 1 }
+          { author: "Suzanne Collins"        , sales:  23, _count: 1 }
+          { author: "Vladimir Nabokov"       , sales:  50, _count: 1 }
+          { author: "William Holmes McGuffey", sales: 125, _count: 1 }
+        ]
     
     it 'should group and order books_sales_by_year by year', ->
       books_sales_by_year.fetch_all().should.be.eql [
