@@ -83,7 +83,7 @@ books = xs.set( [
   { id: 4, title: "The Da Vinci Code"                , author: "Dan Brown"       , sales:        80, year: 2003, language: "English" }
 ] ).order( organizer, { name: "Books" } )
 
-books.table document.getElementById( "demo" ), columns, organizer, {caption: "List of the best-selling books (source: wikipedia)" }
+books.order( organizer ).table document.getElementById( "demo" ), columns, {caption: "List of the best-selling books (source: wikipedia)" }
 
 node = document.getElementById( "demo" ).firstChild
 

@@ -90,7 +90,8 @@
         ] )
         .order( organizer )
         .checkbox( document.getElementById( "checkbox" ) )
-        .table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Checkbox Value" } )
+        .order( organizer )
+        .table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], { caption: "Checkbox Value" } )
       ;
       
       // Religions Radio button
@@ -106,7 +107,8 @@
         ] )
         .order( organizer )
         .radio( document.getElementById( "radio" ) )
-        .table( document.getElementById( "radio_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Radio Value" } )
+        .order( organizer )
+        .table( document.getElementById( "radio_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], { caption: "Radio Value" } )
       ;
       
       // Countries Drop-Down
@@ -121,7 +123,8 @@
         ], { name: 'Countries' } )
         .order( organizer )
         .drop_down( document.getElementById( "drop_down" ) )
-        .table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Drop Down Value" } )
+        .order( organizer )
+        .table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], { caption: "Drop Down Value" } )
       ;
     </script>
   </body>

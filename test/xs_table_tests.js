@@ -144,7 +144,7 @@
     name: "Books"
   });
 
-  books.table(document.getElementById("demo"), columns, organizer, {
+  books.order(organizer).table(document.getElementById("demo"), columns, {
     caption: "List of the best-selling books (source: wikipedia)"
   });
 
