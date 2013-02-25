@@ -73,17 +73,17 @@ chai?.should()
 
 xs = XS.xs
 
-columns   = xs.set [ { id: "id", label: "ID" }, { id: "title", label: "Title" }, { id: "author", label: "Author" } ], { name: "Columns Set" }
+columns   = xs.set( [ { id: "id", label: "ID" }, { id: "title", label: "Title" }, { id: "author", label: "Author" } ], { name: "Columns Set" } ).order( [ { id: "label" } ] )
 organizer = xs.set [ { id: "title" } ], { name: "Organizer: by title ascending" }
 
-books = xs.set( [
-  { id: 1, title: "A Tale of Two Cities"             , author: "Charles Dickens" , sales:       200, year: 1859, language: "English" }
-  { id: 2, title: "The Lord of the Rings"            , author: "J. R. R. Tolkien", sales:       150, year: 1955, language: "English" }
-  { id: 3, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"      , sales:        13            , language: "English" }
-  { id: 4, title: "The Da Vinci Code"                , author: "Dan Brown"       , sales:        80, year: 2003, language: "English" }
-] ).order( organizer, { name: "Books" } )
+books = xs.set [
+  { id: 1, title: "A Tale of Two Cities"             , author: "Charles Dickens" , sales: 200, year: 1859, language: "English" }
+  { id: 2, title: "The Lord of the Rings"            , author: "J. R. R. Tolkien", sales: 150, year: 1955, language: "English" }
+  { id: 3, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"      , sales:  13            , language: "English" }
+  { id: 4, title: "The Da Vinci Code"                , author: "Dan Brown"       , sales:  80, year: 2003, language: "English" }
+], { name: "Books" }
 
-books.order( organizer ).table document.getElementById( "demo" ), columns, {caption: "List of the best-selling books (source: wikipedia)" }
+books_table = books.order( organizer ).table document.getElementById( "demo" ), columns, { caption: "List of the best-selling books (source: wikipedia)" }
 
 node = document.getElementById( "demo" ).firstChild
 
@@ -117,7 +117,7 @@ describe 'Columns_Set():', ->
 describe 'Table():', ->
   it 'books should be equal to object.data', ->
     object = from_HTML_to_object node
-
+    
     object.data.should.be.eql [
       { title: "A Tale of Two Cities"             , author: "Charles Dickens" , year: 1859, sales:       200 }
       { title: "Charlie and the Chocolate Factory", author: "Roald Dahl"                  , sales:        13 }
@@ -141,57 +141,57 @@ describe 'Table():', ->
     ]
     
     object = from_HTML_to_object node
-
-    object.data.should.be.eql [
-      { title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859, sales:       200 }
-      { title: "And Then There Were None"                , author: "Agatha Christie"                    , sales:  100      }
-      { title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000, sales:        39 }
-      { title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008                   }
-      { title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                         , sales:        13 }
-      { title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999                   }
-      { title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955, sales:        50 }
-      { title: "Steps to Christ"                         , author: "Ellen G. White"                     , sales:        60 }
-      { title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003, sales:        80 }
-      { title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000, sales:        10 }
-      { title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005, sales:        30 }
-      { title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937, sales:       100 }
-      { title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008, sales:        23 }
-      { title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955, sales:       150 }
-      { title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853, sales:       125 }
-    ]
     
+    object.data.should.be.eql [
+      { title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859, sales:  200 }
+      { title: "And Then There Were None"                , author: "Agatha Christie"                    , sales:  100 }
+      { title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000, sales:   39 }
+      { title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008              }
+      { title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                         , sales:   13 }
+      { title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999              }
+      { title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955, sales:   50 }
+      { title: "Steps to Christ"                         , author: "Ellen G. White"                     , sales:   60 }
+      { title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003, sales:   80 }
+      { title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 2000, sales:   10 }
+      { title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005, sales:   30 }
+      { title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937, sales:  100 }
+      { title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008, sales:   23 }
+      { title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955, sales:  150 }
+      { title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853, sales:  125 }
+    ]
+  
   it 'after books.update( objects ): books should be equal to object.data', ->
     books.update [
       [
-        { id:  2, title: "The Lord of the Rings"                            , author: "J. R. R. Tolkien"         , year: 1955 }
-        { id:  2, title: "The Lord of the Rings: The Fellowship of the Ring", author: "John Ronald Reuel Tolkien", year: 1955 }
+        { id:  2, title: "The Lord of the Rings"             , author: "J. R. R. Tolkien"         , year: 1955 }
+        { id:  2, title: "The Fellowship of the Ring: LOTR 1", author: "John Ronald Reuel Tolkien", year: 1955 }
       ]
       [
         { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"  , year: 1999 }
         { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "Joanne Rowling", year: 1999 }
       ]
     ]
-
+    
     object = from_HTML_to_object node
-
-    object.data.should.be.eql [
-      { title: "A Tale of Two Cities"                             , author: "Charles Dickens"          , year: 1859, sales:       200 }
-      { title: "And Then There Were None"                         , author: "Agatha Christie"                      , sales:  100      }
-      { title: "Angels and Demons"                                , author: "Dan Brown"                , year: 2000, sales:        39 }
-      { title: "Breaking Dawn"                                    , author: "Stephenie Meyer"          , year: 2008                   }
-      { title: "Charlie and the Chocolate Factory"                , author: "Roald Dahl"                           , sales:        13 }
-      { title: "Harry Potter and the Prisoner of Azkaban"         , author: "Joanne Rowling"           , year: 1999                   }
-      { title: "Lolita"                                           , author: "Vladimir Nabokov"         , year: 1955, sales:        50 }
-      { title: "Steps to Christ"                                  , author: "Ellen G. White"                       , sales:        60 }
-      { title: "The Da Vinci Code"                                , author: "Dan Brown"                , year: 2003, sales:        80 }
-      { title: "The Dukan Diet"                                   , author: "Pierre Dukan"             , year: 2000, sales:        10 }
-      { title: "The Girl with the Dragon Tattoo"                  , author: "Stieg Larsson"            , year: 2005, sales:        30 }
-      { title: "The Hobbit"                                       , author: "J. R. R. Tolkien"         , year: 1937, sales:       100 }
-      { title: "The Hunger Games"                                 , author: "Suzanne Collins"          , year: 2008, sales:        23 }
-      { title: "The Lord of the Rings: The Fellowship of the Ring", author: "John Ronald Reuel Tolkien", year: 1955, sales:       150 }
-      { title: "The McGuffey Readers"                             , author: "William Holmes McGuffey"  , year: 1853, sales:       125 }
+    
+    object.data.should.be.eql [ 
+      { author: "Charles Dickens"          , sales: 200, title: "A Tale of Two Cities"                    , year: 1859 }
+      { author: "Agatha Christie"          , sales: 100, title: "And Then There Were None"                             }
+      { author: "Dan Brown"                , sales:  39, title: "Angels and Demons"                       , year: 2000 }
+      { author: "Stephenie Meyer"                      , title: "Breaking Dawn"                           , year: 2008 }
+      { author: "Roald Dahl"               , sales:  13, title: "Charlie and the Chocolate Factory"                    }
+      { author: "Joanne Rowling"                       , title: "Harry Potter and the Prisoner of Azkaban", year: 1999 }
+      { author: "Vladimir Nabokov"         , sales:  50, title: "Lolita"                                  , year: 1955 }
+      { author: "Ellen G. White"           , sales:  60, title: "Steps to Christ"                                      }
+      { author: "Dan Brown"                , sales:  80, title: "The Da Vinci Code"                       , year: 2003 }
+      { author: "Pierre Dukan"             , sales:  10, title: "The Dukan Diet"                          , year: 2000 }
+      { author: "John Ronald Reuel Tolkien"            , title: "The Fellowship of the Ring: LOTR 1"      , year: 1955 }
+      { author: "Stieg Larsson"            , sales:  30, title: "The Girl with the Dragon Tattoo"         , year: 2005 }
+      { author: "J. R. R. Tolkien"         , sales: 100, title: "The Hobbit"                              , year: 1937 }
+      { author: "Suzanne Collins"          , sales:  23, title: "The Hunger Games"                        , year: 2008 }
+      { author: "William Holmes McGuffey"  , sales: 125, title: "The McGuffey Readers"                    , year: 1853 }
     ]
-
+  
   it 'after books.remove( objects ): books should be equal to object.data', ->
     books.remove [
       { id:  1, title: "A Tale of Two Cities", author: "Charles Dickens"        , year: 1859 }
@@ -202,17 +202,17 @@ describe 'Table():', ->
     object = from_HTML_to_object node
     
     object.data.should.be.eql [
-      { title: "And Then There Were None"                         , author: "Agatha Christie"                      , sales:  100      }
-      { title: "Angels and Demons"                                , author: "Dan Brown"                , year: 2000, sales:        39 }
-      { title: "Breaking Dawn"                                    , author: "Stephenie Meyer"          , year: 2008                   }
-      { title: "Charlie and the Chocolate Factory"                , author: "Roald Dahl"                           , sales:        13 }
-      { title: "Harry Potter and the Prisoner of Azkaban"         , author: "Joanne Rowling"           , year: 1999                   }
-      { title: "Steps to Christ"                                  , author: "Ellen G. White"                       , sales:        60 }
-      { title: "The Da Vinci Code"                                , author: "Dan Brown"                , year: 2003, sales:        80 }
-      { title: "The Dukan Diet"                                   , author: "Pierre Dukan"             , year: 2000, sales:        10 }
-      { title: "The Girl with the Dragon Tattoo"                  , author: "Stieg Larsson"            , year: 2005, sales:        30 }
-      { title: "The Hobbit"                                       , author: "J. R. R. Tolkien"         , year: 1937, sales:       100 }
-      { title: "The Hunger Games"                                 , author: "Suzanne Collins"          , year: 2008, sales:        23 }
-      { title: "The Lord of the Rings: The Fellowship of the Ring", author: "John Ronald Reuel Tolkien", year: 1955, sales:       150 }
+      { author: "Agatha Christie"          , sales: 100, title: "And Then There Were None"                             }
+      { author: "Dan Brown"                , sales:  39, title: "Angels and Demons"                       , year: 2000 }
+      { author: "Stephenie Meyer"                      , title: "Breaking Dawn"                           , year: 2008 }
+      { author: "Roald Dahl"               , sales:  13, title: "Charlie and the Chocolate Factory"                    }
+      { author: "Joanne Rowling"                       , title: "Harry Potter and the Prisoner of Azkaban", year: 1999 }
+      { author: "Ellen G. White"           , sales:  60, title: "Steps to Christ"                                      }
+      { author: "Dan Brown"                , sales:  80, title: "The Da Vinci Code"                       , year: 2003 }
+      { author: "Pierre Dukan"             , sales:  10, title: "The Dukan Diet"                          , year: 2000 }
+      { author: "John Ronald Reuel Tolkien"            , title: "The Fellowship of the Ring: LOTR 1"      , year: 1955 }
+      { author: "Stieg Larsson"            , sales:  30, title: "The Girl with the Dragon Tattoo"         , year: 2005 }
+      { author: "J. R. R. Tolkien"         , sales: 100, title: "The Hobbit"                              , year: 1937 }
+      { author: "Suzanne Collins"          , sales:  23, title: "The Hunger Games"                        , year: 2008 }
     ]
     
