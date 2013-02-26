@@ -45,8 +45,8 @@ options         = { label: "Charts" }
 checkbox_source = xs.order organizer, { name: "Checkbox Source" }
 checkbox        = checkbox_source.checkbox( document.getElementById( "checkbox_control" ), {} ).set()
 
-#checkbox_group_source = xs.order organizer, { name: "Checkbox Group Source" }
-#checkbox_group  = checkbox_group_source.checkbox_group document.getElementById( "checkbox_group_control" )
+checkbox_group_source = xs.order organizer, { name: "Checkbox Group Source" }
+checkbox_group  = checkbox_group_source.checkbox_group( document.getElementById( "checkbox_group_control" ) ).set()
 
 radio_source = xs.order organizer, { name: "Radio Source" }
 radio        = radio_source.radio( document.getElementById( "radio_control" ) ).set()
@@ -93,7 +93,7 @@ describe 'Checkbox():', ->
     ]
     
     checkbox.fetch_all().should.be.eql [ { id: true, label: "Charts", selected: true } ]
-###
+
 describe 'Checkbox_Group():', ->
   it 'checkbox_group should be empty', ->
     
@@ -102,10 +102,10 @@ describe 'Checkbox_Group():', ->
   it 'after checkbox_group_source.add( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.add [
       { id: 1, label: "Photography"            , selected: true }
-      { id: 2, label: "Fishing"                                }
-      { id: 3, label: "Playing Computer Games"                 }
+      { id: 2, label: "Fishing"                                 }
+      { id: 3, label: "Playing Computer Games"                  }
       { id: 4, label: "Traveling"              , selected: true }
-      { id: 5, label: "Cooking"                                }
+      { id: 5, label: "Cooking"                                 }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
     ]
     
@@ -117,7 +117,7 @@ describe 'Checkbox_Group():', ->
   
   it 'after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.remove [
-      { id: 3, label: "Playing Computer Games"                }
+      { id: 3, label: "Playing Computer Games"                 }
       { id: 4, label: "Traveling"             , selected: true }
     ]
     
@@ -137,18 +137,18 @@ describe 'Checkbox_Group():', ->
   
   it 'after checkbox_group_source.update( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.update [
-      [ { id: 3, label: "Playing Computer Games" }, { id: 3, label: "Playing Video Games" } ]
-      [ { id: 7, label: "Pottery", selected: true }, { id: 7, label: "Pottery", selected: false } ]
-      [ { id: 8, label: "Gardening" }, { id: 8, label: "Gardening and Plants", selected: true } ]
+      [ { id: 3, label: "Playing Computer Games"  }, { id: 3, label: "Playing Video Games"                  } ]
+      [ { id: 7, label: "Pottery", selected: true }, { id: 7, label: "Pottery"            , selected: false } ]
+      [ { id: 8, label: "Gardening"               }, { id: 8, label: "Gardening and Plants", selected: true } ]
     ]
     
     checkbox_group.fetch_all().should.be.eql [
       { id: 1, label: "Photography"            , selected: true }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
-      #{ id: 7, label: "Pottery"                , selected: true }
+      { id: 7, label: "Pottery"                , selected: true }
       { id: 8, label: "Gardening and Plants"   , selected: true }
     ]
-###
+
 describe 'Radio():', ->
   it 'radio should be empty', ->
   
