@@ -109,6 +109,11 @@
         .table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], { caption: "Drop Down Value" } )
       ;
       
+      // The following unobvious composition of two orders with a checkbox_group could be part of control.js
+      XS.Compose( 'ordered_checkbox_group', function( source, order, element ) {
+        return source.order( order ).checkbox_group( element ).order( order );
+      } );
+      
       // Table Books with columns as Checkbox Group and Drop Down Organizer
       var source = xs.set( [
             { id: "id"      , label: "ID"      , order: 0                  },
@@ -120,8 +125,8 @@
             /*
             */
           ] )
-        , columns_order = [ { id: "order" } ] 
-        , columns = source.order( columns_order ).checkbox_group( document.getElementById( "columns" ) ).order( columns_order )
+          // use composed ordered_checkbox_group() to produce a flow of ordered columns 
+        , columns = source.ordered_checkbox_group( [ { id: "order" } ], document.getElementById( "columns" ) )
         , order   = source.order( [ { id: "label" } ] ).drop_down( document.getElementById( "order" ) )
       ;
       
