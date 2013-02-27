@@ -228,12 +228,12 @@
           label: "Photography",
           selected: true
         }, {
-          id: 4,
-          label: "Traveling",
-          selected: true
-        }, {
           id: 6,
           label: "Stamp / Coin Collection",
+          selected: true
+        }, {
+          id: 4,
+          label: "Traveling",
           selected: true
         }
       ]);
@@ -278,12 +278,12 @@
           label: "Photography",
           selected: true
         }, {
-          id: 6,
-          label: "Stamp / Coin Collection",
-          selected: true
-        }, {
           id: 7,
           label: "Pottery",
+          selected: true
+        }, {
+          id: 6,
+          label: "Stamp / Coin Collection",
           selected: true
         }
       ]);
@@ -321,20 +321,16 @@
       ]);
       return checkbox_group.fetch_all().should.be.eql([
         {
+          id: 8,
+          label: "Gardening and Plants",
+          selected: true
+        }, {
           id: 1,
           label: "Photography",
           selected: true
         }, {
           id: 6,
           label: "Stamp / Coin Collection",
-          selected: true
-        }, {
-          id: 7,
-          label: "Pottery",
-          selected: true
-        }, {
-          id: 8,
-          label: "Gardening and Plants",
           selected: true
         }
       ]);

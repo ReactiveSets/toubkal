@@ -35,54 +35,13 @@
     
     <h3>Checkbox Group</h3>
     <div id="checkbox_group"></div>
-    <div id="books"></div>
+    <div id="checkbox_group_table"></div>
     
     <script type="text/javascript" charset="utf-8">
       var xs = XS.xs
         , organizer = xs.set( [ { id: 'label' } ], { name: 'by label' } )
       ;
-      
-      /*
-        // Checkbox
-        xs.set( [ { id: false, label: "Label False" }, { id: true, label: "Label True" } ], { name: "Checkbox Source" } )
-          .checkbox( document.getElementById( "checkbox" ), organizer, { default_value : { id: true, label: "Label True" }, label: "Chart" } )
-          .table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], organizer, { caption: "Checkbox Value" } )
-        ;
-        
-        // Books table
-        xs.set( [
-            { id:  1, title: "A Tale of Two Cities"                             , author: "Charles Dickens"          , year: 1859, sales:       200 },
-            { id:  2, title: "And Then There Were None"                         , author: "Agatha Christie"                      , sales:  100      },
-            { id:  3, title: "Angels and Demons"                                , author: "Dan Brown"                , year: 2000, sales:        39 },
-            { id:  4, title: "Breaking Dawn"                                    , author: "Stephenie Meyer"          , year: 2008                   },
-            { id:  5, title: "Charlie and the Chocolate Factory"                , author: "Roald Dahl"                           , sales:        13 },
-            { id:  6, title: "Harry Potter and the Prisoner of Azkaban"         , author: "Joanne Rowling"           , year: 1999                   },
-            { id:  7, title: "Lolita"                                           , author: "Vladimir Nabokov"         , year: 1955, sales:        50 },
-            { id:  8, title: "Steps to Christ"                                  , author: "Ellen G. White"                       , sales:        60 },
-            { id:  9, title: "The Da Vinci Code"                                , author: "Dan Brown"                , year: 2003, sales:        80 },
-            { id: 10, title: "The Dukan Diet"                                   , author: "Pierre Dukan"             , year: 2000, sales:        10 },
-            { id: 11, title: "The Girl with the Dragon Tattoo"                  , author: "Stieg Larsson"            , year: 2005, sales:        30 },
-            { id: 12, title: "The Hobbit"                                       , author: "J. R. R. Tolkien"         , year: 1937, sales:       100 },
-            { id: 13, title: "The Hunger Games"                                 , author: "Suzanne Collins"          , year: 2008, sales:        23 },
-            { id: 14, title: "The Lord of the Rings: The Fellowship of the Ring", author: "John Ronald Reuel Tolkien", year: 1955, sales:       150 },
-            { id: 15, title: "The McGuffey Readers"                             , author: "William Holmes McGuffey"  , year: 1853, sales:       125 }
-          ], { name: 'Books' } )
-          .order( organizer )
-          .table( document.getElementById( "books" ), columns, organizer, { caption: "List of the best-selling books (source: wikipedia)" } )
-        ;
-        
-        // Columns Checkbox group
-        xs.set( [
-            { id: "id"    , label: "ID"                         },
-            { id: "title" , label: "Title" , checked: true      },
-            { id: "author", label: "Author", checked: true      },
-            { id: "year"  , label: "Year"  , checked: true      },
-            { id: "sales" , label: "Sales By Million of Copies" }
-          ], { name: "Columns" } )
-          .checkbox_group( document.getElementById( "checkbox_group" ), organizer )
-        ;
-      */
-      
+            
       // Charts Checkbox
       xs.set( [
           { id: false, label: "No Chart" },
@@ -92,6 +51,23 @@
         .checkbox( document.getElementById( "checkbox" ) )
         .order( organizer )
         .table( document.getElementById( "checkbox_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], { caption: "Checkbox Value" } )
+      ;
+      
+      // Hobbies Checkbox Group
+      xs.set( [
+          { id: 1, label: "Photography"             },
+          { id: 2, label: "Fishing"                 },
+          { id: 3, label: "Playing Computer Games"  },
+          { id: 4, label: "Traveling"               },
+          { id: 5, label: "Cooking"                 },
+          { id: 6, label: "Stamp / Coin Collection" },
+          { id: 7, label: "Pottery"                 },
+          { id: 8, label: "Gardening"               }
+        ] )
+        .order( organizer )
+        .checkbox_group( document.getElementById( "checkbox_group" ) )
+        .order( organizer )
+        .table( document.getElementById( "checkbox_group_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], { caption: "Checkbox Group Value" } )
       ;
       
       // Religions Radio button

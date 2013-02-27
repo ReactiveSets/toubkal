@@ -111,8 +111,8 @@ describe 'Checkbox_Group():', ->
     
     checkbox_group.fetch_all().should.be.eql [
       { id: 1, label: "Photography"            , selected: true }
-      { id: 4, label: "Traveling"              , selected: true }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
+      { id: 4, label: "Traveling"              , selected: true }
     ]
   
   it 'after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', ->
@@ -131,22 +131,21 @@ describe 'Checkbox_Group():', ->
     
     checkbox_group.fetch_all().should.be.eql [
       { id: 1, label: "Photography"            , selected: true }
-      { id: 6, label: "Stamp / Coin Collection", selected: true }
       { id: 7, label: "Pottery"                , selected: true }
+      { id: 6, label: "Stamp / Coin Collection", selected: true }
     ]
   
   it 'after checkbox_group_source.update( objects ), checkbox_group should be equal to result', ->
     checkbox_group_source.update [
-      [ { id: 3, label: "Playing Computer Games"  }, { id: 3, label: "Playing Video Games"                  } ]
-      [ { id: 7, label: "Pottery", selected: true }, { id: 7, label: "Pottery"            , selected: false } ]
-      [ { id: 8, label: "Gardening"               }, { id: 8, label: "Gardening and Plants", selected: true } ]
+      [ { id: 3, label: "Playing Computer Games"  }, { id: 3, label: "Playing Video Games"                   } ]
+      [ { id: 7, label: "Pottery", selected: true }, { id: 7, label: "Pottery"             , selected: false } ]
+      [ { id: 8, label: "Gardening"               }, { id: 8, label: "Gardening and Plants", selected: true  } ]
     ]
     
     checkbox_group.fetch_all().should.be.eql [
+      { id: 8, label: "Gardening and Plants"   , selected: true }
       { id: 1, label: "Photography"            , selected: true }
       { id: 6, label: "Stamp / Coin Collection", selected: true }
-      { id: 7, label: "Pottery"                , selected: true }
-      { id: 8, label: "Gardening and Plants"   , selected: true }
     ]
 
 describe 'Radio():', ->
