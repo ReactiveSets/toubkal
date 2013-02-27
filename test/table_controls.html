@@ -37,6 +37,12 @@
     <div id="checkbox_group"></div>
     <div id="checkbox_group_table"></div>
     
+    <h3>Table Books with columns as Checkbox Group and Drop Down organizer</h3>
+    <div id="columns"></div>
+    <div id="order"></div>
+    <div id="books"></div>
+    
+    
     <script type="text/javascript" charset="utf-8">
       var xs = XS.xs
         , organizer = xs.set( [ { id: 'label' } ], { name: 'by label' } )
@@ -101,6 +107,42 @@
         .drop_down( document.getElementById( "drop_down" ) )
         .order( organizer )
         .table( document.getElementById( "drop_down_table" ), [ { id: "id", label: "ID" }, { id: "label", label: "Label" } ], { caption: "Drop Down Value" } )
+      ;
+      
+      // Table Books with columns as Checkbox Group and Drop Down Organizer
+      var source = xs.set( [
+            { id: "id"      , label: "ID"      , order: 0                  },
+            { id: "title"   , label: "Title"   , order: 1, selected: true                  },
+            { id: "author"  , label: "Author"  , order: 2, selected: true                  },
+            { id: "year"    , label: "Year"    , order: 3, selected: true, align: "center" },
+            { id: "language", label: "Language", order: 4, selected: true                  },
+            { id: "sales"   , label: "Sales by millions of copies", order: 5, selected: true }
+            /*
+            */
+          ] )
+        , columns = source.order( [ { id: "order" } ] ).checkbox_group( document.getElementById( "columns" ) )
+        , order   = source.order( [ { id: "label" } ] ).drop_down( document.getElementById( "order" ) )
+      ;
+      
+      xs.set( [
+          { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year:      1859, language: "English" },
+          { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year:      1955, language: "English" },
+          { id:  3, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13                 , language: "English" },
+          { id:  4, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        80, year:      2003, language: "English" },
+          { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , sales:        39, year:      2000, language: "English" },
+          { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , sales:        30, year:      2005, language: "Swedish" },
+          { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", sales:       125, year:      1853, language: "English" },
+          { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , sales:       100, year:      1937, language: "English" },
+          { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , sales:        23, year:      2008, language: "English" },
+          { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , sales: undefined, year:      1999, language: "English" },
+          { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , sales:        10, year:      2000, language: "French"  },
+          { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , sales: undefined, year:      2008, language: "English" },
+          { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , sales:        50, year:      1955, language: "English" },
+          { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , sales:       100, year: undefined, language: "English" },
+          { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , sales:        60, year:      null, language: "English" }
+        ] )
+        .order( order )
+        .table( document.getElementById( "books" ), columns, { caption: "List of the best-selling books (source: wikipedia)" } )
       ;
     </script>
   </body>
