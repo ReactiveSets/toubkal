@@ -120,7 +120,8 @@
             /*
             */
           ] )
-        , columns = source.order( [ { id: "order" } ] ).checkbox_group( document.getElementById( "columns" ) )
+        , columns_order = [ { id: "order" } ] 
+        , columns = source.order( columns_order ).checkbox_group( document.getElementById( "columns" ) ).order( columns_order )
         , order   = source.order( [ { id: "label" } ] ).drop_down( document.getElementById( "order" ) )
       ;
       
