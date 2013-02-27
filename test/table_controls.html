@@ -110,7 +110,7 @@
       ;
       
       // The following unobvious composition of two orders with a checkbox_group could be part of control.js
-      XS.Compose( 'ordered_checkbox_group', function( source, order, element ) {
+      XS.Compose( 'ordered_checkbox_group', function( source, order, element, options ) {
         return source.order( order ).checkbox_group( element ).order( order );
       } );
       
