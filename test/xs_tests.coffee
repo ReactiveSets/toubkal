@@ -59,6 +59,7 @@ if require?
   require '../lib/filter.js'
   require '../lib/order.js'
   require '../lib/aggregate.js'
+  require '../lib/join.js'
 
 chai = require 'chai' if require?
 chai?.should()

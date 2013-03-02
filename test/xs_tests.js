@@ -68,6 +68,7 @@
     require('../lib/filter.js');
     require('../lib/order.js');
     require('../lib/aggregate.js');
+    require('../lib/join.js');
   }
 
   if (typeof require !== "undefined" && require !== null) {
