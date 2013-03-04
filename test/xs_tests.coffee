@@ -46,6 +46,22 @@ describe 'clone():', ->
     bar.should.be.eql foo
 
 # ----------------------------------------------------------------------------------------------
+# Asynchrnous tests exception catcher
+# -----------------------------------
+
+check = ( done, test ) ->
+  try
+    test()
+    
+    done()
+  catch e
+    done e
+
+describe 'Aynchronous test check()', ->
+  it 'should succeed in 50 ms', ( done ) ->
+    setTimeout ( () -> check done, () -> [].should.be.eql [] ), 50
+
+# ----------------------------------------------------------------------------------------------
 # xs unit test suite
 # ------------------
 
@@ -1354,8 +1370,8 @@ describe 'XS test suite:', ->
       { book_id: 16, sales:        13             }
     ], { key: ['year', 'book_id'] }
     
-    it 'should join books and authors', ->
-      books_with_authors.fetch_all ( values ) -> 
+    it 'should join books and authors', ( done ) ->
+      books_with_authors.fetch_all ( values ) -> check done, () ->
         values.should.be.eql [
           { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
           { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }

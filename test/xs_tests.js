@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Set, XS, chai, clone, extend, xs;
+  var Set, XS, chai, check, clone, extend, xs;
 
   clone = function(o) {
     var p, r;
@@ -57,6 +57,25 @@
     bar = clone(foo);
     return it('foo should be deep equal to bar', function() {
       return bar.should.be.eql(foo);
+    });
+  });
+
+  check = function(done, test) {
+    try {
+      test();
+      return done();
+    } catch (e) {
+      return done(e);
+    }
+  };
+
+  describe('Aynchronous test check()', function() {
+    return it('should succeed in 50 ms', function(done) {
+      return setTimeout((function() {
+        return check(done, function() {
+          return [].should.be.eql([]);
+        });
+      }), 50);
     });
   });
 
@@ -3940,90 +3959,92 @@
       ], {
         key: ['year', 'book_id']
       });
-      return it('should join books and authors', function() {
+      return it('should join books and authors', function(done) {
         return books_with_authors.fetch_all(function(values) {
-          return values.should.be.eql([
-            {
-              id: 1,
-              title: "A Tale of Two Cities",
-              author_id: 1,
-              author_name: "Charles Dickens"
-            }, {
-              id: 8,
-              title: "The Hobbit",
-              author_id: 2,
-              author_name: "J. R. R. Tolkien"
-            }, {
-              id: 2,
-              title: "The Lord of the Rings",
-              author_id: 2,
-              author_name: "J. R. R. Tolkien"
-            }, {
-              id: 3,
-              title: "The Da Vinci Code",
-              author_id: 3,
-              author_name: "Dan Brown"
-            }, {
-              id: 5,
-              title: "Angels and Demons",
-              author_id: 3,
-              author_name: "Dan Brown"
-            }, {
-              id: 4,
-              title: "The Alchemist",
-              author_id: 4,
-              author_name: "Paulo Coelho"
-            }, {
-              id: 6,
-              title: "The Girl with the Dragon Tattoo",
-              author_id: 5,
-              author_name: "Stieg Larsson"
-            }, {
-              id: 7,
-              title: "The McGuffey Readers",
-              author_id: 6,
-              author_name: "William Holmes McGuffey"
-            }, {
-              id: 9,
-              title: "The Hunger Games",
-              author_id: 7,
-              author_name: "Suzanne Collins"
-            }, {
-              id: 10,
-              title: "Harry Potter and the Prisoner of Azkaban",
-              author_id: 8,
-              author_name: "J.K. Rowling"
-            }, {
-              id: 11,
-              title: "The Dukan Diet",
-              author_id: 9,
-              author_name: "Pierre Dukan"
-            }, {
-              id: 12,
-              title: "Breaking Dawn",
-              author_id: 10,
-              author_name: "Stephenie Meyer"
-            }, {
-              id: 13,
-              title: "Lolita",
-              author_id: 11,
-              author_name: "Vladimir Nabokov"
-            }, {
-              id: 14,
-              title: "And Then There Were None",
-              author_id: 12,
-              author_name: "Agatha Christie"
-            }, {
-              id: 15,
-              title: "Steps to Christ",
-              author_id: 13,
-              author_name: "Ellen G. White"
-            }, {
-              id: 16,
-              title: "Charlie and the Chocolate Factory",
-              author_id: 14
-            }
-          ]);
+          return check(done, function() {
+            return values.should.be.eql([
+              {
+                id: 1,
+                title: "A Tale of Two Cities",
+                author_id: 1,
+                author_name: "Charles Dickens"
+              }, {
+                id: 8,
+                title: "The Hobbit",
+                author_id: 2,
+                author_name: "J. R. R. Tolkien"
+              }, {
+                id: 2,
+                title: "The Lord of the Rings",
+                author_id: 2,
+                author_name: "J. R. R. Tolkien"
+              }, {
+                id: 3,
+                title: "The Da Vinci Code",
+                author_id: 3,
+                author_name: "Dan Brown"
+              }, {
+                id: 5,
+                title: "Angels and Demons",
+                author_id: 3,
+                author_name: "Dan Brown"
+              }, {
+                id: 4,
+                title: "The Alchemist",
+                author_id: 4,
+                author_name: "Paulo Coelho"
+              }, {
+                id: 6,
+                title: "The Girl with the Dragon Tattoo",
+                author_id: 5,
+                author_name: "Stieg Larsson"
+              }, {
+                id: 7,
+                title: "The McGuffey Readers",
+                author_id: 6,
+                author_name: "William Holmes McGuffey"
+              }, {
+                id: 9,
+                title: "The Hunger Games",
+                author_id: 7,
+                author_name: "Suzanne Collins"
+              }, {
+                id: 10,
+                title: "Harry Potter and the Prisoner of Azkaban",
+                author_id: 8,
+                author_name: "J.K. Rowling"
+              }, {
+                id: 11,
+                title: "The Dukan Diet",
+                author_id: 9,
+                author_name: "Pierre Dukan"
+              }, {
+                id: 12,
+                title: "Breaking Dawn",
+                author_id: 10,
+                author_name: "Stephenie Meyer"
+              }, {
+                id: 13,
+                title: "Lolita",
+                author_id: 11,
+                author_name: "Vladimir Nabokov"
+              }, {
+                id: 14,
+                title: "And Then There Were None",
+                author_id: 12,
+                author_name: "Agatha Christie"
+              }, {
+                id: 15,
+                title: "Steps to Christ",
+                author_id: 13,
+                author_name: "Ellen G. White"
+              }, {
+                id: 16,
+                title: "Charlie and the Chocolate Factory",
+                author_id: 14
+              }
+            ]);
+          });
         });
       });
     });
