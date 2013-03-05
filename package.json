@@ -1,7 +1,7 @@
 {
   "name": "excess",
-  "version": "0.0.12",
-  "description": "Excess brings big data to the client side. It's push all the way down! Excess is a dataflow programming inspired client/server tool with a twist: it implements a unique game changing push solution, all the way from the database down to the client and back to the database. As a result, data changes  are pushed to the clients in realtime, according to filters and authorizations, enabling fully reactive fast UIs.",
+  "version": "0.0.13",
+  "description": "Excess is a high-efficiency, scallable, realtime web application framework aiming at massively reducing servers environmental footprint while improving mobile clients battery life by making an optimal use of server, network and client resources. Using a dataflow programing model for Excess pipelet programmers and a fluent interface for Excess application architects, Excess features a built-in chardable document database with joins, aggregates, filters and transactions with eventual consistency. Everything in Excess is a pipelet, including models, controllers, and views, greatly simplifying the programming of highly interactive applications. Authorizations are also managed using pipelets, allowing instant changes all the way to the UI without ever requiring page refreshs. Likewise, application code can be upgraded without requiring refreshes, every change becomes realtime.",
   "main": "lib/xs.js",
   "files": [
     "lib",
