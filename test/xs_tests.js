@@ -79,17 +79,17 @@
     });
   });
 
-  XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
+  XS = typeof require !== "undefined" && require !== null ? (require('excess/lib/xs.js')).XS : this.XS;
 
   extend = XS.extend;
 
   if (typeof require !== "undefined" && require !== null) {
-    require('../lib/code.js');
-    require('../lib/pipelet.js');
-    require('../lib/filter.js');
-    require('../lib/order.js');
-    require('../lib/aggregate.js');
-    require('../lib/join.js');
+    require('excess/lib/code.js');
+    require('excess/lib/pipelet.js');
+    require('excess/lib/filter.js');
+    require('excess/lib/order.js');
+    require('excess/lib/aggregate.js');
+    require('excess/lib/join.js');
   }
 
   if (typeof require !== "undefined" && require !== null) {
