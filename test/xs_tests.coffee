@@ -66,17 +66,17 @@ describe 'Aynchronous test check()', ->
 # ------------------
 
 # include modules
-XS = if require? then ( require 'excess/lib/xs.js' ).XS else this.XS
+XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
 
 extend = XS.extend
 
 if require?
-  require 'excess/lib/code.js'
-  require 'excess/lib/pipelet.js'
-  require 'excess/lib/filter.js'
-  require 'excess/lib/order.js'
-  require 'excess/lib/aggregate.js'
-  require 'excess/lib/join.js'
+  require '../lib/code.js'
+  require '../lib/pipelet.js'
+  require '../lib/filter.js'
+  require '../lib/order.js'
+  require '../lib/aggregate.js'
+  require '../lib/join.js'
 
 chai = require 'chai' if require?
 chai?.should()

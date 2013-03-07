@@ -8,7 +8,8 @@
 #
 # Tests results are then available in test.out
 
-mkdir -p node_modules
-rm node_modules/excess
-ln -s ../. node_modules/excess
+mkdir -p node_modules/excess/lib   && \
+rm    -r node_modules/excess/lib   && \
+mkdir -p node_modules/excess/lib   && \
+cp lib/*js node_modules/excess/lib && \
 npm test > test.out
