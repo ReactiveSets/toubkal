@@ -27,6 +27,8 @@ var XS = require( '../lib/http.js' ).XS
   , extend     = XS.extend
 ;
 
+require( '../lib/file.js' );
+
 /* -------------------------------------------------------------------------------------------
    de&&ug()
 */
@@ -45,3 +47,8 @@ xs.set( [
   .http_server()
 ;
 
+xs.set( [
+    { name: 'test/index.html' }
+  ] )
+  .watch()
+;
