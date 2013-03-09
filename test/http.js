@@ -48,7 +48,9 @@ xs.set( [
 ;
 
 xs.set( [
-    { name: 'test/index.html' }
+    { name: 'test/index.html'           },
+    { name: 'this file does not exists' },
+    { name: 'test/control.html'         }
   ] )
   .watch()
 ;
