@@ -5,7 +5,8 @@ This is a work in progress, not ready for beta testing yet.
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers environmental footprint and improving mobile clients battery life by making an optimal use of server, network and client resources.
+Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers environmental footprint and improving mobile
+clients battery life by making an optimal use of server, network and client resources.
 
 Using a dataflow programming model for XS pipelet programmers and a fluent interface for XS application architects, XS features a built-in chardable document database with joins, aggregates, filters and transactions with eventual consistency.
 
@@ -25,9 +26,38 @@ Incremental execution of queries allows to split large datasets into optimal chu
 
 Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-time data analysis and reporting over virtually unlimited size datasets.
 
-Example of application that retrieves sales and employees from a server, aggregates these by year and displays the results incrementally in an html table (* pipelet not yet implemented):
+Installation:
 
-    // client.js
+    npm install excess
+
+Example
+=======
+
+Application retrieving sales and employees from a server, aggregates these by year and displays the results incrementally in an html table (a * indicates that a pipelet is not yet implemented).
+
+index.html (all.css and all-min.js are compiled and mimified in realtime by Excess):
+
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        
+        <title>Excess - Aggregate Sales by Year and Employee</title>
+        
+        <link rel="stylesheet" href="all.css" />
+        
+        <script src="all-min.js"></script>
+      </head>
+      
+      <body>
+        <div id:"sales_table"></div>
+        
+        <script>client()</script>
+      </body>
+    </html>
+
+javacript/client.js:
+
     "use strict";
     
     function client() {
@@ -60,7 +90,7 @@ Example of application that retrieves sales and employees from a server, aggrega
         .join( employees, merge, { left: true } ) // this is a left join
         .aggregate( sales, by_year )
         .order( by_year_employee )
-        .table( 'sales', columns )
+        .table( 'sales_table', columns )
       ;
       
       // Merge function for sales and employees
@@ -73,9 +103,8 @@ Example of application that retrieves sales and employees from a server, aggrega
       }
     }
 
-This is the server code:
+server.js:
 
-    // server.js
     var xs = require( 'excess' ); // this is the target API, not currently available
     
     var servers = xs
@@ -87,21 +116,38 @@ This is the server code:
     
     // Merge and mimify client javascript assets in realtime
     var all_min_js = xs
-      .set( [ { name: 'javascript/client/*.js', recursive: true } ] ) // All javascript client assets
-      .glob()                    // * Retrrieves files list with realtime updates (watching the javascript/client directories)
-      .watch()                   // Retrieves files content with realtime updates
-      .merge_content( 'all.js' ) // * Merge in realtime all javascript files content into a single all.js
-      .uglify( 'all_min.js' )    // * Mimify in realtime using uglifyjs
+      .set( [ // Define the minimum set of javascript files required to serve this client application
+        { name: 'node_modules/excess/lib/xs.js'        },
+        { name: 'node_modules/excess/lib/pipelet.js'   },
+        { name: 'node_modules/excess/lib/filter.js'    },
+        { name: 'node_modules/excess/lib/join.js'      },
+        { name: 'node_modules/excess/lib/aggregate.js' },
+        { name: 'node_modules/excess/lib/order.js'     },
+        { name: 'node_modules/excess/lib/table.js'     },
+        { name: 'javascript/client.js'                 }
+      ] )
+      .watch()                 // Retrieves files content with realtime updates
+      .uglify( 'all-min.js' )  // * Mimify in realtime using uglifyjs, hiding all source assets
     ;
     
-    xs.set( [ // Static assets to deliver to clients
-        { name: 'index.html'      }
-        { name: 'css/*.css'       }
+    var all_css = xs
+      .set( [
+        { name: 'css/*.less' }, // these will be compiled
+        { name: 'css/*.css'  }  // these will only be merged
       ] )
-      .glob()              // * Retrrieves files list with realtime updates (watching the css directory)
-      .watch()             // Retrieves files content with realtime updates
-      .union( all_min_js ) // Add all javascript files merged and mimified
-      .serve( servers )    // * Deliver up-to-date assets to clients
+      .glob()                  // * Retrrieves files list with realtime updates (watching the css directory)
+      .watch()                 // Retrieves files content with realtime updates
+      .less_css( 'all.css' )   // * Compile .less files using less css compiler, merge all, hide source
+    ;
+    
+    xs.set( [ // Other static assets to deliver to clients
+        { name: 'index.html'      }
+      ] )
+      .watch()                 // Retrieves file content with realtime updates
+      .union(                  // Add other compiled assets
+        [ all-min.js, all.css ]
+      )
+      .serve( servers )        // * Deliver up-to-date compiled and mimified assets to clients
     ;
     
     // Start socket servers on all servers using socket.io
@@ -113,13 +159,10 @@ This is the server code:
       .clients( socket )       // * Serve dynamic content to all clients in realtime
     ;
 
-Data model
-==========
+Start server:
 
-XS implements a data flow mechanism where data items flow from pipelet to pipelet in a data graph where each pipelet processes adds, removes, and updates incrementally before passing on to downstream pipelets.
-
-For example, the pipelet filter( condition ), filters incrementally it's source set according to "condition" which is provided as a function.
-
+    node server.js
+    
 Licence
 =======
     Copyright (C) 2013, Connected Sets
