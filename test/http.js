@@ -21,13 +21,13 @@
 */
 "use strict";
 
-var XS = require( '../lib/http.js' ).XS
+var XS = require( '../lib/server/http.js' ).XS
   , xs         = XS.xs
   , log        = XS.log
   , extend     = XS.extend
 ;
 
-require( '../lib/file.js' );
+require( '../lib/server/file.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
