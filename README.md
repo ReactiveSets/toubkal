@@ -52,11 +52,11 @@ Example of application that retrieves sales and employees from a server, aggrega
       var server = xs.server( socket ); // * Get all server objects in realtime
       
       // Get employees from server
-      var employees = server.model( 'employee' ); // * filter values which model attribute equals 'employee'
+      var employees = server.model( 'employee' ); // filter values which model attribute equals 'employee'
       
       // Produce report after joining sales and employees
       server
-        .model( 'sale' )  // *
+        .model( 'sale' )
         .join( employees, merge, { left: true } ) // this is a left join
         .aggregate( sales, by_year )
         .order( by_year_employee )
