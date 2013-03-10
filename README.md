@@ -5,7 +5,7 @@ This is a work in progress, not ready for beta testing yet.
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers environmental footprint while improving mobile clients battery life by making an optimal use of server, network and client resources.
+Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers environmental footprint and improving mobile clients battery life by making an optimal use of server, network and client resources.
 
 Using a dataflow programming model for XS pipelet programmers and a fluent interface for XS application architects, XS features a built-in chardable document database with joins, aggregates, filters and transactions with eventual consistency.
 
@@ -15,51 +15,91 @@ Authorizations are also managed using pipelets, allowing instant changes all the
 
 XS intuitive Architect DSL allows to decrease development time of complex realtime applications by a factor of 10.
 
-Example of application that retrieves sales and employees from a server, aggregates these by year and displays the results incrementally in an html table:
+Example of application that retrieves sales and employees from a server, aggregates these by year and displays the results incrementally in an html table (* pipelet not yet implemented):
 
     // client.js
-    var xs = XS.xs, extend = XS.extend;
+    "use strict";
     
-    var sales = [{ id: 'sales'}];
-    
-    var by_year = [{ id: 'year' }];
-    
-    var by_year_employee = [
-      { id: 'year' },
-      { id: 'employee_name' }
-    ];
-    
-    var employees = xs.server().model( 'employees' );
-    
-    var columns = [
-      { id: 'year', label: 'Year' },
-      { id: 'employee_name', label: 'Employee Name' },
-      { id: 'sales', label: 'Sales $' }
-    ];
-    
-    xs.server()
-      .model( 'sales' )
-      .join( employees, merge, { left: true } ) // this is a left join
-      .aggregate( sales, by_year )
-      .order( by_year_employee )
-      .table( 'sales', columns )
-    ;
-    
-    function merge( sale, employee ) {
-        if ( employee ) return extend( { employee_name: employee.name }, sale )
-        return sale
+    function client() {
+      var xs = XS.xs                  // the start object for XS fluent interface
+        , extend = XS.extend          // used to merge employees and sales
+        , sales = [{ id: 'sales'}];   // Aggregate sales measures
+        , by_year = [{ id: 'year' }]; // Aggregate dimensions
+        
+        // Table columns order by year and employee name
+        , by_year_employee = [ { id: 'year' }, { id: 'employee_name' } ]
+        
+        // Define table displayed columns
+        , columns = [
+          { id: 'year'         , label: 'Year'          }, // First column
+          { id: 'employee_name', label: 'Employee Name' },
+          { id: 'sales'        , label: 'Sales $'       }
+        ]
+      ;
+      
+      var socket = xs.socket_io_client(); // * connect to socket io server
+      
+      var server = xs.server( socket ); // * Get all server objects in realtime
+      
+      // Get employees from server
+      var employees = server.model( 'employee' ); // * filter values which model attribute equals 'employee'
+      
+      // Produce report after joining sales and employees
+      server
+        .model( 'sale' )  // *
+        .join( employees, merge, { left: true } ) // this is a left join
+        .aggregate( sales, by_year )
+        .order( by_year_employee )
+        .table( 'sales', columns )
+      ;
+      
+      // Merge function for sales and employees
+      // Returns sales with employee names coming from employee model
+      function merge( sale, employee ) {
+          // Employee can be undefined because this is a left join
+          if ( employee ) return extend( { employee_name: employee.name }, sale )
+          
+          return sale
+      }
     }
 
 This is the server code:
 
     // server.js
-    var xs = require( 'excess/lib/xs.js' ).XS.xs;
-    require( 'excess/lib/file.js' );
-    require( 'excess/lib/clients.js' );
+    var XS = require( 'excess' ).XS, xs = XS.xs;
     
-    xs.file( 'database.json' )
-      .parse_JSON()
-      .clients()
+    require( 'excess/lib/http.js );
+    require( 'excess/lib/file.js' );
+    require( 'excess/lib/socket_io.js ); // *
+    
+    var servers = xs.set( [ { port:80, ip_address: '0.0.0.0' } ] ).http_server(); // start http server
+    
+    // Merge and mimify javascript assets in realtime
+    var all_min_js = xs
+      .set( [ { name: 'javascript/*.js' } ] ) // All javascript assets
+      .glob()                    // * Retrrieves files list with realtime updates (watching the javascript directory)
+      .watch()                   // Retrieves files content with realtime updates
+      .merge_content( 'all.js' ) // * Merge all javascript files content into a single all.js
+      .uglyfy()                  // * Mimify using uglifyjs
+    ;
+    
+    xs.set( [ // Static assets to deliver to clients
+        { name: 'index.html'      }
+        { name: 'css/*.css'       }
+      ] )
+      .glob()              // * Retrrieves files list with realtime updates (watching the css directory)
+      .watch()             // Retrieves files content with realtime updates
+      .union( all_min_js ) // Add all javascript files merged and mimified
+      .serve( servers )    // * Deliver up-to-date assets to clients
+    ;
+    
+    // Start socket servers on all servers using socket.io
+    var socket = servers.socket_io(); // *
+    
+    xs.file( 'database.json' ) // * The log of all database transactions
+      .parse_JSON()            // * Parse to JavaScript Objects
+      .transactions_to_sets()  // * Transform log into a stream of sets
+      .clients( socket )       // * Serve dynamic content to all clients in realtime
     ;
 
 Capable of handling millions of records per second, XS is particularly well suited for low-power devices such as tablets and smartphones as well as less-efficient or older JavaScript engines.
