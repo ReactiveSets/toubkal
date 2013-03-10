@@ -1,7 +1,7 @@
 {
   "name": "excess",
-  "version": "0.0.17",
-  "description": "Excess is a high-efficiency, scallable, realtime web application framework aiming at massively reducing servers' environmental footprint and improving mobile clients battery life.",
+  "version": "0.0.19",
+  "description": "Excess is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers' environmental footprint and improving mobile clients battery life.",
   "main": "lib/xs.js",
   "files": [
     "lib",
@@ -15,6 +15,7 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
+
     "socket.io": "latest"
   },
   "devDependencies": {
@@ -31,10 +32,13 @@
     "url":  "git://github.com/ConnectedSets/ConnectedSets.git"
   },
   "keywords": [
-    "green sofware",
+    "green software",
+    "high-efficiency",
+    "scalable",
+    "realtime",
+    "web application framework",
     "dataflow",
     "database",
-    "realtime",
     "pipe",
     "functional reactive programming"
   ],
