@@ -15,6 +15,16 @@ Authorizations are also managed using pipelets, allowing instant changes all the
 
 XS intuitive Architect DSL allows to decrease development time of complex realtime applications by a factor of 10.
 
+Capable of handling millions of records per second, XS is particularly well suited for low-power devices such as tablets and smartphones as well as less-efficient or older JavaScript engines.
+
+XS is a no-compromise database, providing all required primitives for the most demanding applications including filters, ordered sets, aggregates, and joins allowing both normalized and denormalized schemes.
+
+Highest performances are provided thanks to,Just-In-Time code generators delivering performances only available to compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
+
+Incremental execution of queries allows to split large datasets into optimal chunks of data rendering data to end-users' interface with low-latency, dramatically improving end-user experience. Data changes update Connected Sets in real-time, both in clients and servers, using push technology.
+
+Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-time data analysis and reporting over virtually unlimited size datasets.
+
 Example of application that retrieves sales and employees from a server, aggregates these by year and displays the results incrementally in an html table (* pipelet not yet implemented):
 
     // client.js
@@ -66,21 +76,22 @@ Example of application that retrieves sales and employees from a server, aggrega
 This is the server code:
 
     // server.js
-    var XS = require( 'excess' ).XS, xs = XS.xs;
+    var xs = require( 'excess' ); // this is the target API, not currently available
     
-    require( 'excess/lib/http.js );
-    require( 'excess/lib/file.js' );
-    require( 'excess/lib/socket_io.js ); // *
+    var servers = xs
+      .set( [ // Define http servers
+        { port:80, ip_address: '0.0.0.0' } // this application has only one server
+      ] )
+      .http_servers() // start http servers
+    ;
     
-    var servers = xs.set( [ { port:80, ip_address: '0.0.0.0' } ] ).http_server(); // start http server
-    
-    // Merge and mimify javascript assets in realtime
+    // Merge and mimify client javascript assets in realtime
     var all_min_js = xs
-      .set( [ { name: 'javascript/*.js' } ] ) // All javascript assets
-      .glob()                    // * Retrrieves files list with realtime updates (watching the javascript directory)
+      .set( [ { name: 'javascript/client/*.js', recursive: true } ] ) // All javascript client assets
+      .glob()                    // * Retrrieves files list with realtime updates (watching the javascript/client directories)
       .watch()                   // Retrieves files content with realtime updates
-      .merge_content( 'all.js' ) // * Merge all javascript files content into a single all.js
-      .uglyfy()                  // * Mimify using uglifyjs
+      .merge_content( 'all.js' ) // * Merge in realtime all javascript files content into a single all.js
+      .uglify( 'all_min.js' )    // * Mimify in realtime using uglifyjs
     ;
     
     xs.set( [ // Static assets to deliver to clients
@@ -102,22 +113,12 @@ This is the server code:
       .clients( socket )       // * Serve dynamic content to all clients in realtime
     ;
 
-Capable of handling millions of records per second, XS is particularly well suited for low-power devices such as tablets and smartphones as well as less-efficient or older JavaScript engines.
-
-XS is a no-compromise database, providing all required primitives for the most demanding applications including filters, ordered sets, aggregates, and joins allowing both normalized and denormalized schemes.
-
-Highest performances are provided thanks to,Just-In-Time code generators delivering performances only available to compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
-
-Incremental execution of queries allows to split large datasets into optimal chunks of data rendering data to end-users' interface with low-latency, dramatically improving end-user experience. Data changes update Connected Sets in real-time, both in clients and servers, using push technology.
-
-Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-time data analysis and reporting over virtually unlimited size datasets.
-
 Data model
-=========
+==========
 
 XS implements a data flow mechanism where data items flow from pipelet to pipelet in a data graph where each pipelet processes adds, removes, and updates incrementally before passing on to downstream pipelets.
 
-For example, the pipelet filter( condition ), filters incrementally it's source set according to "condition".
+For example, the pipelet filter( condition ), filters incrementally it's source set according to "condition" which is provided as a function.
 
 Licence
 =======
