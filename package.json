@@ -1,37 +1,48 @@
 {
   "name": "excess",
-  "version": "0.0.20",
+  
+  "version": "0.0.21",
+  
   "description": "Excess is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers' environmental footprint and improving mobile clients battery life.",
-  "main": "lib/xs.js",
+  
+  "main": "lib/pipelet.js",
+  
   "files": [
     "lib",
     "test"
   ],
+  
   "directories": {
     "lib":  "lib",
     "test": "test"
   },
+  
   "engines": {
     "node": ">=0.8.0"
   },
+  
   "dependencies": {
     "socket.io": ">=0.9.13",
     "uglify-js": ">=2.2.5",
-    "less": ">=1.3.3"
+    "less"     : ">=1.3.3"
   },
+  
   "devDependencies": {
     "coffee-script": "~1.4.0",
     "mocha": "latest",
     "chai":  "latest"
   },
+  
   "scripts": {
     "postinstall": "ln -s ../. node_modules/excess || true",
     "test": "mocha -R spec --compilers coffee:coffee-script test/xs_tests.coffee"
   },
+  
   "repository": {
     "type": "git",
     "url":  "git://github.com/ConnectedSets/ConnectedSets.git"
   },
+  
   "keywords": [
     "green software",
     "high-efficiency",
@@ -43,6 +54,8 @@
     "pipe",
     "functional reactive programming"
   ],
+  
   "author": "ConnectedSets",
+  
   "license": "AGPLv3"
 }
