@@ -54,3 +54,12 @@ xs.set( [
   ] )
   .watch()
 ;
+
+require( '../lib/server/uglify.js' );
+
+xs.set( [
+    { name: 'lib/xs.js' }
+  ] )
+  .watch()
+  .uglify( 'all-min.js' )
+;
