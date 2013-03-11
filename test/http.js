@@ -39,6 +39,7 @@ function ug( m ) {
 } // ug()
   
 /* -------------------------------------------------------------------------------------------
+   Start HTTP Servers
 */
 var servers = xs.set( [
     { id: 1, ip_address: '0.0.0.0' },
@@ -47,13 +48,26 @@ var servers = xs.set( [
   .http_servers()
 ;
 
+/* -------------------------------------------------------------------------------------------
+   Load and Serve Assets
+*/
 xs.set( [
     { name: 'test/index.html'           },
-    { name: 'this file does not exists' },
-    { name: 'test/control.html'         }
+    { name: 'test/css/mocha.css'        },
+    { name: 'test/javascript/es5.js'    },
+    { name: 'test/javascript/mocha.js'  },
+    { name: 'test/javascript/chai.js'   },
+    { name: 'lib/xs.js'                 },
+    { name: 'lib/code.js'               },
+    { name: 'lib/pipelet.js'            },
+    { name: 'lib/filter.js'             },
+    { name: 'lib/order.js'              },
+    { name: 'lib/aggregate.js'          },
+    { name: 'lib/join.js'               },
+    { name: 'test/xs_tests.js'          }
   ] )
   .watch()
-  //.serve( servers )
+  .serve( servers )
 ;
 
 require( '../lib/server/uglify.js' );
