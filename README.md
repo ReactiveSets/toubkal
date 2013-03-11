@@ -50,7 +50,7 @@ index.html (all.css and all-min.js are compiled and mimified in realtime by Exce
       </head>
       
       <body>
-        <div id:"sales_table"></div>
+        <div id="sales_table"></div>
         
         <script>client()</script>
       </body>
