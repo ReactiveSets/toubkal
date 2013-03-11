@@ -21,11 +21,13 @@
 */
 "use strict";
 
-var XS = require( '../lib/http.js' ).XS
+var XS = require( '../lib/server/http.js' ).XS
   , xs         = XS.xs
   , log        = XS.log
   , extend     = XS.extend
 ;
+
+require( '../lib/server/file.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
@@ -45,3 +47,19 @@ xs.set( [
   .http_server()
 ;
 
+xs.set( [
+    { name: 'test/index.html'           },
+    { name: 'this file does not exists' },
+    { name: 'test/control.html'         }
+  ] )
+  .watch()
+;
+
+require( '../lib/server/uglify.js' );
+
+xs.set( [
+    { name: 'lib/xs.js' }
+  ] )
+  .watch()
+  .uglify( 'all-min.js' )
+;
