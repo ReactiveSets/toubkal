@@ -33,7 +33,8 @@ Installation:
 Example
 =======
 
-Application retrieving sales and employees from a server, aggregates these by year and displays the results incrementally in an html table (a * indicates that a pipelet is not yet implemented).
+Application retrieving sales and employees from a server, aggregates these by year and displays the results incrementally in an html table
+(a * indicates that a pipelet is not yet implemented or is work in progress).
 
 index.html (all.css and all-min.js are compiled and mimified in realtime by Excess):
 
@@ -127,7 +128,7 @@ server.js:
         { name: 'javascript/client.js'                 }
       ] )
       .watch()                 // Retrieves files content with realtime updates
-      .uglify( 'all-min.js' )  // * Mimify in realtime using uglifyjs, hiding all source assets
+      .uglify( 'all-min.js' )  // * Minify in realtime using uglifyjs, hiding all source assets
     ;
     
     var all_css = xs
@@ -147,7 +148,7 @@ server.js:
       .union(                  // Add other compiled assets
         [ all-min.js, all.css ]
       )
-      .serve( servers )        // * Deliver up-to-date compiled and mimified assets to clients
+      .serve( servers )        // Deliver up-to-date compiled and mimified assets to clients
     ;
     
     // Start socket servers on all servers using socket.io
