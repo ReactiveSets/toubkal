@@ -40,11 +40,11 @@ function ug( m ) {
   
 /* -------------------------------------------------------------------------------------------
 */
-xs.set( [
+var servers = xs.set( [
     { id: 1, ip_address: '0.0.0.0' },
     { id: 1, port: 8080 }
   ] )
-  .http_server()
+  .http_servers()
 ;
 
 xs.set( [
@@ -53,6 +53,7 @@ xs.set( [
     { name: 'test/control.html'         }
   ] )
   .watch()
+  //.serve( servers )
 ;
 
 require( '../lib/server/uglify.js' );
