@@ -52,22 +52,25 @@ var servers = xs.set( [
    Load and Serve Assets
 */
 require( '../lib/server/uglify.js' );
+require( '../lib/order.js' );
 
 var client_min = xs.set( [
-    { name: 'lib/xs.js'                 },
-    { name: 'lib/code.js'               },
-    { name: 'lib/pipelet.js'            },
-    { name: 'lib/filter.js'             },
-    { name: 'lib/order.js'              },
-    { name: 'lib/aggregate.js'          },
-    { name: 'lib/join.js'               }
+    { order: 1, name: 'lib/xs.js'                 },
+    { order: 2, name: 'lib/code.js'               },
+    { order: 3, name: 'lib/pipelet.js'            },
+    { order: 4, name: 'lib/filter.js'             },
+    { order: 5, name: 'lib/order.js'              },
+    { order: 6, name: 'lib/aggregate.js'          },
+    { order: 7, name: 'lib/join.js'               }
   ] )
   .watch()
-  .uglify( 'xs-client-min.js' )
+  .order( [ { id: 'order' } ] ) // order loaded files
+  .uglify( 'lib/xs-min.js' )
 ;
 
 xs.set( [
     { name: 'test/index.html'           },
+    { name: 'test/index-min.html'       },
     { name: 'test/css/mocha.css'        },
     { name: 'test/javascript/es5.js'    },
     { name: 'test/javascript/mocha.js'  },
