@@ -51,6 +51,21 @@ var servers = xs.set( [
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
 */
+require( '../lib/server/uglify.js' );
+
+var client_min = xs.set( [
+    { name: 'lib/xs.js'                 },
+    { name: 'lib/code.js'               },
+    { name: 'lib/pipelet.js'            },
+    { name: 'lib/filter.js'             },
+    { name: 'lib/order.js'              },
+    { name: 'lib/aggregate.js'          },
+    { name: 'lib/join.js'               }
+  ] )
+  .watch()
+  .uglify( 'xs-client-min.js' )
+;
+
 xs.set( [
     { name: 'test/index.html'           },
     { name: 'test/css/mocha.css'        },
@@ -67,14 +82,6 @@ xs.set( [
     { name: 'test/xs_tests.js'          }
   ] )
   .watch()
+  .union( [ client_min ] )
   .serve( servers )
-;
-
-require( '../lib/server/uglify.js' );
-
-xs.set( [
-    { name: 'lib/xs.js' }
-  ] )
-  .watch()
-  .uglify( 'all-min.js' )
 ;
