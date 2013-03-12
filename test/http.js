@@ -69,7 +69,7 @@ var client_min = xs.set( [
   ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
-  .uglify( 'lib/xs-min.js' )
+  .uglify( 'lib/xs-min.js', { warnings: true } )
 ;
 
 var mocha_chai = xs.set( [
