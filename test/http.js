@@ -55,26 +55,8 @@ require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
 
 var client_min = xs.set( [
-    { name: 'lib/xs.js'                 },
-    { name: 'lib/code.js'               },
-    { name: 'lib/pipelet.js'            },
-    { name: 'lib/filter.js'             },
-    { name: 'lib/order.js'              },
-    { name: 'lib/aggregate.js'          },
-    { name: 'lib/join.js'               }
-  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
-  .watch()
-  .order( [ { id: 'id' } ] ) // order loaded files
-  .uglify( 'lib/xs-min.js' )
-;
-
-xs.set( [
-    { name: 'test/index.html'           },
-    { name: 'test/index-min.html'       },
-    { name: 'test/css/mocha.css'        },
     { name: 'test/javascript/es5.js'    },
-    { name: 'test/javascript/mocha.js'  },
-    { name: 'test/javascript/chai.js'   },
+    
     { name: 'lib/xs.js'                 },
     { name: 'lib/code.js'               },
     { name: 'lib/pipelet.js'            },
@@ -82,9 +64,29 @@ xs.set( [
     { name: 'lib/order.js'              },
     { name: 'lib/aggregate.js'          },
     { name: 'lib/join.js'               },
+    
     { name: 'test/xs_tests.js'          }
+  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
+  .watch()
+  .order( [ { id: 'id' } ] ) // order loaded files
+  .uglify( 'lib/xs-min.js' )
+;
+
+var mocha_chai = xs.set( [
+    { name: 'test/javascript/mocha.js'  },
+    { name: 'test/javascript/chai.js'   }
+  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
+  .watch()
+  .order( [ { id: 'id' } ] ) // order loaded files
+  .uglify( 'test/javascript/mocha_chai-min.js' )
+;
+
+xs.set( [
+    { name: 'test/index.html'           },
+    { name: 'test/index-min.html'       },
+    { name: 'test/css/mocha.css'        }
   ] )
   .watch()
-  .union( [ client_min ] )
+  .union( [ client_min, mocha_chai ] )
   .serve( servers )
 ;

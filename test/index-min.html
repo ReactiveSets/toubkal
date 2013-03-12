@@ -7,22 +7,23 @@
     
     <title>XS Tests</title>
     
-    <script src="javascript/es5.js"></script>
+    <!--script src="javascript/mocha.js"></script>
+    <script src="javascript/chai.js"></script-->
     
-    <script src="javascript/mocha.js"></script>
-    <script src="javascript/chai.js"></script>
+    <script src="javascript/mocha_chai-min.js"></script>
     <script>
       mocha.setup( 'bdd' );
       
       chai.should();
     </script>
     
+    
     <script src="../lib/xs-min.js"></script>
     
-    <script src="xs_tests.js"></script>
-    
     <script>
-      window.onload = function() { mocha.run() };
+      window.onload = function() {
+        mocha.run()
+      };
     </script>
   </head>
   
