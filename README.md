@@ -126,9 +126,10 @@ server.js:
         { name: 'node_modules/excess/lib/order.js'     },
         { name: 'node_modules/excess/lib/table.js'     },
         { name: 'javascript/client.js'                 }
-      ] )
-      .watch()                 // Retrieves files content with realtime updates
-      .uglify( 'all-min.js' )  // * Minify in realtime using uglifyjs, hiding all source assets
+      ], { auto_increment: true } ) // auto_increment to keep track of files order
+      .watch()                      // Retrieves files content with realtime updates
+      .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
+      .uglify( 'all-min.js' )       // Minify in realtime using uglifyjs, hiding all source assets
     ;
     
     var all_css = xs
