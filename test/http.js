@@ -55,16 +55,16 @@ require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
 
 var client_min = xs.set( [
-    { order: 1, name: 'lib/xs.js'                 },
-    { order: 2, name: 'lib/code.js'               },
-    { order: 3, name: 'lib/pipelet.js'            },
-    { order: 4, name: 'lib/filter.js'             },
-    { order: 5, name: 'lib/order.js'              },
-    { order: 6, name: 'lib/aggregate.js'          },
-    { order: 7, name: 'lib/join.js'               }
-  ] )
+    { name: 'lib/xs.js'                 },
+    { name: 'lib/code.js'               },
+    { name: 'lib/pipelet.js'            },
+    { name: 'lib/filter.js'             },
+    { name: 'lib/order.js'              },
+    { name: 'lib/aggregate.js'          },
+    { name: 'lib/join.js'               }
+  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
   .watch()
-  .order( [ { id: 'order' } ] ) // order loaded files
+  .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'lib/xs-min.js' )
 ;
 
