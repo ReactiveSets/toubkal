@@ -1,0 +1,50 @@
+Current ToDo Lists
+
+Core database engine (sets, filters, ordered sets, aggregates, join):
+- All basic functionality is developed
+- aggregate(): needs to handle null and undefined dimension values
+- join(): fix duplicate record
+
+Basic Table view:
+- This is complete, tests need to be automated
+
+Basic controls (checkbox, checkbox groups, drop-down, radio-button groups):
+- This is complete, tests need to be automated
+
+Static web site with https support:
+- This is complete, tests need to be automated
+
+Optimized static web site with realtime minification:
+- This is complete, tests need to be automated
+
+Realtime data exchange between client and server:
+- socket_io()
+- socket_io_client()
+- server()
+- clients()
+
+Web Site with contact form:
+- form_xxx() pipelets, work is in progress
+- email_send()
+
+Database persistance (read-only):
+- file(): read on fetch()
+- JSON_parse()
+- transactions_to_sets()
+
+Database persistance (writes)
+- file(): append inputs
+- JSON_Stringify()
+- sets_to_transactions()
+
+Replication:
+- last()
+- server(): implement dynamic fetching
+
+Autorizations:
+- Authorizations data model
+- query_and(): to and with filter query
+
+Further improvements:
+- watch(): handle directories and glob regexes
+- less_css()
