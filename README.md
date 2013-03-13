@@ -39,7 +39,9 @@ over virtually unlimited size datasets.
 
 ## Installation
 
-    npm install excess
+```bash
+npm install excess
+```
 
 ## Example
 
@@ -52,135 +54,143 @@ time .less files. The same could be done to compile coffee script or use any oth
 
 ### index.html
 
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        
-        <title>Excess - Aggregate Sales by Year and Employee</title>
-        
-        <link rel="stylesheet" href="all.css" />
-        
-        <script src="all-min.js"></script>
-      </head>
-      
-      <body>
-        <div id="sales_table"></div>
-        
-        <script>client()</script>
-      </body>
-    </html>
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Excess - Aggregate Sales by Year and Employee</title>
+    
+    <link rel="stylesheet" href="all.css" />
+    
+    <script src="all-min.js"></script>
+  </head>
+  
+  <body>
+    <div id="sales_table"></div>
+    
+    <script>client()</script>
+  </body>
+</html>
+```
 
 ### javacript/client.js
 
-    "use strict";
+```javascript
+"use strict";
+
+function client() {
+  var xs = XS.xs                  // the start object for XS fluent interface
+    , extend = XS.extend          // used to merge employees and sales
+    , sales = [{ id: 'sales'}];   // Aggregate sales measures
+    , by_year = [{ id: 'year' }]; // Aggregate dimensions
     
-    function client() {
-      var xs = XS.xs                  // the start object for XS fluent interface
-        , extend = XS.extend          // used to merge employees and sales
-        , sales = [{ id: 'sales'}];   // Aggregate sales measures
-        , by_year = [{ id: 'year' }]; // Aggregate dimensions
-        
-        // Table columns order by year and employee name
-        , by_year_employee = [ { id: 'year' }, { id: 'employee_name' } ]
-        
-        // Define table displayed columns
-        , columns = [
-          { id: 'year'         , label: 'Year'          }, // First column
-          { id: 'employee_name', label: 'Employee Name' },
-          { id: 'sales'        , label: 'Sales $'       }
-        ]
-      ;
+    // Table columns order by year and employee name
+    , by_year_employee = [ { id: 'year' }, { id: 'employee_name' } ]
+    
+    // Define table displayed columns
+    , columns = [
+      { id: 'year'         , label: 'Year'          }, // First column
+      { id: 'employee_name', label: 'Employee Name' },
+      { id: 'sales'        , label: 'Sales $'       }
+    ]
+  ;
+  
+  var socket = xs.socket_io_client(); // * connect to socket io server
+  
+  var server = xs.server( socket ); // * Get all server objects in realtime
+  
+  // Get employees from server
+  var employees = server.model( 'employee' ); // filter values which model attribute equals 'employee'
+  
+  // Produce report after joining sales and employees
+  server
+    .model( 'sale' )
+    .join( employees, merge, { left: true } ) // this is a left join
+    .aggregate( sales, by_year )
+    .order( by_year_employee )
+    .table( 'sales_table', columns )
+  ;
+  
+  // Merge function for sales and employees
+  // Returns sales with employee names coming from employee model
+  function merge( sale, employee ) {
+      // Employee can be undefined because this is a left join
+      if ( employee ) return extend( { employee_name: employee.name }, sale )
       
-      var socket = xs.socket_io_client(); // * connect to socket io server
-      
-      var server = xs.server( socket ); // * Get all server objects in realtime
-      
-      // Get employees from server
-      var employees = server.model( 'employee' ); // filter values which model attribute equals 'employee'
-      
-      // Produce report after joining sales and employees
-      server
-        .model( 'sale' )
-        .join( employees, merge, { left: true } ) // this is a left join
-        .aggregate( sales, by_year )
-        .order( by_year_employee )
-        .table( 'sales_table', columns )
-      ;
-      
-      // Merge function for sales and employees
-      // Returns sales with employee names coming from employee model
-      function merge( sale, employee ) {
-          // Employee can be undefined because this is a left join
-          if ( employee ) return extend( { employee_name: employee.name }, sale )
-          
-          return sale
-      }
-    }
+      return sale
+  }
+}
+```
 
 ### server.js
 
-    var xs = require( 'excess' ); // this is the target API, not currently available
-    
-    var servers = xs
-      .set( [ // Define http servers
-        { port:80, ip_address: '0.0.0.0' } // this application has only one server
-        { port:443, ip_address: '0.0.0.0', key: 'key string', cert: 'cert string' }
-        // See also "Setting up free SSL on your Node server" http://n8.io/setting-up-free-ssl-on-your-node-server/
-      ] )
-      .http_servers() // start http servers
-    ;
-    
-    // Merge and mimify client javascript assets in realtime
-    var all_min_js = xs
-      .set( [ // Define the minimum set of javascript files required to serve this client application
-        { name: 'node_modules/excess/lib/xs.js'        },
-        { name: 'node_modules/excess/lib/pipelet.js'   },
-        { name: 'node_modules/excess/lib/filter.js'    },
-        { name: 'node_modules/excess/lib/join.js'      },
-        { name: 'node_modules/excess/lib/aggregate.js' },
-        { name: 'node_modules/excess/lib/order.js'     },
-        { name: 'node_modules/excess/lib/table.js'     },
-        { name: 'javascript/client.js'                 }
-      ], { auto_increment: true } ) // use auto_increment option to keep track of files order
-      .watch()                      // Retrieves files content with realtime updates
-      .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
-      .uglify( 'all-min.js' )       // Minify in realtime using uglify-js, hiding all source assets
-    ;
-    
-    var all_css = xs
-      .set( [
-        { name: 'css/*.less' }, // these will be compiled
-        { name: 'css/*.css'  }  // these will only be merged
-      ] )
-      .glob()                  // * Retrrieves files list with realtime updates (watching the css directory)
-      .watch()                 // Retrieves files content with realtime updates
-      .less_css( 'all.css' )   // * Compile .less files using less css compiler, merge all, hide source
-    ;
-    
-    xs.set( [ // Other static assets to deliver to clients
-        { name: 'index.html'      }
-      ] )
-      .watch()                 // Retrieves file content with realtime updates
-      .union(                  // Add other compiled assets
-        [ all-min.js, all.css ]
-      )
-      .serve( servers )        // Deliver up-to-date compiled and mimified assets to clients
-    ;
-    
-    // Start socket servers on all servers using socket.io
-    var socket = servers.socket_io(); // *
-    
-    xs.file( 'database.json' ) // * The log of all database transactions
-      .parse_JSON()            // * Parse to JavaScript Objects
-      .transactions_to_sets()  // * Transform log into a stream of sets
-      .clients( socket )       // * Serve dynamic content to all clients in realtime
-    ;
+```javacript
+var xs = require( 'excess' ); // this is the target API, not currently available
+
+var servers = xs
+  .set( [ // Define http servers
+    { port:80, ip_address: '0.0.0.0' } // this application has only one server
+    { port:443, ip_address: '0.0.0.0', key: 'key string', cert: 'cert string' }
+    // See also "Setting up free SSL on your Node server" http://n8.io/setting-up-free-ssl-on-your-node-server/
+  ] )
+  .http_servers() // start http servers
+;
+
+// Merge and mimify client javascript assets in realtime
+var all_min_js = xs
+  .set( [ // Define the minimum set of javascript files required to serve this client application
+    { name: 'node_modules/excess/lib/xs.js'        },
+    { name: 'node_modules/excess/lib/pipelet.js'   },
+    { name: 'node_modules/excess/lib/filter.js'    },
+    { name: 'node_modules/excess/lib/join.js'      },
+    { name: 'node_modules/excess/lib/aggregate.js' },
+    { name: 'node_modules/excess/lib/order.js'     },
+    { name: 'node_modules/excess/lib/table.js'     },
+    { name: 'javascript/client.js'                 }
+  ], { auto_increment: true } ) // use auto_increment option to keep track of files order
+  .watch()                      // Retrieves files content with realtime updates
+  .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
+  .uglify( 'all-min.js' )       // Minify in realtime using uglify-js, hiding all source assets
+;
+
+var all_css = xs
+  .set( [
+    { name: 'css/*.less' }, // these will be compiled
+    { name: 'css/*.css'  }  // these will only be merged
+  ] )
+  .glob()                  // * Retrrieves files list with realtime updates (watching the css directory)
+  .watch()                 // Retrieves files content with realtime updates
+  .less_css( 'all.css' )   // * Compile .less files using less css compiler, merge all, hide source
+;
+
+xs.set( [ // Other static assets to deliver to clients
+    { name: 'index.html'      }
+  ] )
+  .watch()                 // Retrieves file content with realtime updates
+  .union(                  // Add other compiled assets
+    [ all-min.js, all.css ]
+  )
+  .serve( servers )        // Deliver up-to-date compiled and mimified assets to clients
+;
+
+// Start socket servers on all servers using socket.io
+var socket = servers.socket_io(); // *
+
+xs.file( 'database.json' ) // * The log of all database transactions
+  .parse_JSON()            // * Parse to JavaScript Objects
+  .transactions_to_sets()  // * Transform log into a stream of sets
+  .clients( socket )       // * Serve dynamic content to all clients in realtime
+;
+```
 
 ## Start server
 
-    node server.js
-    
+```bash
+node server.js
+```
+ 
 # Licence
 
     Copyright (C) 2013, Connected Sets
