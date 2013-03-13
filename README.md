@@ -1,16 +1,19 @@
 # Connected Sets Excess
 
-This is a work in progress, not ready for beta testing yet.
-
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers
-environmental footprint and improving mobile clients battery life by making an optimal use of server, network and client
+Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at *massively reducing servers
+environmental footprint* and improving mobile clients battery life by making an optimal use of server, network and client
 resources.
 
-Using a dataflow programming model for XS pipelet programmers and a fluent interface for XS application architects, XS
-features a built-in chardable document database with joins, aggregates, filters and transactions with eventual
-consistency.
+XS intuitive Architect DSL allows to very *significantly decrease development time* of complex realtime applications.
+
+This rare combination of runtime high-efficiency and reduction in programming complexity should allow to *greatly reduce
+the cost of running green startups*.
+
+Using a dataflow programming model for XS *pipelet* programmers and a fluent interface for XS application architects, XS
+features a *no-compromise built-in chardable document database* with joins, aggregates, filters and transactions with eventual
+consistency allowing both normalized and denormalized schemes.
 
 Everything in XS is a pipelet, including models, controllers, and views, greatly simplifying the programming of highly
 interactive applications.
@@ -18,26 +21,27 @@ interactive applications.
 Authorizations are also managed using pipelets, allowing instant changes all the way to the UI without ever requiring
 page refreshes. Likewise, application code can be upgraded without requiring refreshes, every change becomes realtime.
 
-XS intuitive Architect DSL allows to decrease development time of complex realtime applications by a factor of 10.
-
-Capable of handling millions of records per second, XS is particularly well suited for low-power devices such as
+Capable of handling *millions of records per second*, XS is particularly well suited for low-power devices such as
 tablets and smartphones as well as less-efficient or older JavaScript engines.
 
-XS is a no-compromise database, providing all required primitives for the most demanding applications including
-filters, ordered sets, aggregates, and joins allowing both normalized and denormalized schemes.
-
-Highest performances are provided thanks to,Just-In-Time code generators delivering performances only available to
+Highest performances are provided thanks to,*Just-In-Time code generators* delivering performances only available to
 compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing
 JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
 
-Incremental execution of queries allows to split large datasets into optimal chunks of data rendering data to
+*Incremental query execution* allows to split large datasets into optimal chunks of data rendering data to
 end-users' interface with low-latency, dramatically improving end-user experience. Data changes update Connected
-Sets in real-time, both in clients and servers, using push technology.
+Sets in real-time, both in clients and servers, using push technology (over socketio by default).
 
-Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-time data analysis and reporting
+Incremental aggregates allow to deliver realtime OLAP cubes suitable for *realtime data analysis* and reporting
 over virtually unlimited size datasets.
 
-## Installation
+### Work in Progress
+
+This is a work in progress, not ready for beta testing yet. The API is subject to changes although the example below
+gives a good view of the final framework. If you would like to be notified for beta testing, please drop me
+a message @uiteoi.
+
+### Installation
 
 ```bash
 npm install excess
@@ -126,7 +130,7 @@ function client() {
 
 ### server.js
 
-```javacript
+```javascript
 var xs = require( 'excess' ); // this is the target API, not currently available
 
 var servers = xs
