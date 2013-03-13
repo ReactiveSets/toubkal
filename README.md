@@ -1,42 +1,56 @@
-Connected Sets Excess
-=====================
+# Connected Sets Excess
 
 This is a work in progress, not ready for beta testing yet.
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers environmental footprint and improving mobile
-clients battery life by making an optimal use of server, network and client resources.
+Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers
+environmental footprint and improving mobile clients battery life by making an optimal use of server, network and client
+resources.
 
-Using a dataflow programming model for XS pipelet programmers and a fluent interface for XS application architects, XS features a built-in chardable document database with joins, aggregates, filters and transactions with eventual consistency.
+Using a dataflow programming model for XS pipelet programmers and a fluent interface for XS application architects, XS
+features a built-in chardable document database with joins, aggregates, filters and transactions with eventual
+consistency.
 
-Everything in XS is a pipelet, including models, controllers, and views, greatly simplifying the programming of highly interactive applications.
+Everything in XS is a pipelet, including models, controllers, and views, greatly simplifying the programming of highly
+interactive applications.
 
-Authorizations are also managed using pipelets, allowing instant changes all the way to the UI without ever requiring page refreshes. Likewise, application code can be upgraded without requiring refreshes, every change becomes realtime.
+Authorizations are also managed using pipelets, allowing instant changes all the way to the UI without ever requiring
+page refreshes. Likewise, application code can be upgraded without requiring refreshes, every change becomes realtime.
 
 XS intuitive Architect DSL allows to decrease development time of complex realtime applications by a factor of 10.
 
-Capable of handling millions of records per second, XS is particularly well suited for low-power devices such as tablets and smartphones as well as less-efficient or older JavaScript engines.
+Capable of handling millions of records per second, XS is particularly well suited for low-power devices such as
+tablets and smartphones as well as less-efficient or older JavaScript engines.
 
-XS is a no-compromise database, providing all required primitives for the most demanding applications including filters, ordered sets, aggregates, and joins allowing both normalized and denormalized schemes.
+XS is a no-compromise database, providing all required primitives for the most demanding applications including
+filters, ordered sets, aggregates, and joins allowing both normalized and denormalized schemes.
 
-Highest performances are provided thanks to,Just-In-Time code generators delivering performances only available to compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
+Highest performances are provided thanks to,Just-In-Time code generators delivering performances only available to
+compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing
+JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
 
-Incremental execution of queries allows to split large datasets into optimal chunks of data rendering data to end-users' interface with low-latency, dramatically improving end-user experience. Data changes update Connected Sets in real-time, both in clients and servers, using push technology.
+Incremental execution of queries allows to split large datasets into optimal chunks of data rendering data to
+end-users' interface with low-latency, dramatically improving end-user experience. Data changes update Connected
+Sets in real-time, both in clients and servers, using push technology.
 
-Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-time data analysis and reporting over virtually unlimited size datasets.
+Incremental aggregates allow to deliver real-time OLAP cubes suitable for real-time data analysis and reporting
+over virtually unlimited size datasets.
 
-Installation:
+## Installation
 
     npm install excess
 
-Example
-=======
+## Example
 
-Application retrieving sales and employees from a server, aggregates these by year and displays the results incrementally in an html table
-(a * indicates that a pipelet is not yet implemented or is work in progress).
+Application retrieving sales and employees from a server, aggregates these by year and displays the results
+incrementally in an html table (a * indicates that a pipelet is not yet implemented or is work in progress).
 
-index.html (all.css and all-min.js are compiled and mimified in realtime by Excess):
+This example also shows how to produce and in realtime minified all.css and all-min.js. All assets content
+is prefetched in this example for maximum performance. The less css compiler is also used to compile in real
+time .less files. The same could be done to compile coffee script or use any other code compiler.
+
+### index.html
 
     <!DOCTYPE html>
     <html>
@@ -57,7 +71,7 @@ index.html (all.css and all-min.js are compiled and mimified in realtime by Exce
       </body>
     </html>
 
-javacript/client.js:
+### javacript/client.js
 
     "use strict";
     
@@ -104,13 +118,15 @@ javacript/client.js:
       }
     }
 
-server.js:
+### server.js
 
     var xs = require( 'excess' ); // this is the target API, not currently available
     
     var servers = xs
       .set( [ // Define http servers
         { port:80, ip_address: '0.0.0.0' } // this application has only one server
+        { port:443, ip_address: '0.0.0.0', key: 'key string', cert: 'cert string' }
+        // See also "Setting up free SSL on your Node server" http://n8.io/setting-up-free-ssl-on-your-node-server/
       ] )
       .http_servers() // start http servers
     ;
@@ -126,10 +142,10 @@ server.js:
         { name: 'node_modules/excess/lib/order.js'     },
         { name: 'node_modules/excess/lib/table.js'     },
         { name: 'javascript/client.js'                 }
-      ], { auto_increment: true } ) // auto_increment to keep track of files order
+      ], { auto_increment: true } ) // use auto_increment option to keep track of files order
       .watch()                      // Retrieves files content with realtime updates
       .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
-      .uglify( 'all-min.js' )       // Minify in realtime using uglifyjs, hiding all source assets
+      .uglify( 'all-min.js' )       // Minify in realtime using uglify-js, hiding all source assets
     ;
     
     var all_css = xs
@@ -161,12 +177,12 @@ server.js:
       .clients( socket )       // * Serve dynamic content to all clients in realtime
     ;
 
-Start server:
+## Start server
 
     node server.js
     
-Licence
-=======
+# Licence
+
     Copyright (C) 2013, Connected Sets
 
     This program is free software: you can redistribute it and/or modify
