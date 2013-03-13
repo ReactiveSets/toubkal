@@ -2,17 +2,17 @@
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at *massively reducing servers
-environmental footprint* and improving mobile clients battery life by making an optimal use of server, network and client
+Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at **massively reducing servers
+environmental footprint** and improving mobile clients battery life by making an optimal use of server, network and client
 resources.
 
-XS intuitive Architect DSL allows to very *significantly decrease development time* of complex realtime applications.
+XS intuitive Architect DSL allows to very **significantly decrease development time** of complex realtime applications.
 
-This rare combination of runtime high-efficiency and reduction in programming complexity should allow to *greatly reduce
-the cost of running green startups*.
+This rare combination of runtime high-efficiency and reduction in programming complexity should allow to **greatly reduce
+the cost of running green startups**.
 
 Using a dataflow programming model for XS *pipelet* programmers and a fluent interface for XS application architects, XS
-features a *no-compromise built-in chardable document database* with joins, aggregates, filters and transactions with eventual
+features a **no-compromise built-in chardable document database** with joins, aggregates, filters and transactions with eventual
 consistency allowing both normalized and denormalized schemes.
 
 Everything in XS is a pipelet, including models, controllers, and views, greatly simplifying the programming of highly
@@ -21,18 +21,18 @@ interactive applications.
 Authorizations are also managed using pipelets, allowing instant changes all the way to the UI without ever requiring
 page refreshes. Likewise, application code can be upgraded without requiring refreshes, every change becomes realtime.
 
-Capable of handling *millions of records per second*, XS is particularly well suited for low-power devices such as
+Capable of handling **millions of records per second**, XS is particularly well suited for low-power devices such as
 tablets and smartphones as well as less-efficient or older JavaScript engines.
 
-Highest performances are provided thanks to,*Just-In-Time code generators* delivering performances only available to
+Highest performances are provided thanks to,**Just-In-Time code generators** delivering performances only available to
 compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing
 JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
 
-*Incremental query execution* allows to split large datasets into optimal chunks of data rendering data to
+**Incremental query execution** allows to split large datasets into optimal chunks of data rendering data to
 end-users' interface with low-latency, dramatically improving end-user experience. Data changes update Connected
 Sets in real-time, both in clients and servers, using push technology (over socketio by default).
 
-Incremental aggregates allow to deliver realtime OLAP cubes suitable for *realtime data analysis* and reporting
+Incremental aggregates allow to deliver realtime OLAP cubes suitable for **realtime data analysis** and reporting
 over virtually unlimited size datasets.
 
 ### Work in Progress
@@ -52,7 +52,7 @@ npm install excess
 Application retrieving sales and employees from a server, aggregates these by year and displays the results
 incrementally in an html table (a * indicates that a pipelet is not yet implemented or is work in progress).
 
-This example also shows how to produce and in realtime minified all.css and all-min.js. All assets content
+This example also shows how to produce in realtime minified `all.css` and `all-min.js`. All assets content
 is prefetched in this example for maximum performance. The less css compiler is also used to compile in real
 time .less files. The same could be done to compile coffee script or use any other code compiler.
 
