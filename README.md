@@ -24,7 +24,7 @@ page refreshes. Likewise, application code can be upgraded without requiring ref
 Capable of handling **millions of records per second**, XS is particularly well suited for low-power devices such as
 tablets and smartphones as well as less-efficient or older JavaScript engines.
 
-Highest performances are provided thanks to, **Just-In-Time code generators** delivering performances only available to
+Highest performances are provided thanks to **Just-In-Time code generators** delivering performances only available to
 compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing
 JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
 

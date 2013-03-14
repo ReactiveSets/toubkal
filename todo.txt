@@ -46,5 +46,19 @@ Autorizations:
 - query_and(): to and with filter query
 
 Further improvements:
-- watch(): handle directories and glob regexes
-- less_css()
+- watch():
+  - handle directories and glob regexes
+  - stat files
+  - generate ETag after each actual content change using sha1 digest
+- uglify():
+  - generate ETag after each acutal content change
+  - use stat info of last file
+  - store results into file for fast retrieval on no change after server restart
+  - extract compiler base pipelet to implement other compilers
+  - separate merge and compilation in two independant pipelets
+- serve():
+  - set response content-length header
+  - based on files ETags, set ETag header, check http://www.mnot.net/cache_docs/
+  - handle HTTP If-None-Match request header
+- less_css(): develop using compiler base pipelet
+
