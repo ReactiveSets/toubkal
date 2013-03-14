@@ -164,8 +164,8 @@ describe 'XS test suite:', ->
       a.should.not.be.an.instanceof Snake
     
   describe 'XS.Code():', ->
-    code = new XS.Code( 'Code Test' )
-      ._function( null, 'f', [] )
+    f = code = new XS.Code( 'Code Test' )
+      ._function( 'f', null, [] )
         .add( 'var i' )
         ._for( 'i = -1', ' ++i < 10' )
         .end()
@@ -185,7 +185,7 @@ describe 'XS test suite:', ->
     
     test = 'a[ ++i ] === n'
     
-    code = new XS.Code( 'Test unfolded while' )
+    g = code = new XS.Code( 'Test unfolded while' )
       ._function( 'g', null, [ 'n' ] )
         ._var( [ 'a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1' ] )
         .unrolled_while( 'if ( ' + test, '|| ' + test, ') return i' )

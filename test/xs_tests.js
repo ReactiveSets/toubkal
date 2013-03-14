@@ -189,8 +189,8 @@
       });
     });
     describe('XS.Code():', function() {
-      var code, i, test;
-      code = new XS.Code('Code Test')._function(null, 'f', []).add('var i')._for('i = -1', ' ++i < 10').end().add('return i').end().get();
+      var code, f, g, i, test;
+      f = code = new XS.Code('Code Test')._function('f', null, []).add('var i')._for('i = -1', ' ++i < 10').end().add('return i').end().get();
       eval(code);
       i = f();
       it('f should be a function', function() {
@@ -200,7 +200,7 @@
         return i.should.be.eql(10);
       });
       test = 'a[ ++i ] === n';
-      code = new XS.Code('Test unfolded while')._function('g', null, ['n'])._var(['a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1']).unrolled_while('if ( ' + test, '|| ' + test, ') return i').add('return -1').end('').get();
+      g = code = new XS.Code('Test unfolded while')._function('g', null, ['n'])._var(['a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1']).unrolled_while('if ( ' + test, '|| ' + test, ') return i').add('return -1').end('').get();
       eval(code);
       it('the index of 34 should be 0', function() {
         return g(34).should.be.eql(0);
