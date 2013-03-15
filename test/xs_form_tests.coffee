@@ -41,7 +41,7 @@ xs = XS.xs
 
 fields = xs.set( [
   { id: 'model', name: 'model' , type: 'hidden', value: 'user_profile' }
-  { id: 'id'   , type: 'hidden', value: { type: 'UUID' } }
+  { id: 'id'   , name: 'uuid', type: 'hidden', value: { type: 'UUID' } }
   { id: 'gender', name: 'gender', type: 'radio', label: 'Gender', values: [
     { value: 0, label: 'Female', selected: true }
     { value: 1, label: 'Male' }
@@ -51,7 +51,7 @@ fields = xs.set( [
   { id: 'phone', name: 'phone', type: 'phone', label: 'Phone Number'     , mandatory: true }
   { id: 'address', name: 'address', type: 'text_area', label: 'Address', cols: 30, rows: 5, mandatory: true }
   { id: 'country', name: 'country', type: 'drop_down', label: 'Country', values: [
-    { vallue: 1, label: "USA"        }
+    { value: 1, label: "USA"        }
     { value: 2, label: "Morocco"    }
     { value: 3, label: "France"     }
     { value: 4, label: "Japan"      }
@@ -66,7 +66,8 @@ fields = xs.set( [
       { value: 4, label: "Traveling"              , selected: true }
       { value: 5, label: "Cooking"                                 }
       { value: 6, label: "Stamp / Coin Collection", selected: true }
-    ], mandatory: true }
+    ]
+  }
 ], { name: 'Fields Set', auto_increment: 'order' } ).order( [ { id: 'order' } ] )
 
 form = xs.form( document.getElementById( 'form' ), 'user_profile', fields )

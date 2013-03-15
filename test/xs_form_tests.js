@@ -53,6 +53,7 @@
       value: 'user_profile'
     }, {
       id: 'id',
+      name: 'uuid',
       type: 'hidden',
       value: {
         type: 'UUID'
@@ -106,7 +107,7 @@
       label: 'Country',
       values: [
         {
-          vallue: 1,
+          value: 1,
           label: "USA"
         }, {
           value: 2,
@@ -157,8 +158,7 @@
           label: "Stamp / Coin Collection",
           selected: true
         }
-      ],
-      mandatory: true
+      ]
     }
   ], {
     name: 'Fields Set',
