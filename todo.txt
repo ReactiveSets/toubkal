@@ -45,6 +45,9 @@ Autorizations:
 - Authorizations data model
 - query_and(): to and with filter query
 
+Modules:
+- implement Asynchronous Module  requirejs
+
 Further improvements:
 - watch():
   - handle directories and glob regexes
