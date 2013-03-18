@@ -1,6 +1,7 @@
 var xs = require( '../lib/server/aws.js' ).XS.xs;
 
 require( '../lib/filter.js' );
+require( '../lib/watchdog.js' );
 
 var zones = xs.ec2( '../aws-credentials.json' )
   .ec2_regions()
@@ -14,4 +15,9 @@ var zones = xs.ec2( '../aws-credentials.json' )
     } );
   } )
   .set() // testing output of availability zones
+;
+
+zones
+  .trace( 'zones' )
+  .watchdog( 'watching_zones', 5000 )
 ;
