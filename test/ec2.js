@@ -28,28 +28,7 @@ var XS     = require( '../lib/server/aws.js' ).XS
 
 require( '../lib/filter.js' );
 require( '../lib/watchdog.js' );
-
-var zones = xs.ec2( '../aws-credentials.json' )
-  .ec2_regions()
-  .filter( function( r ) { return /^us/.test( r.RegionName ) } )
-  .ec2_availability_zones()
-  .on( 'complete', function() {
-    zones.fetch_all( function( zones ) {
-      console.log( 'Received all us Availability Zones: '
-        + zones.map( function( z ) { return z.ZoneName } ).join( ', ' )
-      )
-    } );
-  } )
-  .set() // testing output of availability zones
-;
-
-// Watchdog test on availability zones reception
-zones
-  .trace( 'zones' )
-  .watchdog( 'watching_zones', 5000 )
-  .trace( 'watchdog zones' )
-;
-
+require( '../lib/aggregate.js' );
 require( '../lib/join.js' );
 
 var ami_types = xs.set( [
@@ -98,6 +77,34 @@ var ubuntu_amis = xs
     { id: 'version', descending: true },
     { id: 'type'   }
   ] )
-  .trace( 'ubuntu amis' )
+  // .trace( 'ubuntu amis' )
 ;
 
+var regions = ubuntu_amis
+  .filter( function( ami ) { return ami.version == '12.10' } )
+  .aggregate( void 0, [ { id: 'region' } ] )
+  .trace( 'AMI Regions' );
+;
+
+var zones = xs.ec2( '../aws-credentials.json' )
+  .ec2_regions()
+  .join( regions, [ [ 'RegionName', 'region' ] ], function( region ) { return region } )
+  .trace( 'Regions for which we have AMIs' )
+  .filter( function( r ) { return /^us/.test( r.RegionName ) } )
+  .ec2_availability_zones()
+  .on( 'complete', function() {
+    zones.fetch_all( function( zones ) {
+      console.log( 'Received all us Availability Zones: '
+        + zones.map( function( z ) { return z.ZoneName } ).join( ', ' )
+      )
+    } );
+  } )
+  .set() // testing output of availability zones
+;
+
+// Watchdog test on availability zones reception
+zones
+  .trace( 'zones' )
+  .watchdog( 'watching_zones', 5000 )
+  .trace( 'watchdog zones' )
+;
