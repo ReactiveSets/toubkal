@@ -30,6 +30,7 @@ require( '../lib/filter.js' );
 require( '../lib/watchdog.js' );
 require( '../lib/aggregate.js' );
 require( '../lib/join.js' );
+require( '../lib/last.js' );
 
 var ami_types = xs.set( [
   { type: 0, description: 'instance-store'        },
@@ -117,14 +118,51 @@ zones
 var d = new Date();
 d.setDate( d.getDate() - 10 );
 
+var previous;
+
 var spot_prices = regions
   .filter( function( region ) { return region.RegionName == 'us-east-1' } )
-  .ec2_describe_spot_price_history( d, [ 'cg1.4xlarge' ], { products : [ 'Linux/UNIX' ] } )
+  .ec2_describe_spot_price_history( d, [ 'm1.small' ], { products : [ 'Linux/UNIX' ] } )
+
   .order( [
     { id: 'AvailabilityZone'   },
     { id: 'ProductDescription' },
     { id: 'InstanceType'       }, 
     { id: 'Timestamp'          }
   ] )
-  .trace( 'Spot Prices' )
+  .alter( function( price ) {
+    var timestamp = price.Timestamp;
+    
+    price.year = timestamp.getUTCFullYear();
+    price.month = timestamp.getUTCMonth();
+    
+    if ( previous
+      && previous.AvailabilityZone   == price.AvailabilityZone
+      && previous.ProductDescription == price.ProductDescription
+      && previous.InstanceType       == price.InstanceType
+    ) {
+      var seconds = previous.seconds = ( timestamp - previous.Timestamp ) / 1000;
+      previous.cost_seconds = previous.SpotPrice * seconds 
+    }
+    
+    return previous = price;
+  } )
+  //.trace( 'Spot Prices' )
+  .aggregate( [
+    { id: 'seconds' },
+    { id: 'cost_seconds' }
+  ], [
+    { id: 'AvailabilityZone' },
+    { id: 'InstanceType' }
+  ] )
+  .trace( 'Total Seconds and Cost by AvailabilityZone and InstanceType' )
+  .alter( function( cost ) {
+    cost.average_cost_per_hour = cost.cost_seconds / cost.seconds;
+    
+    return cost;
+  } )
+  .order( [ { id: 'average_cost_per_hour', descending: true } ] )
+  .trace( 'Average Cost per Hour by AvailabilityZone and InstanceType' )
+  .last()
+  .trace( 'Lowest Cost Availability Zone' )
 ;
