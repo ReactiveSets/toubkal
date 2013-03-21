@@ -80,16 +80,20 @@ var ubuntu_amis = xs
   // .trace( 'ubuntu amis' )
 ;
 
-var regions = ubuntu_amis
+var AMI_regions = ubuntu_amis
   .filter( function( ami ) { return ami.version == '12.10' } )
   .aggregate( void 0, [ { id: 'region' } ] )
   .trace( 'AMI Regions' );
 ;
 
-var zones = xs.ec2( '../aws-credentials.json' )
+var regions = xs
+  .ec2( '../aws-credentials.json' )
   .ec2_regions()
-  .join( regions, [ [ 'RegionName', 'region' ] ], function( region ) { return region } )
+  .join( AMI_regions, [ [ 'RegionName', 'region' ] ], function( region ) { return region } )
   .trace( 'Regions for which we have AMIs' )
+;
+    
+var zones = regions
   .filter( function( r ) { return /^us/.test( r.RegionName ) } )
   .ec2_availability_zones()
   .on( 'complete', function() {
@@ -102,9 +106,25 @@ var zones = xs.ec2( '../aws-credentials.json' )
   .set() // testing output of availability zones
 ;
 
-// Watchdog test on availability zones reception
+/*/ Watchdog test on availability zones reception
 zones
   .trace( 'zones' )
   .watchdog( 'watching_zones', 5000 )
   .trace( 'watchdog zones' )
+;
+// */
+
+var d = new Date();
+d.setDate( d.getDate() - 10 );
+
+var spot_prices = regions
+  .filter( function( region ) { return region.RegionName == 'us-east-1' } )
+  .ec2_describe_spot_price_history( d, [ 'cg1.4xlarge' ], { products : [ 'Linux/UNIX' ] } )
+  .order( [
+    { id: 'AvailabilityZone'   },
+    { id: 'ProductDescription' },
+    { id: 'InstanceType'       }, 
+    { id: 'Timestamp'          }
+  ] )
+  .trace( 'Spot Prices' )
 ;
