@@ -1,8 +1,8 @@
-# Connected Sets Excess
+# Connected Sets
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Excess (XS) is a high-efficiency, scalable, realtime web application framework aiming at **massively reducing servers
+Connected Sets (XS) is a high-efficiency, scalable, realtime web application framework aiming at **massively reducing servers
 environmental footprint** and improving mobile clients battery life by making an optimal use of server, network and client
 resources.
 
@@ -64,7 +64,7 @@ time .less files. The same could be done to compile coffee script or use any oth
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Excess - Aggregate Sales by Year and Employee</title>
+    <title>Connected Sets - Aggregate Sales by Year and Employee</title>
     
     <link rel="stylesheet" href="all.css" />
     
