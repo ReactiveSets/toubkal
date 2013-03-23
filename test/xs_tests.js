@@ -216,7 +216,7 @@
       });
     });
     describe('XS.Set():', function() {
-      var cars, cities, employee, set;
+      var cars, cities, delayed_set, employee, set;
       set = xs.set();
       it('set should be a Set', function() {
         return set.should.be.an["instanceof"](Set);
@@ -237,6 +237,14 @@
           country: "France"
         }
       ]);
+      delayed_set = xs.set([
+        {
+          id: 1,
+          value: 'delayed'
+        }
+      ]).delay(100).trace('Delayed Set').filter(function() {
+        return true;
+      });
       cars = xs.set([
         {
           id: 1,
@@ -293,6 +301,20 @@
           order_id: "1227"
         }
       ]);
+      describe('Delayed set:', function() {
+        return it('Delayed set should eventually equal its source values', function(done) {
+          return delayed_set.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 1,
+                  value: 'delayed'
+                }
+              ]);
+            });
+          });
+        });
+      });
       describe('fetch_all():', function() {
         it('set.fetch_all() should be empty', function() {
           return set.fetch_all().should.be.eql([]);

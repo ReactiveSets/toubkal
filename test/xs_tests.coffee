@@ -220,6 +220,12 @@ describe 'XS test suite:', ->
       { id: 3, name: "Paris", country: "France" }
     ]
     
+    delayed_set = xs
+     .set( [ { id:1, value: 'delayed' } ] )
+     .delay( 100 )
+     .trace( 'Delayed Set' )
+     .filter( () -> true )
+    
     cars = xs.set [
           { id: 1, brand: "Mercedes", model: "C Class" }
           { id: 2, brand: "Mercedes", model: "S Class" }
@@ -235,6 +241,14 @@ describe 'XS test suite:', ->
       { id:  5, name: "Alex Frog"      , salary: "$3000", customer_id: "226", order_id: "1226" }
       { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
     ]
+    
+    describe 'Delayed set:', ->
+      it 'Delayed set should eventually equal its source values', ( done ) ->
+        delayed_set.fetch_all ( values ) ->
+          check done, () ->
+            values.should.be.eql [
+              { id:1, value: 'delayed' }
+            ]
     
     describe 'fetch_all():', ->
       it 'set.fetch_all() should be empty', ->
