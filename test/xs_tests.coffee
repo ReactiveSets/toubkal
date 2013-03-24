@@ -85,6 +85,8 @@ xs = XS.xs
 
 Set = XS.Set
 
+log = ( message ) -> XS.log( 'xs tests, ' + message )
+
 describe 'XS test suite:', ->
   it 'XS should be defined:', ->
     XS.should.exist
@@ -625,9 +627,17 @@ describe 'XS test suite:', ->
         .order( organizer, { name: 'books_ordered_by_year' } )
         .ordered().ordered()
       
+      by_descending_year_delay = 100
+      
+      by_descending_year = xs
+        .set( [ { id: "year", descending: true } ] )
+        .trace( 'By Descending Year Organizer, before delay' )
+        .delay( by_descending_year_delay )
+        .trace( 'By Descending Year Organizer, after delay' )
+      
       books_ordered_by_descending_year = books
-        .order( xs.set( [ { id: "year", descending: true } ] ), { name: 'books_ordered_by_descending_year', insert_before: true } )
-        .ordered().ordered()
+        .order( by_descending_year, { name: 'books_ordered_by_descending_year', insert_before: true } )
+        .ordered().ordered().delay( by_descending_year_delay )
       
       books_ordered_by_ascending_author  = books
         .order( by_ascending_author , { name: 'books_ordered_by_ascending_author'  } )
@@ -637,8 +647,8 @@ describe 'XS test suite:', ->
         .order( by_descending_author, { name: 'books_ordered_by_descending_author', insert_before: true } )
         .ordered().ordered()
       
-      it 'books_ordered_by_year should be ordered by ascending year', ->
-        books_ordered_by_year.fetch_all().should.be.eql [
+      it 'books_ordered_by_year should be ordered by ascending year', ( done ) ->
+        books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
           { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
           { id: 2, title: "The Lord of the Rings", author: "J. R. R. Tolkien", year: 1955 }
           { id: 4, title: "The Alchemist"        , author: "Paulo Coelho"    , year: 1988 }
@@ -646,17 +656,20 @@ describe 'XS test suite:', ->
           { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
         ]
 
-      it 'books_ordered_by_descending_year should be ordered by descending year', ->
-        books_ordered_by_descending_year.fetch_all().should.be.eql [
-          { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
-          { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
-          { id: 4, title: "The Alchemist"        , author: "Paulo Coelho"    , year: 1988 }
-          { id: 2, title: "The Lord of the Rings", author: "J. R. R. Tolkien", year: 1955 }
-          { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
-        ]
+      it 'books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+        books_ordered_by_descending_year.fetch_all ( books ) ->
+          log 'books_ordered_by_descending_year delayed fetched'
+          
+          check done, () -> books.should.be.eql [
+            { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
+            { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
+            { id: 4, title: "The Alchemist"        , author: "Paulo Coelho"    , year: 1988 }
+            { id: 2, title: "The Lord of the Rings", author: "J. R. R. Tolkien", year: 1955 }
+            { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
+          ]
       
-      it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', ->
-        books_ordered_by_ascending_author.fetch_all().should.be.eql [
+      it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', ( done ) ->
+        books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
           { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
           { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
           { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -664,8 +677,8 @@ describe 'XS test suite:', ->
           { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
         ]
 
-      it 'books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', ->
-        books_ordered_by_descending_author.fetch_all().should.be.eql [
+      it 'books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', ( done ) ->
+        books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
           { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
           { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
           { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -674,10 +687,10 @@ describe 'XS test suite:', ->
         ]
       
       describe 'add()', ->
-        it 'after books.add( book 6 ), books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( book 6 ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
           books.add [ { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson", year: 2005 } ]
 
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 1, title: "A Tale of Two Cities"           , author: "Charles Dickens" , year: 1859 }
             { id: 2, title: "The Lord of the Rings"          , author: "J. R. R. Tolkien", year: 1955 }
             { id: 4, title: "The Alchemist"                  , author: "Paulo Coelho"    , year: 1988 }
@@ -686,8 +699,8 @@ describe 'XS test suite:', ->
             { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson"   , year: 2005 }
           ]
         
-        it 'after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', ->
-          books_ordered_by_descending_year.fetch_all().should.be.eql [
+        it 'after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson"   , year: 2005 }
             { id: 3, title: "The Da Vinci Code"              , author: "Dan Brown"       , year: 2003 }
             { id: 5, title: "Angels and Demons"              , author: "Dan Brown"       , year: 2000 }
@@ -696,8 +709,8 @@ describe 'XS test suite:', ->
             { id: 1, title: "A Tale of Two Cities"           , author: "Charles Dickens" , year: 1859 }
           ]
         
-        it 'after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
-          books_ordered_by_ascending_author.fetch_all().should.be.eql [
+        it 'after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -706,8 +719,8 @@ describe 'XS test suite:', ->
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
           ]
 
-        it 'after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', ->
-          books_ordered_by_descending_author.fetch_all().should.be.eql [
+        it 'after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
+          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
             { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
@@ -716,7 +729,7 @@ describe 'XS test suite:', ->
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
           ]
 
-        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
           books.add [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
@@ -724,7 +737,7 @@ describe 'XS test suite:', ->
             { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
           ]
 
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
@@ -737,8 +750,8 @@ describe 'XS test suite:', ->
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
-        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', ->
-          books_ordered_by_descending_year.fetch_all().should.be.eql [
+        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -751,8 +764,8 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
         
-        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
-          books_ordered_by_ascending_author.fetch_all().should.be.eql [
+        it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -765,14 +778,14 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
-        it 'after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_year should be ordered by ascending year', ( done ) ->
           books.add [
             { id: 11, title: "The Dukan Diet", author: "Pierre Dukan"    , year: 2000 }
             { id: 12, title: "Breaking Dawn" , author: "Stephenie Meyer" , year: 2008 }
             { id: 13, title: "Lolita"        , author: "Vladimir Nabokov", year: 1955 }
           ]
           
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
@@ -788,8 +801,8 @@ describe 'XS test suite:', ->
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
           ]
         
-        it 'after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', ->
-          books_ordered_by_descending_year.fetch_all().should.be.eql [
+        it 'after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -805,14 +818,14 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
         
-        it 'after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', ( done ) ->
           books.add [
             { id: 14, title: "And Then There Were None"         , author: "Agatha Christie", year: undefined }
             { id: 15, title: "Steps to Christ"                  , author: "Ellen G. White" , year: null      }
             { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"                       }
           ]
           
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
@@ -831,8 +844,8 @@ describe 'XS test suite:', ->
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
           ]
         
-        it 'after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', ->
-          books_ordered_by_descending_year.fetch_all().should.be.eql [
+        it 'after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -851,10 +864,10 @@ describe 'XS test suite:', ->
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
           ]
         
-        it 'update organizer, books_ordered_by_year should be ordered by ascending by title', ->
+        it 'update organizer, books_ordered_by_year should be ordered by ascending by title', ( done ) ->
           organizer.update [ [ { id: "year" }, { id: "title" } ] ]
 
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -873,13 +886,13 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
         
-        it 'add a second field to organizer, books_ordered_by_year should be ordered by ascending year and title', ->
+        it 'add a second field to organizer, books_ordered_by_year should be ordered by ascending year and title', ( done ) ->
           organizer.notify [
             { action: "update", objects: [ [ { id: "title" }, { id: "year" } ] ] }
             { action: "add"   , objects: [ { id: "title" } ] }
           ]
           
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
@@ -898,8 +911,8 @@ describe 'XS test suite:', ->
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
-        it 'books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
-          books_ordered_by_ascending_author.fetch_all().should.be.eql [
+        it 'books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -918,8 +931,8 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
-        it 'books_ordered_by_descending_author should be ordered by descending auhtor', ->
-          books_ordered_by_descending_author.fetch_all().should.be.eql [
+        it 'books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
+          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
@@ -938,10 +951,10 @@ describe 'XS test suite:', ->
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
           ]
         
-        it 'books_ordered_by_ascending_id should be ordered by ascending id: organizer is an objects', ->
+        it 'books_ordered_by_ascending_id should be ordered by ascending id: organizer is an objects', ( done ) ->
           books_ordered_by_ascending_id = books.order( [ { id: "id" } ] ).ordered().ordered()
           
-          books_ordered_by_ascending_id.fetch_all().should.be.eql [
+          books_ordered_by_ascending_id.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -960,10 +973,10 @@ describe 'XS test suite:', ->
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
           ]
 
-        it 'books_ordered_by_descending should be ordered by descending id: organizer is an objects', ->
+        it 'books_ordered_by_descending should be ordered by descending id: organizer is an objects', ( done ) ->
           books_ordered_by_ascending_id = books.order( [ { id: "id", descending: true } ] ).ordered().ordered()
           
-          books_ordered_by_ascending_id.fetch_all().should.be.eql [
+          books_ordered_by_ascending_id.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
@@ -983,13 +996,13 @@ describe 'XS test suite:', ->
           ]
       
       describe 'update():', ->
-        it 'after books.update( object 2 ), books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.update( object 2 ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
           books.update [ [
             { id: 2, title: "The Lord of the Rings"  , author: "J. R. R. Tolkien", year: 1955 }
             { id: 2, title: "The Lord of the Rings 1", author: "J. R. R. Tolkien", year: 1954 }
           ] ]
 
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
@@ -1008,8 +1021,8 @@ describe 'XS test suite:', ->
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
           ]
         
-        it 'after books.update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', ->
-          books_ordered_by_descending_year.fetch_all().should.be.eql [
+        it 'after books.update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -1028,7 +1041,7 @@ describe 'XS test suite:', ->
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
           ]
         
-        it 'after books.notify( 4 updates transaction ), books_ordered_by_year should be ordered by ascending year', ->
+        it 'after books.notify( 4 updates transaction ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
           books.notify [
             {
               action : "update"
@@ -1081,7 +1094,7 @@ describe 'XS test suite:', ->
             }
           ]
           
-          books_ordered_by_year.fetch_all().should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: undefined }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
@@ -1100,8 +1113,8 @@ describe 'XS test suite:', ->
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
           ]
         
-        it 'after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', ->
-          books_ordered_by_descending_year.fetch_all().should.be.eql [
+        it 'after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
@@ -1121,14 +1134,14 @@ describe 'XS test suite:', ->
           ]
         
       describe 'remove( books 12, 13, 15 ):', ->
-        it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ->
+        it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
           books.remove [
             { id: 12, title: "Breaking Dawn"  , author: "Stephenie Meyer" , year: 2008 }
             { id: 13, title: "Lolita"         , author: "Vladimir Nabokov", year: 1955 }
             { id: 15, title: "Steps to Christ", author: "Ellen G. White"  , year: undefined }
           ]
           
-          books_ordered_by_ascending_author.fetch_all().should.be.eql [
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -1144,8 +1157,8 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
-        it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', ->
-          books_ordered_by_descending_author.fetch_all().should.be.eql [
+        it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
+          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -1202,8 +1215,8 @@ describe 'XS test suite:', ->
     
     tolkien_sales_by_year = books_sales.aggregate_from tolkien_books, sales, by_year 
     
-    it 'should group and order books_sales_by_author by author', ->
-      books_sales_by_author.fetch_all().should.be.eql [
+    it 'should group and order books_sales_by_author by author', ( done ) ->
+      books_sales_by_author.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
           { author: "Agatha Christie"        , sales: 100, _count: 1 }
           { author: "Charles Dickens"        , sales: 200, _count: 1 }
           { author: "Dan Brown"              , sales: 119, _count: 2 }
@@ -1220,8 +1233,8 @@ describe 'XS test suite:', ->
           { author: "William Holmes McGuffey", sales: 125, _count: 1 }
         ]
     
-    it 'should group and order books_sales_by_year by year', ->
-      books_sales_by_year.fetch_all().should.be.eql [
+    it 'should group and order books_sales_by_year by year', ( done ) ->
+      books_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
       # ToDo: undefined and null groups are not supported at this time
       #  { sales:       113, year: undefined, _count: 1 }
       #  { sales:        60, year: null, _count: 1 }
@@ -1237,19 +1250,19 @@ describe 'XS test suite:', ->
         { sales:        23, year: 2008, _count: 2 }
       ]
     
-    it 'should group and order tolkien_sales_by_year by year', ->
-      tolkien_sales_by_year.fetch_all().should.be.eql [
+    it 'should group and order tolkien_sales_by_year by year', ( done ) ->
+      tolkien_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
         { sales:       100, year: 1937, _count: 1 }
         { sales:       150, year: 1955, _count: 1 }
       ]
 
     describe 'add sales for "Dan Brown" in 2004', ->
-      it 'should increase books_sales_by_author for "Dan Brown"', ->
+      it 'should increase books_sales_by_author for "Dan Brown"', ( done ) ->
         books_sales.add [
           { id: 17, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        125, year: 2004 }
         ]
 
-        books_sales_by_author.fetch_all().should.be.eql [
+        books_sales_by_author.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
           { author: "Agatha Christie"        , sales: 100, _count: 1 }
           { author: "Charles Dickens"        , sales: 200, _count: 1 }
           { author: "Dan Brown"              , sales: 244, _count: 3 }
@@ -1266,8 +1279,8 @@ describe 'XS test suite:', ->
           { author: "William Holmes McGuffey", sales: 125, _count: 1 }
         ]      
        
-      it 'should add books_sales_by_year for 2004', ->
-        books_sales_by_year.fetch_all().should.be.eql [
+      it 'should add books_sales_by_year for 2004', ( done ) ->
+        books_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
           { sales:       125, year: 1853, _count: 1 }
           { sales:       200, year: 1859, _count: 1 }
           { sales:       100, year: 1937, _count: 1 }
@@ -1282,13 +1295,13 @@ describe 'XS test suite:', ->
         ]
 
     describe "remove Stephenie Meyer's sales in 2008 and Pierre Dukan's sales in 2000", ->
-      it 'should remove Stephenie Meyer and Pierre Dukan sales from books_sales_by_author', ->
+      it 'should remove Stephenie Meyer and Pierre Dukan sales from books_sales_by_author', ( done ) ->
         books_sales.remove [
           { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , sales:        10, year: 2000 }
           { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , sales: undefined, year: 2008 }
         ]
 
-        books_sales_by_author.fetch_all().should.be.eql [
+        books_sales_by_author.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
           { author: "Agatha Christie"        , sales: 100, _count: 1 }
           { author: "Charles Dickens"        , sales: 200, _count: 1 }
           { author: "Dan Brown"              , sales: 244, _count: 3 }
@@ -1303,8 +1316,8 @@ describe 'XS test suite:', ->
           { author: "William Holmes McGuffey", sales: 125, _count: 1 }
         ]      
        
-      it 'should remove 10 from sales in 2000 from books_sales_by_year', ->
-        books_sales_by_year.fetch_all().should.be.eql [
+      it 'should remove 10 from sales in 2000 from books_sales_by_year', ( done ) ->
+        books_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
           { sales:       125, year: 1853, _count: 1 }
           { sales:       200, year: 1859, _count: 1 }
           { sales:       100, year: 1937, _count: 1 }
@@ -1386,25 +1399,24 @@ describe 'XS test suite:', ->
     ], { key: ['year', 'book_id'] }
     
     it 'should join books and authors', ( done ) ->
-      books_with_authors.fetch_all ( values ) -> check done, () ->
-        values.should.be.eql [
-          { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
-          { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-          { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
-          { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-          { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
-          { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
-          { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
-          { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
-          { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
-          { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
-          { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
-          { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
-          { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
-          { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
-          # { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
-          { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
-        ]
+      books_with_authors.fetch_all ( values ) -> check done, () -> values.should.be.eql [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        # { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
+      ]
 
     it 'should add a joined author', ( done ) ->
       authors.add [
@@ -1416,23 +1428,22 @@ describe 'XS test suite:', ->
         { id: 15, title: "Steps to Christ"                         , author_id: 13 }
       ]
       
-      books_with_authors.fetch_all ( values ) -> check done, () ->
-        values.should.be.eql [
-          { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
-          { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-          { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
-          { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-          { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
-          { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
-          { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
-          { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
-          { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
-          { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
-          { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
-          { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
-          { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
-          { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
-          { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
-          { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
-          { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
-        ]
+      books_with_authors.fetch_all ( values ) -> check done, () -> values.should.be.eql [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+      ]
