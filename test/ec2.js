@@ -36,6 +36,8 @@ var de = true, ug = function( message ) {
   log( 'xs tests, ' + message )
 }
 
+de&&ug( 'start ec2.js' );
+
 var ami_types = xs.set( [
   { type: 0, description: 'instance-store'        },
   { type: 1, description: 'EBS boot'              },
@@ -99,8 +101,14 @@ var regions = xs
 ;
     
 var zones = regions
-  .filter( function( r ) { return /^us/.test( r.RegionName ) } )
+  .filter( function( r ) {
+    return /^us/.test( r.RegionName )
+  } )
+  
   .ec2_availability_zones()
+  
+  .trace( 'Availability Zones' )
+  
   .on( 'complete', function() {
     zones.fetch_all( function( zones ) {
       console.log( 'Received all us Availability Zones: '
@@ -108,6 +116,7 @@ var zones = regions
       )
     } );
   } )
+  
   .set() // testing output of availability zones
 ;
 
@@ -129,9 +138,11 @@ var spot_prices_stats = regions
   
   .on( 'complete', function() {
     spot_prices_stats.fetch_all( function( prices ) {
-      de&&ug( 'spot_prices_stats: ' + JSON.Stringify( prices, void 0, 2 ) );
+      de&&ug( 'spot_prices_stats: ' + log.s( prices, void 0, '  ' ) );
     } );
   } )
+  
+  .trace( 'Spot Price History', { counts_only: true } )
   
   .order( xs.set( [
     { id: 'AvailabilityZone'   },
