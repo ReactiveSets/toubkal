@@ -320,31 +320,36 @@
         });
       });
       describe('fetch_all():', function() {
-        it('set.fetch_all() should be empty', function() {
-          return set.fetch_all().should.be.eql([]);
+        it('set.fetch_all() should be empty', function(done) {
+          return set.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([]);
+            });
+          });
         });
-        return it('cars.fetch_all() should be equal to result', function() {
-          var result;
-          result = [
-            {
-              id: 1,
-              brand: "Mercedes",
-              model: "C Class"
-            }, {
-              id: 2,
-              brand: "Mercedes",
-              model: "S Class"
-            }, {
-              id: 3,
-              brand: "BMW",
-              model: "M Serie"
-            }
-          ];
-          return cars.fetch_all().should.be.eql(result);
+        return it('cars.fetch_all() should be equal to result', function(done) {
+          return cars.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 1,
+                  brand: "Mercedes",
+                  model: "C Class"
+                }, {
+                  id: 2,
+                  brand: "Mercedes",
+                  model: "S Class"
+                }, {
+                  id: 3,
+                  brand: "BMW",
+                  model: "M Serie"
+                }
+              ]);
+            });
+          });
         });
       });
       describe('add():', function() {
-        var result;
         cities.add([
           {
             id: 4,
@@ -355,28 +360,31 @@
         it('cities.add( object ) should be a Set', function() {
           return cities.should.be.an["instanceof"](Set);
         });
-        result = xs.set([
-          {
-            id: 1,
-            name: "Marrakech",
-            country: "Morocco"
-          }, {
-            id: 2,
-            name: "Mountain View",
-            country: "USA",
-            state: "California"
-          }, {
-            id: 3,
-            name: "Paris",
-            country: "France"
-          }, {
-            id: 4,
-            name: "Berlin",
-            country: "Germany"
-          }
-        ]);
-        return it('cities.add( object ) should be equal to result', function() {
-          return cities.fetch_all().should.be.eql(result.fetch_all());
+        return it('cities.add( object ) should be equal to result', function(done) {
+          return cities.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 2,
+                  name: "Mountain View",
+                  country: "USA",
+                  state: "California"
+                }, {
+                  id: 3,
+                  name: "Paris",
+                  country: "France"
+                }, {
+                  id: 4,
+                  name: "Berlin",
+                  country: "Germany"
+                }
+              ]);
+            });
+          });
         });
       });
       describe('index_of():', function() {
@@ -404,7 +412,7 @@
         });
       });
       describe('remove():', function() {
-        it('set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', function() {
+        it('set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', function(done) {
           return set.remove([
             {
               id: 1
@@ -413,11 +421,15 @@
             {
               id: 2
             }
-          ]).fetch_all().should.be.eql([
-            {
-              id: 2
-            }
-          ]);
+          ]).fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2
+                }
+              ]);
+            });
+          });
         });
         it('should have an one value in the anti-state', function() {
           return set.b.should.be.eql([
@@ -426,184 +438,201 @@
             }
           ]);
         });
-        it('adding back this element should not change the set', function() {
+        it('adding back this element should not change the set', function(done) {
           return set.add([
             {
               id: 1
             }
-          ]).fetch_all().should.be.eql([
-            {
-              id: 2
-            }
-          ]);
+          ]).fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2
+                }
+              ]);
+            });
+          });
         });
         it('anti-state should be empty again', function() {
           return set.b.should.be.eql([]);
         });
-        it('removing id 2 should left set empty again', function() {
+        it('removing id 2 should left set empty again', function(done) {
           return set.remove([
             {
               id: 2
             }
-          ]).fetch_all().should.be.eql([]);
+          ]).fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([]);
+            });
+          });
         });
-        it('employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', function() {
+        it('employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', function(done) {
           employee.remove([
             {
               id: 15
             }
           ]);
-          return employee.fetch_all().should.be.eql([
-            {
-              id: 1,
-              name: "Stephen C. Cox",
-              salary: "$3000",
-              customer_id: "222",
-              order_id: "1222"
-            }, {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Joyce Ming",
-              salary: "$2000",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }, {
-              id: 5,
-              name: "Alex Frog",
-              salary: "$3000",
-              customer_id: "226",
-              order_id: "1226"
-            }, {
-              id: 6,
-              name: "Tim Hancook",
-              salary: "$1500",
-              customer_id: "227",
-              order_id: "1227"
-            }
-          ]);
+          return employee.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 1,
+                  name: "Stephen C. Cox",
+                  salary: "$3000",
+                  customer_id: "222",
+                  order_id: "1222"
+                }, {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Joyce Ming",
+                  salary: "$2000",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }, {
+                  id: 5,
+                  name: "Alex Frog",
+                  salary: "$3000",
+                  customer_id: "226",
+                  order_id: "1226"
+                }, {
+                  id: 6,
+                  name: "Tim Hancook",
+                  salary: "$1500",
+                  customer_id: "227",
+                  order_id: "1227"
+                }
+              ]);
+            });
+          });
         });
-        it('employee.remove( [ { id: 1 } ] ) should be equal to result: first record', function() {
-          var result;
-          result = xs.set([
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Joyce Ming",
-              salary: "$2000",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }, {
-              id: 5,
-              name: "Alex Frog",
-              salary: "$3000",
-              customer_id: "226",
-              order_id: "1226"
-            }, {
-              id: 6,
-              name: "Tim Hancook",
-              salary: "$1500",
-              customer_id: "227",
-              order_id: "1227"
-            }
-          ]);
+        it('employee.remove( [ { id: 1 } ] ) should be equal to result: first record', function(done) {
           employee.remove([
             {
               id: 1
             }
           ]);
-          return employee.fetch_all().should.be.eql(result.fetch_all());
+          return employee.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Joyce Ming",
+                  salary: "$2000",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }, {
+                  id: 5,
+                  name: "Alex Frog",
+                  salary: "$3000",
+                  customer_id: "226",
+                  order_id: "1226"
+                }, {
+                  id: 6,
+                  name: "Tim Hancook",
+                  salary: "$1500",
+                  customer_id: "227",
+                  order_id: "1227"
+                }
+              ]);
+            });
+          });
         });
-        it('employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', function() {
-          var result;
-          result = xs.set([
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Joyce Ming",
-              salary: "$2000",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }, {
-              id: 6,
-              name: "Tim Hancook",
-              salary: "$1500",
-              customer_id: "227",
-              order_id: "1227"
-            }
-          ]);
+        it('employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', function(done) {
           employee.remove([
             {
               id: 5
             }
           ]);
-          return employee.fetch_all().should.be.eql(result.fetch_all());
+          return employee.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Joyce Ming",
+                  salary: "$2000",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }, {
+                  id: 6,
+                  name: "Tim Hancook",
+                  salary: "$1500",
+                  customer_id: "227",
+                  order_id: "1227"
+                }
+              ]);
+            });
+          });
         });
-        return it('employee.remove( [ { id: 6 } ] ) should be equal to result: last record', function() {
-          var result;
-          result = xs.set([
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Joyce Ming",
-              salary: "$2000",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }
-          ]);
-          employee.remove([
+        return it('employee.remove( [ { id: 6 } ] ) should be equal to result: last record', function(done) {
+          return employee.remove([
             {
               id: 6
             }
-          ]);
-          return employee.fetch_all().should.be.eql(result.fetch_all());
+          ]).fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Joyce Ming",
+                  salary: "$2000",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }
+              ]);
+            });
+          });
         });
       });
       describe('update():', function() {
-        it('set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', function() {
+        it('set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', function(done) {
           return set.update([
             [
               {
@@ -613,14 +642,18 @@
                 v: 'test'
               }
             ]
-          ]).fetch_all().should.be.eql([
-            {
-              id: 1,
-              v: 'test'
-            }
-          ]);
+          ]).fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 1,
+                  v: 'test'
+                }
+              ]);
+            });
+          });
         });
-        it('employee with add, update and remove inverted should end with update done', function() {
+        it('employee with add, update and remove inverted should end with update done', function(done) {
           return employee.remove([
             {
               id: 15,
@@ -645,51 +678,33 @@
               name: "Khalifa P Nassik",
               salary: "$1500"
             }
-          ]).fetch_all().should.be.eql([
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Joyce Ming",
-              salary: "$2000",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }
-          ]);
+          ]).fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Joyce Ming",
+                  salary: "$2000",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }
+              ]);
+            });
+          });
         });
-        return it('employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', function() {
-          var result;
-          result = [
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Khalifa P Nassik",
-              Salary: "$1500",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }
-          ];
+        return it('employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', function(done) {
           employee.update([
             [
               {
@@ -703,7 +718,31 @@
               }
             ]
           ]);
-          return employee.fetch_all().should.be.eql(result);
+          return employee.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Khalifa P Nassik",
+                  Salary: "$1500",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }
+              ]);
+            });
+          });
         });
       });
       describe('filter():', function() {
@@ -715,32 +754,22 @@
         it('cities_in_usa should be a Pipelet', function() {
           return cities_in_usa.should.be.an["instanceof"](XS.Pipelet);
         });
-        it('cities_in_usa should only contain cities in USA', function() {
-          return cities_in_usa.fetch_all().should.be.eql([
-            {
-              id: 2,
-              name: "Mountain View",
-              country: "USA",
-              state: "California"
-            }
-          ]);
+        it('cities_in_usa should only contain cities in USA', function(done) {
+          return cities_in_usa.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Mountain View",
+                  country: "USA",
+                  state: "California"
+                }
+              ]);
+            });
+          });
         });
         describe('add():', function() {
-          it('cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', function() {
-            var result;
-            result = [
-              {
-                id: 2,
-                name: "Mountain View",
-                country: "USA",
-                state: "California"
-              }, {
-                id: 5,
-                name: "New York",
-                country: "USA",
-                state: "New York"
-              }
-            ];
+          it('cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', function(done) {
             cities.add([
               {
                 id: 5,
@@ -749,28 +778,25 @@
                 state: "New York"
               }
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 2,
+                    name: "Mountain View",
+                    country: "USA",
+                    state: "California"
+                  }, {
+                    id: 5,
+                    name: "New York",
+                    country: "USA",
+                    state: "New York"
+                  }
+                ]);
+              });
+            });
           });
-          return it('cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', function() {
-            var result;
-            result = [
-              {
-                id: 2,
-                name: "Mountain View",
-                country: "USA",
-                state: "California"
-              }, {
-                id: 5,
-                name: "New York",
-                country: "USA",
-                state: "New York"
-              }, {
-                id: 7,
-                name: "Housten",
-                country: "USA",
-                state: "Texas"
-              }
-            ];
+          return it('cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', function(done) {
             cities.add([
               {
                 id: 6,
@@ -783,30 +809,32 @@
                 state: 'Texas'
               }
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 2,
+                    name: "Mountain View",
+                    country: "USA",
+                    state: "California"
+                  }, {
+                    id: 5,
+                    name: "New York",
+                    country: "USA",
+                    state: "New York"
+                  }, {
+                    id: 7,
+                    name: "Housten",
+                    country: "USA",
+                    state: "Texas"
+                  }
+                ]);
+              });
+            });
           });
         });
         describe('update', function() {
-          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', function() {
-            var result;
-            result = [
-              {
-                id: 2,
-                name: "Mountain View",
-                country: "USA",
-                state: "California"
-              }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }, {
-                id: 7,
-                name: "Housten",
-                country: "USA",
-                state: "Texas"
-              }
-            ];
+          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', function(done) {
             cities.update([
               [
                 {
@@ -822,23 +850,30 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 2,
+                    name: "Mountain View",
+                    country: "USA",
+                    state: "California"
+                  }, {
+                    id: 5,
+                    name: "NY",
+                    country: "USA",
+                    state: "NY"
+                  }, {
+                    id: 7,
+                    name: "Housten",
+                    country: "USA",
+                    state: "Texas"
+                  }
+                ]);
+              });
+            });
           });
-          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', function() {
-            var result;
-            result = [
-              {
-                id: 2,
-                name: "Mountain View",
-                country: "USA",
-                state: "California"
-              }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }
-            ];
+          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', function(done) {
             cities.update([
               [
                 {
@@ -853,28 +888,25 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 2,
+                    name: "Mountain View",
+                    country: "USA",
+                    state: "California"
+                  }, {
+                    id: 5,
+                    name: "NY",
+                    country: "USA",
+                    state: "NY"
+                  }
+                ]);
+              });
+            });
           });
-          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', function() {
-            var result;
-            result = [
-              {
-                id: 2,
-                name: "Mountain View",
-                country: "USA",
-                state: "California"
-              }, {
-                id: 8,
-                name: "Detroit",
-                country: "USA",
-                state: "Michigan"
-              }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }
-            ];
+          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', function(done) {
             cities.update([
               [
                 {
@@ -889,28 +921,30 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 2,
+                    name: "Mountain View",
+                    country: "USA",
+                    state: "California"
+                  }, {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
+                  }, {
+                    id: 5,
+                    name: "NY",
+                    country: "USA",
+                    state: "NY"
+                  }
+                ]);
+              });
+            });
           });
-          return it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', function() {
-            var result;
-            result = [
-              {
-                id: 2,
-                name: "Mountain View",
-                country: "USA",
-                state: "California"
-              }, {
-                id: 8,
-                name: "Detroit",
-                country: "USA",
-                state: "Michigan"
-              }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }
-            ];
+          return it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', function(done) {
             cities.update([
               [
                 {
@@ -924,25 +958,32 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 2,
+                    name: "Mountain View",
+                    country: "USA",
+                    state: "California"
+                  }, {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
+                  }, {
+                    id: 5,
+                    name: "NY",
+                    country: "USA",
+                    state: "NY"
+                  }
+                ]);
+              });
+            });
           });
         });
         return describe('remove()', function() {
-          it('cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', function() {
-            var result;
-            result = [
-              {
-                id: 8,
-                name: "Detroit",
-                country: "USA",
-                state: "Michigan"
-              }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }
-            ];
+          it('cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', function(done) {
             cities.remove([
               {
                 id: 2,
@@ -951,23 +992,25 @@
                 state: "California"
               }
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
+                  }, {
+                    id: 5,
+                    name: "NY",
+                    country: "USA",
+                    state: "NY"
+                  }
+                ]);
+              });
+            });
           });
-          return it('cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', function() {
-            var result;
-            result = [
-              {
-                id: 8,
-                name: "Detroit",
-                country: "USA",
-                state: "Michigan"
-              }, {
-                id: 5,
-                name: "NY",
-                country: "USA",
-                state: "NY"
-              }
-            ];
+          return it('cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', function(done) {
             cities.remove([
               {
                 id: 7,
@@ -975,14 +1018,29 @@
                 country: "Italy"
               }
             ]);
-            return cities_in_usa.fetch_all().should.be.eql(result);
+            return cities_in_usa.fetch_all(function(values) {
+              return check(done, function() {
+                return values.should.be.eql([
+                  {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
+                  }, {
+                    id: 5,
+                    name: "NY",
+                    country: "USA",
+                    state: "NY"
+                  }
+                ]);
+              });
+            });
           });
         });
       });
       describe('notify():', function() {
-        it('add(): employee.notify( transaction ) should be equal to result', function() {
-          var result, transaction;
-          transaction = [
+        it('add(): employee.notify( transaction ) should be equal to result', function(done) {
+          employee.notify([
             {
               action: "add",
               objects: [
@@ -1001,46 +1059,47 @@
                 }
               ]
             }
-          ];
-          result = [
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Khalifa P Nassik",
-              Salary: "$1500",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }, {
-              id: 7,
-              name: "John Morrison",
-              salary: "$3000",
-              customer_id: "228",
-              order_id: "1228"
-            }, {
-              id: 8,
-              name: "Thomas Buch",
-              salary: "$2500",
-              customer_id: "229",
-              order_id: "1229"
-            }
-          ];
-          employee.notify(transaction);
-          return employee.fetch_all().should.be.eql(result);
+          ]);
+          return employee.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Khalifa P Nassik",
+                  Salary: "$1500",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }, {
+                  id: 7,
+                  name: "John Morrison",
+                  salary: "$3000",
+                  customer_id: "228",
+                  order_id: "1228"
+                }, {
+                  id: 8,
+                  name: "Thomas Buch",
+                  salary: "$2500",
+                  customer_id: "229",
+                  order_id: "1229"
+                }
+              ]);
+            });
+          });
         });
-        it('remove(): employee.notify( transaction ) should be equal to result', function() {
-          var result, transaction;
-          transaction = [
+        it('remove(): employee.notify( transaction ) should be equal to result', function(done) {
+          employee.notify([
             {
               action: "remove",
               objects: [
@@ -1049,40 +1108,41 @@
                 }
               ]
             }
-          ];
-          result = [
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$1500",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Khalifa P Nassik",
-              Salary: "$1500",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }, {
-              id: 7,
-              name: "John Morrison",
-              salary: "$3000",
-              customer_id: "228",
-              order_id: "1228"
-            }
-          ];
-          employee.notify(transaction);
-          return employee.fetch_all().should.be.eql(result);
+          ]);
+          return employee.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$1500",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Khalifa P Nassik",
+                  Salary: "$1500",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }, {
+                  id: 7,
+                  name: "John Morrison",
+                  salary: "$3000",
+                  customer_id: "228",
+                  order_id: "1228"
+                }
+              ]);
+            });
+          });
         });
-        it('update(): employee.notify( transaction ) should be equal to result', function() {
-          var result, transaction;
-          transaction = [
+        it('update(): employee.notify( transaction ) should be equal to result', function(done) {
+          employee.notify([
             {
               action: "update",
               objects: [
@@ -1117,44 +1177,45 @@
                 ]
               ]
             }
-          ];
-          result = [
-            {
-              id: 2,
-              name: "Josephin Tan",
-              salary: "$2750",
-              customer_id: "223",
-              order_id: "1223"
-            }, {
-              id: 3,
-              name: "Khalifa P Nassik",
-              Salary: "$1500",
-              customer_id: "224",
-              order_id: "1224"
-            }, {
-              id: 4,
-              name: "James A. Pentel",
-              salary: "$1750",
-              customer_id: "225",
-              order_id: "1225"
-            }, {
-              id: 7,
-              name: "John Morrison",
-              salary: "$3500",
-              customer_id: "228",
-              order_id: "1228"
-            }
-          ];
-          employee.notify(transaction);
-          return employee.fetch_all().should.be.eql(result);
+          ]);
+          return employee.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 2,
+                  name: "Josephin Tan",
+                  salary: "$2750",
+                  customer_id: "223",
+                  order_id: "1223"
+                }, {
+                  id: 3,
+                  name: "Khalifa P Nassik",
+                  Salary: "$1500",
+                  customer_id: "224",
+                  order_id: "1224"
+                }, {
+                  id: 4,
+                  name: "James A. Pentel",
+                  salary: "$1750",
+                  customer_id: "225",
+                  order_id: "1225"
+                }, {
+                  id: 7,
+                  name: "John Morrison",
+                  salary: "$3500",
+                  customer_id: "228",
+                  order_id: "1228"
+                }
+              ]);
+            });
+          });
         });
-        return it('filter(): cities.filter( is_in_morocco ) should be equal to result', function() {
-          var cities_in_morocco, is_in_morocco, result, transaction;
-          is_in_morocco = function(o) {
-            return o.country === "Morocco";
-          };
-          cities_in_morocco = cities.filter(is_in_morocco);
-          transaction = [
+        return it('filter(): cities.filter( is_in_morocco ) should be equal to result', function(done) {
+          var cities_in_morocco;
+          cities_in_morocco = cities.filter(function(city) {
+            return city.country === "Morocco";
+          });
+          cities.notify([
             {
               action: "add",
               objects: [
@@ -1233,20 +1294,22 @@
                 }
               ]
             }
-          ];
-          cities.notify(transaction);
-          result = [
-            {
-              id: 1,
-              name: "Marrakech",
-              country: "Morocco"
-            }, {
-              id: 6,
-              name: "Casa",
-              country: "Morocco"
-            }
-          ];
-          return cities_in_morocco.fetch_all().should.be.eql(result);
+          ]);
+          return cities_in_morocco.fetch_all(function(values) {
+            return check(done, function() {
+              return values.should.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 6,
+                  name: "Casa",
+                  country: "Morocco"
+                }
+              ]);
+            });
+          });
         });
       });
       return describe('order():', function() {

@@ -246,24 +246,20 @@ describe 'XS test suite:', ->
     
     describe 'Delayed set:', ->
       it 'Delayed set should eventually equal its source values', ( done ) ->
-        delayed_set.fetch_all ( values ) ->
-          check done, () ->
-            values.should.be.eql [
-              { id:1, value: 'delayed' }
-            ]
+        delayed_set.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          { id:1, value: 'delayed' }
+        ]
     
     describe 'fetch_all():', ->
-      it 'set.fetch_all() should be empty', ->
-        set.fetch_all().should.be.eql []
+      it 'set.fetch_all() should be empty', ( done ) ->
+        set.fetch_all ( values ) -> check done, -> values.should.be.eql []
       
-      it 'cars.fetch_all() should be equal to result', ->
-        result = [
+      it 'cars.fetch_all() should be equal to result', ( done ) ->
+        cars.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id: 1, brand: "Mercedes", model: "C Class" }
           { id: 2, brand: "Mercedes", model: "S Class" }
           { id: 3, brand: "BMW"     , model: "M Serie" }
         ]
-        
-        cars.fetch_all().should.be.eql result
     
     describe 'add():', ->
       cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
@@ -271,15 +267,13 @@ describe 'XS test suite:', ->
       it 'cities.add( object ) should be a Set', ->
         cities.should.be.an.instanceof Set
       
-      result = xs.set [
-        { id: 1, name: "Marrakech", country: "Morocco"  }
-        { id: 2, name: "Mountain View", country: "USA", state: "California" }
-        { id: 3, name: "Paris", country: "France" }
-        { id: 4, name: "Berlin", country: "Germany" }
-      ]
-      
-      it 'cities.add( object ) should be equal to result', ->
-        cities.fetch_all().should.be.eql result.fetch_all()
+      it 'cities.add( object ) should be equal to result', ( done ) ->
+        cities.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          { id: 1, name: "Marrakech", country: "Morocco"  }
+          { id: 2, name: "Mountain View", country: "USA", state: "California" }
+          { id: 3, name: "Paris", country: "France" }
+          { id: 4, name: "Berlin", country: "Germany" }
+        ]
     
     describe 'index_of():', ->
       it 'set.index_of( { id: 2 } ) should be -1: empty set', ->
@@ -295,25 +289,28 @@ describe 'XS test suite:', ->
         cars.index_of( { id: 3, model: "S Class" } ).should.be.eql -1
     
     describe 'remove():', ->
-      it 'set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', ->
-        set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ).fetch_all().should.be.eql [ { id: 2 } ]
+      it 'set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', ( done ) ->
+        set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ).fetch_all ( values ) ->
+          check done, -> values.should.be.eql [ { id: 2 } ]
       
       it 'should have an one value in the anti-state', ->
         set.b.should.be.eql [ { id: 1 } ]
       
-      it 'adding back this element should not change the set', ->
-        set.add( [ { id: 1 } ] ).fetch_all().should.be.eql [ { id: 2 } ]
+      it 'adding back this element should not change the set', ( done ) ->
+        set.add( [ { id: 1 } ] ).fetch_all ( values ) ->
+          check done, -> values.should.be.eql [ { id: 2 } ]
       
       it 'anti-state should be empty again', ->
         set.b.should.be.eql []
         
-      it 'removing id 2 should left set empty again', ->
-        set.remove( [ { id: 2 } ] ).fetch_all().should.be.eql []
+      it 'removing id 2 should left set empty again', ( done ) ->
+        set.remove( [ { id: 2 } ] ).fetch_all ( values ) ->
+          check done, -> values.should.be.eql []
       
-      it 'employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', ->
+      it 'employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', ( done ) ->
         employee.remove( [ { id: 15 } ] )
         
-        employee.fetch_all().should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
@@ -322,72 +319,66 @@ describe 'XS test suite:', ->
           { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
         ]
       
-      it 'employee.remove( [ { id: 1 } ] ) should be equal to result: first record', ->
-        result = xs.set [
+      it 'employee.remove( [ { id: 1 } ] ) should be equal to result: first record', ( done ) ->
+        employee.remove( [ { id: 1 } ] )
+        
+        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
           { id:  5, name: "Alex Frog"      , salary: "$3000", customer_id: "226", order_id: "1226" }
           { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
         ]
-        
-        employee.remove( [ { id: 1 } ] )
-        
-        employee.fetch_all().should.be.eql result.fetch_all()
 
-      it 'employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', ->
-        result = xs.set [
+      it 'employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', ( done ) ->
+        employee.remove( [ { id: 5 } ] )
+        
+        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
           { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
         ]
-        
-        employee.remove( [ { id: 5 } ] )
-        
-        employee.fetch_all().should.be.eql result.fetch_all()
       
-      it 'employee.remove( [ { id: 6 } ] ) should be equal to result: last record', ->
-        result = xs.set [
-          { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
-          { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
-          { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
-        ]
-        
-        employee.remove( [ { id: 6 } ] )
-        
-        employee.fetch_all().should.be.eql result.fetch_all()
+      it 'employee.remove( [ { id: 6 } ] ) should be equal to result: last record', ( done ) ->
+        employee
+          .remove( [ { id: 6 } ] )
+          .fetch_all ( values ) -> check done, -> values.should.be.eql [
+            { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+            { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+            { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+          ]
     
     describe 'update():', ->
-      it 'set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', ->
+      it 'set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', ( done ) ->
         set
           .update( [ [ { id: 1 }, { id: 1, v: 'test' } ] ] )
-          .fetch_all().should.be.eql [ { id: 1, v: 'test' } ]
+          .fetch_all ( values ) -> check done, -> values.should.be.eql [
+            { id: 1, v: 'test' }
+          ]
       
-      it 'employee with add, update and remove inverted should end with update done', ->
+      it 'employee with add, update and remove inverted should end with update done', ( done ) ->
         employee
           .remove(   [ { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] )
           .update( [ [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" }
                        { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] ] )
           .add(      [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" } ] )
-          .fetch_all().should.be.eql [
+          .fetch_all ( values ) -> check done, -> values.should.be.eql [
             { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
             { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
             { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
             #{ id: 15, name: "Khalifa P Nassik", salary: "$2500" }
           ]
       
-      it 'employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', ->
-        result = [
+      it 'employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', ( done ) ->
+        employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ] ] )
+
+        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
           #{ id: 15, name: "Khalifa P Nassik", salary: "$2500" }
         ]
-
-        employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ] ] )
-
-        employee.fetch_all().should.be.eql result
     
     describe 'filter():', ->
       is_in_usa = ( city, c, cities ) ->
@@ -398,100 +389,87 @@ describe 'XS test suite:', ->
       it 'cities_in_usa should be a Pipelet', ->
         cities_in_usa.should.be.an.instanceof XS.Pipelet
       
-      it 'cities_in_usa should only contain cities in USA', ->
-        cities_in_usa.fetch_all().should.be.eql [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
+      it 'cities_in_usa should only contain cities in USA', ( done ) ->
+        cities_in_usa.fetch_all ( values ) -> check done, ->
+          values.should.be.eql [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+          ]
       
       describe 'add():', ->
-        it 'cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', ->
-          result = [
-            { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 5, name: "New York", country: "USA", state: "New York" }
-          ]
-
+        it 'cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', ( done ) ->
           cities.add [ { id: 5, name: "New York", country: "USA", state: "New York" } ]
 
-          cities_in_usa.fetch_all().should.be.eql result
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+            { id: 5, name: "New York", country: "USA", state: "New York" }
+          ]
         
-        it 'cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', ->
-          result = [
+        it 'cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', ( done ) ->
+          cities.add [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: 'Housten', country: 'USA', state: 'Texas' } ]
+          
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 5, name: "New York", country: "USA", state: "New York" }
             { id: 7, name: "Housten", country: "USA", state: "Texas" }
           ]
-
-          cities.add [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: 'Housten', country: 'USA', state: 'Texas' } ]
-          
-          cities_in_usa.fetch_all().should.be.eql result
       
       describe 'update', ->
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', ->
-          result = [
+        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', ( done ) ->
+          cities.update [ [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ]
+
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
             { id: 7, name: "Housten", country: "USA", state: "Texas" }
           ]
-
-          cities.update [ [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ]
-
-          cities_in_usa.fetch_all().should.be.eql result
         
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', ->
-          result = [
-            { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-          ]
-          
+        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', ( done ) ->
           cities.update [ [ { id: 7, name: "Housten", country: "USA", state: "Texas" }, { id: 7, name: "Venice", country: "Italy" } ] ]
           
-          cities_in_usa.fetch_all().should.be.eql result
-        
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', ->
-          result = [
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
-          
+        
+        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ]
           
-          cities_in_usa.fetch_all().should.be.eql result
-        
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', ->
-          result = [
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
-          
+        
+        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 9, name: "Madrid", country: "Spain" } ] ]
           
-          cities_in_usa.fetch_all().should.be.eql result
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+            { id: 2, name: "Mountain View", country: "USA", state: "California" }
+            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
+          ]
         
       describe 'remove()', ->
-        it 'cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', ->
-          result = [
-            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-          ]
-          
+        it 'cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', ( done ) ->
           cities.remove [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
           
-          cities_in_usa.fetch_all().should.be.eql result
-        
-        it 'cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', ->
-          result = [
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
-          
+        
+        it 'cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', ( done ) ->
           cities.remove [ { id: 7, name: "Venice", country: "Italy" } ]
           
-          cities_in_usa.fetch_all().should.be.eql result
+          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            { id: 5, name: "NY", country: "USA", state: "NY" }
+          ]
       
     describe 'notify():', ->
       
-      it 'add(): employee.notify( transaction ) should be equal to result', ->
-        transaction = [
+      it 'add(): employee.notify( transaction ) should be equal to result', ( done ) ->
+        employee.notify [
           {
             action: "add"
             objects: [
@@ -501,34 +479,26 @@ describe 'XS test suite:', ->
           }
         ]
         
-        result = [
+        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
           { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
           { id: 8, name: "Thomas Buch"     , salary: "$2500", customer_id: "229", order_id: "1229" }
         ]
-        
-        employee.notify transaction
-        
-        employee.fetch_all().should.be.eql result
       
-      it 'remove(): employee.notify( transaction ) should be equal to result', ->
-        transaction = [ { action: "remove", objects: [ { id: 8 } ] } ]
-
-        result = [
+      it 'remove(): employee.notify( transaction ) should be equal to result', ( done ) ->
+        employee.notify [ { action: "remove", objects: [ { id: 8 } ] } ]
+        
+        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
           { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
         ]
       
-        employee.notify transaction
-        
-        employee.fetch_all().should.be.eql result
-      
-      it 'update(): employee.notify( transaction ) should be equal to result', ->
-        transaction = [ {
+      it 'update(): employee.notify( transaction ) should be equal to result', ( done ) ->
+        employee.notify [ {
           action: "update"
           objects: [
             [
@@ -543,24 +513,17 @@ describe 'XS test suite:', ->
           ]
         } ]
 
-        result = [
+        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$2750", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
           { id: 7, name: "John Morrison"   , salary: "$3500", customer_id: "228", order_id: "1228" }
         ]
       
-        employee.notify transaction
+      it 'filter(): cities.filter( is_in_morocco ) should be equal to result', ( done ) ->
+        cities_in_morocco = cities.filter ( city ) -> return city.country is "Morocco"
         
-        employee.fetch_all().should.be.eql result
-      
-      it 'filter(): cities.filter( is_in_morocco ) should be equal to result', ->
-        is_in_morocco = ( o ) ->
-          return o.country is "Morocco"
-        
-        cities_in_morocco = cities.filter is_in_morocco
-        
-        transaction = [
+        cities.notify [
           {
             action: "add"
             objects: [
@@ -587,14 +550,10 @@ describe 'XS test suite:', ->
           }
         ]
         
-        cities.notify transaction
-        
-        result = [
+        cities_in_morocco.fetch_all ( values ) -> check done, -> values.should.be.eql [
           { id:  1, name: "Marrakech", country: "Morocco" }
           { id:  6, name: "Casa"     , country: "Morocco" }
         ]
-        
-        cities_in_morocco.fetch_all().should.be.eql result
       
     describe 'order():', ->
       books = xs.set [
