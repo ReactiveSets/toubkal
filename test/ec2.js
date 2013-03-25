@@ -32,6 +32,10 @@ require( '../lib/aggregate.js' );
 require( '../lib/join.js' );
 require( '../lib/last.js' );
 
+var de = true, ug = function( message ) {
+  log( 'xs tests, ' + message )
+}
+
 var ami_types = xs.set( [
   { type: 0, description: 'instance-store'        },
   { type: 1, description: 'EBS boot'              },
@@ -120,16 +124,22 @@ d.setDate( d.getDate() - 10 );
 
 var previous;
 
-var spot_prices = regions
-  .filter( function( region ) { return region.RegionName == 'us-east-1' } )
-  .ec2_describe_spot_price_history( d, [ 'm1.small' ], { products : [ 'Linux/UNIX' ] } )
-
-  .order( [
+var spot_prices_stats = regions
+  .ec2_describe_spot_price_history( d, [ 'm1.small' ], { products : [ 'Linux/UNIX' ], name: 'spot_price_history' } )
+  
+  .on( 'complete', function() {
+    spot_prices_stats.fetch_all( function( prices ) {
+      de&&ug( 'spot_prices_stats: ' + JSON.Stringify( prices, void 0, 2 ) );
+    } );
+  } )
+  
+  .order( xs.set( [
     { id: 'AvailabilityZone'   },
     { id: 'ProductDescription' },
     { id: 'InstanceType'       }, 
     { id: 'Timestamp'          }
-  ] )
+  ] ) )
+  
   .alter( function( price ) {
     var timestamp = price.Timestamp;
     
@@ -147,7 +157,9 @@ var spot_prices = regions
     
     return previous = price;
   } )
+  
   //.trace( 'Spot Prices' )
+  
   .aggregate( [
     { id: 'seconds' },
     { id: 'cost_seconds' }
@@ -155,14 +167,14 @@ var spot_prices = regions
     { id: 'AvailabilityZone' },
     { id: 'InstanceType' }
   ] )
-  .trace( 'Total Seconds and Cost by AvailabilityZone and InstanceType' )
+  
   .alter( function( cost ) {
     cost.average_cost_per_hour = cost.cost_seconds / cost.seconds;
     
     return cost;
   } )
+  
   .order( [ { id: 'average_cost_per_hour', descending: true } ] )
+  
   .trace( 'Average Cost per Hour by AvailabilityZone and InstanceType' )
-  .last()
-  .trace( 'Lowest Cost Availability Zone' )
 ;
