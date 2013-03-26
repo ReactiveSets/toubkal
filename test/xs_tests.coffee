@@ -71,15 +71,14 @@ XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
 extend = XS.extend
 
 if require?
+  expect = require 'expect.js'
+
   require '../lib/code.js'
   require '../lib/pipelet.js'
   require '../lib/filter.js'
   require '../lib/order.js'
   require '../lib/aggregate.js'
   require '../lib/join.js'
-
-#chai = require 'chai' if require?
-#chai?.should()
 
 xs = XS.xs
 

@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Set, XS, check, clone, extend, log, xs;
+  var Set, XS, check, clone, expect, extend, log, xs;
 
   clone = function(o) {
     var p, r;
@@ -84,6 +84,7 @@
   extend = XS.extend;
 
   if (typeof require !== "undefined" && require !== null) {
+    expect = require('expect.js');
     require('../lib/code.js');
     require('../lib/pipelet.js');
     require('../lib/filter.js');
