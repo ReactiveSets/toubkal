@@ -68,8 +68,8 @@ if require?
   require '../lib/aggregate.js'
   require '../lib/table.js'
 
-chai = require 'chai' if require?
-chai?.should()
+#chai = require 'chai' if require?
+#chai?.should()
 
 xs = XS.xs
 
@@ -91,34 +91,34 @@ describe 'Columns_Set():', ->
   it 'columns should be equal to object.columns', ->
     object = from_HTML_to_object node
     
-    columns.fetch_all().should.be.eql object.columns
+    expect( columns.fetch_all() ).to.be.eql object.columns
   
   it 'after add 2 objects: columns.add( objects ) should be equal to object.columns', ->
     columns.add [ { id: "year" , label: "Year", align: "center" }, { id: "language", label: "Language" } ]
     
     object = from_HTML_to_object node
     
-    columns.fetch_all().should.be.eql object.columns
+    expect( columns.fetch_all() ).to.be.eql object.columns
   
   it 'after columns.remove( object ), columns should be equal to object.columns', ->
     columns.remove [ { id: "id", label: "ID" } ]
     
     object = from_HTML_to_object node
     
-    columns.fetch_all().should.be.eql object.columns
+    expect( columns.fetch_all() ).to.be.eql object.columns
   
   it 'after columns.update( object ), columns should be equal to object.columns', ->
     columns.update [ [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ] ]
     
     object = from_HTML_to_object node
 
-    columns.fetch_all().should.be.eql object.columns
+    expect( columns.fetch_all() ).to.be.eql object.columns
 
 describe 'Table():', ->
   it 'books should be equal to object.data', ->
     object = from_HTML_to_object node
     
-    object.data.should.be.eql [
+    expect( object.data ).to.be.eql [
       { title: "A Tale of Two Cities"             , author: "Charles Dickens" , year: 1859, sales:       200 }
       { title: "Charlie and the Chocolate Factory", author: "Roald Dahl"                  , sales:        13 }
       { title: "The Da Vinci Code"                , author: "Dan Brown"       , year: 2003, sales:        80 }
@@ -142,7 +142,7 @@ describe 'Table():', ->
     
     object = from_HTML_to_object node
     
-    object.data.should.be.eql [
+    expect( object.data ).to.be.eql [
       { title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859, sales:  200 }
       { title: "And Then There Were None"                , author: "Agatha Christie"                    , sales:  100 }
       { title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000, sales:   39 }
@@ -174,7 +174,7 @@ describe 'Table():', ->
     
     object = from_HTML_to_object node
     
-    object.data.should.be.eql [ 
+    expect( object.data ).to.be.eql [ 
       { author: "Charles Dickens"          , sales: 200, title: "A Tale of Two Cities"                    , year: 1859 }
       { author: "Agatha Christie"          , sales: 100, title: "And Then There Were None"                             }
       { author: "Dan Brown"                , sales:  39, title: "Angels and Demons"                       , year: 2000 }
@@ -201,7 +201,7 @@ describe 'Table():', ->
     
     object = from_HTML_to_object node
     
-    object.data.should.be.eql [
+    expect( object.data ).to.be.eql [
       { author: "Agatha Christie"          , sales: 100, title: "And Then There Were None"                             }
       { author: "Dan Brown"                , sales:  39, title: "Angels and Demons"                       , year: 2000 }
       { author: "Stephenie Meyer"                      , title: "Breaking Dawn"                           , year: 2008 }

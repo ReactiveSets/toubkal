@@ -43,7 +43,7 @@ describe 'clone():', ->
   bar = clone foo
 
   it 'foo should be deep equal to bar', ->
-    bar.should.be.eql foo
+    expect( bar ).to.be.eql foo
 
 # ----------------------------------------------------------------------------------------------
 # Asynchrnous tests exception catcher
@@ -59,7 +59,7 @@ check = ( done, test ) ->
 
 describe 'Aynchronous test check()', ->
   it 'should succeed in 50 ms', ( done ) ->
-    setTimeout ( () -> check done, () -> [].should.be.eql [] ), 50
+    setTimeout ( () -> check done, () -> expect( [] ).to.be.eql [] ), 50
 
 # ----------------------------------------------------------------------------------------------
 # xs unit test suite
@@ -78,8 +78,8 @@ if require?
   require '../lib/aggregate.js'
   require '../lib/join.js'
 
-chai = require 'chai' if require?
-chai?.should()
+#chai = require 'chai' if require?
+#chai?.should()
 
 xs = XS.xs
 
@@ -89,13 +89,13 @@ log = ( message ) -> XS.log( 'xs tests, ' + message )
 
 describe 'XS test suite:', ->
   it 'XS should be defined:', ->
-    XS.should.exist
+    expect( XS ).to.exist
   
   describe 'XS.extend():', ->
     extend = XS.extend
     
     it 'extend() should be a function', ->
-      extend.should.be.a 'function'
+      expect( extend ).to.be.a 'function'
     
     o1 = 
       id: 1
@@ -116,39 +116,39 @@ describe 'XS test suite:', ->
     it 'extend( object ) should be equal to object', ->
       result = extend o1
       
-      result.should.be.eql o1
+      expect( result ).to.be.eql o1
     
     it 'extend( object1, object2 ) should be equal to object', ->
       result = extend o1, o2
       
-      result.should.be.eql { id: 1, name: 'khalifa', email: 'knassik@gmail.com' }
+      expect( result ).to.be.eql { id: 1, name: 'khalifa', email: 'knassik@gmail.com' }
     
     it 'o2 should be deep equal to _o2', ->
-      o2.should.be.eql _o2
+      expect( o2 ).to.be.eql _o2
     
     it 'extend( object1, object2, object3 ) should be equal to object', ->
       result = extend o1, o2, o3
       
-      result.should.be.eql { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' }
+      expect( result ).to.be.eql { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' }
      
     it 'o2 should be deep equal to _o2', ->
-       o2.should.be.eql _o2
+       expect( o2 ).to.be.eql _o2
     
     it 'o3 should be deep equal to _o3', ->
-      o3.should.be.eql _o3
+      expect( o3 ).to.be.eql _o3
     
   describe 'XS.subclass():', ->
     subclass = XS.subclass
     
     it 'subclass() should be a function', ->
-      subclass.should.be.a 'function'
+      expect( subclass ).to.be.a 'function'
     
     Animal = ( name ) -> @name = name
     
     a = new Animal 'Sam'
     
     it 'a should be an instance of Animal', ->
-      a.should.be.an.instanceof Animal
+      expect( a ).to.be.an Animal
       
     Snake = ( name ) ->
     
@@ -157,13 +157,13 @@ describe 'XS test suite:', ->
     s = new Snake( "Barry the Snake" )
     
     it 's should be an instance of Snake', ->
-      s.should.be.an.instanceof Snake
+      expect( s ).to.be.a Snake
     
     it 's should be an instance of Animal', ->
-      s.should.be.an.instanceof Animal
+      expect( s ).to.be.an Animal
     
     it 'a should not be an instance of Snake', ->
-      a.should.not.be.an.instanceof Snake
+      expect( a ).to.not.be.a Snake
     
   describe 'XS.Code():', ->
     f = code = new XS.Code( 'Code Test' )
@@ -180,10 +180,10 @@ describe 'XS test suite:', ->
     i = f()
     
     it 'f should be a function', ->
-      f.should.be.a 'function'
+      expect( f ).to.be.a 'function'
     
     it 'i should be equal to 10', ->
-      i.should.be.eql 10
+      expect( i ).to.be.eql 10
     
     test = 'a[ ++i ] === n'
     
@@ -199,22 +199,22 @@ describe 'XS test suite:', ->
     eval code
     
     it 'the index of 34 should be 0', ->
-      g( 34 ).should.be.eql 0
+      expect( g( 34 ) ).to.be.eql 0
   
     it 'the index of 52 should be 4', ->
-      g( 52 ).should.be.eql 4
+      expect( g( 52 ) ).to.be.eql 4
   
     it 'the index of 90 should be 9', ->
-      g( 90 ).should.be.eql 9
+      expect( g( 90 ) ).to.be.eql 9
   
     it 'the index of 1 should be 8', ->
-      g( 1 ).should.be.eql 8
+      expect( g( 1 ) ).to.be.eql 8
   
   describe 'XS.Set():', ->
     set = xs.set();
     
     it 'set should be a Set', ->
-      set.should.be.an.instanceof Set
+      expect( set ).to.be.a Set
     
     cities = xs.set [
       { id: 1, name: "Marrakech", country: "Morocco"  }
@@ -246,16 +246,16 @@ describe 'XS test suite:', ->
     
     describe 'Delayed set:', ->
       it 'Delayed set should eventually equal its source values', ( done ) ->
-        delayed_set.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        delayed_set.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id:1, value: 'delayed' }
         ]
     
     describe 'fetch_all():', ->
       it 'set.fetch_all() should be empty', ( done ) ->
-        set.fetch_all ( values ) -> check done, -> values.should.be.eql []
+        set.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql []
       
       it 'cars.fetch_all() should be equal to result', ( done ) ->
-        cars.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        cars.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id: 1, brand: "Mercedes", model: "C Class" }
           { id: 2, brand: "Mercedes", model: "S Class" }
           { id: 3, brand: "BMW"     , model: "M Serie" }
@@ -265,10 +265,10 @@ describe 'XS test suite:', ->
       cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
       
       it 'cities.add( object ) should be a Set', ->
-        cities.should.be.an.instanceof Set
+        expect( cities ).to.be.a Set
       
       it 'cities.add( object ) should be equal to result', ( done ) ->
-        cities.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        cities.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id: 1, name: "Marrakech", country: "Morocco"  }
           { id: 2, name: "Mountain View", country: "USA", state: "California" }
           { id: 3, name: "Paris", country: "France" }
@@ -277,40 +277,40 @@ describe 'XS test suite:', ->
     
     describe 'index_of():', ->
       it 'set.index_of( { id: 2 } ) should be -1: empty set', ->
-        set.index_of( { id: 2 } ).should.be.eql -1
+        expect( set.index_of( { id: 2 } ) ).to.be.eql -1
       
       it 'cities.index_of( { id: 2 } ) should be 1', ->
-        cities.index_of( { id: 2 } ).should.be.eql 1
+        expect( cities.index_of( { id: 2 } ) ).to.be.eql 1
       
       it 'cars.index_of( { id: 2, model: "S Class" } ) should be 1', ->
-        cars.index_of( { id: 2, model: "S Class" } ).should.be.eql 1
+        expect( cars.index_of( { id: 2, model: "S Class" } ) ).to.be.eql 1
       
       it 'cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
-        cars.index_of( { id: 3, model: "S Class" } ).should.be.eql -1
+        expect( cars.index_of( { id: 3, model: "S Class" } ) ).to.be.eql -1
     
     describe 'remove():', ->
       it 'set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', ( done ) ->
         set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ).fetch_all ( values ) ->
-          check done, -> values.should.be.eql [ { id: 2 } ]
+          check done, -> expect( values ).to.be.eql [ { id: 2 } ]
       
       it 'should have an one value in the anti-state', ->
-        set.b.should.be.eql [ { id: 1 } ]
+        expect( set.b ).to.be.eql [ { id: 1 } ]
       
       it 'adding back this element should not change the set', ( done ) ->
         set.add( [ { id: 1 } ] ).fetch_all ( values ) ->
-          check done, -> values.should.be.eql [ { id: 2 } ]
+          check done, -> expect( values ).to.be.eql [ { id: 2 } ]
       
       it 'anti-state should be empty again', ->
-        set.b.should.be.eql []
+        expect( set.b ).to.be.eql []
         
       it 'removing id 2 should left set empty again', ( done ) ->
         set.remove( [ { id: 2 } ] ).fetch_all ( values ) ->
-          check done, -> values.should.be.eql []
+          check done, -> expect( values ).to.be.eql []
       
       it 'employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', ( done ) ->
         employee.remove( [ { id: 15 } ] )
         
-        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
@@ -322,7 +322,7 @@ describe 'XS test suite:', ->
       it 'employee.remove( [ { id: 1 } ] ) should be equal to result: first record', ( done ) ->
         employee.remove( [ { id: 1 } ] )
         
-        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -333,7 +333,7 @@ describe 'XS test suite:', ->
       it 'employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', ( done ) ->
         employee.remove( [ { id: 5 } ] )
         
-        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
           { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -343,7 +343,7 @@ describe 'XS test suite:', ->
       it 'employee.remove( [ { id: 6 } ] ) should be equal to result: last record', ( done ) ->
         employee
           .remove( [ { id: 6 } ] )
-          .fetch_all ( values ) -> check done, -> values.should.be.eql [
+          .fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
             { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
             { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -353,7 +353,7 @@ describe 'XS test suite:', ->
       it 'set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', ( done ) ->
         set
           .update( [ [ { id: 1 }, { id: 1, v: 'test' } ] ] )
-          .fetch_all ( values ) -> check done, -> values.should.be.eql [
+          .fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 1, v: 'test' }
           ]
       
@@ -363,7 +363,7 @@ describe 'XS test suite:', ->
           .update( [ [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" }
                        { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] ] )
           .add(      [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" } ] )
-          .fetch_all ( values ) -> check done, -> values.should.be.eql [
+          .fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
             { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
             { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -373,7 +373,7 @@ describe 'XS test suite:', ->
       it 'employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', ( done ) ->
         employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ] ] )
 
-        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -387,11 +387,11 @@ describe 'XS test suite:', ->
       cities_in_usa = cities.filter is_in_usa
       
       it 'cities_in_usa should be a Pipelet', ->
-        cities_in_usa.should.be.an.instanceof XS.Pipelet
+        expect( cities_in_usa ).to.be.an XS.Pipelet
       
       it 'cities_in_usa should only contain cities in USA', ( done ) ->
         cities_in_usa.fetch_all ( values ) -> check done, ->
-          values.should.be.eql [
+          expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
           ]
       
@@ -399,7 +399,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', ( done ) ->
           cities.add [ { id: 5, name: "New York", country: "USA", state: "New York" } ]
 
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 5, name: "New York", country: "USA", state: "New York" }
           ]
@@ -407,7 +407,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', ( done ) ->
           cities.add [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: 'Housten', country: 'USA', state: 'Texas' } ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 5, name: "New York", country: "USA", state: "New York" }
             { id: 7, name: "Housten", country: "USA", state: "Texas" }
@@ -417,7 +417,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', ( done ) ->
           cities.update [ [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ]
 
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
             { id: 7, name: "Housten", country: "USA", state: "Texas" }
@@ -426,7 +426,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', ( done ) ->
           cities.update [ [ { id: 7, name: "Housten", country: "USA", state: "Texas" }, { id: 7, name: "Venice", country: "Italy" } ] ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
@@ -434,7 +434,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
@@ -443,7 +443,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 9, name: "Madrid", country: "Spain" } ] ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
@@ -453,7 +453,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', ( done ) ->
           cities.remove [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
@@ -461,7 +461,7 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', ( done ) ->
           cities.remove [ { id: 7, name: "Venice", country: "Italy" } ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> values.should.be.eql [
+          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
             { id: 5, name: "NY", country: "USA", state: "NY" }
           ]
@@ -479,7 +479,7 @@ describe 'XS test suite:', ->
           }
         ]
         
-        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -490,7 +490,7 @@ describe 'XS test suite:', ->
       it 'remove(): employee.notify( transaction ) should be equal to result', ( done ) ->
         employee.notify [ { action: "remove", objects: [ { id: 8 } ] } ]
         
-        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -513,7 +513,7 @@ describe 'XS test suite:', ->
           ]
         } ]
 
-        employee.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id: 2, name: "Josephin Tan"    , salary: "$2750", customer_id: "223", order_id: "1223" }
           { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
           { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
@@ -550,7 +550,7 @@ describe 'XS test suite:', ->
           }
         ]
         
-        cities_in_morocco.fetch_all ( values ) -> check done, -> values.should.be.eql [
+        cities_in_morocco.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id:  1, name: "Marrakech", country: "Morocco" }
           { id:  6, name: "Casa"     , country: "Morocco" }
         ]
@@ -607,7 +607,7 @@ describe 'XS test suite:', ->
         .ordered().ordered()
       
       it 'books_ordered_by_year should be ordered by ascending year', ( done ) ->
-        books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+        books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
           { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
           { id: 2, title: "The Lord of the Rings", author: "J. R. R. Tolkien", year: 1955 }
           { id: 4, title: "The Alchemist"        , author: "Paulo Coelho"    , year: 1988 }
@@ -619,7 +619,7 @@ describe 'XS test suite:', ->
         books_ordered_by_descending_year.fetch_all ( books ) ->
           log 'books_ordered_by_descending_year delayed fetched'
           
-          check done, () -> books.should.be.eql [
+          check done, () -> expect( books ).to.be.eql [
             { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
             { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
             { id: 4, title: "The Alchemist"        , author: "Paulo Coelho"    , year: 1988 }
@@ -628,7 +628,7 @@ describe 'XS test suite:', ->
           ]
       
       it 'books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', ( done ) ->
-        books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+        books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
           { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
           { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
           { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -637,7 +637,7 @@ describe 'XS test suite:', ->
         ]
 
       it 'books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', ( done ) ->
-        books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+        books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
           { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
           { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
           { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -649,7 +649,7 @@ describe 'XS test suite:', ->
         it 'after books.add( book 6 ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
           books.add [ { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson", year: 2005 } ]
 
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 1, title: "A Tale of Two Cities"           , author: "Charles Dickens" , year: 1859 }
             { id: 2, title: "The Lord of the Rings"          , author: "J. R. R. Tolkien", year: 1955 }
             { id: 4, title: "The Alchemist"                  , author: "Paulo Coelho"    , year: 1988 }
@@ -659,7 +659,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
-          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 6, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson"   , year: 2005 }
             { id: 3, title: "The Da Vinci Code"              , author: "Dan Brown"       , year: 2003 }
             { id: 5, title: "Angels and Demons"              , author: "Dan Brown"       , year: 2000 }
@@ -669,7 +669,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
-          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -679,7 +679,7 @@ describe 'XS test suite:', ->
           ]
 
         it 'after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
-          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
             { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
@@ -696,7 +696,7 @@ describe 'XS test suite:', ->
             { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
           ]
 
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
@@ -710,7 +710,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
-          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -724,7 +724,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
-          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -744,7 +744,7 @@ describe 'XS test suite:', ->
             { id: 13, title: "Lolita"        , author: "Vladimir Nabokov", year: 1955 }
           ]
           
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , year: 1937 }
@@ -761,7 +761,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
-          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -784,7 +784,7 @@ describe 'XS test suite:', ->
             { id: 16, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"                       }
           ]
           
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
@@ -804,7 +804,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
-          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -826,7 +826,7 @@ describe 'XS test suite:', ->
         it 'update organizer, books_ordered_by_year should be ordered by ascending by title', ( done ) ->
           organizer.update [ [ { id: "year" }, { id: "title" } ] ]
 
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2000 }
@@ -851,7 +851,7 @@ describe 'XS test suite:', ->
             { action: "add"   , objects: [ { id: "title" } ] }
           ]
           
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
@@ -871,7 +871,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
-          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -891,7 +891,7 @@ describe 'XS test suite:', ->
           ]
 
         it 'books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
-          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , year: 1955 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
@@ -913,7 +913,7 @@ describe 'XS test suite:', ->
         it 'books_ordered_by_ascending_id should be ordered by ascending id: organizer is an objects', ( done ) ->
           books_ordered_by_ascending_id = books.order( [ { id: "id" } ] ).ordered().ordered()
           
-          books_ordered_by_ascending_id.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_ascending_id.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , year: 1955 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -935,7 +935,7 @@ describe 'XS test suite:', ->
         it 'books_ordered_by_descending should be ordered by descending id: organizer is an objects', ( done ) ->
           books_ordered_by_ascending_id = books.order( [ { id: "id", descending: true } ] ).ordered().ordered()
           
-          books_ordered_by_ascending_id.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_ascending_id.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
@@ -961,7 +961,7 @@ describe 'XS test suite:', ->
             { id: 2, title: "The Lord of the Rings 1", author: "J. R. R. Tolkien", year: 1954 }
           ] ]
 
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
@@ -981,7 +981,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
-          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , year: 2008 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 2008 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -1053,7 +1053,7 @@ describe 'XS test suite:', ->
             }
           ]
           
-          books_ordered_by_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: undefined }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
@@ -1073,7 +1073,7 @@ describe 'XS test suite:', ->
           ]
         
         it 'after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
-          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_year.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
@@ -1100,7 +1100,7 @@ describe 'XS test suite:', ->
             { id: 15, title: "Steps to Christ", author: "Ellen G. White"  , year: undefined }
           ]
           
-          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
@@ -1117,7 +1117,7 @@ describe 'XS test suite:', ->
           ]
 
         it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
-          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> books.should.be.eql [
+          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
             { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
@@ -1175,7 +1175,7 @@ describe 'XS test suite:', ->
     tolkien_sales_by_year = books_sales.aggregate_from tolkien_books, sales, by_year 
     
     it 'should group and order books_sales_by_author by author', ( done ) ->
-      books_sales_by_author.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
+      books_sales_by_author.fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
           { author: "Agatha Christie"        , sales: 100, _count: 1 }
           { author: "Charles Dickens"        , sales: 200, _count: 1 }
           { author: "Dan Brown"              , sales: 119, _count: 2 }
@@ -1193,7 +1193,7 @@ describe 'XS test suite:', ->
         ]
     
     it 'should group and order books_sales_by_year by year', ( done ) ->
-      books_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
+      books_sales_by_year.fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
       # ToDo: undefined and null groups are not supported at this time
       #  { sales:       113, year: undefined, _count: 1 }
       #  { sales:        60, year: null, _count: 1 }
@@ -1210,7 +1210,7 @@ describe 'XS test suite:', ->
       ]
     
     it 'should group and order tolkien_sales_by_year by year', ( done ) ->
-      tolkien_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
+      tolkien_sales_by_year.fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
         { sales:       100, year: 1937, _count: 1 }
         { sales:       150, year: 1955, _count: 1 }
       ]
@@ -1221,7 +1221,7 @@ describe 'XS test suite:', ->
           { id: 17, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        125, year: 2004 }
         ]
 
-        books_sales_by_author.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
+        books_sales_by_author.fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
           { author: "Agatha Christie"        , sales: 100, _count: 1 }
           { author: "Charles Dickens"        , sales: 200, _count: 1 }
           { author: "Dan Brown"              , sales: 244, _count: 3 }
@@ -1239,7 +1239,7 @@ describe 'XS test suite:', ->
         ]      
        
       it 'should add books_sales_by_year for 2004', ( done ) ->
-        books_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
+        books_sales_by_year.fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
           { sales:       125, year: 1853, _count: 1 }
           { sales:       200, year: 1859, _count: 1 }
           { sales:       100, year: 1937, _count: 1 }
@@ -1260,7 +1260,7 @@ describe 'XS test suite:', ->
           { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , sales: undefined, year: 2008 }
         ]
 
-        books_sales_by_author.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
+        books_sales_by_author.fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
           { author: "Agatha Christie"        , sales: 100, _count: 1 }
           { author: "Charles Dickens"        , sales: 200, _count: 1 }
           { author: "Dan Brown"              , sales: 244, _count: 3 }
@@ -1276,7 +1276,7 @@ describe 'XS test suite:', ->
         ]      
        
       it 'should remove 10 from sales in 2000 from books_sales_by_year', ( done ) ->
-        books_sales_by_year.fetch_all ( sales ) -> check done, () -> sales.should.be.eql [
+        books_sales_by_year.fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
           { sales:       125, year: 1853, _count: 1 }
           { sales:       200, year: 1859, _count: 1 }
           { sales:       100, year: 1937, _count: 1 }
@@ -1358,7 +1358,7 @@ describe 'XS test suite:', ->
     ], { key: ['year', 'book_id'] }
     
     it 'should join books and authors', ( done ) ->
-      books_with_authors.fetch_all ( values ) -> check done, () -> values.should.be.eql [
+      books_with_authors.fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
@@ -1387,7 +1387,7 @@ describe 'XS test suite:', ->
         { id: 15, title: "Steps to Christ"                         , author_id: 13 }
       ]
       
-      books_with_authors.fetch_all ( values ) -> check done, () -> values.should.be.eql [
+      books_with_authors.fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }

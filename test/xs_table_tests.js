@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, books, books_table, chai, columns, from_HTML_to_object, node, organizer, xs;
+  var XS, books, books_table, columns, from_HTML_to_object, node, organizer, xs;
 
   from_HTML_to_object = function(node) {
     var align, cell, columns, data, i, j, o, rows, v, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2;
@@ -76,14 +76,6 @@
     require('../lib/order.js');
     require('../lib/aggregate.js');
     require('../lib/table.js');
-  }
-
-  if (typeof require !== "undefined" && require !== null) {
-    chai = require('chai');
-  }
-
-  if (chai != null) {
-    chai.should();
   }
 
   xs = XS.xs;
@@ -158,7 +150,7 @@
     it('columns should be equal to object.columns', function() {
       var object;
       object = from_HTML_to_object(node);
-      return columns.fetch_all().should.be.eql(object.columns);
+      return expect(columns.fetch_all()).to.be.eql(object.columns);
     });
     it('after add 2 objects: columns.add( objects ) should be equal to object.columns', function() {
       var object;
@@ -173,7 +165,7 @@
         }
       ]);
       object = from_HTML_to_object(node);
-      return columns.fetch_all().should.be.eql(object.columns);
+      return expect(columns.fetch_all()).to.be.eql(object.columns);
     });
     it('after columns.remove( object ), columns should be equal to object.columns', function() {
       var object;
@@ -184,7 +176,7 @@
         }
       ]);
       object = from_HTML_to_object(node);
-      return columns.fetch_all().should.be.eql(object.columns);
+      return expect(columns.fetch_all()).to.be.eql(object.columns);
     });
     return it('after columns.update( object ), columns should be equal to object.columns', function() {
       var object;
@@ -200,7 +192,7 @@
         ]
       ]);
       object = from_HTML_to_object(node);
-      return columns.fetch_all().should.be.eql(object.columns);
+      return expect(columns.fetch_all()).to.be.eql(object.columns);
     });
   });
 
@@ -208,7 +200,7 @@
     it('books should be equal to object.data', function() {
       var object;
       object = from_HTML_to_object(node);
-      return object.data.should.be.eql([
+      return expect(object.data).to.be.eql([
         {
           title: "A Tale of Two Cities",
           author: "Charles Dickens",
@@ -314,7 +306,7 @@
         }
       ]);
       object = from_HTML_to_object(node);
-      return object.data.should.be.eql([
+      return expect(object.data).to.be.eql([
         {
           title: "A Tale of Two Cities",
           author: "Charles Dickens",
@@ -418,7 +410,7 @@
         ]
       ]);
       object = from_HTML_to_object(node);
-      return object.data.should.be.eql([
+      return expect(object.data).to.be.eql([
         {
           author: "Charles Dickens",
           sales: 200,
@@ -512,7 +504,7 @@
         }
       ]);
       object = from_HTML_to_object(node);
-      return object.data.should.be.eql([
+      return expect(object.data).to.be.eql([
         {
           author: "Agatha Christie",
           sales: 100,

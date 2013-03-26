@@ -21,7 +21,7 @@
 
 
 (function() {
-  var Set, XS, chai, check, clone, extend, log, xs;
+  var Set, XS, check, clone, extend, log, xs;
 
   clone = function(o) {
     var p, r;
@@ -56,7 +56,7 @@
     };
     bar = clone(foo);
     return it('foo should be deep equal to bar', function() {
-      return bar.should.be.eql(foo);
+      return expect(bar).to.be.eql(foo);
     });
   });
 
@@ -73,7 +73,7 @@
     return it('should succeed in 50 ms', function(done) {
       return setTimeout((function() {
         return check(done, function() {
-          return [].should.be.eql([]);
+          return expect([]).to.be.eql([]);
         });
       }), 50);
     });
@@ -92,14 +92,6 @@
     require('../lib/join.js');
   }
 
-  if (typeof require !== "undefined" && require !== null) {
-    chai = require('chai');
-  }
-
-  if (chai != null) {
-    chai.should();
-  }
-
   xs = XS.xs;
 
   Set = XS.Set;
@@ -110,13 +102,13 @@
 
   describe('XS test suite:', function() {
     it('XS should be defined:', function() {
-      return XS.should.exist;
+      return expect(XS).to.exist;
     });
     describe('XS.extend():', function() {
       var o1, o2, o3, _o2, _o3;
       extend = XS.extend;
       it('extend() should be a function', function() {
-        return extend.should.be.a('function');
+        return expect(extend).to.be.a('function');
       });
       o1 = {
         id: 1,
@@ -135,24 +127,24 @@
       it('extend( object ) should be equal to object', function() {
         var result;
         result = extend(o1);
-        return result.should.be.eql(o1);
+        return expect(result).to.be.eql(o1);
       });
       it('extend( object1, object2 ) should be equal to object', function() {
         var result;
         result = extend(o1, o2);
-        return result.should.be.eql({
+        return expect(result).to.be.eql({
           id: 1,
           name: 'khalifa',
           email: 'knassik@gmail.com'
         });
       });
       it('o2 should be deep equal to _o2', function() {
-        return o2.should.be.eql(_o2);
+        return expect(o2).to.be.eql(_o2);
       });
       it('extend( object1, object2, object3 ) should be equal to object', function() {
         var result;
         result = extend(o1, o2, o3);
-        return result.should.be.eql({
+        return expect(result).to.be.eql({
           id: 1,
           name: 'khalifa nassik',
           email: 'khalifan@gmail.com',
@@ -160,36 +152,36 @@
         });
       });
       it('o2 should be deep equal to _o2', function() {
-        return o2.should.be.eql(_o2);
+        return expect(o2).to.be.eql(_o2);
       });
       return it('o3 should be deep equal to _o3', function() {
-        return o3.should.be.eql(_o3);
+        return expect(o3).to.be.eql(_o3);
       });
     });
     describe('XS.subclass():', function() {
       var Animal, Snake, a, s, subclass;
       subclass = XS.subclass;
       it('subclass() should be a function', function() {
-        return subclass.should.be.a('function');
+        return expect(subclass).to.be.a('function');
       });
       Animal = function(name) {
         return this.name = name;
       };
       a = new Animal('Sam');
       it('a should be an instance of Animal', function() {
-        return a.should.be.an["instanceof"](Animal);
+        return expect(a).to.be.an(Animal);
       });
       Snake = function(name) {};
       subclass(Animal, Snake);
       s = new Snake("Barry the Snake");
       it('s should be an instance of Snake', function() {
-        return s.should.be.an["instanceof"](Snake);
+        return expect(s).to.be.a(Snake);
       });
       it('s should be an instance of Animal', function() {
-        return s.should.be.an["instanceof"](Animal);
+        return expect(s).to.be.an(Animal);
       });
       return it('a should not be an instance of Snake', function() {
-        return a.should.not.be.an["instanceof"](Snake);
+        return expect(a).to.not.be.a(Snake);
       });
     });
     describe('XS.Code():', function() {
@@ -198,32 +190,32 @@
       eval(code);
       i = f();
       it('f should be a function', function() {
-        return f.should.be.a('function');
+        return expect(f).to.be.a('function');
       });
       it('i should be equal to 10', function() {
-        return i.should.be.eql(10);
+        return expect(i).to.be.eql(10);
       });
       test = 'a[ ++i ] === n';
       g = code = new XS.Code('Test unfolded while')._function('g', null, ['n'])._var(['a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1']).unrolled_while('if ( ' + test, '|| ' + test, ') return i').add('return -1').end('').get();
       eval(code);
       it('the index of 34 should be 0', function() {
-        return g(34).should.be.eql(0);
+        return expect(g(34)).to.be.eql(0);
       });
       it('the index of 52 should be 4', function() {
-        return g(52).should.be.eql(4);
+        return expect(g(52)).to.be.eql(4);
       });
       it('the index of 90 should be 9', function() {
-        return g(90).should.be.eql(9);
+        return expect(g(90)).to.be.eql(9);
       });
       return it('the index of 1 should be 8', function() {
-        return g(1).should.be.eql(8);
+        return expect(g(1)).to.be.eql(8);
       });
     });
     describe('XS.Set():', function() {
       var cars, cities, delayed_set, employee, set;
       set = xs.set();
       it('set should be a Set', function() {
-        return set.should.be.an["instanceof"](Set);
+        return expect(set).to.be.a(Set);
       });
       cities = xs.set([
         {
@@ -309,7 +301,7 @@
         return it('Delayed set should eventually equal its source values', function(done) {
           return delayed_set.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 1,
                   value: 'delayed'
@@ -323,14 +315,14 @@
         it('set.fetch_all() should be empty', function(done) {
           return set.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([]);
+              return expect(values).to.be.eql([]);
             });
           });
         });
         return it('cars.fetch_all() should be equal to result', function(done) {
           return cars.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 1,
                   brand: "Mercedes",
@@ -358,12 +350,12 @@
           }
         ]);
         it('cities.add( object ) should be a Set', function() {
-          return cities.should.be.an["instanceof"](Set);
+          return expect(cities).to.be.a(Set);
         });
         return it('cities.add( object ) should be equal to result', function(done) {
           return cities.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 1,
                   name: "Marrakech",
@@ -389,26 +381,26 @@
       });
       describe('index_of():', function() {
         it('set.index_of( { id: 2 } ) should be -1: empty set', function() {
-          return set.index_of({
+          return expect(set.index_of({
             id: 2
-          }).should.be.eql(-1);
+          })).to.be.eql(-1);
         });
         it('cities.index_of( { id: 2 } ) should be 1', function() {
-          return cities.index_of({
+          return expect(cities.index_of({
             id: 2
-          }).should.be.eql(1);
+          })).to.be.eql(1);
         });
         it('cars.index_of( { id: 2, model: "S Class" } ) should be 1', function() {
-          return cars.index_of({
+          return expect(cars.index_of({
             id: 2,
             model: "S Class"
-          }).should.be.eql(1);
+          })).to.be.eql(1);
         });
         return it('cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', function() {
-          return cars.index_of({
+          return expect(cars.index_of({
             id: 3,
             model: "S Class"
-          }).should.be.eql(-1);
+          })).to.be.eql(-1);
         });
       });
       describe('remove():', function() {
@@ -423,7 +415,7 @@
             }
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2
                 }
@@ -432,7 +424,7 @@
           });
         });
         it('should have an one value in the anti-state', function() {
-          return set.b.should.be.eql([
+          return expect(set.b).to.be.eql([
             {
               id: 1
             }
@@ -445,7 +437,7 @@
             }
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2
                 }
@@ -454,7 +446,7 @@
           });
         });
         it('anti-state should be empty again', function() {
-          return set.b.should.be.eql([]);
+          return expect(set.b).to.be.eql([]);
         });
         it('removing id 2 should left set empty again', function(done) {
           return set.remove([
@@ -463,7 +455,7 @@
             }
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([]);
+              return expect(values).to.be.eql([]);
             });
           });
         });
@@ -475,7 +467,7 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 1,
                   name: "Stephen C. Cox",
@@ -525,7 +517,7 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -569,7 +561,7 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -606,7 +598,7 @@
             }
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -644,7 +636,7 @@
             ]
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 1,
                   v: 'test'
@@ -680,7 +672,7 @@
             }
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -720,7 +712,7 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -752,12 +744,12 @@
         };
         cities_in_usa = cities.filter(is_in_usa);
         it('cities_in_usa should be a Pipelet', function() {
-          return cities_in_usa.should.be.an["instanceof"](XS.Pipelet);
+          return expect(cities_in_usa).to.be.an(XS.Pipelet);
         });
         it('cities_in_usa should only contain cities in USA', function(done) {
           return cities_in_usa.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Mountain View",
@@ -780,7 +772,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -811,7 +803,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -852,7 +844,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -890,7 +882,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -923,7 +915,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -960,7 +952,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -994,7 +986,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 8,
                     name: "Detroit",
@@ -1020,7 +1012,7 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return values.should.be.eql([
+                return expect(values).to.be.eql([
                   {
                     id: 8,
                     name: "Detroit",
@@ -1062,7 +1054,7 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -1111,7 +1103,7 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -1180,7 +1172,7 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -1297,7 +1289,7 @@
           ]);
           return cities_in_morocco.fetch_all(function(values) {
             return check(done, function() {
-              return values.should.be.eql([
+              return expect(values).to.be.eql([
                 {
                   id: 1,
                   name: "Marrakech",
@@ -1398,7 +1390,7 @@
         it('books_ordered_by_year should be ordered by ascending year', function(done) {
           return books_ordered_by_year.fetch_all(function(books) {
             return check(done, function() {
-              return books.should.be.eql([
+              return expect(books).to.be.eql([
                 {
                   id: 1,
                   title: "A Tale of Two Cities",
@@ -1433,7 +1425,7 @@
           return books_ordered_by_descending_year.fetch_all(function(books) {
             log('books_ordered_by_descending_year delayed fetched');
             return check(done, function() {
-              return books.should.be.eql([
+              return expect(books).to.be.eql([
                 {
                   id: 3,
                   title: "The Da Vinci Code",
@@ -1467,7 +1459,7 @@
         it('books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', function(done) {
           return books_ordered_by_ascending_author.fetch_all(function(books) {
             return check(done, function() {
-              return books.should.be.eql([
+              return expect(books).to.be.eql([
                 {
                   id: 1,
                   title: "A Tale of Two Cities",
@@ -1501,7 +1493,7 @@
         it('books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', function(done) {
           return books_ordered_by_descending_author.fetch_all(function(books) {
             return check(done, function() {
-              return books.should.be.eql([
+              return expect(books).to.be.eql([
                 {
                   id: 4,
                   title: "The Alchemist",
@@ -1544,7 +1536,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 1,
                     title: "A Tale of Two Cities",
@@ -1583,7 +1575,7 @@
           it('after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
             return books_ordered_by_descending_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 6,
                     title: "The Girl with the Dragon Tattoo",
@@ -1622,7 +1614,7 @@
           it('after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
             return books_ordered_by_ascending_author.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 1,
                     title: "A Tale of Two Cities",
@@ -1661,7 +1653,7 @@
           it('after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
             return books_ordered_by_descending_author.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 6,
                     title: "The Girl with the Dragon Tattoo",
@@ -1723,7 +1715,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 7,
                     title: "The McGuffey Readers",
@@ -1782,7 +1774,7 @@
           it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
             return books_ordered_by_descending_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 9,
                     title: "The Hunger Games",
@@ -1841,7 +1833,7 @@
           it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
             return books_ordered_by_ascending_author.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 1,
                     title: "A Tale of Two Cities",
@@ -1918,7 +1910,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 7,
                     title: "The McGuffey Readers",
@@ -1992,7 +1984,7 @@
           it('after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', function(done) {
             return books_ordered_by_descending_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 12,
                     title: "Breaking Dawn",
@@ -2083,7 +2075,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 14,
                     title: "And Then There Were None",
@@ -2171,7 +2163,7 @@
           it('after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function(done) {
             return books_ordered_by_descending_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 12,
                     title: "Breaking Dawn",
@@ -2268,7 +2260,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 1,
                     title: "A Tale of Two Cities",
@@ -2377,7 +2369,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 14,
                     title: "And Then There Were None",
@@ -2465,7 +2457,7 @@
           it('books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
             return books_ordered_by_ascending_author.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 14,
                     title: "And Then There Were None",
@@ -2553,7 +2545,7 @@
           it('books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
             return books_ordered_by_descending_author.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 7,
                     title: "The McGuffey Readers",
@@ -2647,7 +2639,7 @@
             ]).ordered().ordered();
             return books_ordered_by_ascending_id.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 1,
                     title: "A Tale of Two Cities",
@@ -2742,7 +2734,7 @@
             ]).ordered().ordered();
             return books_ordered_by_ascending_id.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 16,
                     title: "Charlie and the Chocolate Factory",
@@ -2847,7 +2839,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 14,
                     title: "And Then There Were None",
@@ -2935,7 +2927,7 @@
           it('after books.update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
             return books_ordered_by_descending_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 12,
                     title: "Breaking Dawn",
@@ -3138,7 +3130,7 @@
             ]);
             return books_ordered_by_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 15,
                     title: "Steps to Christ",
@@ -3227,7 +3219,7 @@
           return it('after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
             return books_ordered_by_descending_year.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 6,
                     title: "The Girl with the Dragon Tattoo",
@@ -3336,7 +3328,7 @@
             ]);
             return books_ordered_by_ascending_author.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 14,
                     title: "And Then There Were None",
@@ -3410,7 +3402,7 @@
           return it('after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
             return books_ordered_by_descending_author.fetch_all(function(books) {
               return check(done, function() {
-                return books.should.be.eql([
+                return expect(books).to.be.eql([
                   {
                     id: 7,
                     title: "The McGuffey Readers",
@@ -3612,7 +3604,7 @@
       it('should group and order books_sales_by_author by author', function(done) {
         return books_sales_by_author.fetch_all(function(sales) {
           return check(done, function() {
-            return sales.should.be.eql([
+            return expect(sales).to.be.eql([
               {
                 author: "Agatha Christie",
                 sales: 100,
@@ -3677,7 +3669,7 @@
       it('should group and order books_sales_by_year by year', function(done) {
         return books_sales_by_year.fetch_all(function(sales) {
           return check(done, function() {
-            return sales.should.be.eql([
+            return expect(sales).to.be.eql([
               {
                 sales: 125,
                 year: 1853,
@@ -3726,7 +3718,7 @@
       it('should group and order tolkien_sales_by_year by year', function(done) {
         return tolkien_sales_by_year.fetch_all(function(sales) {
           return check(done, function() {
-            return sales.should.be.eql([
+            return expect(sales).to.be.eql([
               {
                 sales: 100,
                 year: 1937,
@@ -3753,7 +3745,7 @@
           ]);
           return books_sales_by_author.fetch_all(function(sales) {
             return check(done, function() {
-              return sales.should.be.eql([
+              return expect(sales).to.be.eql([
                 {
                   author: "Agatha Christie",
                   sales: 100,
@@ -3818,7 +3810,7 @@
         return it('should add books_sales_by_year for 2004', function(done) {
           return books_sales_by_year.fetch_all(function(sales) {
             return check(done, function() {
-              return sales.should.be.eql([
+              return expect(sales).to.be.eql([
                 {
                   sales: 125,
                   year: 1853,
@@ -3888,7 +3880,7 @@
           ]);
           return books_sales_by_author.fetch_all(function(sales) {
             return check(done, function() {
-              return sales.should.be.eql([
+              return expect(sales).to.be.eql([
                 {
                   author: "Agatha Christie",
                   sales: 100,
@@ -3945,7 +3937,7 @@
         return it('should remove 10 from sales in 2000 from books_sales_by_year', function(done) {
           return books_sales_by_year.fetch_all(function(sales) {
             return check(done, function() {
-              return sales.should.be.eql([
+              return expect(sales).to.be.eql([
                 {
                   sales: 125,
                   year: 1853,
@@ -4183,7 +4175,7 @@
       it('should join books and authors', function(done) {
         return books_with_authors.fetch_all(function(values) {
           return check(done, function() {
-            return values.should.be.eql([
+            return expect(values).to.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -4282,7 +4274,7 @@
         ]);
         return books_with_authors.fetch_all(function(values) {
           return check(done, function() {
-            return values.should.be.eql([
+            return expect(values).to.be.eql([
               {
                 id: 1,
                 title: "A Tale of Two Cities",

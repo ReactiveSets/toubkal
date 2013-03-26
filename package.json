@@ -1,7 +1,7 @@
 {
   "name": "excess",
   
-  "version": "0.0.28",
+  "version": "0.0.29",
   
   "description": "Excess is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers' environmental footprint and improving mobile clients battery life.",
   
@@ -36,7 +36,7 @@
   "devDependencies": {
     "coffee-script": "~1.4.0",
     "mocha": "latest",
-    "chai":  "latest"
+    "expect.js":  "0.2.0"
   },
   
   "scripts": {
