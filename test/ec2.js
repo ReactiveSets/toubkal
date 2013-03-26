@@ -136,13 +136,11 @@ var previous;
 var spot_prices_stats = regions
   .ec2_describe_spot_price_history( d, [ 'm1.small' ], { products : [ 'Linux/UNIX' ], name: 'spot_price_history' } )
   
-  .on( 'complete', function() {
-    spot_prices_stats.fetch_all( function( prices ) {
-      de&&ug( 'spot_prices_stats: ' + log.s( prices, void 0, '  ' ) );
-    } );
-  } )
+  // .on( 'complete', function() { de&&ug( 'complete after ec2_describe_spot_price_history()' ) } )
   
   .trace( 'Spot Price History', { counts_only: true } )
+  
+  // .on( 'complete', function() { de&&ug( 'complete after trace()' ) } )
   
   .order( xs.set( [
     { id: 'AvailabilityZone'   },
@@ -150,6 +148,12 @@ var spot_prices_stats = regions
     { id: 'InstanceType'       }, 
     { id: 'Timestamp'          }
   ] ) )
+  
+  // .on( 'complete', function() { de&&ug( 'complete after order()' ) } )
+  
+  .delay( 1000 ) // for testing purposes only
+  
+  // .on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
   
   .alter( function( price ) {
     var timestamp = price.Timestamp;
@@ -169,6 +173,8 @@ var spot_prices_stats = regions
     return previous = price;
   } )
   
+  // .on( 'complete', function() { de&&ug( 'complete after alter()' ) } )
+  
   //.trace( 'Spot Prices' )
   
   .aggregate( [
@@ -179,6 +185,8 @@ var spot_prices_stats = regions
     { id: 'InstanceType' }
   ] )
   
+  // .on( 'complete', function() { de&&ug( 'complete after aggregate()' ) } )
+  
   .alter( function( cost ) {
     cost.average_cost_per_hour = cost.cost_seconds / cost.seconds;
     
@@ -188,4 +196,12 @@ var spot_prices_stats = regions
   .order( [ { id: 'average_cost_per_hour', descending: true } ] )
   
   .trace( 'Average Cost per Hour by AvailabilityZone and InstanceType' )
+  
+  .on( 'complete', function() {
+    de&&ug( 'complete after all is done' )
+    
+    spot_prices_stats.fetch_all( function( prices ) {
+      //de&&ug( 'spot_prices_stats: ' + log.s( prices, void 0, '  ' ) );
+    } )
+  } )
 ;
