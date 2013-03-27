@@ -1,14 +1,17 @@
-// ECMAScript 5 compatibility functions
-//
-// Copyright (c) 2011, Jean Vincent
-// 
-// Licensed under the MIT license
-//
+/* ECMAScript 5 shim
+   
+   Licensed under the MIT license
+*/
 
 Object.keys || ( Object.keys = function( o ) {
   var keys = [];
-
-  for ( var property in o ) if ( Object.prototype.hasOwnProperty.call( o, property ) ) keys.push( property );
+  
+  // Use Object.prototype.hasOwnProperty.call( o, property ) instead of o.hasOwnProperty( property )
+  // because Mocha uses keys in the "window" which, in IE before version 9, is not a true JavaScript
+  // Object and therefore does not have a hasOwnProperty() method
+  var hasOwnProperty = Object.prototype.hasOwnProperty;
+  
+  for ( var property in o ) if ( hasOwnProperty.call( o, property ) ) keys.push( property );
 
   return keys;
 } );
