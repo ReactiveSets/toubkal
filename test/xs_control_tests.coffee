@@ -24,6 +24,7 @@
 
 # include modules
 XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
+expect = if require? then ( require 'expect.js' ) else this.expect
 
 if require?
   require '../lib/code.js'
@@ -33,9 +34,6 @@ if require?
   require '../lib/aggregate.js'
   require '../lib/table.js'
   require '../lib/control.js'
-
-#chai = require 'chai' if require?
-#chai?.should()
 
 xs = XS.xs
 
