@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, books, books_table, columns, from_HTML_to_object, node, organizer, xs;
+  var XS, books, books_table, columns, expect, from_HTML_to_object, node, organizer, xs;
 
   from_HTML_to_object = function(node) {
     var align, cell, columns, data, i, j, o, rows, v, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2;
@@ -68,6 +68,8 @@
   };
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
+
+  expect = typeof require !== "undefined" && require !== null ? require('expect.js') : this.expect;
 
   if (typeof require !== "undefined" && require !== null) {
     require('../lib/code.js');

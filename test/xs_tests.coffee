@@ -67,12 +67,11 @@ describe 'Aynchronous test check()', ->
 
 # include modules
 XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
+expect = if require? then ( require 'expect.js' ) else this.expect
 
 extend = XS.extend
 
 if require?
-  expect = require 'expect.js'
-
   require '../lib/code.js'
   require '../lib/pipelet.js'
   require '../lib/filter.js'

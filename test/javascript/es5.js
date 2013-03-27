@@ -8,7 +8,7 @@
 Object.keys || ( Object.keys = function( o ) {
   var keys = [];
 
-  for ( var property in o ) if ( o.hasOwnProperty( property ) ) keys.push( property );
+  for ( var property in o ) if ( Object.prototype.hasOwnProperty.call( o, property ) ) keys.push( property );
 
   return keys;
 } );

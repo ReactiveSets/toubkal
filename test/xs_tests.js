@@ -81,10 +81,11 @@
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
+  expect = typeof require !== "undefined" && require !== null ? require('expect.js') : this.expect;
+
   extend = XS.extend;
 
   if (typeof require !== "undefined" && require !== null) {
-    expect = require('expect.js');
     require('../lib/code.js');
     require('../lib/pipelet.js');
     require('../lib/filter.js');

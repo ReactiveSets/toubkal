@@ -21,9 +21,11 @@
 
 
 (function() {
-  var XS, checkbox, checkbox_group, checkbox_group_source, checkbox_source, drop_down, drop_down_source, options, organizer, radio, radio_source, xs;
+  var XS, checkbox, checkbox_group, checkbox_group_source, checkbox_source, drop_down, drop_down_source, expect, options, organizer, radio, radio_source, xs;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
+
+  expect = typeof require !== "undefined" && require !== null ? require('expect.js') : this.expect;
 
   if (typeof require !== "undefined" && require !== null) {
     require('../lib/code.js');
