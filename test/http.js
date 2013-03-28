@@ -58,6 +58,7 @@ require( '../lib/order.js' );
 
 var client_min = xs.set( [
     { name: 'test/javascript/es5.js'    },
+    { name: 'test/javascript/json2.js'  },
     
     { name: 'lib/xs.js'                 },
     { name: 'lib/code.js'               },
@@ -74,13 +75,13 @@ var client_min = xs.set( [
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
-var mocha_chai = xs.set( [
+var mocha_expect = xs.set( [
     { name: 'test/javascript/mocha.js'  },
-    { name: 'test/javascript/chai.js'   }
+    { name: 'test/javascript/expect.js' }
   ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
-  .uglify( 'test/javascript/mocha_chai-min.js' )
+  .uglify( 'test/javascript/mocha_expect-min.js' )
 ;
 
 xs.set( [
@@ -89,6 +90,6 @@ xs.set( [
     { name: 'test/css/mocha.css'        }
   ] )
   .watch()
-  .union( [ client_min, mocha_chai ] )
+  .union( [ client_min, mocha_expect ] )
   .serve( servers )
 ;
