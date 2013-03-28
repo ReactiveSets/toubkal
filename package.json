@@ -1,7 +1,7 @@
 {
   "name": "excess",
   
-  "version": "0.0.31",
+  "version": "0.0.32",
   
   "description": "Excess is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers' environmental footprint and improving mobile clients battery life.",
   
@@ -30,7 +30,8 @@
     "requirejs": ">=2.1.5",
     "everyauth": ">=0.3.1",
     "aws-sdk"  : ">=0.9.7-pre.8",
-    "moment"   : ">=2.0.0"
+    "moment"   : ">=2.0.0",
+    "JSON2"    : "0.1.0"
   },
   
   "devDependencies": {
