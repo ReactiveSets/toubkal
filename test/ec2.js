@@ -139,7 +139,7 @@ zones
 // */
 
 var d = new Date();
-d.setDate( d.getDate() - 60 );
+d.setDate( d.getDate() - 90 ); // 3 months history 
 
 var previous;
 
@@ -150,7 +150,7 @@ var spot_prices_stats = zones
   
   .trace( 'Spot Price History', { counts_only: true } )
   
-  .on( 'complete', function() { de&&ug( 'complete after trace()' ) } )
+  // .on( 'complete', function() { de&&ug( 'complete after trace()' ) } )
   
   .order( [
     { id: 'AvailabilityZone'  , type: 'String' },
@@ -159,11 +159,13 @@ var spot_prices_stats = zones
     { id: 'Timestamp'         , type: 'Date'   }
   ], { no_null: true, no_undefined: true } )
   
-  .on( 'complete', function() { de&&ug( 'complete after order()' ) } )
+  // .on( 'complete', function() { de&&ug( 'complete after order()' ) } )
+  
+  // .trace( 'Spot Price History Ordered', { counts_only: true } )
   
   .delay( 1000 ) // for testing purposes only
   
-  .on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
+  // .on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
   
   .alter( function( price, i ) {
     if ( i
@@ -178,19 +180,21 @@ var spot_prices_stats = zones
       
       var seconds = previous.seconds = ( timestamp - previous.Timestamp ) / 1000;
       
-      previous.cost_seconds = previous.SpotPrice * seconds 
+      previous.cost_seconds = previous.SpotPrice * seconds;
     }
     
     return previous = price;
   } )
   
-  .on( 'complete', function() { de&&ug( 'complete after alter()' ) } )
+  // .on( 'complete', function() { de&&ug( 'complete after alter()' ) } )
   
   //.trace( 'Spot Prices' )
   
   .aggregate( [
-    { id: 'seconds'      },
-    { id: 'cost_seconds' }
+    { id: 'seconds'     , type: 'sum' },
+    { id: 'cost_seconds', type: 'sum' },
+    { id: 'max_price'   , type: 'max', of: 'SpotPrice' },
+    { id: 'min_price'   , type: 'min', of: 'SpotPrice' }
   ], [
     { id: 'AvailabilityZone'   },
     { id: 'ProductDescription' },
@@ -200,7 +204,12 @@ var spot_prices_stats = zones
   .on( 'complete', function() { de&&ug( 'complete after aggregate()' ) } )
   
   .alter( function( cost ) {
+    cost = extend( {}, cost );
+    
     cost.average_cost_per_hour = cost.cost_seconds / cost.seconds;
+    
+    cost.max_price = Math.max.apply( null, cost.max_price );
+    cost.min_price = Math.min.apply( null, cost.min_price );
     
     return cost;
   } )
