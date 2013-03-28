@@ -4177,7 +4177,9 @@
       it('should join books and authors', function(done) {
         return books_with_authors.fetch_all(function(values) {
           return check(done, function() {
-            return expect(values).to.be.eql([
+            var found, result, v, _i, _len;
+            found = true;
+            result = xs.set([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -4253,7 +4255,18 @@
                 title: "Charlie and the Chocolate Factory",
                 author_id: 14
               }
-            ]);
+            ], {
+              key: ['id', 'title', 'author_id', 'author_name']
+            });
+            for (_i = 0, _len = values.length; _i < _len; _i++) {
+              v = values[_i];
+              if (result.index_of(v) !== -1) {
+                continue;
+              }
+              found = false;
+              break;
+            }
+            return expect(found).to.be(true);
           });
         });
       });
@@ -4276,7 +4289,9 @@
         ]);
         return books_with_authors.fetch_all(function(values) {
           return check(done, function() {
-            return expect(values).to.be.eql([
+            var found, result, v, _i, _len;
+            found = true;
+            result = xs.set([
               {
                 id: 1,
                 title: "A Tale of Two Cities",
@@ -4362,7 +4377,18 @@
                 author_id: 13,
                 author_name: "Ellen G. White"
               }
-            ]);
+            ], {
+              key: ['id', 'title', 'author_id', 'author_name']
+            });
+            for (_i = 0, _len = values.length; _i < _len; _i++) {
+              v = values[_i];
+              if (result.index_of(v) !== -1) {
+                continue;
+              }
+              found = false;
+              break;
+            }
+            return expect(found).to.be(true);
           });
         });
       });
