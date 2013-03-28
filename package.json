@@ -30,8 +30,7 @@
     "requirejs": ">=2.1.5",
     "everyauth": ">=0.3.1",
     "aws-sdk"  : ">=0.9.7-pre.8",
-    "moment"   : ">=2.0.0",
-    "JSON2"    : "0.1.0"
+    "moment"   : ">=2.0.0"
   },
   
   "devDependencies": {
