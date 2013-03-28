@@ -76,15 +76,19 @@ var ubuntu_amis = xs
     { id: 'ami-64636a10', version: '12.10', type: 1, region: 'eu-west-1' },
     { id: 'ami-66636a12', version: '12.10', type: 2, region: 'eu-west-1' }
   ] )
-  .join( ami_types, [ 'type' ], function( ami, type ) {
+  
+  .join( ami_types, [ { id: 'type', type: 'number', no_null: true, no_undefined: true } ], function( ami, type ) {
     return extend( {}, ami, { description: type.description } )
   } )
+  
   .order( [
     { id: 'region' },
     { id: 'version', descending: true },
-    { id: 'type'   }
-  ] )
-  // .trace( 'ubuntu amis' )
+    { id: 'type', type: 'number' }
+  ], { no_null: true, no_undefined: true } )
+  
+  .trace( 'ubuntu amis' )
+  .on( 'complete', function() { exit() } )
 ;
 
 var AMI_regions = ubuntu_amis
@@ -96,28 +100,34 @@ var AMI_regions = ubuntu_amis
 var regions = xs
   .ec2( '../aws-credentials.json' )
   .ec2_regions()
-  .join( AMI_regions, [ [ 'RegionName', 'region' ] ], function( region ) { return region } )
+  .join( AMI_regions, [
+    [
+      { id: 'RegionName', no_null: true, no_undefined: true },
+      { id: 'region'    , no_null: true, no_undefined: true }
+    ]
+    ], function( region ) { return region }
+  )
   .trace( 'Regions for which we have AMIs' )
 ;
     
 var zones = regions
-  .filter( function( r ) {
-    return /^us/.test( r.RegionName )
-  } )
+  // .filter( function( r ) { return /^us/.test( r.RegionName ); } )
   
   .ec2_availability_zones()
+  
+  .set() // testing output of availability zones
   
   .trace( 'Availability Zones' )
   
   .on( 'complete', function() {
-    zones.fetch_all( function( zones ) {
+    this.fetch_all( function( zones ) {
       console.log( 'Received all us Availability Zones: '
         + zones.map( function( z ) { return z.ZoneName } ).join( ', ' )
       )
     } );
   } )
   
-  .set() // testing output of availability zones
+  .filter( function( zone ) { return zone.State == 'available' } )
 ;
 
 /*/ Watchdog test on availability zones reception
@@ -129,63 +139,65 @@ zones
 // */
 
 var d = new Date();
-d.setDate( d.getDate() - 10 );
+d.setDate( d.getDate() - 60 );
 
 var previous;
 
-var spot_prices_stats = regions
+var spot_prices_stats = zones
   .ec2_describe_spot_price_history( d, [ 'm1.small' ], { products : [ 'Linux/UNIX' ], name: 'spot_price_history' } )
   
-  // .on( 'complete', function() { de&&ug( 'complete after ec2_describe_spot_price_history()' ) } )
+  .on( 'complete', function() { de&&ug( 'complete after ec2_describe_spot_price_history()' ) } )
   
   .trace( 'Spot Price History', { counts_only: true } )
   
-  // .on( 'complete', function() { de&&ug( 'complete after trace()' ) } )
+  .on( 'complete', function() { de&&ug( 'complete after trace()' ) } )
   
-  .order( xs.set( [
-    { id: 'AvailabilityZone'   },
-    { id: 'ProductDescription' },
-    { id: 'InstanceType'       }, 
-    { id: 'Timestamp'          }
-  ] ) )
+  .order( [
+    { id: 'AvailabilityZone'  , type: 'String' },
+    { id: 'ProductDescription', type: 'String' },
+    { id: 'InstanceType'      , type: 'String' }, 
+    { id: 'Timestamp'         , type: 'Date'   }
+  ], { no_null: true, no_undefined: true } )
   
-  // .on( 'complete', function() { de&&ug( 'complete after order()' ) } )
+  .on( 'complete', function() { de&&ug( 'complete after order()' ) } )
   
   .delay( 1000 ) // for testing purposes only
   
-  // .on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
+  .on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
   
-  .alter( function( price ) {
-    var timestamp = price.Timestamp;
-    
-    price.year = timestamp.getUTCFullYear();
-    price.month = timestamp.getUTCMonth();
-    
-    if ( previous
+  .alter( function( price, i ) {
+    if ( i
       && previous.AvailabilityZone   == price.AvailabilityZone
       && previous.ProductDescription == price.ProductDescription
       && previous.InstanceType       == price.InstanceType
     ) {
+      var timestamp = price.Timestamp;
+      
+      // price.year = timestamp.getUTCFullYear();
+      // price.month = timestamp.getUTCMonth();
+      
       var seconds = previous.seconds = ( timestamp - previous.Timestamp ) / 1000;
+      
       previous.cost_seconds = previous.SpotPrice * seconds 
     }
     
     return previous = price;
   } )
   
-  // .on( 'complete', function() { de&&ug( 'complete after alter()' ) } )
+  .on( 'complete', function() { de&&ug( 'complete after alter()' ) } )
   
   //.trace( 'Spot Prices' )
   
   .aggregate( [
-    { id: 'seconds' },
+    { id: 'seconds'      },
     { id: 'cost_seconds' }
   ], [
-    { id: 'AvailabilityZone' },
-    { id: 'InstanceType' }
+    { id: 'AvailabilityZone'   },
+    { id: 'ProductDescription' },
+    { id: 'InstanceType'       }
   ] )
   
-  // .on( 'complete', function() { de&&ug( 'complete after aggregate()' ) } )
+  .on( 'complete', function() { de&&ug( 'complete after aggregate()' ) } )
   
   .alter( function( cost ) {
     cost.average_cost_per_hour = cost.cost_seconds / cost.seconds;
@@ -200,7 +212,7 @@ var spot_prices_stats = regions
   .on( 'complete', function() {
     de&&ug( 'complete after all is done' )
     
-    spot_prices_stats.fetch_all( function( prices ) {
+    this.fetch_all( function( prices ) {
       //de&&ug( 'spot_prices_stats: ' + log.s( prices, void 0, '  ' ) );
     } )
   } )
