@@ -74,8 +74,13 @@ body {
   background: #B94A48;
 }
 
+#mocha .test.pass {
+  list-style-image: url( 'images/ok.png' );
+  padding-left: 0px;
+}
+
 #mocha .test.pass::before {
-  content: '✓';
+  _content: '✓';
   font-size: 12px;
   display: block;
   float: left;
@@ -119,8 +124,12 @@ body {
   color: black;
 }
 
+#mocha .test.fail {
+  list-style-image: url( 'images/error.png' );
+}
+
 #mocha .test.fail::before {
-  content: '✖';
+  _content: '✖';
   font-size: 12px;
   display: block;
   float: left;
@@ -152,6 +161,8 @@ body {
 
 #stats {
   position: fixed;
+  max-width: 300px;
+  float: right;
   top: 15px;
   right: 10px;
   font-size: 12px;
@@ -169,7 +180,8 @@ body {
 }
 
 #stats li {
-  display: inline-block;
+  display: block;
+  float: left;
   margin: 0 5px;
   list-style: none;
   padding-top: 11px;
