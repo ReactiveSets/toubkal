@@ -84,12 +84,19 @@ var mocha_expect = xs.set( [
   .uglify( 'test/javascript/mocha_expect-min.js' )
 ;
 
+
+var image = xs.set( [
+    { name: 'test/css/images/ok.png' }
+  ] )
+  .watch()
+;
+
 xs.set( [
     { name: 'test/index.html'           },
     { name: 'test/index-min.html'       },
     { name: 'test/css/mocha.css'        }
   ] )
   .watch()
-  .union( [ client_min, mocha_expect ] )
+  .union( [ client_min, mocha_expect, image ] )
   .serve( servers )
 ;
