@@ -1,0 +1,2237 @@
+2013/03/28 04:00:17.314 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.extend      = extend;
+  _XS.log         = log;
+  _XS.subclass    = subclass;
+  _XS.export_code = export_code;
+2013/03/28 04:00:17.318 - xs, module loaded
+2013/03/28 04:00:17.324 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.Code = Code;
+2013/03/28 04:00:17.324 - xs.code, module loaded
+2013/03/28 04:00:17.326 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.xs      = xs;
+  _XS.Compose = Compose;
+  _XS.Pipelet = Pipelet;
+  _XS.Fork    = Fork;
+  _XS.Union   = Union;
+  _XS.Alter   = Alter;
+  _XS.Set     = Set;
+  _XS.Trace   = Trace;
+  _XS.Delay   = Delay;
+2013/03/28 04:00:17.327 - xs pipelet, module loaded
+2013/03/28 04:00:17.327 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.EC2         = EC2;
+  _XS.EC2_Regions = EC2_Regions;
+2013/03/28 04:00:17.327 - xs aws, module loaded
+2013/03/28 04:00:17.333 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.Filter = Filter;
+2013/03/28 04:00:17.333 - xs filter, module loaded
+2013/03/28 04:00:17.337 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.Watchdog = Watchdog;
+2013/03/28 04:00:17.337 - xs watchdog, module loaded
+2013/03/28 04:00:17.349 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.Aggregate = Aggregate;
+2013/03/28 04:00:17.349 - xs aggregate, module loaded
+2013/03/28 04:00:17.366 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.Order   = Order;
+  _XS.Ordered = Ordered;
+2013/03/28 04:00:17.366 - xs order, module loaded
+2013/03/28 04:00:17.366 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.Half_Join = Half_Join;
+2013/03/28 04:00:17.367 - xs join, module loaded
+2013/03/28 04:00:17.370 - xs, exports:
+  var _XS = exports.XS = typeof( XS ) === "object" ? XS : {};
+
+  _XS.Last = Last;
+2013/03/28 04:00:17.370 - xs last, module loaded
+2013/03/28 04:00:17.370 - xs tests, start ec2.js
+2013/03/28 04:00:17.370 - xs pipelet, pipelet.set(), parameters count: 2
+2013/03/28 04:00:17.371 - xs pipelet, emit( "add" ), l: 3, more: false
+2013/03/28 04:00:17.371 - xs pipelet, New Set, name: undefined, length: 3
+2013/03/28 04:00:17.371 - xs pipelet, pipelet.set(), parameters count: 1
+2013/03/28 04:00:17.372 - xs pipelet, emit( "add" ), l: 21, more: false
+2013/03/28 04:00:17.372 - xs pipelet, New Set, name: undefined, length: 21
+2013/03/28 04:00:17.372 - xs pipelet, pipelet.half_join(), parameters count: 5
+2013/03/28 04:00:17.373 - xs.code, Code:
+  this.transform = function( values ) {
+    var u, filter = this.filter, merge = this.merge, out, i, l, v, locations;
+
+    values = values.slice( 0 );
+    out = []; i = -1;
+    values.sort( filter.sorter );
+    if ( this.only_not_matching )  {
+      locations = filter.locate( values ); l = locations.length;
+      while ( ++i < l )  {
+        var _l = locations[ i ], v = _l.o;
+
+        if ( _l.found === u )  {
+        } 
+
+      } 
+
+      return out;
+    } 
+
+    locations = filter.locate( values, { all: true } ); l = locations.length;
+    while ( ++i < l )  {
+      var _l = locations[ i ], v = _l.o, matches = _l.all_matches;
+
+      if ( matches )  {
+        var j = -1, ml = matches.length;
+
+        var ul = ml - ml % 7 - 1;
+
+        while( j < ul ) {
+          out.push( merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+          );
+        } 
+
+        ul = ml - 1;
+        while( j < ul ) {
+          out.push( merge( v, matches[ ++j ] ) );
+        } 
+
+      } 
+
+    } 
+
+    return out;
+  } // Join..transform()
+
+
+2013/03/28 04:00:17.374 - xs pipelet, pipelet.order(), parameters count: 2
+2013/03/28 04:00:17.375 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:17.376 - xs.code, Code:
+  sorter = function( a, b ) {
+    var u, x, y;
+
+    return a.type - b.type;
+    return 0;
+  } // Order..sorter()
+
+
+2013/03/28 04:00:17.378 - xs pipelet, emit( "add" ), l: 3, more: false
+2013/03/28 04:00:17.378 - xs pipelet, pipelet.half_join(), parameters count: 5
+2013/03/28 04:00:17.379 - xs.code, Code:
+  this.transform = function( values ) {
+    var u, filter = this.filter, merge = this.merge, out, i, l, v, locations;
+
+    values = values.slice( 0 );
+    out = []; i = -1;
+    values.sort( filter.sorter );
+    if ( this.only_not_matching )  {
+      locations = filter.locate( values ); l = locations.length;
+      while ( ++i < l )  {
+        var _l = locations[ i ], v = _l.o;
+
+        if ( _l.found === u )  {
+        } 
+
+      } 
+
+      return out;
+    } 
+
+    locations = filter.locate( values, { all: true } ); l = locations.length;
+    while ( ++i < l )  {
+      var _l = locations[ i ], v = _l.o, matches = _l.all_matches;
+
+      if ( matches )  {
+        var j = -1, ml = matches.length;
+
+        var ul = ml - ml % 7 - 1;
+
+        while( j < ul ) {
+          out.push( merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+          );
+        } 
+
+        ul = ml - 1;
+        while( j < ul ) {
+          out.push( merge( matches[ ++j ], v ) );
+        } 
+
+      } 
+
+    } 
+
+    return out;
+  } // Join..transform()
+
+
+2013/03/28 04:00:17.379 - xs pipelet, pipelet.order(), parameters count: 2
+2013/03/28 04:00:17.379 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:17.380 - xs.code, Code:
+  sorter = function( a, b ) {
+    var u, x, y;
+
+    return a.type - b.type;
+    return 0;
+  } // Order..sorter()
+
+
+2013/03/28 04:00:17.380 - xs pipelet, emit( "add" ), l: 21, more: false
+2013/03/28 04:00:17.380 - xs pipelet, pipelet.fork(), parameters count: 2
+2013/03/28 04:00:17.381 - xs pipelet, pipelet.fork(), parameters count: 2
+2013/03/28 04:00:17.381 - xs pipelet, pipelet.union(), parameters count: 2
+2013/03/28 04:00:17.382 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:17.383 - xs order, Order.locate(), name: undefined, locations: 21
+2013/03/28 04:00:17.383 - xs pipelet, emit( "add" ), l: 21, more: false
+2013/03/28 04:00:17.384 - xs pipelet, pipelet.order(), parameters count: 2
+2013/03/28 04:00:17.384 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:17.384 - xs.code, Code:
+  sorter = function( a, b ) {
+    var u, x, y;
+
+    if ( ( x = a.region ) !== ( y = b.region ) )  {
+      if ( x  <  y    ) return -1;
+      if ( x  >  y    ) return  1;
+    } 
+
+    if ( ( x = a.version ) !== ( y = b.version ) )  {
+      if ( x  <  y    ) return  1;
+      if ( x  >  y    ) return -1;
+    } 
+
+    if ( x = a.type - b.type ) return x;
+    return 0;
+  } // Order..sorter()
+
+
+2013/03/28 04:00:17.385 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:17.385 - xs order, Order.locate(), name: undefined, locations: 21
+2013/03/28 04:00:17.385 - xs pipelet, emit( "add" ), l: 21, more: false
+2013/03/28 04:00:17.386 - xs pipelet, pipelet.trace(), parameters count: 1
+2013/03/28 04:00:17.386 - xs ubuntu amis, new Trace()
+2013/03/28 04:00:17.386 - xs pipelet, on(), event "complete", name: "", listeners: 1
+2013/03/28 04:00:17.386 - xs pipelet, pipelet.filter(), parameters count: 1
+2013/03/28 04:00:17.387 - xs pipelet, pipelet.aggregate(), parameters count: 2
+2013/03/28 04:00:17.387 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:17.387 - xs.code, Code:
+  this.aggregate.group = function( objects ) {
+    var groups = {}, keys = [], i = -1, o, k, g;
+
+    while ( o = objects[ ++i ] )  {
+      if ( g = groups[ k = o[ "region" ] ] )  {
+        g.push( o );
+        continue;
+      } 
+
+      groups[ k ] = [ o ];
+      keys.push( k );
+    } 
+
+    return { groups: groups, keys: keys };;
+  } // group()
+
+
+2013/03/28 04:00:17.388 - xs.code, Code:
+  this.aggregate.reduce_groups = function( groups ) {
+    var keys = groups.keys, positions = {}, key, out = [], hash = {};
+
+    groups = groups.groups;
+    for( var j = -1; key = keys[ ++j ];  ) {
+      var g = groups[ key ], i = -1, l = g.length;
+
+      positions[ key ] = j;
+
+      out.push( hash[ key ] = {
+          region: g[ 0 ].region
+        , _count: l
+      } );
+    } 
+
+    return { groups: out, keys: keys, positions: positions, hash: hash };
+  } // reduce_groups()
+
+
+2013/03/28 04:00:17.390 - xs ubuntu amis, fetch(), sending: , {
+  "values": [
+    {
+      "id": "ami-5a60692e",
+      "version": "12.10",
+      "type": 0,
+      "region": "eu-west-1",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-64636a10",
+      "version": "12.10",
+      "type": 1,
+      "region": "eu-west-1",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-66636a12",
+      "version": "12.10",
+      "type": 2,
+      "region": "eu-west-1",
+      "description": "HVM (cluster compute)"
+    },
+    {
+      "id": "ami-3c229e55",
+      "version": "8.04",
+      "type": 0,
+      "region": "us-east-1",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-b19458d8",
+      "version": "8.04",
+      "type": 1,
+      "region": "us-east-1",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-b8d147d1",
+      "version": "12.10",
+      "type": 0,
+      "region": "us-east-1",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-0cdf4965",
+      "version": "12.10",
+      "type": 1,
+      "region": "us-east-1",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-02df496b",
+      "version": "12.10",
+      "type": 2,
+      "region": "us-east-1",
+      "description": "HVM (cluster compute)"
+    },
+    {
+      "id": "ami-b6089bdf",
+      "version": "12.04",
+      "type": 0,
+      "region": "us-east-1",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-de0d9eb7",
+      "version": "12.04",
+      "type": 1,
+      "region": "us-east-1",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-d00d9eb9",
+      "version": "12.04",
+      "type": 2,
+      "region": "us-east-1",
+      "description": "HVM (cluster compute)"
+    },
+    {
+      "id": "ami-cc811ea5",
+      "version": "11.10",
+      "type": 0,
+      "region": "us-east-1",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-a4801fcd",
+      "version": "11.10",
+      "type": 1,
+      "region": "us-east-1",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-ba801fd3",
+      "version": "11.10",
+      "type": 2,
+      "region": "us-east-1",
+      "description": "HVM (cluster compute)"
+    },
+    {
+      "id": "ami-bffa6fd6",
+      "version": "11.04",
+      "type": 0,
+      "region": "us-east-1",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-21e47148",
+      "version": "11.04",
+      "type": 1,
+      "region": "us-east-1",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-42b39007",
+      "version": "12.10",
+      "type": 0,
+      "region": "us-west-1",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-00b39045",
+      "version": "12.10",
+      "type": 1,
+      "region": "us-west-1",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-6ab8325a",
+      "version": "12.10",
+      "type": 0,
+      "region": "us-west-2",
+      "description": "instance-store"
+    },
+    {
+      "id": "ami-a4b83294",
+      "version": "12.10",
+      "type": 1,
+      "region": "us-west-2",
+      "description": "EBS boot"
+    },
+    {
+      "id": "ami-a6b83296",
+      "version": "12.10",
+      "type": 2,
+      "region": "us-west-2",
+      "description": "HVM (cluster compute)"
+    }
+  ],
+  "no_more": true
+}
+2013/03/28 04:00:17.392 - xs filter, parse_filter(), parsed:{"parameters":["ami"],"code":"","condition":"ami.version == '12.10' "}, function: function ( ami ) { return ami.version == '12.10' }
+2013/03/28 04:00:17.392 - xs.code, Code:
+  this.transform = function( _o ) {
+    var _out = [], ami, i = -1, l = _o.length;
+
+    var ul = l - l % 3 - 1;
+
+    while( i < ul ) {
+      ami = _o[ ++i ];  if ( ami.version == '12.10'  ) _out.push( ami );
+      ami = _o[ ++i ];  if ( ami.version == '12.10'  ) _out.push( ami );
+      ami = _o[ ++i ];  if ( ami.version == '12.10'  ) _out.push( ami );
+    } 
+
+    ul = l - 1;
+    while( i < ul ) {
+      ami = _o[ ++i ];  if ( ami.version == '12.10'  ) _out.push( ami );
+    } 
+
+    return _out;
+  } // Filter.transform()
+
+
+2013/03/28 04:00:17.393 - xs pipelet, emit( "add" ), l: 4, more: false
+2013/03/28 04:00:17.394 - xs pipelet, pipelet.trace(), parameters count: 1
+2013/03/28 04:00:17.394 - xs AMI Regions, new Trace()
+2013/03/28 04:00:17.394 - xs pipelet, pipelet.ec2(), parameters count: 1
+2013/03/28 04:00:17.415 - xs pipelet, pipelet.ec2_regions(), parameters count: 0
+2013/03/28 04:00:17.415 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.260 - xs pipelet, pipelet.half_join(), parameters count: 5
+2013/03/28 04:00:18.268 - xs.code, Code:
+  this.transform = function( values ) {
+    var u, filter = this.filter, merge = this.merge, out, i, l, v, locations;
+
+    out = []; l = values.length; i = -1;
+    var ul = l - l % 4 - 1;
+
+    while( i < ul ) {
+      out.push( { __v: v = values[ ++i ], region: v.RegionName }
+        , { __v: v = values[ ++i ], region: v.RegionName }
+        , { __v: v = values[ ++i ], region: v.RegionName }
+        , { __v: v = values[ ++i ], region: v.RegionName }
+      );
+    } 
+
+    ul = l - 1;
+    while( i < ul ) {
+      out.push( { __v: v = values[ ++i ], region: v.RegionName } );
+    } 
+
+    values = out;
+    out = []; i = -1;
+    values.sort( filter.sorter );
+    if ( this.only_not_matching )  {
+      locations = filter.locate( values ); l = locations.length;
+      while ( ++i < l )  {
+        var _l = locations[ i ], v = _l.o.__v;
+
+        if ( _l.found === u )  {
+        } 
+
+      } 
+
+      return out;
+    } 
+
+    locations = filter.locate( values, { all: true } ); l = locations.length;
+    while ( ++i < l )  {
+      var _l = locations[ i ], v = _l.o.__v, matches = _l.all_matches;
+
+      if ( matches )  {
+        var j = -1, ml = matches.length;
+
+        var ul = ml - ml % 7 - 1;
+
+        while( j < ul ) {
+          out.push( merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+            , merge( v, matches[ ++j ] )
+          );
+        } 
+
+        ul = ml - 1;
+        while( j < ul ) {
+          out.push( merge( v, matches[ ++j ] ) );
+        } 
+
+      } 
+
+    } 
+
+    return out;
+  } // Join..transform()
+
+
+2013/03/28 04:00:18.268 - xs pipelet, pipelet.order(), parameters count: 2
+2013/03/28 04:00:18.269 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.269 - xs.code, Code:
+  sorter = function( a, b ) {
+    var u, x, y;
+
+    if ( ( x = a.region ) !== ( y = b.region ) )  {
+      if ( x  <  y    ) return -1;
+      if ( x  >  y    ) return  1;
+    } 
+
+    return 0;
+  } // Order..sorter()
+
+
+2013/03/28 04:00:18.269 - xs AMI Regions, fetch(), sending: , {
+  "values": [
+    {
+      "region": "eu-west-1",
+      "_count": 3
+    },
+    {
+      "region": "us-east-1",
+      "_count": 3
+    },
+    {
+      "region": "us-west-1",
+      "_count": 2
+    },
+    {
+      "region": "us-west-2",
+      "_count": 3
+    }
+  ],
+  "no_more": true
+}
+2013/03/28 04:00:18.269 - xs pipelet, emit( "add" ), l: 4, more: false
+2013/03/28 04:00:18.270 - xs pipelet, pipelet.half_join(), parameters count: 5
+2013/03/28 04:00:18.270 - xs.code, Code:
+  this.transform = function( values ) {
+    var u, filter = this.filter, merge = this.merge, out, i, l, v, locations;
+
+    out = []; l = values.length; i = -1;
+    var ul = l - l % 4 - 1;
+
+    while( i < ul ) {
+      out.push( { __v: v = values[ ++i ], RegionName: v.region }
+        , { __v: v = values[ ++i ], RegionName: v.region }
+        , { __v: v = values[ ++i ], RegionName: v.region }
+        , { __v: v = values[ ++i ], RegionName: v.region }
+      );
+    } 
+
+    ul = l - 1;
+    while( i < ul ) {
+      out.push( { __v: v = values[ ++i ], RegionName: v.region } );
+    } 
+
+    values = out;
+    out = []; i = -1;
+    values.sort( filter.sorter );
+    if ( this.only_not_matching )  {
+      locations = filter.locate( values ); l = locations.length;
+      while ( ++i < l )  {
+        var _l = locations[ i ], v = _l.o.__v;
+
+        if ( _l.found === u )  {
+        } 
+
+      } 
+
+      return out;
+    } 
+
+    locations = filter.locate( values, { all: true } ); l = locations.length;
+    while ( ++i < l )  {
+      var _l = locations[ i ], v = _l.o.__v, matches = _l.all_matches;
+
+      if ( matches )  {
+        var j = -1, ml = matches.length;
+
+        var ul = ml - ml % 7 - 1;
+
+        while( j < ul ) {
+          out.push( merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+            , merge( matches[ ++j ], v )
+          );
+        } 
+
+        ul = ml - 1;
+        while( j < ul ) {
+          out.push( merge( matches[ ++j ], v ) );
+        } 
+
+      } 
+
+    } 
+
+    return out;
+  } // Join..transform()
+
+
+2013/03/28 04:00:18.271 - xs pipelet, pipelet.order(), parameters count: 2
+2013/03/28 04:00:18.271 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.272 - xs.code, Code:
+  sorter = function( a, b ) {
+    var u, x, y;
+
+    if ( ( x = a.RegionName ) !== ( y = b.RegionName ) )  {
+      if ( x  <  y    ) return -1;
+      if ( x  >  y    ) return  1;
+    } 
+
+    return 0;
+  } // Order..sorter()
+
+
+2013/03/28 04:00:18.272 - xs pipelet, pipelet.fork(), parameters count: 2
+2013/03/28 04:00:18.272 - xs pipelet, pipelet.fork(), parameters count: 2
+2013/03/28 04:00:18.272 - xs pipelet, pipelet.union(), parameters count: 2
+2013/03/28 04:00:18.273 - xs pipelet, pipelet.trace(), parameters count: 1
+2013/03/28 04:00:18.273 - xs Regions for which we have AMIs, new Trace()
+2013/03/28 04:00:18.273 - xs pipelet, pipelet.ec2_availability_zones(), parameters count: 0
+2013/03/28 04:00:18.273 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.273 - xs Regions for which we have AMIs, fetch(), sending: , {
+  "no_more": true
+}
+2013/03/28 04:00:18.273 - xs pipelet, pipelet.set(), parameters count: 0
+2013/03/28 04:00:18.273 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.274 - xs pipelet, pipelet.trace(), parameters count: 1
+2013/03/28 04:00:18.274 - xs Availability Zones, new Trace()
+2013/03/28 04:00:18.274 - xs pipelet, on(), event "complete", name: "", listeners: 1
+2013/03/28 04:00:18.274 - xs pipelet, pipelet.filter(), parameters count: 1
+2013/03/28 04:00:18.275 - xs pipelet, pipelet.ec2_describe_spot_price_history(), parameters count: 3
+2013/03/28 04:00:18.275 - xs pipelet, New Set, name: spot_price_history, length: 0
+2013/03/28 04:00:18.276 - xs Availability Zones, fetch(), sending: , {
+  "values": [],
+  "no_more": true
+}
+2013/03/28 04:00:18.276 - xs pipelet, on(), event "complete", name: "spot_price_history", listeners: 1
+2013/03/28 04:00:18.276 - xs pipelet, pipelet.trace(), parameters count: 2
+2013/03/28 04:00:18.276 - xs Spot Price History, new Trace()
+2013/03/28 04:00:18.276 - xs pipelet, pipelet.order(), parameters count: 2
+2013/03/28 04:00:18.276 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.277 - xs.code, Code:
+  sorter = function( a, b ) {
+    var u, x, y;
+
+    if ( ( x = a.AvailabilityZone ) !== ( y = b.AvailabilityZone ) )  {
+      if ( x  <  y    ) return -1;
+      if ( x  >  y    ) return  1;
+    } 
+
+    if ( ( x = a.ProductDescription ) !== ( y = b.ProductDescription ) )  {
+      if ( x  <  y    ) return -1;
+      if ( x  >  y    ) return  1;
+    } 
+
+    if ( ( x = a.InstanceType ) !== ( y = b.InstanceType ) )  {
+      if ( x  <  y    ) return -1;
+      if ( x  >  y    ) return  1;
+    } 
+
+    if ( ( x = a.Timestamp ) !== ( y = b.Timestamp ) )  {
+      if ( x  <  y    ) return -1;
+      if ( x  >  y    ) return  1;
+    } 
+
+    return 0;
+  } // Order..sorter()
+
+
+2013/03/28 04:00:18.277 - xs Spot Price History, fetch(), sending: , {
+  "no_more": true,
+  "count": 0
+}
+2013/03/28 04:00:18.277 - xs pipelet, pipelet.delay(), parameters count: 1
+2013/03/28 04:00:18.277 - xs pipelet, new Delay(): delay: 1000 ms
+2013/03/28 04:00:18.278 - xs pipelet, pipelet.alter(), parameters count: 1
+2013/03/28 04:00:18.278 - xs.code, Code:
+  this.transform = function( values, options ) {
+    var i = -1, l = values.length, r = [], t = transform;
+
+    var ul = l - l % 6 - 1;
+
+    while( i < ul ) {
+      r.push( t( values[ ++i ], i ) );
+      r.push( t( values[ ++i ], i ) );
+      r.push( t( values[ ++i ], i ) );
+      r.push( t( values[ ++i ], i ) );
+      r.push( t( values[ ++i ], i ) );
+      r.push( t( values[ ++i ], i ) );
+    } 
+
+    ul = l - 1;
+    while( i < ul ) {
+      r.push( t( values[ ++i ], i ) );
+    } 
+
+    return r;
+  } // Alter..transform()
+
+
+2013/03/28 04:00:18.278 - xs pipelet, pipelet.aggregate(), parameters count: 2
+2013/03/28 04:00:18.279 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.279 - xs.code, Code:
+  this.aggregate.group = function( objects ) {
+    var groups = {}, keys = [], i = -1, o, k, g;
+
+    while ( o = objects[ ++i ] )  {
+      if ( g = groups[ k = o[ "AvailabilityZone" ] + "_" + o[ "ProductDescription" ] + "_" + o[ "InstanceType" ] ] )  {
+        g.push( o );
+        continue;
+      } 
+
+      groups[ k ] = [ o ];
+      keys.push( k );
+    } 
+
+    return { groups: groups, keys: keys };;
+  } // group()
+
+
+2013/03/28 04:00:18.280 - xs.code, Code:
+  this.aggregate.reduce_groups = function( groups ) {
+    var keys = groups.keys, positions = {}, key, out = [], hash = {}, o, _seconds, _cost_seconds;
+
+    groups = groups.groups;
+    for( var j = -1; key = keys[ ++j ];  ) {
+      var g = groups[ key ], i = -1, l = g.length;
+
+      var i = -1;
+
+      _seconds = 0; _cost_seconds = 0; 
+      var ul = l - l % 2 - 1;
+
+      while( i < ul ) {
+        _seconds += ( o = g[ ++i ] ).seconds || 0; _cost_seconds += o.cost_seconds || 0;
+        _seconds += ( o = g[ ++i ] ).seconds || 0; _cost_seconds += o.cost_seconds || 0;
+      } 
+
+      ul = l - 1;
+      while( i < ul ) {
+        _seconds += ( o = g[ ++i ] ).seconds || 0; _cost_seconds += o.cost_seconds || 0;
+      } 
+
+      positions[ key ] = j;
+
+      out.push( hash[ key ] = {
+          AvailabilityZone: ( o = g[ 0 ] ).AvailabilityZone
+        , ProductDescription: o.ProductDescription
+        , InstanceType: o.InstanceType
+        , seconds: _seconds
+        , cost_seconds: _cost_seconds
+        , _count: l
+      } );
+    } 
+
+    return { groups: out, keys: keys, positions: positions, hash: hash };
+  } // reduce_groups()
+
+
+2013/03/28 04:00:18.281 - xs pipelet, on(), event "complete", name: "", listeners: 1
+2013/03/28 04:00:18.281 - xs pipelet, pipelet.alter(), parameters count: 1
+2013/03/28 04:00:18.281 - xs.code, Code:
+  this.transform = function( values, options ) {
+    var i = -1, l = values.length, r = [], t = transform;
+
+    var ul = l - l % 6 - 1;
+
+    while( i < ul ) {
+      r.push( t( values[ ++i ] ) );
+      r.push( t( values[ ++i ] ) );
+      r.push( t( values[ ++i ] ) );
+      r.push( t( values[ ++i ] ) );
+      r.push( t( values[ ++i ] ) );
+      r.push( t( values[ ++i ] ) );
+    } 
+
+    ul = l - 1;
+    while( i < ul ) {
+      r.push( t( values[ ++i ] ) );
+    } 
+
+    return r;
+  } // Alter..transform()
+
+
+2013/03/28 04:00:18.282 - xs pipelet, pipelet.order(), parameters count: 1
+2013/03/28 04:00:18.282 - xs pipelet, New Set, name: undefined, length: 0
+2013/03/28 04:00:18.283 - xs.code, Code:
+  sorter = function( a, b ) {
+    var u, x, y;
+
+    if ( ( x = a.average_cost_per_hour ) !== ( y = b.average_cost_per_hour ) )  {
+      if ( x === u    ) return  1;
+      if ( y === u    ) return -1;
+      if ( x === null ) return  1;
+      if ( y === null ) return -1;
+      if ( x  <  y    ) return  1;
+      if ( x  >  y    ) return -1;
+    } 
+
+    return 0;
+  } // Order..sorter()
+
+
+2013/03/28 04:00:18.283 - xs pipelet, pipelet.trace(), parameters count: 1
+2013/03/28 04:00:18.283 - xs Average Cost per Hour by AvailabilityZone and InstanceType, new Trace()
+2013/03/28 04:00:18.284 - xs pipelet, on(), event "complete", name: "", listeners: 1
+2013/03/28 04:00:23.135 - xs aws, EC2 Regions, 8 regions found: [{"RegionName":"eu-west-1","Endpoint":"ec2.eu-west-1.amazonaws.com"},{"RegionName":"sa-east-1","Endpoint":"ec2.sa-east-1.amazonaws.com"},{"RegionName":"us-east-1","Endpoint":"ec2.us-east-1.amazonaws.com"},{"RegionName":"ap-northeast-1","Endpoint":"ec2.ap-northeast-1.amazonaws.com"},{"RegionName":"us-west-2","Endpoint":"ec2.us-west-2.amazonaws.com"},{"RegionName":"us-west-1","Endpoint":"ec2.us-west-1.amazonaws.com"},{"RegionName":"ap-southeast-1","Endpoint":"ec2.ap-southeast-1.amazonaws.com"},{"RegionName":"ap-southeast-2","Endpoint":"ec2.ap-southeast-2.amazonaws.com"}]
+2013/03/28 04:00:23.135 - xs aws, EC2 starting client for region eu-west-1
+2013/03/28 04:00:23.136 - xs aws, EC2 starting client for region sa-east-1
+2013/03/28 04:00:23.137 - xs aws, EC2 starting client for region us-east-1
+2013/03/28 04:00:23.137 - xs aws, EC2 starting client for region ap-northeast-1
+2013/03/28 04:00:23.138 - xs aws, EC2 starting client for region us-west-2
+2013/03/28 04:00:23.138 - xs aws, EC2 starting client for region us-west-1
+2013/03/28 04:00:23.138 - xs aws, EC2 starting client for region ap-southeast-1
+2013/03/28 04:00:23.139 - xs aws, EC2 starting client for region ap-southeast-2
+2013/03/28 04:00:23.139 - xs aws, EC2 Regions: adding regions
+2013/03/28 04:00:23.141 - xs pipelet, emit( "add" ), l: 8, more: false
+2013/03/28 04:00:23.142 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:23.146 - xs order, Order.locate(), name: undefined, locations: 8
+2013/03/28 04:00:23.146 - xs pipelet, emit( "add" ), l: 4, more: false
+2013/03/28 04:00:23.146 - xs pipelet, emit( "add" ), l: 4, more: false
+2013/03/28 04:00:23.146 - xs Regions for which we have AMIs, add(), {
+  "values": [
+    {
+      "RegionName": "eu-west-1",
+      "Endpoint": "ec2.eu-west-1.amazonaws.com"
+    },
+    {
+      "RegionName": "us-east-1",
+      "Endpoint": "ec2.us-east-1.amazonaws.com"
+    },
+    {
+      "RegionName": "us-west-1",
+      "Endpoint": "ec2.us-west-1.amazonaws.com"
+    },
+    {
+      "RegionName": "us-west-2",
+      "Endpoint": "ec2.us-west-2.amazonaws.com"
+    }
+  ]
+}
+2013/03/28 04:00:23.146 - xs pipelet, emit( "add" ), l: 4, more: false
+2013/03/28 04:00:23.147 - xs aws, ec2_availability_zones..add(): regions: [{"RegionName":"eu-west-1","Endpoint":"ec2.eu-west-1.amazonaws.com"},{"RegionName":"us-east-1","Endpoint":"ec2.us-east-1.amazonaws.com"},{"RegionName":"us-west-1","Endpoint":"ec2.us-west-1.amazonaws.com"},{"RegionName":"us-west-2","Endpoint":"ec2.us-west-2.amazonaws.com"}]
+2013/03/28 04:00:23.729 - xs pipelet, emit( "add" ), l: 8, more: false
+2013/03/28 04:00:24.245 - xs aws, EC2 Availability Zones for region "eu-west-1": [{"Messages":[],"ZoneName":"eu-west-1a","State":"available","RegionName":"eu-west-1"},{"Messages":[],"ZoneName":"eu-west-1b","State":"available","RegionName":"eu-west-1"},{"Messages":[],"ZoneName":"eu-west-1c","State":"available","RegionName":"eu-west-1"}]
+2013/03/28 04:00:24.246 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:24.246 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:24.246 - xs Availability Zones, add(), {
+  "values": [
+    {
+      "Messages": [],
+      "ZoneName": "eu-west-1a",
+      "State": "available",
+      "RegionName": "eu-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "eu-west-1b",
+      "State": "available",
+      "RegionName": "eu-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "eu-west-1c",
+      "State": "available",
+      "RegionName": "eu-west-1"
+    }
+  ],
+  "options": {
+    "more": true
+  }
+}
+2013/03/28 04:00:24.246 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:24.247 - xs filter, parse_filter(), parsed:{"parameters":["zone"],"code":"","condition":"zone.State == 'available' "}, function: function ( zone ) { return zone.State == 'available' }
+2013/03/28 04:00:24.247 - xs.code, Code:
+  this.transform = function( _o ) {
+    var _out = [], zone, i = -1, l = _o.length;
+
+    var ul = l - l % 2 - 1;
+
+    while( i < ul ) {
+      zone = _o[ ++i ];  if ( zone.State == 'available'  ) _out.push( zone );
+      zone = _o[ ++i ];  if ( zone.State == 'available'  ) _out.push( zone );
+    } 
+
+    ul = l - 1;
+    while( i < ul ) {
+      zone = _o[ ++i ];  if ( zone.State == 'available'  ) _out.push( zone );
+    } 
+
+    return _out;
+  } // Filter.transform()
+
+
+2013/03/28 04:00:24.248 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:24.248 - xs aws, ec2_describe_spot_price_history..add(): zones: [{"Messages":[],"ZoneName":"eu-west-1a","State":"available","RegionName":"eu-west-1"},{"Messages":[],"ZoneName":"eu-west-1b","State":"available","RegionName":"eu-west-1"},{"Messages":[],"ZoneName":"eu-west-1c","State":"available","RegionName":"eu-west-1"}]
+2013/03/28 04:00:24.248 - xs aws, ec2_describe_spot_price_history, region: "eu-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"eu-west-1a"}
+2013/03/28 04:00:24.392 - xs aws, ec2_describe_spot_price_history, region: "eu-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"eu-west-1b"}
+2013/03/28 04:00:24.534 - xs aws, ec2_describe_spot_price_history, region: "eu-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"eu-west-1c"}
+2013/03/28 04:00:24.934 - xs aws, EC2 Availability Zones for region "us-east-1": [{"Messages":[],"ZoneName":"us-east-1a","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1b","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1c","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1d","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1e","State":"available","RegionName":"us-east-1"}]
+2013/03/28 04:00:24.934 - xs pipelet, emit( "add" ), l: 5, more: true
+2013/03/28 04:00:24.934 - xs pipelet, emit( "add" ), l: 5, more: true
+2013/03/28 04:00:24.935 - xs Availability Zones, add(), {
+  "values": [
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1a",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1b",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1c",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1d",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1e",
+      "State": "available",
+      "RegionName": "us-east-1"
+    }
+  ],
+  "options": {
+    "more": true
+  }
+}
+2013/03/28 04:00:24.935 - xs pipelet, emit( "add" ), l: 5, more: true
+2013/03/28 04:00:24.935 - xs pipelet, emit( "add" ), l: 5, more: true
+2013/03/28 04:00:24.935 - xs aws, ec2_describe_spot_price_history..add(): zones: [{"Messages":[],"ZoneName":"us-east-1a","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1b","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1c","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1d","State":"available","RegionName":"us-east-1"},{"Messages":[],"ZoneName":"us-east-1e","State":"available","RegionName":"us-east-1"}]
+2013/03/28 04:00:24.935 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1a"}
+2013/03/28 04:00:25.080 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1b"}
+2013/03/28 04:00:25.222 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1c"}
+2013/03/28 04:00:25.370 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1d"}
+2013/03/28 04:00:25.515 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1e"}
+2013/03/28 04:00:25.855 - xs aws, EC2 Availability Zones for region "us-west-2": [{"Messages":[],"ZoneName":"us-west-2a","State":"available","RegionName":"us-west-2"},{"Messages":[],"ZoneName":"us-west-2b","State":"available","RegionName":"us-west-2"},{"Messages":[],"ZoneName":"us-west-2c","State":"available","RegionName":"us-west-2"}]
+2013/03/28 04:00:25.855 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:25.856 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:25.856 - xs Availability Zones, add(), {
+  "values": [
+    {
+      "Messages": [],
+      "ZoneName": "us-west-2a",
+      "State": "available",
+      "RegionName": "us-west-2"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-2b",
+      "State": "available",
+      "RegionName": "us-west-2"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-2c",
+      "State": "available",
+      "RegionName": "us-west-2"
+    }
+  ],
+  "options": {
+    "more": true
+  }
+}
+2013/03/28 04:00:25.857 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:25.857 - xs pipelet, emit( "add" ), l: 3, more: true
+2013/03/28 04:00:25.857 - xs aws, ec2_describe_spot_price_history..add(): zones: [{"Messages":[],"ZoneName":"us-west-2a","State":"available","RegionName":"us-west-2"},{"Messages":[],"ZoneName":"us-west-2b","State":"available","RegionName":"us-west-2"},{"Messages":[],"ZoneName":"us-west-2c","State":"available","RegionName":"us-west-2"}]
+2013/03/28 04:00:25.857 - xs aws, ec2_describe_spot_price_history, region: "us-west-2", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-west-2a"}
+2013/03/28 04:00:26.001 - xs aws, ec2_describe_spot_price_history, region: "us-west-2", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-west-2b"}
+2013/03/28 04:00:26.141 - xs aws, ec2_describe_spot_price_history, region: "us-west-2", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-west-2c"}
+2013/03/28 04:00:26.304 - xs aws, EC2 Availability Zones for region "us-west-1": [{"Messages":[],"ZoneName":"us-west-1a","State":"available","RegionName":"us-west-1"},{"Messages":[],"ZoneName":"us-west-1b","State":"available","RegionName":"us-west-1"},{"Messages":[],"ZoneName":"us-west-1c","State":"available","RegionName":"us-west-1"}]
+2013/03/28 04:00:26.305 - xs pipelet, emit( "add" ), l: 3, more: false
+2013/03/28 04:00:26.305 - xs pipelet, emit( "add" ), l: 3, more: false
+2013/03/28 04:00:26.305 - xs Availability Zones, add(), {
+  "values": [
+    {
+      "Messages": [],
+      "ZoneName": "us-west-1a",
+      "State": "available",
+      "RegionName": "us-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-1b",
+      "State": "available",
+      "RegionName": "us-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-1c",
+      "State": "available",
+      "RegionName": "us-west-1"
+    }
+  ]
+}
+2013/03/28 04:00:26.305 - xs pipelet, emit( "add" ), l: 3, more: false, complete listeners: 1
+2013/03/28 04:00:26.305 - xs pipelet, emit( "add" ), l: 3, more: false
+2013/03/28 04:00:26.305 - xs aws, ec2_describe_spot_price_history..add(): zones: [{"Messages":[],"ZoneName":"us-west-1a","State":"available","RegionName":"us-west-1"},{"Messages":[],"ZoneName":"us-west-1b","State":"available","RegionName":"us-west-1"},{"Messages":[],"ZoneName":"us-west-1c","State":"available","RegionName":"us-west-1"}]
+2013/03/28 04:00:26.305 - xs aws, ec2_describe_spot_price_history, region: "us-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-west-1a"}
+2013/03/28 04:00:26.447 - xs aws, ec2_describe_spot_price_history, region: "us-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-west-1b"}
+2013/03/28 04:00:26.589 - xs aws, ec2_describe_spot_price_history, region: "us-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-west-1c"}
+2013/03/28 04:00:26.733 - xs pipelet, emit( "add" ), listeners: 1
+2013/03/28 04:00:26.733 - xs Availability Zones, fetch(), sending: , {
+  "values": [
+    {
+      "Messages": [],
+      "ZoneName": "eu-west-1a",
+      "State": "available",
+      "RegionName": "eu-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "eu-west-1b",
+      "State": "available",
+      "RegionName": "eu-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "eu-west-1c",
+      "State": "available",
+      "RegionName": "eu-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1a",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1b",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1c",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1d",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-east-1e",
+      "State": "available",
+      "RegionName": "us-east-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-2a",
+      "State": "available",
+      "RegionName": "us-west-2"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-2b",
+      "State": "available",
+      "RegionName": "us-west-2"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-2c",
+      "State": "available",
+      "RegionName": "us-west-2"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-1a",
+      "State": "available",
+      "RegionName": "us-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-1b",
+      "State": "available",
+      "RegionName": "us-west-1"
+    },
+    {
+      "Messages": [],
+      "ZoneName": "us-west-1c",
+      "State": "available",
+      "RegionName": "us-west-1"
+    }
+  ],
+  "no_more": true
+}
+Received all us Availability Zones: eu-west-1a, eu-west-1b, eu-west-1c, us-east-1a, us-east-1b, us-east-1c, us-east-1d, us-east-1e, us-west-2a, us-west-2b, us-west-2c, us-west-1a, us-west-1b, us-west-1c
+2013/03/28 04:00:30.346 - xs aws, EC2 Spot Price History for region/zone: "eu-west-1b", prices: 1000, count: 14
+2013/03/28 04:00:30.349 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:30.349 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:30.349 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:30.372 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:30.373 - xs aws, ec2_describe_spot_price_history, region: "eu-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"eu-west-1b","NextToken":"gSrGMhUdh9X4KXPn4NO7vUowFVWF+pgKXzuhZYxL7Smhj+NOPG+RyI1M7SiALtvW"}
+2013/03/28 04:00:31.722 - xs aws, EC2 Spot Price History for region/zone: "eu-west-1c", prices: 993, count: 14
+2013/03/28 04:00:31.723 - xs pipelet, emit( "add" ), name: spot_price_history, l: 993, more: true
+2013/03/28 04:00:31.723 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 993
+}
+2013/03/28 04:00:31.723 - xs pipelet, emit( "add" ), l: 993, more: true
+2013/03/28 04:00:31.743 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:31.760 - xs order, Order.locate(), name: undefined, locations: 993
+2013/03/28 04:00:31.762 - xs pipelet, emit( "add" ), l: 993, more: true
+2013/03/28 04:00:31.764 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:31.766 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:31.768 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:31.769 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:31.769 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:31.769 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "eu-west-1b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 4197223,
+      "cost_seconds": 540484.2757000008,
+      "_count": 1000,
+      "average_cost_per_hour": 0.1287718750469062
+    }
+  ],
+  "options": {
+    "more": true
+  }
+}
+2013/03/28 04:00:31.769 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:31.958 - xs aws, EC2 Spot Price History for region/zone: "us-west-2b", prices: 267, count: 13
+2013/03/28 04:00:31.959 - xs pipelet, emit( "add" ), name: spot_price_history, l: 267, more: true
+2013/03/28 04:00:31.959 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 267
+}
+2013/03/28 04:00:31.959 - xs pipelet, emit( "add" ), l: 267, more: true
+2013/03/28 04:00:31.965 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:31.966 - xs order, Order.locate(), name: undefined, locations: 267
+2013/03/28 04:00:31.966 - xs pipelet, emit( "add" ), l: 267, more: true
+2013/03/28 04:00:32.425 - xs aws, EC2 Spot Price History for region/zone: "us-west-2c", prices: 726, count: 12
+2013/03/28 04:00:32.425 - xs pipelet, emit( "add" ), name: spot_price_history, l: 726, more: true
+2013/03/28 04:00:32.425 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 726
+}
+2013/03/28 04:00:32.425 - xs pipelet, emit( "add" ), l: 726, more: true
+2013/03/28 04:00:32.441 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:32.455 - xs order, Order.locate(), name: undefined, locations: 726
+2013/03/28 04:00:32.457 - xs pipelet, emit( "add" ), l: 726, more: true
+2013/03/28 04:00:32.520 - xs aws, EC2 Spot Price History for region/zone: "us-west-1a", prices: 92, count: 11
+2013/03/28 04:00:32.521 - xs pipelet, emit( "add" ), name: spot_price_history, l: 92, more: true
+2013/03/28 04:00:32.521 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 92
+}
+2013/03/28 04:00:32.521 - xs pipelet, emit( "add" ), l: 92, more: true
+2013/03/28 04:00:32.522 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:32.534 - xs order, Order.locate(), name: undefined, locations: 92
+2013/03/28 04:00:32.534 - xs pipelet, emit( "add" ), l: 92, more: true
+2013/03/28 04:00:33.229 - xs aws, EC2 Spot Price History for region/zone: "eu-west-1a", prices: 1000, count: 10
+2013/03/28 04:00:33.230 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:33.230 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:33.230 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:33.250 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:33.326 - xs order, Order.locate(), name: undefined, locations: 1000
+2013/03/28 04:00:33.354 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:33.354 - xs aws, ec2_describe_spot_price_history, region: "eu-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"eu-west-1a","NextToken":"jD2+0wrFwbUMARX+DnlgptRw2+PUjCBgPWutNlGchVM4kdxc9BRsY9IlzS44onWV"}
+2013/03/28 04:00:33.536 - xs aws, EC2 Spot Price History for region/zone: "us-west-1b", prices: 64, count: 10
+2013/03/28 04:00:33.537 - xs pipelet, emit( "add" ), name: spot_price_history, l: 64, more: true
+2013/03/28 04:00:33.537 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 64
+}
+2013/03/28 04:00:33.537 - xs pipelet, emit( "add" ), l: 64, more: true
+2013/03/28 04:00:33.537 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:33.538 - xs order, Order.locate(), name: undefined, locations: 64
+2013/03/28 04:00:33.538 - xs pipelet, emit( "add" ), l: 64, more: true
+2013/03/28 04:00:33.544 - xs pipelet, emit( "add" ), l: 993, more: true
+2013/03/28 04:00:33.545 - xs pipelet, emit( "add" ), l: 993, more: true
+2013/03/28 04:00:33.547 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.547 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.548 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:33.548 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.548 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "eu-west-1c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5194089,
+      "cost_seconds": 4236969.979699995,
+      "_count": 993,
+      "average_cost_per_hour": 0.815729183635474
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      0
+    ]
+  }
+}
+2013/03/28 04:00:33.548 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.548 - xs pipelet, emit( "add" ), l: 267, more: true
+2013/03/28 04:00:33.548 - xs pipelet, emit( "add" ), l: 267, more: true
+2013/03/28 04:00:33.549 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.550 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.550 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:33.550 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.550 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-west-2b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5105727,
+      "cost_seconds": 87848.63979999995,
+      "_count": 267,
+      "average_cost_per_hour": 0.017205902274054205
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      2
+    ]
+  }
+}
+2013/03/28 04:00:33.550 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.551 - xs pipelet, emit( "add" ), l: 726, more: true
+2013/03/28 04:00:33.551 - xs pipelet, emit( "add" ), l: 726, more: true
+2013/03/28 04:00:33.553 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.553 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.555 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:33.555 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.555 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-west-2c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5168373,
+      "cost_seconds": 59447.62379999999,
+      "_count": 726,
+      "average_cost_per_hour": 0.011502193011224226
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      3
+    ]
+  }
+}
+2013/03/28 04:00:33.556 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.556 - xs pipelet, emit( "add" ), l: 92, more: true
+2013/03/28 04:00:33.556 - xs pipelet, emit( "add" ), l: 92, more: true
+2013/03/28 04:00:33.556 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.557 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.557 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:33.557 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:33.557 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-west-1a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5260589,
+      "cost_seconds": 52900.625,
+      "_count": 92,
+      "average_cost_per_hour": 0.010056026996216584
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      4
+    ]
+  }
+}
+2013/03/28 04:00:33.557 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.263 - xs aws, EC2 Spot Price History for region/zone: "us-west-2a", prices: 1000, count: 9
+2013/03/28 04:00:34.264 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:34.264 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:34.264 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:34.284 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:34.304 - xs order, Order.locate(), name: undefined, locations: 1000
+2013/03/28 04:00:34.333 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:34.333 - xs aws, ec2_describe_spot_price_history, region: "us-west-2", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-west-2a","NextToken":"zV1PSCYDzi581w5j/glvMnHAwShC1691oOHot4wVEBcwX4Qv6TVE9XwdCaSfCwpJ"}
+2013/03/28 04:00:34.475 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:34.476 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:34.478 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.478 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.482 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:34.482 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.482 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "eu-west-1a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 2442848,
+      "cost_seconds": 471471.4199999997,
+      "_count": 1000,
+      "average_cost_per_hour": 0.1930007188330996
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      1
+    ]
+  }
+}
+2013/03/28 04:00:34.482 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.649 - xs aws, EC2 Spot Price History for region/zone: "eu-west-1b", prices: 252, count: 9
+2013/03/28 04:00:34.649 - xs pipelet, emit( "add" ), name: spot_price_history, l: 252, more: true
+2013/03/28 04:00:34.649 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 252
+}
+2013/03/28 04:00:34.649 - xs pipelet, emit( "add" ), l: 252, more: true
+2013/03/28 04:00:34.655 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:34.663 - xs order, Order.locate(), name: undefined, locations: 252
+2013/03/28 04:00:34.670 - xs pipelet, emit( "add" ), l: 252, more: true
+2013/03/28 04:00:34.761 - xs aws, EC2 Spot Price History for region/zone: "us-west-1c", prices: 114, count: 8
+2013/03/28 04:00:34.761 - xs pipelet, emit( "add" ), name: spot_price_history, l: 114, more: true
+2013/03/28 04:00:34.761 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 114
+}
+2013/03/28 04:00:34.761 - xs pipelet, emit( "add" ), l: 114, more: true
+2013/03/28 04:00:34.763 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:34.764 - xs order, Order.locate(), name: undefined, locations: 114
+2013/03/28 04:00:34.764 - xs pipelet, emit( "add" ), l: 114, more: true
+2013/03/28 04:00:34.766 - xs pipelet, emit( "add" ), l: 64, more: true
+2013/03/28 04:00:34.767 - xs pipelet, emit( "add" ), l: 64, more: true
+2013/03/28 04:00:34.767 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.767 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.767 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:34.767 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:34.767 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-west-1b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5164897,
+      "cost_seconds": 51657.59500000001,
+      "_count": 64,
+      "average_cost_per_hour": 0.01000166992681558
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      6
+    ]
+  }
+}
+2013/03/28 04:00:34.767 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.342 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:35.343 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:35.345 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.345 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.345 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:35.345 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.345 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-west-2a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 1795676,
+      "cost_seconds": 19370.078000000005,
+      "_count": 1000,
+      "average_cost_per_hour": 0.010787067377411072
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      5
+    ]
+  }
+}
+2013/03/28 04:00:35.345 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.683 - xs pipelet, emit( "add" ), l: 252, more: true
+2013/03/28 04:00:35.683 - xs pipelet, emit( "add" ), l: 252, more: true
+2013/03/28 04:00:35.684 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:35.684 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:35.685 - xs.code, Code:
+  this.make_key = function( o ) {
+    return '' + o.id;
+  } // make_key()
+
+
+2013/03/28 04:00:35.685 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:35.685 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:35.685 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:35.686 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "eu-west-1b",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4197223,
+        "cost_seconds": 540484.2757000008,
+        "_count": 1000,
+        "average_cost_per_hour": 0.1287718750469062
+      },
+      {
+        "AvailabilityZone": "eu-west-1b",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 5210127,
+        "cost_seconds": 603789.0167000009,
+        "_count": 1252,
+        "average_cost_per_hour": 0.11588758137757503
+      }
+    ]
+  ],
+  "options": {
+    "more": true,
+    "moves": [
+      {
+        "from": 2,
+        "to": 2
+      }
+    ]
+  }
+}
+2013/03/28 04:00:35.686 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:35.779 - xs pipelet, emit( "add" ), l: 114, more: true
+2013/03/28 04:00:35.779 - xs pipelet, emit( "add" ), l: 114, more: true
+2013/03/28 04:00:35.780 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.780 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.780 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:35.780 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:35.782 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-west-1c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5216841,
+      "cost_seconds": 61088.49800000001,
+      "_count": 114,
+      "average_cost_per_hour": 0.011709863881226207
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      4
+    ]
+  }
+}
+2013/03/28 04:00:35.783 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:37.370 - xs aws, EC2 Spot Price History for region/zone: "eu-west-1a", prices: 1000, count: 7
+2013/03/28 04:00:37.371 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:37.371 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:37.371 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:37.391 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:37.418 - xs order, Order.locate(), name: undefined, locations: 1000
+2013/03/28 04:00:37.539 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:37.539 - xs aws, ec2_describe_spot_price_history, region: "eu-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"eu-west-1a","NextToken":"ijw2bByBCR+RiAlkieEdgUFO+cnCF23gu0Q9Kwjxdso4kdxc9BRsY9IlzS44onWV"}
+2013/03/28 04:00:38.372 - xs aws, EC2 Spot Price History for region/zone: "us-east-1d", prices: 1000, count: 7
+2013/03/28 04:00:38.373 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:38.373 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:38.374 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:38.394 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:38.402 - xs order, Order.locate(), name: undefined, locations: 1000
+2013/03/28 04:00:38.457 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:38.457 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1d","NextToken":"wp1s/L5dGOpA16IuEOp+HpLLLO0cKky3rsuMhcLVvI7gj6sI/odo7b/p8PsBR8nV"}
+2013/03/28 04:00:38.740 - xs aws, EC2 Spot Price History for region/zone: "us-west-2a", prices: 436, count: 7
+2013/03/28 04:00:38.741 - xs pipelet, emit( "add" ), name: spot_price_history, l: 436, more: true
+2013/03/28 04:00:38.741 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 436
+}
+2013/03/28 04:00:38.741 - xs pipelet, emit( "add" ), l: 436, more: true
+2013/03/28 04:00:38.749 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:38.759 - xs order, Order.locate(), name: undefined, locations: 436
+2013/03/28 04:00:38.771 - xs pipelet, emit( "add" ), l: 436, more: true
+2013/03/28 04:00:38.774 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:38.776 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:38.777 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:38.778 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:38.778 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:38.778 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:38.778 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:38.781 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "eu-west-1a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 2442848,
+        "cost_seconds": 471471.4199999997,
+        "_count": 1000,
+        "average_cost_per_hour": 0.1930007188330996
+      },
+      {
+        "AvailabilityZone": "eu-west-1a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4464993,
+        "cost_seconds": 805421.5676999995,
+        "_count": 2000,
+        "average_cost_per_hour": 0.18038585227345252
+      }
+    ]
+  ],
+  "options": {
+    "more": true,
+    "moves": [
+      {
+        "from": 1,
+        "to": 1
+      }
+    ]
+  }
+}
+2013/03/28 04:00:38.782 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:39.461 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:39.462 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:39.464 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:39.464 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:39.464 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:39.464 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:39.464 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-east-1d",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 1903637,
+      "cost_seconds": 52312.757300000005,
+      "_count": 1000,
+      "average_cost_per_hour": 0.027480426835578425
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      3
+    ]
+  }
+}
+2013/03/28 04:00:39.464 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:39.773 - xs pipelet, emit( "add" ), l: 436, more: true
+2013/03/28 04:00:39.774 - xs pipelet, emit( "add" ), l: 436, more: true
+2013/03/28 04:00:39.775 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:39.775 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:39.775 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:39.775 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:39.775 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:39.775 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "us-west-2a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 1795676,
+        "cost_seconds": 19370.078000000005,
+        "_count": 1000,
+        "average_cost_per_hour": 0.010787067377411072
+      },
+      {
+        "AvailabilityZone": "us-west-2a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 5183150,
+        "cost_seconds": 55263.634800000014,
+        "_count": 1436,
+        "average_cost_per_hour": 0.010662171613786986
+      }
+    ]
+  ],
+  "options": {
+    "more": true,
+    "moves": [
+      {
+        "from": 7,
+        "to": 7
+      }
+    ]
+  }
+}
+2013/03/28 04:00:39.776 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:39.984 - xs aws, EC2 Spot Price History for region/zone: "us-east-1c", prices: 85, count: 6
+2013/03/28 04:00:39.985 - xs pipelet, emit( "add" ), name: spot_price_history, l: 85, more: true
+2013/03/28 04:00:39.985 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 85
+}
+2013/03/28 04:00:39.985 - xs pipelet, emit( "add" ), l: 85, more: true
+2013/03/28 04:00:39.986 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:39.986 - xs order, Order.locate(), name: undefined, locations: 85
+2013/03/28 04:00:39.987 - xs pipelet, emit( "add" ), l: 85, more: true
+2013/03/28 04:00:40.987 - xs pipelet, emit( "add" ), l: 85, more: true
+2013/03/28 04:00:40.987 - xs pipelet, emit( "add" ), l: 85, more: true
+2013/03/28 04:00:40.989 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:40.989 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:40.989 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:40.989 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:40.989 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-east-1c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5184448,
+      "cost_seconds": 37717.9895,
+      "_count": 85,
+      "average_cost_per_hour": 0.00727521801742442
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      10
+    ]
+  }
+}
+2013/03/28 04:00:40.989 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:43.296 - xs aws, EC2 Spot Price History for region/zone: "eu-west-1a", prices: 1000, count: 5
+2013/03/28 04:00:43.297 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:43.297 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:43.297 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:43.318 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:43.346 - xs order, Order.locate(), name: undefined, locations: 1000
+2013/03/28 04:00:43.568 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:43.569 - xs aws, ec2_describe_spot_price_history, region: "eu-west-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"eu-west-1a","NextToken":"p868iYpGfo919lJ/m8UGWefh2C90h5vEH6k2h6OvtBI4kdxc9BRsY9IlzS44onWV"}
+2013/03/28 04:00:44.577 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:44.578 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:44.581 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:44.582 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:44.582 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:44.582 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:44.582 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:44.582 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "eu-west-1a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4464993,
+        "cost_seconds": 805421.5676999995,
+        "_count": 2000,
+        "average_cost_per_hour": 0.18038585227345252
+      },
+      {
+        "AvailabilityZone": "eu-west-1a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4991139,
+        "cost_seconds": 893064.5086999995,
+        "_count": 3000,
+        "average_cost_per_hour": 0.17893000148863808
+      }
+    ]
+  ],
+  "options": {
+    "more": true,
+    "moves": [
+      {
+        "from": 1,
+        "to": 1
+      }
+    ]
+  }
+}
+2013/03/28 04:00:44.582 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:44.894 - xs aws, EC2 Spot Price History for region/zone: "eu-west-1a", prices: 291, count: 5
+2013/03/28 04:00:44.894 - xs pipelet, emit( "add" ), name: spot_price_history, l: 291, more: true
+2013/03/28 04:00:44.894 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 291
+}
+2013/03/28 04:00:44.894 - xs pipelet, emit( "add" ), l: 291, more: true
+2013/03/28 04:00:44.898 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:44.907 - xs order, Order.locate(), name: undefined, locations: 291
+2013/03/28 04:00:44.988 - xs pipelet, emit( "add" ), l: 291, more: true
+2013/03/28 04:00:46.538 - xs aws, EC2 Spot Price History for region/zone: "us-east-1b", prices: 969, count: 4
+2013/03/28 04:00:46.539 - xs pipelet, emit( "add" ), name: spot_price_history, l: 969, more: true
+2013/03/28 04:00:46.541 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 969
+}
+2013/03/28 04:00:46.541 - xs pipelet, emit( "add" ), l: 969, more: true
+2013/03/28 04:00:46.558 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:46.568 - xs order, Order.locate(), name: undefined, locations: 969
+2013/03/28 04:00:46.645 - xs pipelet, emit( "add" ), l: 969, more: true
+2013/03/28 04:00:46.647 - xs pipelet, emit( "add" ), l: 291, more: true
+2013/03/28 04:00:46.647 - xs pipelet, emit( "add" ), l: 291, more: true
+2013/03/28 04:00:46.648 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:46.648 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:46.648 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:46.648 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:46.648 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:46.649 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "eu-west-1a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4991139,
+        "cost_seconds": 893064.5086999995,
+        "_count": 3000,
+        "average_cost_per_hour": 0.17893000148863808
+      },
+      {
+        "AvailabilityZone": "eu-west-1a",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 5230462,
+        "cost_seconds": 906912.2046999995,
+        "_count": 3291,
+        "average_cost_per_hour": 0.17339045856752225
+      }
+    ]
+  ],
+  "options": {
+    "more": true,
+    "moves": [
+      {
+        "from": 1,
+        "to": 1
+      }
+    ]
+  }
+}
+2013/03/28 04:00:46.649 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:47.351 - xs aws, EC2 Spot Price History for region/zone: "us-east-1e", prices: 1000, count: 3
+2013/03/28 04:00:47.352 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:47.352 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:47.353 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:47.370 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:47.378 - xs order, Order.locate(), name: undefined, locations: 1000
+2013/03/28 04:00:47.444 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:47.444 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1e","NextToken":"ezvAaP+4BqIZF6mQ4HEPdYPaLkT6HdEnN4KCsXK5TKDhcsB6BfcJBPXOJjgteZJj"}
+2013/03/28 04:00:47.648 - xs pipelet, emit( "add" ), l: 969, more: true
+2013/03/28 04:00:47.649 - xs pipelet, emit( "add" ), l: 969, more: true
+2013/03/28 04:00:47.651 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:47.651 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:47.655 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:47.655 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:47.655 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-east-1b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5249567,
+      "cost_seconds": 63917.36999999999,
+      "_count": 969,
+      "average_cost_per_hour": 0.012175741351620046
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      5
+    ]
+  }
+}
+2013/03/28 04:00:47.655 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:48.459 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:48.461 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:48.463 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:48.463 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:48.463 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:48.463 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:48.463 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-east-1e",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 4158247,
+      "cost_seconds": 52380.95649999992,
+      "_count": 1000,
+      "average_cost_per_hour": 0.012596884336115657
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      5
+    ]
+  }
+}
+2013/03/28 04:00:48.463 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:50.373 - xs aws, EC2 Spot Price History for region/zone: "us-east-1e", prices: 605, count: 3
+2013/03/28 04:00:50.373 - xs pipelet, emit( "add" ), name: spot_price_history, l: 605, more: true
+2013/03/28 04:00:50.373 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 605
+}
+2013/03/28 04:00:50.373 - xs pipelet, emit( "add" ), l: 605, more: true
+2013/03/28 04:00:50.383 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:50.397 - xs order, Order.locate(), name: undefined, locations: 605
+2013/03/28 04:00:50.431 - xs pipelet, emit( "add" ), l: 605, more: true
+2013/03/28 04:00:51.025 - xs aws, EC2 Spot Price History for region/zone: "us-east-1a", prices: 953, count: 2
+2013/03/28 04:00:51.026 - xs pipelet, emit( "add" ), name: spot_price_history, l: 953, more: true
+2013/03/28 04:00:51.026 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 953
+}
+2013/03/28 04:00:51.026 - xs pipelet, emit( "add" ), l: 953, more: true
+2013/03/28 04:00:51.041 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:51.050 - xs order, Order.locate(), name: undefined, locations: 953
+2013/03/28 04:00:51.169 - xs pipelet, emit( "add" ), l: 953, more: true
+2013/03/28 04:00:51.439 - xs pipelet, emit( "add" ), l: 605, more: true
+2013/03/28 04:00:51.440 - xs pipelet, emit( "add" ), l: 605, more: true
+2013/03/28 04:00:51.441 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:51.441 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:51.441 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:51.441 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:51.441 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:51.441 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "us-east-1e",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4158247,
+        "cost_seconds": 52380.95649999992,
+        "_count": 1000,
+        "average_cost_per_hour": 0.012596884336115657
+      },
+      {
+        "AvailabilityZone": "us-east-1e",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 5173541,
+        "cost_seconds": 169014.93349999964,
+        "_count": 1605,
+        "average_cost_per_hour": 0.032669101008380844
+      }
+    ]
+  ],
+  "options": {
+    "more": true,
+    "moves": [
+      {
+        "from": 5,
+        "to": 3
+      }
+    ]
+  }
+}
+2013/03/28 04:00:51.442 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:52.178 - xs pipelet, emit( "add" ), l: 953, more: true
+2013/03/28 04:00:52.180 - xs pipelet, emit( "add" ), l: 953, more: true
+2013/03/28 04:00:52.182 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:52.182 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:52.182 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:52.182 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:52.182 - xs Average Cost per Hour by AvailabilityZone and InstanceType, add(), {
+  "values": [
+    {
+      "AvailabilityZone": "us-east-1a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5202146,
+      "cost_seconds": 285189.7622000003,
+      "_count": 953,
+      "average_cost_per_hour": 0.05482156060210542
+    }
+  ],
+  "options": {
+    "more": true,
+    "locations": [
+      3
+    ]
+  }
+}
+2013/03/28 04:00:52.182 - xs pipelet, emit( "add" ), l: 1, more: true
+2013/03/28 04:00:53.228 - xs aws, EC2 Spot Price History for region/zone: "us-east-1d", prices: 1000, count: 1
+2013/03/28 04:00:53.229 - xs pipelet, emit( "add" ), name: spot_price_history, l: 1000, more: true
+2013/03/28 04:00:53.229 - xs Spot Price History, add(), {
+  "options": {
+    "more": true
+  },
+  "count": 1000
+}
+2013/03/28 04:00:53.229 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:53.246 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:53.272 - xs order, Order.locate(), name: undefined, locations: 1000
+2013/03/28 04:00:53.384 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:53.384 - xs aws, ec2_describe_spot_price_history, region: "us-east-1", get_prices(): parameters: {"InstanceTypes":["m1.small"],"ProductDescriptions":["Linux/UNIX"],"AvailabilityZone":"us-east-1d","NextToken":"cEGuMLJUwYYKjZ/2eKgCJlDSv5okNqO96g5Bssm4bPjgj6sI/odo7b/p8PsBR8nV"}
+2013/03/28 04:00:54.394 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:54.396 - xs pipelet, emit( "add" ), l: 1000, more: true
+2013/03/28 04:00:54.398 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:54.398 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:54.398 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:54.398 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:00:54.398 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:00:54.398 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "us-east-1d",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 1903637,
+        "cost_seconds": 52312.757300000005,
+        "_count": 1000,
+        "average_cost_per_hour": 0.027480426835578425
+      },
+      {
+        "AvailabilityZone": "us-east-1d",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4206152,
+        "cost_seconds": 187740.74599999998,
+        "_count": 2000,
+        "average_cost_per_hour": 0.0446347982669195
+      }
+    ]
+  ],
+  "options": {
+    "more": true,
+    "moves": [
+      {
+        "from": 5,
+        "to": 4
+      }
+    ]
+  }
+}
+2013/03/28 04:00:54.398 - xs pipelet, emit( "update" ), l: 1, more: true
+2013/03/28 04:01:00.179 - xs aws, EC2 Spot Price History for region/zone: "us-east-1d", prices: 641, count: 1
+2013/03/28 04:01:00.180 - xs pipelet, emit( "add" ), name: spot_price_history, l: 641, more: false, complete listeners: 1
+2013/03/28 04:01:00.180 - xs Spot Price History, add(), {
+  "options": {},
+  "count": 641
+}
+2013/03/28 04:01:00.180 - xs pipelet, emit( "add" ), l: 641, more: false
+2013/03/28 04:01:00.188 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:01:00.200 - xs order, Order.locate(), name: undefined, locations: 641
+2013/03/28 04:01:00.291 - xs pipelet, emit( "add" ), l: 641, more: false
+2013/03/28 04:01:00.291 - xs pipelet, emit( "add" ), name: spot_price_history, listeners: 1
+2013/03/28 04:01:00.291 - xs tests, complete after ec2_describe_spot_price_history()
+2013/03/28 04:01:01.300 - xs pipelet, emit( "add" ), l: 641, more: false
+2013/03/28 04:01:01.301 - xs pipelet, emit( "add" ), l: 641, more: false
+2013/03/28 04:01:01.302 - xs pipelet, emit( "update" ), l: 1, more: false, complete listeners: 1
+2013/03/28 04:01:01.302 - xs pipelet, emit( "update" ), l: 1, more: false
+2013/03/28 04:01:01.303 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:01:01.303 - xs order, Order.locate(), name: undefined, locations: 1
+2013/03/28 04:01:01.303 - xs pipelet, emit( "update" ), l: 1, more: false
+2013/03/28 04:01:01.303 - xs Average Cost per Hour by AvailabilityZone and InstanceType, update(), {
+  "updates": [
+    [
+      {
+        "AvailabilityZone": "us-east-1d",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 4206152,
+        "cost_seconds": 187740.74599999998,
+        "_count": 2000,
+        "average_cost_per_hour": 0.0446347982669195
+      },
+      {
+        "AvailabilityZone": "us-east-1d",
+        "ProductDescription": "Linux/UNIX",
+        "InstanceType": "m1.small",
+        "seconds": 5169873,
+        "cost_seconds": 305210.41500000004,
+        "_count": 2641,
+        "average_cost_per_hour": 0.0590363467342428
+      }
+    ]
+  ],
+  "options": {
+    "more": false,
+    "moves": [
+      {
+        "from": 4,
+        "to": 3
+      }
+    ]
+  }
+}
+2013/03/28 04:01:01.303 - xs pipelet, emit( "update" ), l: 1, more: false, complete listeners: 1
+2013/03/28 04:01:01.303 - xs pipelet, emit( "update" ), listeners: 1
+2013/03/28 04:01:01.304 - xs tests, complete after all is done
+2013/03/28 04:01:01.304 - xs Average Cost per Hour by AvailabilityZone and InstanceType, fetch(), sending: , {
+  "values": [
+    {
+      "AvailabilityZone": "eu-west-1c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5194089,
+      "cost_seconds": 4236969.979699995,
+      "_count": 993,
+      "average_cost_per_hour": 0.815729183635474
+    },
+    {
+      "AvailabilityZone": "eu-west-1a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5230462,
+      "cost_seconds": 906912.2046999995,
+      "_count": 3291,
+      "average_cost_per_hour": 0.17339045856752225
+    },
+    {
+      "AvailabilityZone": "eu-west-1b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5210127,
+      "cost_seconds": 603789.0167000009,
+      "_count": 1252,
+      "average_cost_per_hour": 0.11588758137757503
+    },
+    {
+      "AvailabilityZone": "us-east-1d",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5169873,
+      "cost_seconds": 305210.41500000004,
+      "_count": 2641,
+      "average_cost_per_hour": 0.0590363467342428
+    },
+    {
+      "AvailabilityZone": "us-east-1a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5202146,
+      "cost_seconds": 285189.7622000003,
+      "_count": 953,
+      "average_cost_per_hour": 0.05482156060210542
+    },
+    {
+      "AvailabilityZone": "us-east-1e",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5173541,
+      "cost_seconds": 169014.93349999964,
+      "_count": 1605,
+      "average_cost_per_hour": 0.032669101008380844
+    },
+    {
+      "AvailabilityZone": "us-west-2b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5105727,
+      "cost_seconds": 87848.63979999995,
+      "_count": 267,
+      "average_cost_per_hour": 0.017205902274054205
+    },
+    {
+      "AvailabilityZone": "us-east-1b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5249567,
+      "cost_seconds": 63917.36999999999,
+      "_count": 969,
+      "average_cost_per_hour": 0.012175741351620046
+    },
+    {
+      "AvailabilityZone": "us-west-1c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5216841,
+      "cost_seconds": 61088.49800000001,
+      "_count": 114,
+      "average_cost_per_hour": 0.011709863881226207
+    },
+    {
+      "AvailabilityZone": "us-west-2c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5168373,
+      "cost_seconds": 59447.62379999999,
+      "_count": 726,
+      "average_cost_per_hour": 0.011502193011224226
+    },
+    {
+      "AvailabilityZone": "us-west-2a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5183150,
+      "cost_seconds": 55263.634800000014,
+      "_count": 1436,
+      "average_cost_per_hour": 0.010662171613786986
+    },
+    {
+      "AvailabilityZone": "us-west-1a",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5260589,
+      "cost_seconds": 52900.625,
+      "_count": 92,
+      "average_cost_per_hour": 0.010056026996216584
+    },
+    {
+      "AvailabilityZone": "us-west-1b",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5164897,
+      "cost_seconds": 51657.59500000001,
+      "_count": 64,
+      "average_cost_per_hour": 0.01000166992681558
+    },
+    {
+      "AvailabilityZone": "us-east-1c",
+      "ProductDescription": "Linux/UNIX",
+      "InstanceType": "m1.small",
+      "seconds": 5184448,
+      "cost_seconds": 37717.9895,
+      "_count": 85,
+      "average_cost_per_hour": 0.00727521801742442
+    }
+  ],
+  "no_more": true
+}
+2013/03/28 04:01:01.304 - xs pipelet, emit( "update" ), listeners: 1
+2013/03/28 04:01:01.304 - xs tests, complete after aggregate()
