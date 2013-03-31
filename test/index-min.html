@@ -20,6 +20,37 @@
         mocha.run()
       };
     </script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script>
+      var socket, connection;
+      
+      socket = io.connect( 'http://localhost' )
+        .on( 'connect', function() {
+          socket.emit( 'xs_connection', {} );
+        } )
+        
+        .on( 'disconnect', function() {
+          connection.state = 'disconnected';
+        } )
+        
+        .on( 'reconnect', function() {
+          socket.emit( 'xs_connection', connection );
+        } )
+        
+        .on( 'xs_connection', function( _connection ) {
+          connection = _connection;
+          
+          // send some operation
+          socket.emit( 'xs', { operation: 'add', values: [ { id: 1 } ] } )
+        } )
+      
+        .on( 'xs', function ( data ) {
+          console.log( 'socketio data received', data );
+        } )
+      ;
+    </script>
   </head>
   
   <body>

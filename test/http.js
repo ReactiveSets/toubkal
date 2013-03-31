@@ -100,3 +100,6 @@ xs.set( [
   .union( [ client_min, mocha_expect, image ] )
   .serve( servers )
 ;
+
+// Socket.io Server tests
+servers.socket_io_servers();
