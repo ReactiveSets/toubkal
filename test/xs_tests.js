@@ -23,6 +23,10 @@
 (function() {
   var Set, XS, check, clone, expect, extend, log, xs;
 
+  if (typeof mocha !== 'undefined') {
+    mocha.setup('bdd');
+  }
+
   clone = function(o) {
     var p, r;
     if (typeof o !== 'object' || o === null) {
