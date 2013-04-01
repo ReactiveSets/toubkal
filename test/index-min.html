@@ -7,49 +7,14 @@
     
     <title>XS Tests</title>
     
-    <script src="javascript/mocha_expect-min.js"></script>
-    <script>
-      mocha.setup( 'bdd' );
-    </script>
-    
-    
     <script src="../lib/xs-min.js"></script>
+    
+    <script src="javascript/mocha_expect_tests-min.js"></script>
     
     <script>
       window.onload = function() {
         mocha.run()
       };
-    </script>
-    
-    <script src="/socket.io/socket.io.js"></script>
-    
-    <script>
-      var socket, connection;
-      
-      socket = io.connect( 'http://localhost' )
-        .on( 'connect', function() {
-          socket.emit( 'xs_connection', {} );
-        } )
-        
-        .on( 'disconnect', function() {
-          connection.state = 'disconnected';
-        } )
-        
-        .on( 'reconnect', function() {
-          socket.emit( 'xs_connection', connection );
-        } )
-        
-        .on( 'xs_connection', function( _connection ) {
-          connection = _connection;
-          
-          // send some operation
-          socket.emit( 'xs', { operation: 'add', values: [ { id: 1 } ] } )
-        } )
-      
-        .on( 'xs', function ( data ) {
-          console.log( 'socketio data received', data );
-        } )
-      ;
     </script>
   </head>
   

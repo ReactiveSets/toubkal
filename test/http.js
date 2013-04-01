@@ -56,7 +56,7 @@ var servers = xs.set( [
 require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
 
-var client_min = xs.set( [
+var xs_min = xs.set( [
     { name: 'test/javascript/es5.js'    },
     { name: 'test/javascript/json2.js'  },
     
@@ -66,38 +66,32 @@ var client_min = xs.set( [
     { name: 'lib/filter.js'             },
     { name: 'lib/order.js'              },
     { name: 'lib/aggregate.js'          },
-    { name: 'lib/join.js'               },
-    
-    { name: 'test/xs_tests.js'          }
+    { name: 'lib/join.js'               }
   ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
-var mocha_expect = xs.set( [
+var tests_min = xs.set( [
     { name: 'test/javascript/mocha.js'  },
-    { name: 'test/javascript/expect.js' }
+    { name: 'test/javascript/expect.js' },
+    { name: 'test/xs_tests.js'          }
   ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
-  .uglify( 'test/javascript/mocha_expect-min.js' )
-;
-
-
-var image = xs.set( [
-    { name: 'test/css/images/ok.png' }
-  ] )
-  .watch()
+  .uglify( 'test/javascript/mocha_expect_tests-min.js' )
 ;
 
 xs.set( [
     { name: 'test/index.html'           },
     { name: 'test/index-min.html'       },
-    { name: 'test/css/mocha.css'        }
+    { name: 'test/socketio.html'        },
+    { name: 'test/css/mocha.css'        },
+    { name: 'test/css/images/ok.png'    }
   ] )
   .watch()
-  .union( [ client_min, mocha_expect, image ] )
+  .union( [ xs_min, tests_min ] )
   .serve( servers )
 ;
 

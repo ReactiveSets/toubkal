@@ -10,12 +10,6 @@
     <script src="javascript/es5.js"></script>
     <script src="javascript/json2.js"></script>
     
-    <script src="javascript/mocha.js"></script>
-    <script src="javascript/expect.js"></script>
-    <script>
-      mocha.setup( 'bdd' );
-    </script>
-    
     <script src="../lib/xs.js"></script>
     <script src="../lib/code.js"></script>
     <script src="../lib/pipelet.js"></script>
@@ -24,14 +18,20 @@
     <script src="../lib/aggregate.js"></script>
     <script src="../lib/join.js"></script>
     
+    <script src="javascript/mocha.js"></script>
+    <script src="javascript/expect.js"></script>
+    
     <script src="xs_tests.js"></script>
     
-    <script>
-      window.onload = function() { mocha.run() };
-    </script>
   </head>
   
   <body>
     <div id="mocha"></div>
+    
+    <script>
+      window.onload = function() {
+        mocha.run()
+      };
+    </script>
   </body>
 </html>
