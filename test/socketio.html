@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" href="css/mocha.css" />
+    
+    <title>XS Tests</title>
+    
+    <script src="../lib/xs-min.js"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    
+  </head>
+  
+  <body>
+    <div id="socketio_test"></div>
+    
+    <script>
+      window.onload = function() {
+        var u, socket, connection = {};
+        
+        var url = document.location.href;
+        
+        socket = io.connect( location.protocol + '//' + location.host )
+          .on( 'connect', function() {
+            socket.emit( 'xs_connection', connection );
+          } )
+          
+          .on( 'disconnect', function() {
+            connection.state = 'disconnected';
+          } )
+          
+          .on( 'reconnect', function() {
+            socket.emit( 'xs_connection', connection );
+          } )
+          
+          .on( 'xs_connection', function( _connection ) {
+            connection = _connection;
+            
+            connection.state = 'connected';
+            
+            // send some operation
+            socket.emit( 'xs', { operation: 'add', values: [ { id: 1 } ] } )
+          } )
+        
+          .on( 'xs', function ( data ) {
+            console.log( 'socketio data received', data );
+          } )
+        ;
+      };
+    </script>
+  </body>
+</html>
