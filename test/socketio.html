@@ -18,24 +18,38 @@
     
     <script>
       window.onload = function() {
+        var log = XS.log, de = true, ug = function( m ) {
+          log( 'socketio tests, ' + m )
+        }
+        
         var u, socket, connection = {};
         
-        var url = document.location.href;
+        var address = location.protocol + '//' + location.host;
         
-        socket = io.connect( location.protocol + '//' + location.host )
+        de&&ug( 'connecting to ' + address );
+        
+        socket = io.connect( address )
           .on( 'connect', function() {
+            de&&ug( 'received connect' );
+            
+            connection.state = 'requesting_id'
+            
             socket.emit( 'xs_connection', connection );
           } )
           
           .on( 'disconnect', function() {
+            de&&ug( 'received disconnect' );
+            
             connection.state = 'disconnected';
           } )
           
           .on( 'reconnect', function() {
-            socket.emit( 'xs_connection', connection );
+            de&&ug( 'received reconnect' );
           } )
           
           .on( 'xs_connection', function( _connection ) {
+            de&&ug( 'received xs_connection: ' + log.s( _connection ) );
+            
             connection = _connection;
             
             connection.state = 'connected';
@@ -45,7 +59,7 @@
           } )
         
           .on( 'xs', function ( data ) {
-            console.log( 'socketio data received', data );
+            de&&ug( 'received data: ' + log.s( data ) );
           } )
         ;
       };
