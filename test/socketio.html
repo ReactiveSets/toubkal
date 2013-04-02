@@ -55,7 +55,7 @@
             connection.state = 'connected';
             
             // send some operation
-            socket.emit( 'xs', { operation: 'add', values: [ { id: 1 } ] } )
+            socket.emit( 'xs_add', { values: [ { id: 1 } ] } )
           } )
         
           .on( 'xs', function ( data ) {
