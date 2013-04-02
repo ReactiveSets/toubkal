@@ -86,6 +86,7 @@ var tests_min = xs.set( [
 xs.set( [
     { name: 'test/index.html'           },
     { name: 'test/index-min.html'       },
+    { name: 'test/form.html'            },
     { name: 'test/socketio.html'        },
     { name: 'test/css/mocha.css'        },
     { name: 'test/css/images/ok.png'    }
