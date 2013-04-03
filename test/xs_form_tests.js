@@ -170,5 +170,6 @@
   ]);
 
   form = xs.form(document.getElementById('form'), 'user_profile', fields);
-
+  
+  form.socket_io_client();
 }).call(this);

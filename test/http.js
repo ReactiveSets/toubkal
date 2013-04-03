@@ -56,10 +56,14 @@ var servers = xs.set( [
 require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
 
-var xs_min = xs.set( [
+var xs_min = xs
+  // Define JavaScript Assets to minify
+  .set( [
+    // IE8- compatibility
     { name: 'test/javascript/es5.js'    },
     { name: 'test/javascript/json2.js'  },
     
+    // xs core
     { name: 'lib/xs.js'                 },
     { name: 'lib/code.js'               },
     { name: 'lib/pipelet.js'            },
@@ -67,11 +71,26 @@ var xs_min = xs.set( [
     { name: 'lib/order.js'              },
     { name: 'lib/aggregate.js'          },
     { name: 'lib/join.js'               },
+    
+    // xs socket.io
     { name: 'lib/socket_io_socket.js'   },
-    { name: 'lib/socket_io_client.js'   }
-  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
+    { name: 'lib/socket_io_client.js'   },
+    
+    // Third-party client libraries
+    { name: 'test/javascript/uuid.js'   },
+    
+    // xs client
+    { name: 'lib/selector.js'           },
+    { name: 'lib/form.js'               }
+  ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
+  
+  // Update file contents in realtime
   .watch()
-  .order( [ { id: 'id' } ] ) // order loaded files
+  
+  // Maintain up-to-date file contents in order
+  .order( [ { id: 'id' } ] )
+  
+  // Update minified xs-min.js and source map in realtime  
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
@@ -89,6 +108,7 @@ xs.set( [
     { name: 'test/index.html'           },
     { name: 'test/index-min.html'       },
     { name: 'test/form.html'            },
+    { name: 'test/xs_form_tests.js'     },
     { name: 'test/socketio.html'        },
     { name: 'test/css/mocha.css'        },
     { name: 'test/css/images/ok.png'    }
