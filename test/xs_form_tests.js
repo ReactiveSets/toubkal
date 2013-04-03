@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, chai, fields, form, xs;
+  var XS, fields, xs;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -35,14 +35,6 @@
     require('../lib/form.js');
   }
 
-  if (typeof require !== "undefined" && require !== null) {
-    chai = require('chai');
-  }
-
-  if (chai != null) {
-    chai.should();
-  }
-
   xs = XS.xs;
 
   fields = xs.set([
@@ -53,7 +45,7 @@
       value: 'user_profile'
     }, {
       id: 'id',
-      name: 'uuid',
+      name: 'id',
       type: 'hidden',
       value: {
         type: 'UUID'
@@ -63,6 +55,7 @@
       name: 'gender',
       type: 'radio',
       label: 'Gender',
+      mandatory: true,
       values: [
         {
           value: 0,
@@ -72,8 +65,7 @@
           value: 1,
           label: 'Male'
         }
-      ],
-      mandatory: true
+      ]
     }, {
       id: 'name',
       name: 'name',
@@ -105,6 +97,7 @@
       name: 'country',
       type: 'drop_down',
       label: 'Country',
+      mandatory: true,
       values: [
         {
           value: 1,
@@ -128,8 +121,7 @@
           value: 8,
           label: "Madagascar"
         }
-      ],
-      mandatory: true
+      ]
     }, {
       id: 'hobby',
       name: 'hobby',
@@ -169,7 +161,6 @@
     }
   ]);
 
-  form = xs.form(document.getElementById('form'), 'user_profile', fields);
-  
-  form.socket_io_client();
+  xs.form(document.getElementById('form'), 'user_profile', fields).socket_io_client();
+
 }).call(this);
