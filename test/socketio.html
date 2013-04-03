@@ -17,48 +17,18 @@
     <div id="socketio_test"></div>
     
     <script>
-      window.onload = function() {
-        var log = XS.log, de = true, ug = function( m ) {
-          log( 'socketio tests, ' + m )
-        }
-        
-        var u, socket, connection = {};
-        
-        var address = location.protocol + '//' + location.host;
-        
-        de&&ug( 'connecting to ' + address );
-        
-        socket = io.connect( address )
-          .on( 'connect', function() {
-            de&&ug( 'received connect' );
-            
-            connection.state = 'requesting_id'
-            
-            socket.emit( 'xs_connection', connection );
-          } )
-          
-          .on( 'disconnect', function() {
-            de&&ug( 'received disconnect' );
-            
-            connection.state = 'disconnected';
-          } )
-          
-          .on( 'reconnect', function() {
-            de&&ug( 'received reconnect' );
-          } )
-          
-          .on( 'xs_connection', function( _connection ) {
-            de&&ug( 'received xs_connection: ' + log.s( _connection ) );
-            
-            connection = _connection;
-            
-            connection.state = 'connected';
-            
-            // send some operation
-            new XS.Socket_IO_Socket( socket ).add( [ { id: 1 }, { id: 2 } ] );
-          } )
-        ;
-      };
+      var xs = XS.xs;
+      
+      var delay = xs.delay( 3000 );
+      
+      delay
+        .add( [
+          { id: 1 },
+          { id: 2 },
+          { id: 3 }
+        ] )
+        .socket_io_client()
+      ;
     </script>
   </body>
 </html>
