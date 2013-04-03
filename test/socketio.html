@@ -19,15 +19,12 @@
     <script>
       var xs = XS.xs;
       
-      var delay = xs.delay( 3000 );
-      
-      delay
+      xs.socket_io_client()
         .add( [
           { id: 1 },
           { id: 2 },
           { id: 3 }
         ] )
-        .socket_io_client()
       ;
     </script>
   </body>
