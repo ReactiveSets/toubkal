@@ -66,7 +66,8 @@ var xs_min = xs.set( [
     { name: 'lib/filter.js'             },
     { name: 'lib/order.js'              },
     { name: 'lib/aggregate.js'          },
-    { name: 'lib/join.js'               }
+    { name: 'lib/join.js'               },
+    { name: 'lib/socket_io_socket.js'   }
   ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
