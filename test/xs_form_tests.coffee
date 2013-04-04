@@ -36,6 +36,8 @@ if require?
 
 xs = XS.xs
 
+organizer = xs.set( [ id: 'label' ] )
+
 fields = xs
   .set(
     [
@@ -43,10 +45,11 @@ fields = xs
       
       { id: 'id'   , name: 'id', type: 'hidden', value: { type: 'UUID' } }
       
-      { id: 'gender', name: 'gender', type: 'radio', label: 'Gender', mandatory: true, values: [
-        { value: 0, label: 'Female', selected: true }
-        { value: 1, label: 'Male' }
-      ] }
+      { id: 'gender', name: 'gender', type: 'radio', label: 'Gender', mandatory: true, value: xs.set( [
+          { id: 0, label: 'Female', selected: true }
+          { id: 1, label: 'Male' }
+        ] ).order( organizer )
+      }
       
       { id: 'name' , name: 'name' , type: 'text' , label: 'Full Name' , mandatory: true }
       
@@ -56,24 +59,25 @@ fields = xs
       
       { id: 'address', name: 'address', type: 'text_area', label: 'Address', cols: 30, rows: 5, mandatory: true }
       
-      { id: 'country', name: 'country', type: 'drop_down', label: 'Country', mandatory: true, values: [
-        { value: 1, label: "USA"        }
-        { value: 2, label: "Morocco"    }
-        { value: 3, label: "France"     }
-        { value: 4, label: "Japan"      }
-        { value: 5, label: "Spain"      }
-        { value: 6, label: "Portugal"   }
-        { value: 8, label: "Madagascar" }
-      ] }
+      { id: 'country', name: 'country', type: 'drop_down', label: 'Country', mandatory: true, value: xs.set( [
+          { id: 1, label: "USA"        }
+          { id: 2, label: "Morocco"    }
+          { id: 3, label: "France"     }
+          { id: 4, label: "Japan"      }
+          { id: 5, label: "Spain"      }
+          { id: 6, label: "Portugal"   }
+          { id: 8, label: "Madagascar" }
+        ] ).order( organizer )
+      }
       
-      { id: 'hobby', name: 'hobby', type: 'checkbox', label: 'Hobbies', values: [
-          { value: 1, label: "Photography"            , selected: true }
-          { value: 2, label: "Fishing"                                 }
-          { value: 3, label: "Playing Computer Games"                  }
-          { value: 4, label: "Traveling"              , selected: true }
-          { value: 5, label: "Cooking"                                 }
-          { value: 6, label: "Stamp / Coin Collection", selected: true }
-        ]
+      { id: 'hobby', name: 'hobby', type: 'checkbox', label: 'Hobbies', value: xs.set( [
+          { id: 1, label: "Photography"            , selected: true }
+          { id: 2, label: "Fishing"                                 }
+          { id: 3, label: "Playing Computer Games"                  }
+          { id: 4, label: "Traveling"              , selected: true }
+          { id: 5, label: "Cooking"                                 }
+          { id: 6, label: "Stamp / Coin Collection", selected: true }
+        ] ).order( organizer )
       }
     ],
     

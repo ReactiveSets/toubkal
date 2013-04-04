@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, fields, xs;
+  var XS, fields, organizer, xs;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -36,6 +36,12 @@
   }
 
   xs = XS.xs;
+
+  organizer = xs.set([
+    {
+      id: 'label'
+    }
+  ]);
 
   fields = xs.set([
     {
@@ -56,16 +62,16 @@
       type: 'radio',
       label: 'Gender',
       mandatory: true,
-      values: [
+      value: xs.set([
         {
-          value: 0,
+          id: 0,
           label: 'Female',
           selected: true
         }, {
-          value: 1,
+          id: 1,
           label: 'Male'
         }
-      ]
+      ]).order(organizer)
     }, {
       id: 'name',
       name: 'name',
@@ -98,59 +104,59 @@
       type: 'drop_down',
       label: 'Country',
       mandatory: true,
-      values: [
+      value: xs.set([
         {
-          value: 1,
+          id: 1,
           label: "USA"
         }, {
-          value: 2,
+          id: 2,
           label: "Morocco"
         }, {
-          value: 3,
+          id: 3,
           label: "France"
         }, {
-          value: 4,
+          id: 4,
           label: "Japan"
         }, {
-          value: 5,
+          id: 5,
           label: "Spain"
         }, {
-          value: 6,
+          id: 6,
           label: "Portugal"
         }, {
-          value: 8,
+          id: 8,
           label: "Madagascar"
         }
-      ]
+      ]).order(organizer)
     }, {
       id: 'hobby',
       name: 'hobby',
       type: 'checkbox',
       label: 'Hobbies',
-      values: [
+      value: xs.set([
         {
-          value: 1,
+          id: 1,
           label: "Photography",
           selected: true
         }, {
-          value: 2,
+          id: 2,
           label: "Fishing"
         }, {
-          value: 3,
+          id: 3,
           label: "Playing Computer Games"
         }, {
-          value: 4,
+          id: 4,
           label: "Traveling",
           selected: true
         }, {
-          value: 5,
+          id: 5,
           label: "Cooking"
         }, {
-          value: 6,
+          id: 6,
           label: "Stamp / Coin Collection",
           selected: true
         }
-      ]
+      ]).order(organizer)
     }
   ], {
     name: 'Fields Set',
