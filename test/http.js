@@ -119,4 +119,22 @@ xs.set( [
 ;
 
 // Socket.io Server tests
-servers.socket_io_servers();
+var clients = servers.socket_io_servers();
+
+xs.set( [
+    { model: 'source', id: 1 },
+    { model: 'source', id: 2 },
+    { model: 'source', id: 3 },
+    { model: 'source', id: 4 }
+  ] )
+  
+  .trace( 'to socket.io clients' )
+  
+  .map_reduce( clients, function( source, client ) {
+    de&&ug( 'creating socket_io client id: ' + client.id );
+    
+    return source.plug( client.socket );
+  } )
+  
+  .trace( 'from socket.io clients' )
+;
