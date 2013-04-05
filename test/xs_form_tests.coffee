@@ -87,4 +87,4 @@ fields = xs
   .order( [ { id: 'order' } ] )
 
 xs.form( document.getElementById( 'form' ), 'user_profile', fields )
-  .socket_io_client()
+  .socket_io_server()
