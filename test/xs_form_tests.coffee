@@ -38,6 +38,13 @@ xs = XS.xs
 
 organizer = xs.set( [ id: 'label' ] )
 
+validate_name = ( value, field ) ->
+  r = { valid: true, message: 'Valide' }
+  
+  r = { valid: false, message: field.label + ' is empty' } if value is ''
+  
+  return r
+
 fields = xs
   .set(
     [
@@ -51,7 +58,7 @@ fields = xs
         ] ).order( organizer )
       }
       
-      { id: 'name' , name: 'name' , type: 'text' , label: 'Full Name' , mandatory: true }
+      { id: 'name' , name: 'name' , type: 'text' , label: 'Full Name' , validate: validate_name, mandatory: true }
       
       { id: 'email', name: 'email', type: 'email', label: 'Email'     , mandatory: true }
       

@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, fields, organizer, xs;
+  var XS, fields, organizer, validate_name, xs;
 
   XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
@@ -42,6 +42,21 @@
       id: 'label'
     }
   ]);
+
+  validate_name = function(value, field) {
+    var r;
+    r = {
+      valid: true,
+      message: 'Valide'
+    };
+    if (value === '') {
+      r = {
+        valid: false,
+        message: field.label + ' is empty'
+      };
+    }
+    return r;
+  };
 
   fields = xs.set([
     {
@@ -77,6 +92,7 @@
       name: 'name',
       type: 'text',
       label: 'Full Name',
+      validate: validate_name,
       mandatory: true
     }, {
       id: 'email',
