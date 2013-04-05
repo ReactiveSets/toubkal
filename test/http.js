@@ -120,7 +120,7 @@ xs.set( [
 ;
 
 // Socket.io Server tests
-var clients = servers.socket_io_servers();
+var clients = servers.socket_io_clients();
 
 xs.set( [
     { model: 'source', id: 1 },
