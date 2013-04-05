@@ -60,29 +60,29 @@ var xs_min = xs
   // Define JavaScript Assets to minify
   .set( [
     // IE8- compatibility
-    { name: 'test/javascript/es5.js'    },
-    { name: 'test/javascript/json2.js'  },
+    { name: 'test/javascript/es5.js'     },
+    { name: 'test/javascript/json2.js'   },
     
     // xs core
-    { name: 'lib/xs.js'                 },
-    { name: 'lib/code.js'               },
-    { name: 'lib/pipelet.js'            },
-    { name: 'lib/filter.js'             },
-    { name: 'lib/order.js'              },
-    { name: 'lib/aggregate.js'          },
-    { name: 'lib/join.js'               },
+    { name: 'lib/xs.js'                  },
+    { name: 'lib/code.js'                },
+    { name: 'lib/pipelet.js'             },
+    { name: 'lib/filter.js'              },
+    { name: 'lib/order.js'               },
+    { name: 'lib/aggregate.js'           },
+    { name: 'lib/join.js'                },
     
     // xs socket.io
-    { name: 'lib/socket_io_socket.js'   },
-    { name: 'lib/socket_io_client.js'   },
+    { name: 'lib/socket_io_crossover.js' },
+    { name: 'lib/socket_io_server.js'    },
     
     // Third-party client libraries
-    { name: 'test/javascript/uuid.js'   },
+    { name: 'test/javascript/uuid.js'    },
     
     // xs client
-    { name: 'lib/selector.js'           },
-    { name: 'lib/control.js'            },
-    { name: 'lib/form.js'               }
+    { name: 'lib/selector.js'            },
+    { name: 'lib/control.js'             },
+    { name: 'lib/form.js'                }
   ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
   
   // Update file contents in realtime

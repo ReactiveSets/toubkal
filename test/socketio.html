@@ -17,16 +17,18 @@
     <div id="socketio_test"></div>
     
     <script>
-      var xs = XS.xs;
-      
-      // Loopback all server data back to server for testing purposes
-      xs.socket_io_client() // .socket_io_client()
-        .add( [
+      XS.xs.set( [
           { id: 1 },
           { id: 2 },
           { id: 3 }
         ] )
+        
+        .trace( 'to socket io server' )
+        
+        .socket_io_server()
+        
         .trace( 'from socket io server' )
+        
         .set()
       ;
     </script>
