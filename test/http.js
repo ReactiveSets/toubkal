@@ -134,7 +134,7 @@ xs.set( [
   .map_reduce( clients, function( source, client ) {
     de&&ug( 'creating socket_io client id: ' + client.id );
     
-    return source.plug( client.socket );
+    return source.plug( client.socket ).set();
   } )
   
   .trace( 'from socket.io clients' )
