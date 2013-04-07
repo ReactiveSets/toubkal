@@ -101,9 +101,7 @@ function client() {
     ]
   ;
   
-  var socket = xs.socket_io_client(); // * connect to socket io server
-  
-  var server = xs.server( socket ); // * Get all server objects in realtime
+  var server = xs.socket_io_server(); // exchange dataflows with server using socket.io
   
   // Get employees from server
   var employees = server.model( 'employee' ); // filter values which model attribute equals 'employee'
@@ -180,12 +178,17 @@ xs.set( [ // Other static assets to deliver to clients
 ;
 
 // Start socket servers on all servers using socket.io
-var socket = servers.socket_io(); // *
+var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
 xs.file( 'database.json' ) // * The log of all database transactions
   .parse_JSON()            // * Parse to JavaScript Objects
   .transactions_to_sets()  // * Transform log into a stream of sets
-  .clients( socket )       // * Serve dynamic content to all clients in realtime
+
+  .dispatch( clients, function( source, options ) { // Serve dynamic content to all clients in realtime
+    return source
+      .plug( this.socket )
+    ;
+  } )
 ;
 ```
 
