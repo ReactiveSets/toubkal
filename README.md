@@ -35,12 +35,6 @@ Sets in real-time, both in clients and servers, using push technology (over sock
 Incremental aggregates allow to deliver realtime OLAP cubes suitable for **realtime data analysis** and reporting
 over virtually unlimited size datasets.
 
-### Work in Progress
-
-This is a work in progress, not ready for beta testing yet. The API is subject to changes although the example below
-gives a good view of the final framework. If you would like to be notified for beta testing, please drop me
-a message @uiteoi.
-
 ### Installation
 
 ```bash
@@ -154,7 +148,7 @@ var all_min_js = xs
   ], { auto_increment: true } ) // use auto_increment option to keep track of files order
   .watch()                      // Retrieves files content with realtime updates
   .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
-  .uglify( 'all-min.js' )       // Minify in realtime using uglify-js, hiding all source assets
+  .uglify( 'all-min.js' )       // Minify in realtime using uglify-js
 ;
 
 var all_css = xs
@@ -164,7 +158,7 @@ var all_css = xs
   ] )
   .glob()                  // * Retrrieves files list with realtime updates (watching the css directory)
   .watch()                 // Retrieves files content with realtime updates
-  .less_css( 'all.css' )   // * Compile .less files using less css compiler, merge all, hide source
+  .less_css( 'all.css' )   // * Compile .less files using less css compiler, merge all
 ;
 
 xs.set( [ // Other static assets to deliver to clients
@@ -184,9 +178,9 @@ xs.file( 'database.json' ) // * The log of all database transactions
   .parse_JSON()            // Parse to JavaScript Objects
   .transactions_to_sets()  // * Transform log into a stream of sets
 
-  .dispatch( clients, function( source, options ) { // Serve dynamic content to all clients in realtime
+  .dispatch( clients, function( source, options ) { // Serve realtime content to all socket.io clients
     return source
-      .plug( this.socket )
+      .plug( this.socket ) // Insert socket dataflow to exchage data with this client
     ;
   } )
 ;
@@ -197,7 +191,22 @@ xs.file( 'database.json' ) // * The log of all database transactions
 ```bash
 node server.js
 ```
- 
+
+# Releases
+
+Version 0.1.0 - April 8th 2013:
+  Features:
+    - Core Database engine with order / aggregates / join / union, and much more
+    - Automated tests
+    - Dataflows between clients and server using socket.io
+    - DOM Tables w/ realtime updates
+    - DOM Controls as dataflows: Drop-Down / Radio / Checkboxes
+    - DOM Forms with client-side and server-side validation
+    - Realtime Minification using Uglify w/ source maps
+    - HTTP(s) servers
+    - File watch w/ realtime updates
+    - JSON Configuration Files w/ realtime updates
+    
 # Licence
 
     Copyright (C) 2013, Connected Sets
