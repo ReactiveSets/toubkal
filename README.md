@@ -181,7 +181,7 @@ xs.set( [ // Other static assets to deliver to clients
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
 xs.file( 'database.json' ) // * The log of all database transactions
-  .parse_JSON()            // * Parse to JavaScript Objects
+  .parse_JSON()            // Parse to JavaScript Objects
   .transactions_to_sets()  // * Transform log into a stream of sets
 
   .dispatch( clients, function( source, options ) { // Serve dynamic content to all clients in realtime
