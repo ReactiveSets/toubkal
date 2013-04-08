@@ -131,10 +131,10 @@ xs.set( [
   
   .trace( 'to socket.io clients' )
   
-  .dispatch( clients, function( source, client ) {
-    de&&ug( 'creating socket_io client id: ' + client.id );
+  .dispatch( clients, function( source, options ) {
+    de&&ug( 'creating socket_io client id: ' + this.id );
     
-    return source.plug( client.socket ).set();
+    return source.plug( this.socket ).set();
   } )
   
   .trace( 'from socket.io clients' )
