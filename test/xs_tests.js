@@ -247,6 +247,9 @@
       ]).delay(100).trace('Delayed Set').filter(function() {
         return true;
       });
+      delayed_set = delayed_set.filter(function() {
+        return true;
+      });
       cars = xs.set([
         {
           id: 1,

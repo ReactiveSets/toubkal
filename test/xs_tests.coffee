@@ -228,6 +228,8 @@ describe 'XS test suite:', ->
      .trace( 'Delayed Set' )
      .filter( () -> true )
     
+    delayed_set = delayed_set.filter( () -> true )
+    
     cars = xs.set [
           { id: 1, brand: "Mercedes", model: "C Class" }
           { id: 2, brand: "Mercedes", model: "S Class" }
