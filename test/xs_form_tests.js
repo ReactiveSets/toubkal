@@ -61,19 +61,16 @@
   fields = xs.set([
     {
       id: 'model',
-      name: 'model',
       type: 'hidden',
       value: 'user_profile'
     }, {
       id: 'id',
-      name: 'id',
       type: 'hidden',
       value: {
         type: 'UUID'
       }
     }, {
       id: 'gender',
-      name: 'gender',
       type: 'radio',
       label: 'Gender',
       mandatory: true,
@@ -89,26 +86,22 @@
       ]).order(organizer)
     }, {
       id: 'name',
-      name: 'name',
       type: 'text',
       label: 'Full Name',
       validate: validate_name,
       mandatory: true
     }, {
       id: 'email',
-      name: 'email',
       type: 'email',
       label: 'Email',
       mandatory: true
     }, {
       id: 'phone',
-      name: 'phone',
       type: 'phone',
       label: 'Phone Number',
       mandatory: true
     }, {
       id: 'address',
-      name: 'address',
       type: 'text_area',
       label: 'Address',
       cols: 30,
@@ -116,7 +109,6 @@
       mandatory: true
     }, {
       id: 'country',
-      name: 'country',
       type: 'drop_down',
       label: 'Country',
       mandatory: true,
@@ -146,7 +138,6 @@
       ]).order(organizer)
     }, {
       id: 'hobby',
-      name: 'hobby',
       type: 'checkbox',
       label: 'Hobbies',
       value: xs.set([

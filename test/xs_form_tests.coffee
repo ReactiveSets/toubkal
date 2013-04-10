@@ -48,25 +48,25 @@ validate_name = ( value, field ) ->
 fields = xs
   .set(
     [
-      { id: 'model', name: 'model' , type: 'hidden', value: 'user_profile' }
+      { id: 'model', type: 'hidden', value: 'user_profile' }
       
-      { id: 'id'   , name: 'id', type: 'hidden', value: { type: 'UUID' } }
+      { id: 'id'   , type: 'hidden', value: { type: 'UUID' } }
       
-      { id: 'gender', name: 'gender', type: 'radio', label: 'Gender', mandatory: true, value: xs.set( [
+      { id: 'gender', type: 'radio', label: 'Gender', mandatory: true, value: xs.set( [
           { id: 0, label: 'Female', selected: true }
           { id: 1, label: 'Male' }
         ] ).order( organizer )
       }
       
-      { id: 'name' , name: 'name' , type: 'text' , label: 'Full Name' , validate: validate_name, mandatory: true }
+      { id: 'name' , type: 'text' , label: 'Full Name' , validate: validate_name, mandatory: true }
       
-      { id: 'email', name: 'email', type: 'email', label: 'Email'     , mandatory: true }
+      { id: 'email', type: 'email', label: 'Email'     , mandatory: true }
       
-      { id: 'phone', name: 'phone', type: 'phone', label: 'Phone Number'     , mandatory: true }
+      { id: 'phone', type: 'phone', label: 'Phone Number'     , mandatory: true }
       
-      { id: 'address', name: 'address', type: 'text_area', label: 'Address', cols: 30, rows: 5, mandatory: true }
+      { id: 'address', type: 'text_area', label: 'Address', cols: 30, rows: 5, mandatory: true }
       
-      { id: 'country', name: 'country', type: 'drop_down', label: 'Country', mandatory: true, value: xs.set( [
+      { id: 'country', type: 'drop_down', label: 'Country', mandatory: true, value: xs.set( [
           { id: 1, label: "USA"        }
           { id: 2, label: "Morocco"    }
           { id: 3, label: "France"     }
@@ -77,7 +77,7 @@ fields = xs
         ] ).order( organizer )
       }
       
-      { id: 'hobby', name: 'hobby', type: 'checkbox', label: 'Hobbies', value: xs.set( [
+      { id: 'hobby', type: 'checkbox', label: 'Hobbies', value: xs.set( [
           { id: 1, label: "Photography"            , selected: true }
           { id: 2, label: "Fishing"                                 }
           { id: 3, label: "Playing Computer Games"                  }
