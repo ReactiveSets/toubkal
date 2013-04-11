@@ -210,6 +210,14 @@ describe 'XS test suite:', ->
     it 'the index of 1 should be 8', ->
       expect( g( 1 ) ).to.be.eql 8
   
+  describe 'XS.Query():', ->
+    Query = XS.Query
+    
+    q = new Query( [ { model: 'stores' } ] ).or( [ { model: 'user' } ] )
+    
+    it 'Query..or() should OR the two queries', ->
+      expect( q.query ).to.be.eql [ { model: 'stores' }, { model: 'user' } ]
+      
   describe 'XS.Set():', ->
     set = xs.set();
     

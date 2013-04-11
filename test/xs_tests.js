@@ -217,6 +217,28 @@
         return expect(g(1)).to.be.eql(8);
       });
     });
+    describe('XS.Query():', function() {
+      var Query, q;
+      Query = XS.Query;
+      q = new Query([
+        {
+          model: 'stores'
+        }
+      ]).or([
+        {
+          model: 'user'
+        }
+      ]);
+      return it('Query..or() should OR the two queries', function() {
+        return expect(q.query).to.be.eql([
+          {
+            model: 'stores'
+          }, {
+            model: 'user'
+          }
+        ]);
+      });
+    });
     describe('XS.Set():', function() {
       var cars, cities, delayed_set, employee, set;
       set = xs.set();
