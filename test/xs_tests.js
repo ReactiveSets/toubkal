@@ -301,7 +301,7 @@
           }
         ]).query).to.be.eql([]);
       });
-      return it('Query..and() with two AND propositions should AND two queries and produce two propositions', function() {
+      it('Query..and() with two AND propositions should AND two queries and produce two propositions', function() {
         return expect(new Query([
           {
             model: 'store'
@@ -317,6 +317,26 @@
             model: 'store',
             id: 26
           }, {
+            model: 'store',
+            id: 27
+          }
+        ]);
+      });
+      return it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
+        return expect(new Query([
+          {
+            model: 'store'
+          }
+        ]).and([
+          {
+            model: 'store',
+            id: 27
+          }, {
+            model: 'user',
+            id: 234
+          }
+        ]).query).to.be.eql([
+          {
             model: 'store',
             id: 27
           }

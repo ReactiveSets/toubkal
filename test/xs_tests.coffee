@@ -237,6 +237,10 @@ describe 'XS test suite:', ->
       expect( new Query( [ { model: 'store' } ] ).and( [ { id: 26 }, { id: 27 } ] ).query )
         .to.be.eql [ { model: 'store', id: 26 }, { model: 'store', id: 27 } ]
     
+    it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
+      expect( new Query( [ { model: 'store' } ] ).and( [ { model: 'store', id: 27 }, { model: 'user', id: 234 } ] ).query )
+        .to.be.eql [ { model: 'store', id: 27 } ]
+    
   describe 'XS.Set():', ->
     set = xs.set();
     
