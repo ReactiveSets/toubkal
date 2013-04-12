@@ -218,8 +218,9 @@
       });
     });
     describe('XS.Query():', function() {
-      var Query;
+      var Query, q;
       Query = XS.Query;
+      q = null;
       it('Query..or() should OR two queries', function() {
         return expect(new Query([
           {
@@ -322,7 +323,7 @@
           }
         ]);
       });
-      return it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
+      it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
         return expect(new Query([
           {
             model: 'store'
@@ -339,6 +340,45 @@
           {
             model: 'store',
             id: 27
+          }
+        ]);
+      });
+      it('generate() should generate a filter() function', function() {
+        q = new Query([
+          {
+            model: 'store'
+          }, {
+            model: 'user',
+            id: 231
+          }
+        ]).generate();
+        return expect(typeof q.filter).to.be.eql('function');
+      });
+      return it('filter() should filter an Array of Objects', function() {
+        return expect(q.filter([
+          {
+            model: 'store',
+            id: 826
+          }, {
+            model: 'store',
+            id: 295
+          }, {
+            model: 'user',
+            id: 231
+          }, {
+            model: 'user',
+            id: 235
+          }
+        ])).to.be.eql([
+          {
+            model: 'store',
+            id: 826
+          }, {
+            model: 'store',
+            id: 295
+          }, {
+            model: 'user',
+            id: 231
           }
         ]);
       });
