@@ -218,6 +218,10 @@ describe 'XS test suite:', ->
     it 'Query..or() should OR the two queries', ->
       expect( q.query ).to.be.eql [ { model: 'stores' }, { model: 'user' } ]
       
+    it 'Query..or() should OR the two queries and result in optimized query', ->
+      expect( new Query( [ { model: 'store', id: 1465 } ] ).or( [ { model: 'store' } ] ).query )
+        .to.be.eql [ { model: 'store' } ]
+      
   describe 'XS.Set():', ->
     set = xs.set();
     

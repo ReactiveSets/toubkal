@@ -229,12 +229,28 @@
           model: 'user'
         }
       ]);
-      return it('Query..or() should OR the two queries', function() {
+      it('Query..or() should OR the two queries', function() {
         return expect(q.query).to.be.eql([
           {
             model: 'stores'
           }, {
             model: 'user'
+          }
+        ]);
+      });
+      return it('Query..or() should OR the two queries and result in optimized query', function() {
+        return expect(new Query([
+          {
+            model: 'store',
+            id: 1465
+          }
+        ]).or([
+          {
+            model: 'store'
+          }
+        ]).query).to.be.eql([
+          {
+            model: 'store'
           }
         ]);
       });
