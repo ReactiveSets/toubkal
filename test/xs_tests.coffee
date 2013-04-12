@@ -213,15 +213,30 @@ describe 'XS test suite:', ->
   describe 'XS.Query():', ->
     Query = XS.Query
     
-    q = new Query( [ { model: 'stores' } ] ).or( [ { model: 'user' } ] )
+    it 'Query..or() should OR two queries', ->
+      expect( new Query( [ { model: 'stores' } ] ).or( [ { model: 'user' } ] ).query )
+        .to.be.eql [ { model: 'stores' }, { model: 'user' } ]
     
-    it 'Query..or() should OR the two queries', ->
-      expect( q.query ).to.be.eql [ { model: 'stores' }, { model: 'user' } ]
-      
-    it 'Query..or() should OR the two queries and result in optimized query', ->
+    it 'Query..or() should OR two queries and result in optimized query', ->
       expect( new Query( [ { model: 'store', id: 1465 } ] ).or( [ { model: 'store' } ] ).query )
         .to.be.eql [ { model: 'store' } ]
-      
+    
+    it 'Query..and() should AND two queries', ->
+      expect( new Query( [ { model: 'store' } ] ).and( [ { id: 26 } ] ).query )
+        .to.be.eql [ { model: 'store', id: 26 } ]
+    
+    it 'Query..and() with one false sub term should AND two queries', ->
+      expect( new Query( [ { model: 'store', id: 26 }, { model: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
+        .to.be.eql [ { model: 'store', id: 26 } ]
+    
+    it 'Query..and() with only one false sub term should AND two queries to result in an empty query', ->
+      expect( new Query( [ { model: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
+        .to.be.eql []
+    
+    it 'Query..and() with two AND propositions should AND two queries and produce two propositions', ->
+      expect( new Query( [ { model: 'store' } ] ).and( [ { id: 26 }, { id: 27 } ] ).query )
+        .to.be.eql [ { model: 'store', id: 26 }, { model: 'store', id: 27 } ]
+    
   describe 'XS.Set():', ->
     set = xs.set();
     

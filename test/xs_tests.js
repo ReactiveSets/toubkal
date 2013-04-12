@@ -218,19 +218,18 @@
       });
     });
     describe('XS.Query():', function() {
-      var Query, q;
+      var Query;
       Query = XS.Query;
-      q = new Query([
-        {
-          model: 'stores'
-        }
-      ]).or([
-        {
-          model: 'user'
-        }
-      ]);
-      it('Query..or() should OR the two queries', function() {
-        return expect(q.query).to.be.eql([
+      it('Query..or() should OR two queries', function() {
+        return expect(new Query([
+          {
+            model: 'stores'
+          }
+        ]).or([
+          {
+            model: 'user'
+          }
+        ]).query).to.be.eql([
           {
             model: 'stores'
           }, {
@@ -238,7 +237,7 @@
           }
         ]);
       });
-      return it('Query..or() should OR the two queries and result in optimized query', function() {
+      it('Query..or() should OR two queries and result in optimized query', function() {
         return expect(new Query([
           {
             model: 'store',
@@ -251,6 +250,75 @@
         ]).query).to.be.eql([
           {
             model: 'store'
+          }
+        ]);
+      });
+      it('Query..and() should AND two queries', function() {
+        return expect(new Query([
+          {
+            model: 'store'
+          }
+        ]).and([
+          {
+            id: 26
+          }
+        ]).query).to.be.eql([
+          {
+            model: 'store',
+            id: 26
+          }
+        ]);
+      });
+      it('Query..and() with one false sub term should AND two queries', function() {
+        return expect(new Query([
+          {
+            model: 'store',
+            id: 26
+          }, {
+            model: 'store',
+            id: 27
+          }
+        ]).and([
+          {
+            id: 26
+          }
+        ]).query).to.be.eql([
+          {
+            model: 'store',
+            id: 26
+          }
+        ]);
+      });
+      it('Query..and() with only one false sub term should AND two queries to result in an empty query', function() {
+        return expect(new Query([
+          {
+            model: 'store',
+            id: 27
+          }
+        ]).and([
+          {
+            id: 26
+          }
+        ]).query).to.be.eql([]);
+      });
+      return it('Query..and() with two AND propositions should AND two queries and produce two propositions', function() {
+        return expect(new Query([
+          {
+            model: 'store'
+          }
+        ]).and([
+          {
+            id: 26
+          }, {
+            id: 27
+          }
+        ]).query).to.be.eql([
+          {
+            model: 'store',
+            id: 26
+          }, {
+            model: 'store',
+            id: 27
           }
         ]);
       });
