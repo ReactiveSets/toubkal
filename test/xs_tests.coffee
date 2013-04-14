@@ -577,6 +577,20 @@ describe 'XS test suite:', ->
         recipients: []
       }
       
+    it 'Remove the last record, should empty the query tree', ->
+      expect( tree
+        
+        .remove( [
+          { id: 425 }
+        ], { recipient: recipient_3 } )
+        
+        .top
+      ).to.be.eql {
+        branches  : {}
+        keys      : []
+        recipients: []
+      }
+      
   describe 'XS.Set():', ->
     set = xs.set();
     

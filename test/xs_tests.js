@@ -659,7 +659,7 @@
           recipients: []
         });
       });
-      return it('Remove another query should shrink the query tree even further', function() {
+      it('Remove another query should shrink the query tree even further', function() {
         return expect(tree.remove([
           {
             model: 'store',
@@ -681,6 +681,19 @@
             }
           },
           keys: ["id"],
+          recipients: []
+        });
+      });
+      return it('Remove the last record, should empty the query tree', function() {
+        return expect(tree.remove([
+          {
+            id: 425
+          }
+        ], {
+          recipient: recipient_3
+        }).top).to.be.eql({
+          branches: {},
+          keys: [],
           recipients: []
         });
       });
