@@ -431,6 +431,8 @@
           }, {
             id: 521,
             model: 'store'
+          }, {
+            id: 425
           }
         ], {
           recipient: recipient_2
@@ -460,9 +462,16 @@
                 keys: ["id"],
                 recipients: []
               }
+            },
+            "id": {
+              "425": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_2]
+              }
             }
           },
-          keys: ["model"],
+          keys: ["model", "id"],
           recipients: []
         });
       });

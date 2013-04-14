@@ -304,6 +304,7 @@ describe 'XS test suite:', ->
           { model: 'user' }
           { model: 'store', id: 527 }
           { id: 521, model: 'store' }
+          { id: 425 }
         ], { recipient: recipient_2 } )
         
         .top
@@ -336,8 +337,16 @@ describe 'XS test suite:', ->
               recipients: []
             }
           }
+          
+          "id" : {
+            "425": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_2 ]
+            }
+          }
         }
-        keys      : [ "model" ]
+        keys      : [ "model", "id" ]
         recipients: []
       }
       
