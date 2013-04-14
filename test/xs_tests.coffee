@@ -516,6 +516,44 @@ describe 'XS test suite:', ->
         recipients: []
       }
       
+    it 'Add and Remove empty queries should not change anything', ->
+      expect( tree.add( [] ).remove( [] ).top
+      ).to.be.eql {
+        branches: {
+          "model": {
+            "store": {
+              branches: {
+                "id": {
+                  "527": {
+                    branches: {}
+                    keys: []
+                    recipients: [ recipient_3 ]
+                  }
+                  
+                  "521": {
+                    branches: {}
+                    keys: []
+                    recipients: [ recipient_3 ]
+                  }
+                }
+              }
+              keys: [ "id" ]
+              recipients: []
+            }
+          }
+          
+          "id" : {
+            "425": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_3 ]
+            }
+          }
+        }
+        keys      : [ "model", "id" ]
+        recipients: []
+      }
+      
   describe 'XS.Set():', ->
     set = xs.set();
     
