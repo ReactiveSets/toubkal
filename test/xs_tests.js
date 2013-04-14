@@ -384,9 +384,11 @@
       });
     });
     describe('XS.Query_tree(): ', function() {
-      var Query_Tree, tree;
+      var Query_Tree, recipient_1, recipient_2, tree;
       Query_Tree = XS.Query_Tree;
       tree = new Query_Tree();
+      recipient_1 = new XS.Pipelet();
+      recipient_2 = new XS.Pipelet();
       it('Query_Tree() should allow to create a top query tree node', function() {
         return expect(tree.top).to.be.eql({
           branches: {},
@@ -394,19 +396,34 @@
           recipients: []
         });
       });
-      return it('Adding a query should generate a query tree', function() {
-        var recipient_1, recipient_2;
-        recipient_1 = new XS.Pipelet();
-        recipient_2 = new XS.Pipelet();
+      it('Adding a query should generate a query tree', function() {
         return expect(tree.add([
           {
             model: 'user'
           }
         ], {
           recipient: recipient_1
-        }).add([
+        }).top).to.be.eql({
+          branches: {
+            "model": {
+              "user": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_1]
+              }
+            }
+          },
+          keys: ["model"],
+          recipients: []
+        });
+      });
+      return it('Adding an additional query should expand the query tree', function() {
+        return expect(tree.add([
           {
             model: 'user'
+          }, {
+            model: 'store',
+            id: 527
           }
         ], {
           recipient: recipient_2
@@ -417,6 +434,19 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1, recipient_2]
+              },
+              "store": {
+                branches: {
+                  "id": {
+                    "527": {
+                      branches: {},
+                      keys: [],
+                      recipients: [recipient_2]
+                    }
+                  }
+                },
+                keys: ["id"],
+                recipients: []
               }
             }
           },

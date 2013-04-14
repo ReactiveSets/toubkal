@@ -266,6 +266,9 @@ describe 'XS test suite:', ->
     
     tree = new Query_Tree()
     
+    recipient_1 = new XS.Pipelet()
+    recipient_2 = new XS.Pipelet()
+    
     it 'Query_Tree() should allow to create a top query tree node', ->
       expect( tree.top ).to.be.eql {
         branches  : {}
@@ -274,25 +277,59 @@ describe 'XS test suite:', ->
       }
     
     it 'Adding a query should generate a query tree', ->
-      recipient_1 = new XS.Pipelet()
-      recipient_2 = new XS.Pipelet()
-      
       expect( tree
         .add( [
           { model: 'user' }
         ], { recipient: recipient_1 } )
         
+        .top
+      ).to.be.eql {
+        branches  : {
+          "model": {
+            "user": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_1 ]
+            }
+          }
+        }
+        keys      : [ "model" ]
+        recipients: []
+      }
+      
+    it 'Adding an additional query should expand the query tree', ->
+      expect( tree
+        
         .add( [
           { model: 'user' }
+          { model: 'store', id: 527 }
         ], { recipient: recipient_2 } )
         
         .top
       ).to.be.eql {
-        branches  : { "model": { "user": {
-          branches: {}
-          keys: []
-          recipients: [ recipient_1, recipient_2 ]
-        } } }
+        branches  : {
+          "model": {
+            "user": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_1, recipient_2 ]
+            }
+            
+            "store": {
+              branches: {
+                "id": {
+                  "527": {
+                    branches: {}
+                    keys: []
+                    recipients: [ recipient_2 ]
+                  }
+                }
+              }
+              keys: [ "id" ]
+              recipients: []
+            }
+          }
+        }
         keys      : [ "model" ]
         recipients: []
       }
