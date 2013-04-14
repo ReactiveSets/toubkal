@@ -384,7 +384,7 @@
       });
     });
     describe('XS.Query_tree(): ', function() {
-      var Query_Tree, recipient_1, recipient_2, tree;
+      var Query_Tree, recipient_1, recipient_2, recipient_3, tree;
       Query_Tree = XS.Query_Tree;
       tree = new Query_Tree();
       recipient_1 = new XS.Pipelet({
@@ -392,6 +392,9 @@
       });
       recipient_2 = new XS.Pipelet({
         name: 'recipient_2'
+      });
+      recipient_3 = new XS.Pipelet({
+        name: 'recipient_3'
       });
       it('Query_Tree() should allow to create a top query tree node', function() {
         return expect(tree.top).to.be.eql({
@@ -421,7 +424,24 @@
           recipients: []
         });
       });
-      return it('Adding an additional query should expand the query tree', function() {
+      it('Adding an empty query should expand the query tree', function() {
+        return expect(tree.add([{}], {
+          recipient: recipient_2
+        }).top).to.be.eql({
+          branches: {
+            "model": {
+              "user": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_1]
+              }
+            }
+          },
+          keys: ["model"],
+          recipients: [recipient_2]
+        });
+      });
+      it('Adding an additional query should expand the query tree', function() {
         return expect(tree.add([
           {
             model: 'user'
@@ -435,14 +455,14 @@
             id: 425
           }
         ], {
-          recipient: recipient_2
+          recipient: recipient_3
         }).top).to.be.eql({
           branches: {
             "model": {
               "user": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_1, recipient_2]
+                recipients: [recipient_1, recipient_3]
               },
               "store": {
                 branches: {
@@ -450,12 +470,12 @@
                     "527": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_2]
+                      recipients: [recipient_3]
                     },
                     "521": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_2]
+                      recipients: [recipient_3]
                     }
                   }
                 },
@@ -467,7 +487,49 @@
               "425": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_2]
+                recipients: [recipient_3]
+              }
+            }
+          },
+          keys: ["model", "id"],
+          recipients: [recipient_2]
+        });
+      });
+      return it('Remove a query should shrink the query tree', function() {
+        return expect(tree.remove([{}], {
+          recipient: recipient_2
+        }).top).to.be.eql({
+          branches: {
+            "model": {
+              "user": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_1, recipient_3]
+              },
+              "store": {
+                branches: {
+                  "id": {
+                    "527": {
+                      branches: {},
+                      keys: [],
+                      recipients: [recipient_3]
+                    },
+                    "521": {
+                      branches: {},
+                      keys: [],
+                      recipients: [recipient_3]
+                    }
+                  }
+                },
+                keys: ["id"],
+                recipients: []
+              }
+            },
+            "id": {
+              "425": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_3]
               }
             }
           },

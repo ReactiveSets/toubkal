@@ -268,6 +268,7 @@ describe 'XS test suite:', ->
     
     recipient_1 = new XS.Pipelet( { name: 'recipient_1' } )
     recipient_2 = new XS.Pipelet( { name: 'recipient_2' } )
+    recipient_3 = new XS.Pipelet( { name: 'recipient_3' } )
     
     it 'Query_Tree() should allow to create a top query tree node', ->
       expect( tree.top ).to.be.eql {
@@ -284,7 +285,7 @@ describe 'XS test suite:', ->
         
         .top
       ).to.be.eql {
-        branches  : {
+        branches: {
           "model": {
             "user": {
               branches: {}
@@ -297,6 +298,27 @@ describe 'XS test suite:', ->
         recipients: []
       }
       
+    it 'Adding an empty query should expand the query tree', ->
+      expect( tree
+        .add( [
+          {} # empty key:
+        ], { recipient: recipient_2 } )
+        
+        .top
+      ).to.be.eql {
+        branches: {
+          "model": {
+            "user": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_1 ]
+            }
+          }
+        }
+        keys      : [ "model" ]
+        recipients: [ recipient_2 ]
+      }
+      
     it 'Adding an additional query should expand the query tree', ->
       expect( tree
         
@@ -305,16 +327,16 @@ describe 'XS test suite:', ->
           { model: 'store', id: 527 }
           { id: 521, model: 'store' }
           { id: 425 }
-        ], { recipient: recipient_2 } )
+        ], { recipient: recipient_3 } )
         
         .top
       ).to.be.eql {
-        branches  : {
+        branches: {
           "model": {
             "user": {
               branches: {}
               keys: []
-              recipients: [ recipient_1, recipient_2 ]
+              recipients: [ recipient_1, recipient_3 ]
             }
             
             "store": {
@@ -323,13 +345,13 @@ describe 'XS test suite:', ->
                   "527": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_2 ]
+                    recipients: [ recipient_3 ]
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_2 ]
+                    recipients: [ recipient_3 ]
                   }
                 }
               }
@@ -342,7 +364,57 @@ describe 'XS test suite:', ->
             "425": {
               branches: {}
               keys: []
-              recipients: [ recipient_2 ]
+              recipients: [ recipient_3 ]
+            }
+          }
+        }
+        keys      : [ "model", "id" ]
+        recipients: [ recipient_2 ]
+      }
+      
+    it 'Remove a query should shrink the query tree', ->
+      expect( tree
+        
+        .remove( [
+          {}
+        ], { recipient: recipient_2 } )
+        
+        .top
+      ).to.be.eql {
+        branches: {
+          "model": {
+            "user": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_1, recipient_3 ]
+            }
+            
+            "store": {
+              branches: {
+                "id": {
+                  "527": {
+                    branches: {}
+                    keys: []
+                    recipients: [ recipient_3 ]
+                  }
+                  
+                  "521": {
+                    branches: {}
+                    keys: []
+                    recipients: [ recipient_3 ]
+                  }
+                }
+              }
+              keys: [ "id" ]
+              recipients: []
+            }
+          }
+          
+          "id" : {
+            "425": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_3 ]
             }
           }
         }
