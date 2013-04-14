@@ -383,6 +383,48 @@
         ]);
       });
     });
+    describe('XS.Query_tree(): ', function() {
+      var Query_Tree, tree;
+      Query_Tree = XS.Query_Tree;
+      tree = new Query_Tree();
+      it('Query_Tree() should allow to create a top query tree node', function() {
+        return expect(tree.top).to.be.eql({
+          branches: {},
+          keys: [],
+          recipients: []
+        });
+      });
+      return it('Adding a query should generate a query tree', function() {
+        var recipient_1, recipient_2;
+        recipient_1 = new XS.Pipelet();
+        recipient_2 = new XS.Pipelet();
+        return expect(tree.add([
+          {
+            model: 'user'
+          }
+        ], {
+          recipient: recipient_1
+        }).add([
+          {
+            model: 'user'
+          }
+        ], {
+          recipient: recipient_2
+        }).top).to.be.eql({
+          branches: {
+            "model": {
+              "user": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_1, recipient_2]
+              }
+            }
+          },
+          keys: ["model"],
+          recipients: []
+        });
+      });
+    });
     describe('XS.Set():', function() {
       var cars, cities, delayed_set, employee, set;
       set = xs.set();

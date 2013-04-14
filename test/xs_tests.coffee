@@ -260,7 +260,43 @@ describe 'XS test suite:', ->
         { model: 'store', id: 295 }
         { model: 'user', id: 231 }
       ]
+  
+  describe 'XS.Query_tree(): ', ->
+    Query_Tree = XS.Query_Tree
     
+    tree = new Query_Tree()
+    
+    it 'Query_Tree() should allow to create a top query tree node', ->
+      expect( tree.top ).to.be.eql {
+        branches  : {}
+        keys      : []
+        recipients: []
+      }
+    
+    it 'Adding a query should generate a query tree', ->
+      recipient_1 = new XS.Pipelet()
+      recipient_2 = new XS.Pipelet()
+      
+      expect( tree
+        .add( [
+          { model: 'user' }
+        ], { recipient: recipient_1 } )
+        
+        .add( [
+          { model: 'user' }
+        ], { recipient: recipient_2 } )
+        
+        .top
+      ).to.be.eql {
+        branches  : { "model": { "user": {
+          branches: {}
+          keys: []
+          recipients: [ recipient_1, recipient_2 ]
+        } } }
+        keys      : [ "model" ]
+        recipients: []
+      }
+      
   describe 'XS.Set():', ->
     set = xs.set();
     
