@@ -624,7 +624,7 @@
           recipients: []
         });
       });
-      return it('Add and Remove empty queries should not change anything', function() {
+      it('Add and Remove empty queries should not change anything', function() {
         return expect(tree.add([]).remove([]).top).to.be.eql({
           branches: {
             "model": {
@@ -656,6 +656,31 @@
             }
           },
           keys: ["model", "id"],
+          recipients: []
+        });
+      });
+      return it('Remove another query should shrink the query tree even further', function() {
+        return expect(tree.remove([
+          {
+            model: 'store',
+            id: 521
+          }, {
+            id: 527,
+            model: 'store'
+          }
+        ], {
+          recipient: recipient_3
+        }).top).to.be.eql({
+          branches: {
+            "id": {
+              "425": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_3]
+              }
+            }
+          },
+          keys: ["id"],
           recipients: []
         });
       });
