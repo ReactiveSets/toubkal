@@ -495,7 +495,7 @@
           recipients: [recipient_2]
         });
       });
-      return it('Remove a query should shrink the query tree', function() {
+      it('Remove a query should shrink the query tree', function() {
         return expect(tree.remove([{}], {
           recipient: recipient_2
         }).top).to.be.eql({
@@ -505,6 +505,52 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1, recipient_3]
+              },
+              "store": {
+                branches: {
+                  "id": {
+                    "527": {
+                      branches: {},
+                      keys: [],
+                      recipients: [recipient_3]
+                    },
+                    "521": {
+                      branches: {},
+                      keys: [],
+                      recipients: [recipient_3]
+                    }
+                  }
+                },
+                keys: ["id"],
+                recipients: []
+              }
+            },
+            "id": {
+              "425": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_3]
+              }
+            }
+          },
+          keys: ["model", "id"],
+          recipients: []
+        });
+      });
+      return it('Remove another query should shrink the query tree further', function() {
+        return expect(tree.remove([
+          {
+            model: 'user'
+          }
+        ], {
+          recipient: recipient_3
+        }).top).to.be.eql({
+          branches: {
+            "model": {
+              "user": {
+                branches: {},
+                keys: [],
+                recipients: [recipient_1]
               },
               "store": {
                 branches: {

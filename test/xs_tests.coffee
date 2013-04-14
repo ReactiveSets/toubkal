@@ -422,6 +422,56 @@ describe 'XS test suite:', ->
         recipients: []
       }
       
+    it 'Remove another query should shrink the query tree further', ->
+      expect( tree
+        
+        .remove( [
+          { model: 'user' }
+        ], { recipient: recipient_3 } )
+        
+        .top
+      ).to.be.eql {
+        branches: {
+          "model": {
+            "user": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_1 ]
+            }
+            
+            "store": {
+              branches: {
+                "id": {
+                  "527": {
+                    branches: {}
+                    keys: []
+                    recipients: [ recipient_3 ]
+                  }
+                  
+                  "521": {
+                    branches: {}
+                    keys: []
+                    recipients: [ recipient_3 ]
+                  }
+                }
+              }
+              keys: [ "id" ]
+              recipients: []
+            }
+          }
+          
+          "id" : {
+            "425": {
+              branches: {}
+              keys: []
+              recipients: [ recipient_3 ]
+            }
+          }
+        }
+        keys      : [ "model", "id" ]
+        recipients: []
+      }
+      
   describe 'XS.Set():', ->
     set = xs.set();
     
