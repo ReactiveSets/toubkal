@@ -275,6 +275,7 @@ describe 'XS test suite:', ->
         branches  : {}
         keys      : []
         recipients: []
+        recipients_values: []
       }
     
     it 'Adding a query should generate a query tree', ->
@@ -291,11 +292,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_1 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "model" ]
         recipients: []
+        recipients_values: []
       }
       
     it 'Adding an empty query should expand the query tree', ->
@@ -312,11 +315,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_1 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "model" ]
         recipients: [ recipient_2 ]
+        recipients_values: []
       }
       
     it 'Adding an additional query should expand the query tree', ->
@@ -337,6 +342,7 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_1, recipient_3 ]
+              recipients_values: []
             }
             
             "store": {
@@ -346,17 +352,20 @@ describe 'XS test suite:', ->
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
+              recipients_values: []
             }
           }
           
@@ -365,11 +374,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_3 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "model", "id" ]
         recipients: [ recipient_2 ]
+        recipients_values: []
       }
       
     it 'Remove a query should shrink the query tree', ->
@@ -387,6 +398,7 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_1, recipient_3 ]
+              recipients_values: []
             }
             
             "store": {
@@ -396,17 +408,20 @@ describe 'XS test suite:', ->
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
+              recipients_values: []
             }
           }
           
@@ -415,11 +430,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_3 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "model", "id" ]
         recipients: []
+        recipients_values: []
       }
       
     it 'Remove another query should shrink the query tree further', ->
@@ -437,6 +454,7 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_1 ]
+              recipients_values: []
             }
             
             "store": {
@@ -446,17 +464,20 @@ describe 'XS test suite:', ->
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
+              recipients_values: []
             }
           }
           
@@ -465,11 +486,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_3 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "model", "id" ]
         recipients: []
+        recipients_values: []
       }
       
     it 'Remove another query should shrink the query tree even further', ->
@@ -490,17 +513,20 @@ describe 'XS test suite:', ->
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
+              recipients_values: []
             }
           }
           
@@ -509,11 +535,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_3 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "model", "id" ]
         recipients: []
+        recipients_values: []
       }
       
     it 'Add and Remove empty queries should not change anything', ->
@@ -528,17 +556,20 @@ describe 'XS test suite:', ->
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     recipients: [ recipient_3 ]
+                    recipients_values: []
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
+              recipients_values: []
             }
           }
           
@@ -547,11 +578,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_3 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "model", "id" ]
         recipients: []
+        recipients_values: []
       }
       
     it 'Remove another query should shrink the query tree even further', ->
@@ -570,11 +603,13 @@ describe 'XS test suite:', ->
               branches: {}
               keys: []
               recipients: [ recipient_3 ]
+              recipients_values: []
             }
           }
         }
         keys      : [ "id" ]
         recipients: []
+        recipients_values: []
       }
       
     it 'Remove the last record, should empty the query tree', ->
@@ -589,6 +624,7 @@ describe 'XS test suite:', ->
         branches  : {}
         keys      : []
         recipients: []
+        recipients_values: []
       }
       
   describe 'XS.Set():', ->
