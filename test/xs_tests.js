@@ -401,7 +401,8 @@
           branches: {},
           keys: [],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Adding a query should generate a query tree', function() {
@@ -418,13 +419,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["model"],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Adding an empty query should expand the query tree', function() {
@@ -437,13 +440,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["model"],
           recipients: [recipient_2],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Adding an additional query should expand the query tree', function() {
@@ -468,7 +473,8 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1, recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               },
               "store": {
                 branches: {
@@ -477,19 +483,22 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             },
             "id": {
@@ -497,13 +506,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["model", "id"],
           recipients: [recipient_2],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Remove a query should shrink the query tree', function() {
@@ -516,7 +527,8 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1, recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               },
               "store": {
                 branches: {
@@ -525,19 +537,22 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             },
             "id": {
@@ -545,13 +560,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["model", "id"],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Remove another query should shrink the query tree further', function() {
@@ -568,7 +585,8 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               },
               "store": {
                 branches: {
@@ -577,19 +595,22 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             },
             "id": {
@@ -597,13 +618,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["model", "id"],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
@@ -623,19 +646,22 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             },
             "id": {
@@ -643,13 +669,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["model", "id"],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Add and Remove empty queries should not change anything', function() {
@@ -663,19 +691,22 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: []
+                      recipients_values: [],
+                      transaction_ids: {}
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             },
             "id": {
@@ -683,13 +714,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["model", "id"],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
@@ -710,13 +743,15 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: []
+                recipients_values: [],
+                transaction_ids: {}
               }
             }
           },
           keys: ["id"],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
       return it('Remove the last record, should empty the query tree', function() {
@@ -730,7 +765,8 @@
           branches: {},
           keys: [],
           recipients: [],
-          recipients_values: []
+          recipients_values: [],
+          transaction_ids: {}
         });
       });
     });
