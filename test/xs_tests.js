@@ -754,7 +754,7 @@
           transaction_ids: {}
         });
       });
-      it('Remove the last record, should empty the query tree', function() {
+      return it('Remove the last record, should empty the query tree', function() {
         return expect(tree.remove([
           {
             id: 425
@@ -769,39 +769,94 @@
           transaction_ids: {}
         });
       });
-      return it('A Query tree should allow to route operations filtered by a query', function() {
-        tree.add([
-          {
-            model: 'user',
-            id: 123
-          }
-        ], {
-          recipient: recipient_1
+    });
+    describe('Query_Tree routing:', function() {
+      var Query_Tree, recipient_1, recipient_2, recipient_3, tree;
+      Query_Tree = XS.Query_Tree;
+      tree = new Query_Tree();
+      recipient_1 = new xs.set({
+        name: 'recipient_1'
+      });
+      recipient_2 = new xs.set({
+        name: 'recipient_2'
+      });
+      recipient_3 = new xs.set({
+        name: 'recipient_3'
+      });
+      tree.add([
+        {
+          model: 'user',
+          id: 123
+        }
+      ], {
+        recipient: recipient_1
+      });
+      tree.add([
+        {
+          model: 'user',
+          id: 345
+        }
+      ], {
+        recipient: recipient_2
+      });
+      tree.add([{}], {
+        recipient: recipient_3
+      });
+      tree.route('add', [
+        {
+          model: 'store'
+        }, {
+          id: 123
+        }, {
+          model: 'user',
+          id: 123
+        }, {
+          model: 'user',
+          id: 345
+        }
+      ]);
+      it('Should allow to route an add operation filtered by a query to the first recipient', function(done) {
+        return recipient_1.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                model: 'user',
+                id: 123
+              }
+            ]);
+          });
         });
-        tree.add([
-          {
-            model: 'user',
-            id: 345
-          }
-        ], {
-          recipient: recipient_2
+      });
+      it('Should route other values to the second recipient', function(done) {
+        return recipient_2.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                model: 'user',
+                id: 345
+              }
+            ]);
+          });
         });
-        tree.add([{}], {
-          recipient: recipient_3
+      });
+      return it('Should route all values to the third recipient', function(done) {
+        return recipient_3.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                model: 'store'
+              }, {
+                id: 123
+              }, {
+                model: 'user',
+                id: 123
+              }, {
+                model: 'user',
+                id: 345
+              }
+            ]);
+          });
         });
-        return tree.route('add', [
-          {
-            model: 'store'
-          }, {
-            id: 123
-          }, {
-            model: 'user',
-            id: 123
-          }, {
-            model: 'user',
-            id: 345
-          }
-        ]);
       });
     });
     describe('XS.Set():', function() {
