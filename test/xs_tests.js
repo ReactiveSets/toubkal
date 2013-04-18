@@ -387,13 +387,13 @@
       var Query_Tree, recipient_1, recipient_2, recipient_3, tree;
       Query_Tree = XS.Query_Tree;
       tree = new Query_Tree();
-      recipient_1 = new XS.Pipelet({
+      recipient_1 = new xs.set({
         name: 'recipient_1'
       });
-      recipient_2 = new XS.Pipelet({
+      recipient_2 = new xs.set({
         name: 'recipient_2'
       });
-      recipient_3 = new XS.Pipelet({
+      recipient_3 = new xs.set({
         name: 'recipient_3'
       });
       it('Query_Tree() should allow to create a top query tree node', function() {
@@ -430,7 +430,7 @@
           transaction_ids: {}
         });
       });
-      it('Adding an empty query should expand the query tree', function() {
+      it('Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', function() {
         return expect(tree.add([{}], {
           recipient: recipient_2
         }).top).to.be.eql({
@@ -754,7 +754,7 @@
           transaction_ids: {}
         });
       });
-      return it('Remove the last record, should empty the query tree', function() {
+      it('Remove the last record, should empty the query tree', function() {
         return expect(tree.remove([
           {
             id: 425
@@ -768,6 +768,40 @@
           recipients_values: [],
           transaction_ids: {}
         });
+      });
+      return it('A Query tree should allow to route operations filtered by a query', function() {
+        tree.add([
+          {
+            model: 'user',
+            id: 123
+          }
+        ], {
+          recipient: recipient_1
+        });
+        tree.add([
+          {
+            model: 'user',
+            id: 345
+          }
+        ], {
+          recipient: recipient_2
+        });
+        tree.add([{}], {
+          recipient: recipient_3
+        });
+        return tree.route('add', [
+          {
+            model: 'store'
+          }, {
+            id: 123
+          }, {
+            model: 'user',
+            id: 123
+          }, {
+            model: 'user',
+            id: 345
+          }
+        ]);
       });
     });
     describe('XS.Set():', function() {
