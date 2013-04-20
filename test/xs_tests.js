@@ -383,7 +383,7 @@
         ]);
       });
     });
-    describe('XS.Query_tree(): ', function() {
+    describe('XS.Query_Tree(): ', function() {
       var Query_Tree, recipient_1, recipient_2, recipient_3, tree;
       Query_Tree = XS.Query_Tree;
       tree = new Query_Tree();
@@ -839,7 +839,7 @@
           });
         });
       });
-      return it('Should route all values to the third recipient', function(done) {
+      it('Should route all values to the third recipient', function(done) {
         return recipient_3.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
@@ -855,6 +855,86 @@
                 id: 345
               }
             ]);
+          });
+        });
+      });
+      it('Should allow to route a remove operation filtered by a query to the first recipient', function(done) {
+        tree.route('remove', [
+          {
+            model: 'user',
+            id: 123
+          }
+        ]);
+        return recipient_1.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([]);
+          });
+        });
+      });
+      it('Second recipient set should be unchanged', function(done) {
+        return recipient_2.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                model: 'user',
+                id: 345
+              }
+            ]);
+          });
+        });
+      });
+      it('Third recipient set should have two record less after removing one more record', function(done) {
+        tree.route('remove', [
+          {
+            id: 123
+          }
+        ]);
+        return recipient_3.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                model: 'store'
+              }, {
+                model: 'user',
+                id: 345
+              }
+            ]);
+          });
+        });
+      });
+      it('Second recipient be empy after removing one more record', function(done) {
+        tree.route('remove', [
+          {
+            model: 'user',
+            id: 345
+          }
+        ]);
+        return recipient_2.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([]);
+          });
+        });
+      });
+      it('And third recipient should have only one record left', function(done) {
+        return recipient_3.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                model: 'store'
+              }
+            ]);
+          });
+        });
+      });
+      return it('Finally third recipient should be empty after removing last record', function(done) {
+        tree.route('remove', [
+          {
+            model: 'store'
+          }
+        ]);
+        return recipient_3.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([]);
           });
         });
       });

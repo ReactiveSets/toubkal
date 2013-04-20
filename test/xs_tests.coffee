@@ -261,7 +261,7 @@ describe 'XS test suite:', ->
         { model: 'user', id: 231 }
       ]
   
-  describe 'XS.Query_tree(): ', ->
+  describe 'XS.Query_Tree(): ', ->
     Query_Tree = XS.Query_Tree
     
     tree = new Query_Tree()
@@ -711,6 +711,47 @@ describe 'XS test suite:', ->
           { model: 'user', id: 123 }
           { model: 'user', id: 345 }
         ]
+      
+    it 'Should allow to route a remove operation filtered by a query to the first recipient', ( done ) ->
+      tree.route 'remove', [
+        { model: 'user', id: 123 }
+      ]
+      
+      recipient_1.fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql []
+        
+    it 'Second recipient set should be unchanged', ( done ) ->
+      recipient_2.fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { model: 'user', id: 345 }
+        ]
+      
+    it 'Third recipient set should have two record less after removing one more record', ( done ) ->
+      tree.route 'remove', [ { id: 123 } ]
+      
+      recipient_3.fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { model: 'store' }
+          { model: 'user', id: 345 }
+        ]
+      
+    it 'Second recipient be empy after removing one more record', ( done ) ->
+      tree.route 'remove', [ { model: 'user', id: 345 } ]
+      
+      recipient_2.fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql []
+      
+    it 'And third recipient should have only one record left', ( done ) ->
+      recipient_3.fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { model: 'store' }
+        ]
+      
+    it 'Finally third recipient should be empty after removing last record', ( done ) ->
+      tree.route 'remove', [ { model: 'store' } ]
+      
+      recipient_3.fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql []
       
   describe 'XS.Set():', ->
     set = xs.set();
