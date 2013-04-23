@@ -47,7 +47,7 @@ books = xs.set( [
 
 describe 'XS UI Tests:', ->
   before ( done ) ->
-    browser.visit 'http://localhost/ConnectedSets/test/ui.html', done
+    browser.visit 'http://localhost:8080/test/ui.html', done
   
   it 'expect ui.html to be loaded', ->
     expect( browser.success ).to.be true

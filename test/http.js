@@ -112,7 +112,8 @@ xs.set( [
     { name: 'test/xs_form_tests.js'     },
     { name: 'test/socketio.html'        },
     { name: 'test/css/mocha.css'        },
-    { name: 'test/css/images/ok.png'    }
+    { name: 'test/css/images/ok.png'    },
+    { name: 'test/ui.html'              }
   ] )
   .watch()
   .union( [ xs_min, tests_min ] )
