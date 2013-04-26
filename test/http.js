@@ -96,9 +96,10 @@ var xs_min = xs
 ;
 
 var tests_min = xs.set( [
-    { name: 'test/javascript/mocha.js'  },
-    { name: 'test/javascript/expect.js' },
-    { name: 'test/xs_tests.js'          }
+    { name: 'node_modules/mocha/mocha.js'      },
+    { name: 'node_modules/expect.js/expect.js' },
+    { name: 'test/xs_tests.js'                 },
+    { name: 'test/xs_ui_tests.js'              }
   ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
@@ -106,14 +107,14 @@ var tests_min = xs.set( [
 ;
 
 xs.set( [
-    { name: 'test/index.html'           },
-    { name: 'test/index-min.html'       },
-    { name: 'test/form.html'            },
-    { name: 'test/xs_form_tests.js'     },
-    { name: 'test/socketio.html'        },
-    { name: 'test/css/mocha.css'        },
-    { name: 'test/css/images/ok.png'    },
-    { name: 'test/ui.html'              }
+    { name: 'test/index.html'              },
+    { name: 'test/index-min.html'          },
+    { name: 'test/form.html'               },
+    { name: 'test/xs_form_tests.js'        },
+    { name: 'test/socketio.html'           },
+    { name: 'node_modules/mocha/mocha.css' },
+    { name: 'test/css/images/ok.png'       },
+    { name: 'test/ui.html'                 }
   ] )
   .watch()
   .union( [ xs_min, tests_min ] )
