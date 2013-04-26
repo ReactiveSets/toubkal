@@ -81,6 +81,7 @@ var xs_min = xs
     
     // xs client
     { name: 'lib/selector.js'            },
+    { name: 'lib/table.js'               },
     { name: 'lib/control.js'             },
     { name: 'lib/form.js'                }
   ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
