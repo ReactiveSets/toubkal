@@ -21,21 +21,11 @@
 
 
 (function() {
-  var XS, Zombie, books, browser, columns, document, expect, xs;
+  var XS, books, columns, expect, xs;
 
-  expect = require('expect.js');
+  expect = typeof require !== "undefined" && require !== null ? require('expect.js') : this.expect;
 
-  Zombie = require('zombie');
-
-  browser = new Zombie({
-    debug: true
-  });
-
-  document = browser.document;
-
-  XS = (require('../lib/xs.js')).XS;
-
-  require('../lib/table.js');
+  XS = typeof require !== "undefined" && require !== null ? (require('../lib/xs.js')).XS : this.XS;
 
   xs = XS.xs;
 
@@ -52,7 +42,7 @@
     }
   ]).order([
     {
-      id: "label"
+      id: 'id'
     }
   ]);
 
@@ -91,22 +81,92 @@
     }
   ]);
 
-  describe('XS UI Tests:', function() {
-    before(function(done) {
-      return browser.visit('http://localhost/ConnectedSets/test/ui.html', done);
-    });
-    it('expect ui.html to be loaded', function() {
-      return expect(browser.success).to.be(true);
-    });
-    return describe('Table Tests:', function() {
-      it('expect div#table ( table container ) to exist', function() {
-        return expect(browser.query("#table")).to.be.ok();
+  describe('UI Tests', function() {
+    return describe('Table():', function() {
+      var table_body, table_container, table_head, table_node;
+      table_container = document.getElementById('table');
+      books.table(table_container, columns, {
+        caption: "List of the best-selling books (source: wikipedia)"
       });
-      return it('after books.table(), expect div#table to contain a table element', function() {
-        books.table(browser.query("#table"), columns, {
-          caption: "List of the best-selling books (source: wikipedia)"
-        });
-        return expect(browser.query("#table table")).to.be.ok();
+      table_node = document.getElementsByTagName('table')[0];
+      table_head = table_node.childNodes[1];
+      table_body = table_node.childNodes[2];
+      it('expect document body to contain table element', function() {
+        return expect(table_node).to.be.ok();
+      });
+      it('expect table to have a caption', function() {
+        return expect(table_node.caption.innerText).to.be.ok();
+      });
+      it('expect table caption to be "List of the best-selling books (source: wikipedia)"', function() {
+        return expect(table_node.caption.innerText).to.be('List of the best-selling books (source: wikipedia)');
+      });
+      it('expect table to have a thead', function() {
+        return expect(table_head).to.be.ok();
+      });
+      it('expect table to have a tbody', function() {
+        return expect(table_body).to.be.ok();
+      });
+      it('expect table to have 3 columns', function() {
+        return expect(table_head.childNodes[0].childNodes.length).to.be(3);
+      });
+      it('expect table to have 4 rows', function() {
+        return expect(table_body.childNodes.length).to.be(4);
+      });
+      it('expect table content to be equal to content', function() {
+        var content;
+        content = 'List of the best-selling books (source: wikipedia)' + 'AuthorIDTitle' + 'Charles Dickens1A Tale of Two Cities' + 'Roald Dahl3Charlie and the Chocolate Factory' + 'Dan Brown4The Da Vinci Code' + 'J. R. R. Tolkien2The Lord of the Rings';
+        return expect(table_node.textContent).to.be(content);
+      });
+      it('after columns.add( objects ), expect table to have 5 columns', function() {
+        columns.add([
+          {
+            id: "year",
+            label: "Year",
+            align: "center"
+          }, {
+            id: "language",
+            label: "Language"
+          }
+        ]);
+        return expect(table_head.childNodes[0].childNodes.length).to.be(5);
+      });
+      it('expect table content to be equal to content', function() {
+        var content;
+        content = 'List of the best-selling books (source: wikipedia)' + 'AuthorIDLanguageTitleYear' + 'Charles Dickens1EnglishA Tale of Two Cities1859' + 'Roald Dahl3EnglishCharlie and the Chocolate Factory' + 'Dan Brown4EnglishThe Da Vinci Code2003' + 'J. R. R. Tolkien2EnglishThe Lord of the Rings1955';
+        return expect(table_node.textContent).to.be(content);
+      });
+      it('after columns.remove( object ), expect table to have 4 columns', function() {
+        columns.remove([
+          {
+            id: "id",
+            label: "ID"
+          }
+        ]);
+        return expect(table_head.childNodes[0].childNodes.length).to.be(4);
+      });
+      it('expect table content to be equal to content', function() {
+        var content;
+        content = 'List of the best-selling books (source: wikipedia)' + 'AuthorLanguageTitleYear' + 'Charles DickensEnglishA Tale of Two Cities1859' + 'Roald DahlEnglishCharlie and the Chocolate Factory' + 'Dan BrownEnglishThe Da Vinci Code2003' + 'J. R. R. TolkienEnglishThe Lord of the Rings1955';
+        return expect(table_node.textContent).to.be(content);
+      });
+      it('after columns.update( object ), expect table to have 4 columns', function() {
+        columns.update([
+          [
+            {
+              id: "language",
+              label: "Language"
+            }, {
+              id: "sales",
+              label: "Sales by millions of copies"
+            }
+          ]
+        ]);
+        return expect(table_head.childNodes[0].childNodes.length).to.be(4);
+      });
+      return it('expect table content to be equal to content', function() {
+        var content;
+        content = 'List of the best-selling books (source: wikipedia)' + 'AuthorSales by millions of copiesTitleYear' + 'Charles Dickens200A Tale of Two Cities1859' + 'Roald Dahl13Charlie and the Chocolate Factory' + 'Dan Brown80The Da Vinci Code2003' + 'J. R. R. Tolkien150The Lord of the Rings1955';
+        return expect(table_node.textContent).to.be(content);
       });
     });
   });

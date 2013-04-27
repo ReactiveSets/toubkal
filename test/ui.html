@@ -3,13 +3,46 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <link rel="stylesheet" media="all" type="text/css" href="css/table.css" />
+    
+    <script src="javascript/es5.js"></script>
+    <script src="javascript/json2.js"></script>
+    
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/expect.js/expect.js"></script>
+    
+    <script>
+      mocha.setup('bdd');
+    </script>
+    
     <title>XS UI Tests</title>
     
+    <script type="text/javascript" charset="utf-8" src="../lib/xs.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/code.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/pipelet.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/order.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/selector.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/table.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/control.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/form.js"></script>
   </head>
-
+  
   <body>
     <div id="table"></div>
     <div id="controls"></div>
     <div id="form"></div>
+    
+    <div id="mocha"></div>
+    <script>
+      window.onload = function() {
+        if (window.mochaPhantomJS) {
+          mochaPhantomJS.run();
+        } else {
+          mocha.run();
+        }
+      }
+    </script>
+    <script src="xs_ui_tests.js"></script>
   </body>
 </html>
