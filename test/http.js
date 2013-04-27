@@ -114,6 +114,7 @@ xs.set( [
     { name: 'test/xs_form_tests.js'        },
     { name: 'test/socketio.html'           },
     { name: 'node_modules/mocha/mocha.css' },
+    { name: 'test/css/table.css'           },
     { name: 'test/css/images/ok.png'       },
     { name: 'test/ui.html'                 }
   ] )
