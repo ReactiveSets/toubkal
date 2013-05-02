@@ -239,3 +239,104 @@ describe 'UI Tests', ->
         'Suzanne Collins23The Hunger Games2008'
       
       expect( table_node.textContent ).to.be content
+  describe 'Control():', ->
+    checkbox_node       = document.getElementById 'chart'
+    radio_node          = document.getElementById 'religions'
+    checkbox_group_node = document.getElementById 'hobbies'
+    drop_down_node      = document.getElementById 'countries'
+    
+    organizer = [ { id: "label" } ]
+    
+    hobbies   = xs.order organizer
+    religions = xs.order organizer
+    countries = xs.order organizer
+    
+    describe 'Checkbox():', ->
+      chart          = xs.order organizer
+      checkbox_chart = chart.checkbox( checkbox_node ).set()
+      input          = checkbox_node.childNodes[ 0 ]
+      label          = checkbox_node.childNodes[ 1 ]
+      
+      console.log input
+      
+      it 'expect checkbox container to have a label element', ->
+        expect( label.nodeName ).to.be 'LABEL'
+      
+      it 'expect checkbox container to have a checkbox element', ->
+        expect( input.nodeName ).to.be 'INPUT'
+        expect( input.type     ).to.be 'checkbox'
+      
+      it 'expect checkbox label to be empty', ->
+        expect( label.textContent ).to.be.empty()
+      
+      it 'expect checkbox be disabled', ->
+        expect( input.disabled ).to.be true
+      
+      it 'after chart.add( object ), expect checkbox label to be equal to "Chart"', ->
+        chart.add [ { id: true, label: "Chart" } ]
+        
+        expect( label.textContent ).to.be 'Chart'
+      
+      it 'expect checkbox be checked', ->
+        expect( input.checked ).to.be true
+      
+      it 'expect checkbox be disabled', ->
+        expect( input.disabled ).to.be true
+      
+      it 'after chart.add( object ), expect checkbox label to be equal to "Chart"', ->
+        chart.add [ { id: false, label: "No-Chart" } ]
+        
+        expect( label.textContent ).to.be 'Chart'
+      
+      it 'expect checkbox be checked', ->
+        expect( input.checked ).to.be true
+      
+      it 'expect checkbox be active', ->
+        expect( input.disabled ).to.be false
+      
+      it 'after chart.remove( object ), expect checkbox label to be equal to "No-Chart"', ->
+        chart.remove [ { id: true, label: "Chart" } ]
+        
+        expect( label.textContent ).to.be 'No-Chart'
+      
+      it 'expect checkbox be unchecked', ->
+        expect( input.checked ).to.be false
+      
+      it 'expect checkbox be disabled', ->
+        expect( input.disabled ).to.be true
+      
+      it 'after chart.remove( object ), expect checkbox label to be equal to be empty', ->
+        chart.remove [ { id: false, label: "No-Chart" } ]
+        
+        expect( label.textContent ).to.be.empty()
+      
+      it 'expect checkbox be unchecked', ->
+        expect( input.checked ).to.be false
+      
+      it 'expect checkbox be disabled', ->
+        expect( input.disabled ).to.be true
+      
+      it 'after chart.add( objects ), expect checkbox label to be equal to "No-Chart"', ->
+        chart.add [ { id: true, label: "Chart" }, { id: false, label: "No-Chart", selected: true } ]
+        
+        expect( label.textContent ).to.be 'No-Chart'
+      
+      it 'expect checkbox be unchecked', ->
+        expect( input.checked ).to.be false
+      
+      it 'expect checkbox be active', ->
+        expect( input.disabled ).to.be false
+      
+      it 'after chart.update( objects ), expect checkbox label to be equal to "Chart"', ->
+        chart.update [
+          [ { id: true , label: "Chart"                    }, { id: true , label: "Chart"   , selected: true } ]
+          [ { id: false, label: "No-Chart", selected: true }, { id: false, label: "No-Chart"                 } ]
+        ]
+        
+        expect( label.textContent ).to.be 'Chart'
+      
+      it 'expect checkbox be checked', ->
+        expect( input.checked ).to.be true
+      
+      it 'expect checkbox be active', ->
+        expect( input.disabled ).to.be false

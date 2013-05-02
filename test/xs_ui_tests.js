@@ -82,7 +82,7 @@
   ]);
 
   describe('UI Tests', function() {
-    return describe('Table():', function() {
+    describe('Table():', function() {
       var table_body, table_container, table_head, table_node;
       table_container = document.getElementById('table');
       books.table(table_container, columns, {
@@ -338,6 +338,151 @@
         var content;
         content = 'List of the best-selling books (source: wikipedia)' + 'AuthorSales by millions of copiesTitleYear' + 'Agatha Christie100And Then There Were None' + 'Dan Brown39Angels and Demons2000' + 'Stephenie MeyerBreaking Dawn2008' + 'Roald Dahl13Charlie and the Chocolate Factory' + 'Joanne RowlingHarry Potter and the Prisoner of Azkaban1999' + 'Ellen G. White60Steps to Christ' + 'Dan Brown80The Da Vinci Code2003' + 'Pierre Dukan10The Dukan Diet2000' + 'John Ronald Reuel TolkienThe Fellowship of the Ring: LOTR 11955' + 'Stieg Larsson30The Girl with the Dragon Tattoo2005' + 'J. R. R. Tolkien100The Hobbit1937' + 'Suzanne Collins23The Hunger Games2008';
         return expect(table_node.textContent).to.be(content);
+      });
+    });
+    return describe('Control():', function() {
+      var checkbox_group_node, checkbox_node, countries, drop_down_node, hobbies, organizer, radio_node, religions;
+      checkbox_node = document.getElementById('chart');
+      radio_node = document.getElementById('religions');
+      checkbox_group_node = document.getElementById('hobbies');
+      drop_down_node = document.getElementById('countries');
+      organizer = [
+        {
+          id: "label"
+        }
+      ];
+      hobbies = xs.order(organizer);
+      religions = xs.order(organizer);
+      countries = xs.order(organizer);
+      return describe('Checkbox():', function() {
+        var chart, checkbox_chart, input, label;
+        chart = xs.order(organizer);
+        checkbox_chart = chart.checkbox(checkbox_node).set();
+        input = checkbox_node.childNodes[0];
+        label = checkbox_node.childNodes[1];
+        console.log(input);
+        it('expect checkbox container to have a label element', function() {
+          return expect(label.nodeName).to.be('LABEL');
+        });
+        it('expect checkbox container to have a checkbox element', function() {
+          expect(input.nodeName).to.be('INPUT');
+          return expect(input.type).to.be('checkbox');
+        });
+        it('expect checkbox label to be empty', function() {
+          return expect(label.textContent).to.be.empty();
+        });
+        it('expect checkbox be disabled', function() {
+          return expect(input.disabled).to.be(true);
+        });
+        it('after chart.add( object ), expect checkbox label to be equal to "Chart"', function() {
+          chart.add([
+            {
+              id: true,
+              label: "Chart"
+            }
+          ]);
+          return expect(label.textContent).to.be('Chart');
+        });
+        it('expect checkbox be checked', function() {
+          return expect(input.checked).to.be(true);
+        });
+        it('expect checkbox be disabled', function() {
+          return expect(input.disabled).to.be(true);
+        });
+        it('after chart.add( object ), expect checkbox label to be equal to "Chart"', function() {
+          chart.add([
+            {
+              id: false,
+              label: "No-Chart"
+            }
+          ]);
+          return expect(label.textContent).to.be('Chart');
+        });
+        it('expect checkbox be checked', function() {
+          return expect(input.checked).to.be(true);
+        });
+        it('expect checkbox be active', function() {
+          return expect(input.disabled).to.be(false);
+        });
+        it('after chart.remove( object ), expect checkbox label to be equal to "No-Chart"', function() {
+          chart.remove([
+            {
+              id: true,
+              label: "Chart"
+            }
+          ]);
+          return expect(label.textContent).to.be('No-Chart');
+        });
+        it('expect checkbox be unchecked', function() {
+          return expect(input.checked).to.be(false);
+        });
+        it('expect checkbox be disabled', function() {
+          return expect(input.disabled).to.be(true);
+        });
+        it('after chart.remove( object ), expect checkbox label to be equal to be empty', function() {
+          chart.remove([
+            {
+              id: false,
+              label: "No-Chart"
+            }
+          ]);
+          return expect(label.textContent).to.be.empty();
+        });
+        it('expect checkbox be unchecked', function() {
+          return expect(input.checked).to.be(false);
+        });
+        it('expect checkbox be disabled', function() {
+          return expect(input.disabled).to.be(true);
+        });
+        it('after chart.add( objects ), expect checkbox label to be equal to "No-Chart"', function() {
+          chart.add([
+            {
+              id: true,
+              label: "Chart"
+            }, {
+              id: false,
+              label: "No-Chart",
+              selected: true
+            }
+          ]);
+          return expect(label.textContent).to.be('No-Chart');
+        });
+        it('expect checkbox be unchecked', function() {
+          return expect(input.checked).to.be(false);
+        });
+        it('expect checkbox be active', function() {
+          return expect(input.disabled).to.be(false);
+        });
+        it('after chart.update( objects ), expect checkbox label to be equal to "Chart"', function() {
+          chart.update([
+            [
+              {
+                id: true,
+                label: "Chart"
+              }, {
+                id: true,
+                label: "Chart",
+                selected: true
+              }
+            ], [
+              {
+                id: false,
+                label: "No-Chart",
+                selected: true
+              }, {
+                id: false,
+                label: "No-Chart"
+              }
+            ]
+          ]);
+          return expect(label.textContent).to.be('Chart');
+        });
+        it('expect checkbox be checked', function() {
+          return expect(input.checked).to.be(true);
+        });
+        return it('expect checkbox be active', function() {
+          return expect(input.disabled).to.be(false);
+        });
       });
     });
   });
