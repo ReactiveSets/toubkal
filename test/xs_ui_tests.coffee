@@ -239,6 +239,7 @@ describe 'UI Tests', ->
         'Suzanne Collins23The Hunger Games2008'
       
       expect( table_node.textContent ).to.be content
+    
   describe 'Control():', ->
     checkbox_node       = document.getElementById 'chart'
     radio_node          = document.getElementById 'religions'
@@ -247,7 +248,6 @@ describe 'UI Tests', ->
     
     organizer = [ { id: "label" } ]
     
-    hobbies   = xs.order organizer
     religions = xs.order organizer
     countries = xs.order organizer
     
@@ -256,8 +256,6 @@ describe 'UI Tests', ->
       checkbox_chart = chart.checkbox( checkbox_node ).set()
       input          = checkbox_node.childNodes[ 0 ]
       label          = checkbox_node.childNodes[ 1 ]
-      
-      console.log input
       
       it 'expect checkbox container to have a label element', ->
         expect( label.nodeName ).to.be 'LABEL'
@@ -340,3 +338,77 @@ describe 'UI Tests', ->
       
       it 'expect checkbox be active', ->
         expect( input.disabled ).to.be false
+      
+    describe 'Checkbox_Group():', ->
+      hobbies = xs.set(
+        [
+          { id: 1, label: "Photography"            , selected: true }
+          { id: 2, label: "Fishing"                                 }
+          { id: 3, label: "Playing Computer Games"                  }
+          { id: 4, label: "Traveling"              , selected: true }
+          { id: 5, label: "Cooking"                                 }
+          { id: 6, label: "Stamp / Coin Collection", selected: true }
+        ]
+      ).order organizer
+      
+      checkbox_group_hobbies = hobbies.checkbox_group( checkbox_group_node ).set()
+      checkbox_list          = checkbox_group_node.getElementsByTagName( 'input' )
+      
+      it 'expect checkbox group container to have 6 checkboxes', ->
+        expect( checkbox_list.length ).to.be 6
+      
+      it 'expect checkbox group container to be equal to content', ->
+        expect( checkbox_group_node.textContent ).to.be 'CookingFishingPhotographyPlaying Computer GamesStamp / Coin CollectionTraveling'
+      
+      it 'expect checked checkboxes to be: "Photography", "Stamp / Coin Collection" and "Traveling"', ->
+        expect( checkbox_list[ 2 ].checked ).to.be true
+        expect( checkbox_list[ 4 ].checked ).to.be true
+        expect( checkbox_list[ 5 ].checked ).to.be true
+      
+      it 'after hobbies.remove( objects ), expect checkbox group container to have 4 checkboxes', ->
+        hobbies.remove [
+          { id: 3, label: "Playing Computer Games"                 }
+          { id: 4, label: "Traveling"             , selected: true }
+        ]
+        
+        expect( checkbox_list.length ).to.be 4
+      
+      it 'expect checkbox group container to be equal to content', ->
+        expect( checkbox_group_node.textContent ).to.be 'CookingFishingPhotographyStamp / Coin Collection'
+      
+      it 'expect checked checkboxes to be: "Photography" and "Stamp / Coin Collection"', ->
+        expect( checkbox_list[ 2 ].checked ).to.be true
+        expect( checkbox_list[ 3 ].checked ).to.be true
+      
+      it 'after hobbies.add( objects ), expect checkbox group container to have 6 checkboxes', ->
+        hobbies.add [
+          { id: 7, label: "Pottery"  , selected: true }
+          { id: 8, label: "Gardening"                 }
+        ]
+        
+        expect( checkbox_list.length ).to.be 6
+      
+      it 'expect checkbox group container to be equal to content', ->
+        expect( checkbox_group_node.textContent ).to.be 'CookingFishingGardeningPhotographyPotteryStamp / Coin Collection'
+      
+      it 'expect checked checkboxes to be: "Photography", "Pottery" and "Stamp / Coin Collection"', ->
+        expect( checkbox_list[ 3 ].checked ).to.be true
+        expect( checkbox_list[ 4 ].checked ).to.be true
+        expect( checkbox_list[ 5 ].checked ).to.be true
+      
+      it 'after hobbies.update( objects ), expect checkbox group container to have 6 checkboxes', ->
+        hobbies.update [
+          [ { id: 3, label: "Playing Computer Games"  }, { id: 3, label: "Playing Video Games"                   } ]
+          [ { id: 7, label: "Pottery", selected: true }, { id: 7, label: "Pottery"             , selected: false } ]
+          [ { id: 8, label: "Gardening"               }, { id: 8, label: "Gardening and Plants", selected: true  } ]
+        ]
+        
+        expect( checkbox_list.length ).to.be 6
+      
+      it 'expect checkbox group container to be equal to content', ->
+        expect( checkbox_group_node.textContent ).to.be 'CookingFishingGardening and PlantsPhotographyPotteryStamp / Coin Collection'
+      
+      it 'expect checked checkboxes to be: ', ->
+        expect( checkbox_list[ 2 ].checked ).to.be true
+        expect( checkbox_list[ 3 ].checked ).to.be true
+        expect( checkbox_list[ 5 ].checked ).to.be true
