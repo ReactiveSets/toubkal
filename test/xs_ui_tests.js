@@ -341,7 +341,7 @@
       });
     });
     return describe('Control():', function() {
-      var checkbox_group_node, checkbox_node, countries, drop_down_node, organizer, radio_node, religions;
+      var checkbox_group_node, checkbox_node, countries, drop_down_node, organizer, radio_node;
       checkbox_node = document.getElementById('chart');
       radio_node = document.getElementById('religions');
       checkbox_group_node = document.getElementById('hobbies');
@@ -351,7 +351,6 @@
           id: "label"
         }
       ];
-      religions = xs.order(organizer);
       countries = xs.order(organizer);
       describe('Checkbox():', function() {
         var chart, checkbox_chart, input, label;
@@ -482,7 +481,7 @@
           return expect(input.disabled).to.be(false);
         });
       });
-      return describe('Checkbox_Group():', function() {
+      describe('Checkbox_Group():', function() {
         var checkbox_group_hobbies, checkbox_list, hobbies;
         hobbies = xs.set([
           {
@@ -602,6 +601,120 @@
           expect(checkbox_list[2].checked).to.be(true);
           expect(checkbox_list[3].checked).to.be(true);
           return expect(checkbox_list[5].checked).to.be(true);
+        });
+      });
+      return describe('Radio():', function() {
+        var radio_list, radio_religions, religions;
+        religions = xs.set([
+          {
+            id: 1,
+            label: "Islam",
+            selected: true
+          }, {
+            id: 2,
+            label: "Christianity"
+          }, {
+            id: 3,
+            label: "Judaism"
+          }, {
+            id: 6,
+            label: "Satanism"
+          }, {
+            id: 7,
+            label: "Atheism"
+          }, {
+            id: 8,
+            label: "Rastafari"
+          }
+        ]).order(organizer);
+        radio_religions = religions.radio(radio_node).set();
+        radio_list = radio_node.getElementsByTagName('input');
+        it('expect radio container to have 6 radio inputs', function() {
+          return expect(radio_list.length).to.be(6);
+        });
+        it('expect radio container to be equal to content', function() {
+          return expect(radio_node.textContent).to.be('AtheismChristianityIslamJudaismRastafariSatanism');
+        });
+        it('expect selected radio to be: "Islam"', function() {
+          return expect(radio_list[2].checked).to.be(true);
+        });
+        it('after religions.remove( objects ), expect radio container to have 4 radio', function() {
+          religions.remove([
+            {
+              id: 6,
+              label: "Satanism"
+            }, {
+              id: 1,
+              label: "Islam",
+              selected: true
+            }
+          ]);
+          return expect(radio_list.length).to.be(4);
+        });
+        it('expect radio container to be equal to content', function() {
+          return expect(radio_node.textContent).to.be('AtheismChristianityJudaismRastafari');
+        });
+        it('expect all radio button tu be unchecked', function() {
+          var r, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = radio_list.length; _i < _len; _i++) {
+            r = radio_list[_i];
+            _results.push(expect(r.checked).to.be(false));
+          }
+          return _results;
+        });
+        it('after religions.add( objects ), expect radio container to have 5 radio', function() {
+          religions.add([
+            {
+              id: 5,
+              label: "Hinduism",
+              selected: true
+            }
+          ]);
+          return expect(radio_list.length).to.be(5);
+        });
+        it('expect radio container to be equal to content', function() {
+          return expect(radio_node.textContent).to.be('AtheismChristianityHinduismJudaismRastafari');
+        });
+        it('expect checked radio to be: "Hinduism"', function() {
+          return expect(radio_list[2].checked).to.be(true);
+        });
+        it('after religions.update( objects ), expect radio container to have 6 radio', function() {
+          religions.update([
+            [
+              {
+                id: 8,
+                label: "Rastafari"
+              }, {
+                id: 4,
+                label: "Rastafari",
+                selected: true
+              }
+            ], [
+              {
+                id: 5,
+                label: "Hinduism"
+              }, {
+                id: 5,
+                label: "Buddhism"
+              }
+            ], [
+              {
+                id: 7,
+                label: "Atheism"
+              }, {
+                id: 7,
+                label: "Islam"
+              }
+            ]
+          ]);
+          return expect(radio_list.length).to.be(5);
+        });
+        it('expect radio container to be equal to content', function() {
+          return expect(radio_node.textContent).to.be('BuddhismChristianityIslamJudaismRastafari');
+        });
+        return it('expect checked radio to be: "Rastafari"', function() {
+          return expect(radio_list[4].checked).to.be(true);
         });
       });
     });
