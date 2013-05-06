@@ -341,7 +341,7 @@
       });
     });
     return describe('Control():', function() {
-      var checkbox_group_node, checkbox_node, countries, drop_down_node, organizer, radio_node;
+      var checkbox_group_node, checkbox_node, drop_down_node, organizer, radio_node;
       checkbox_node = document.getElementById('chart');
       radio_node = document.getElementById('religions');
       checkbox_group_node = document.getElementById('hobbies');
@@ -351,7 +351,6 @@
           id: "label"
         }
       ];
-      countries = xs.order(organizer);
       describe('Checkbox():', function() {
         var chart, checkbox_chart, input, label;
         chart = xs.order(organizer);
@@ -603,7 +602,7 @@
           return expect(checkbox_list[5].checked).to.be(true);
         });
       });
-      return describe('Radio():', function() {
+      describe('Radio():', function() {
         var radio_list, radio_religions, religions;
         religions = xs.set([
           {
@@ -715,6 +714,111 @@
         });
         return it('expect checked radio to be: "Rastafari"', function() {
           return expect(radio_list[4].checked).to.be(true);
+        });
+      });
+      return describe('Drop_Down():', function() {
+        var countries, drop_down_countries, select;
+        countries = xs.set([
+          {
+            id: 1,
+            label: "USA"
+          }, {
+            id: 2,
+            label: "Morocco"
+          }, {
+            id: 3,
+            label: "France"
+          }, {
+            id: 4,
+            label: "Japan"
+          }, {
+            id: 5,
+            label: "Spain"
+          }, {
+            id: 6,
+            label: "Portugal"
+          }, {
+            id: 8,
+            label: "Madagascar"
+          }
+        ]).order(organizer);
+        drop_down_countries = countries.drop_down(drop_down_node).set();
+        select = drop_down_node.getElementsByTagName('select')[0];
+        it('expect drop down control to have 7 options', function() {
+          return expect(select.length).to.be(7);
+        });
+        it('expect drop down control to be equal to content', function() {
+          return expect(drop_down_node.textContent).to.be('FranceJapanMadagascarMoroccoPortugalSpainUSA');
+        });
+        it('expect selected value to be: "France"', function() {
+          return expect(select.selectedIndex).to.be(0);
+        });
+        it('after countries.remove( object ), expect drop down control to have 6 options', function() {
+          countries.remove([
+            {
+              id: 3,
+              label: "France"
+            }
+          ]);
+          return expect(select.length).to.be(6);
+        });
+        it('expect drop down control to be equal to content', function() {
+          return expect(drop_down_node.textContent).to.be('JapanMadagascarMoroccoPortugalSpainUSA');
+        });
+        it('expect selected value to be: "Japan"', function() {
+          return expect(select.selectedIndex).to.be(0);
+        });
+        it('after countries.add( object ), expect drop down control to have 7 options', function() {
+          countries.add([
+            {
+              id: 7,
+              label: "China"
+            }
+          ]);
+          return expect(select.length).to.be(7);
+        });
+        it('expect drop down control to be equal to content', function() {
+          return expect(drop_down_node.textContent).to.be('ChinaJapanMadagascarMoroccoPortugalSpainUSA');
+        });
+        it('expect expect selected value to be: "Japan"', function() {
+          return expect(select.selectedIndex).to.be(1);
+        });
+        it('after countries.update( objects ), expect drop down control to have 7 options', function() {
+          countries.update([
+            [
+              {
+                id: 6,
+                label: "Portugal"
+              }, {
+                id: 5,
+                label: "Germany"
+              }
+            ], [
+              {
+                id: 8,
+                label: "Madagascar"
+              }, {
+                id: 8,
+                label: "Madagascar",
+                selected: true
+              }
+            ], [
+              {
+                id: 4,
+                label: "Japan"
+              }, {
+                id: 4,
+                label: "Italy"
+              }
+            ]
+          ]);
+          return expect(select.length).to.be(7);
+        });
+        it('expect drop down control to be equal to content', function() {
+          return expect(drop_down_node.textContent).to.be('ChinaGermanyItalyMadagascarMoroccoSpainUSA');
+        });
+        return it('expect selected value to be: "Madagascar"', function() {
+          return expect(select.selectedIndex).to.be(3);
         });
       });
     });

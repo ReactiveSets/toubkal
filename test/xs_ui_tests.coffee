@@ -248,8 +248,6 @@ describe 'UI Tests', ->
     
     organizer = [ { id: "label" } ]
     
-    countries = xs.order organizer
-    
     describe 'Checkbox():', ->
       chart          = xs.order organizer
       checkbox_chart = chart.checkbox( checkbox_node ).set()
@@ -476,3 +474,65 @@ describe 'UI Tests', ->
       
       it 'expect checked radio to be: "Rastafari"', ->
         expect( radio_list[ 4 ].checked ).to.be true
+    
+    describe 'Drop_Down():', ->
+      countries = xs.set(
+        [
+          { id: 1, label: "USA"        }
+          { id: 2, label: "Morocco"    }
+          { id: 3, label: "France"     }
+          { id: 4, label: "Japan"      }
+          { id: 5, label: "Spain"      }
+          { id: 6, label: "Portugal"   }
+          { id: 8, label: "Madagascar" }
+        ]
+      ).order organizer
+      
+      drop_down_countries = countries.drop_down( drop_down_node ).set()
+      select              = drop_down_node.getElementsByTagName( 'select' )[ 0 ]
+      
+      it 'expect drop down control to have 7 options', ->
+        expect( select.length ).to.be 7
+      
+      it 'expect drop down control to be equal to content', ->
+        expect( drop_down_node.textContent ).to.be 'FranceJapanMadagascarMoroccoPortugalSpainUSA'
+      
+      it 'expect selected value to be: "France"', ->
+        expect( select.selectedIndex ).to.be 0
+      
+      it 'after countries.remove( object ), expect drop down control to have 6 options', ->
+        countries.remove [ { id: 3, label: "France" } ]
+        
+        expect( select.length ).to.be 6
+      
+      it 'expect drop down control to be equal to content', ->
+        expect( drop_down_node.textContent ).to.be 'JapanMadagascarMoroccoPortugalSpainUSA'
+      
+      it 'expect selected value to be: "Japan"', ->
+        expect( select.selectedIndex ).to.be 0
+      
+      it 'after countries.add( object ), expect drop down control to have 7 options', ->
+        countries.add [ { id: 7, label: "China" } ]
+        
+        expect( select.length ).to.be 7
+      
+      it 'expect drop down control to be equal to content', ->
+        expect( drop_down_node.textContent ).to.be 'ChinaJapanMadagascarMoroccoPortugalSpainUSA'
+      
+      it 'expect expect selected value to be: "Japan"', ->
+        expect( select.selectedIndex ).to.be 1
+      
+      it 'after countries.update( objects ), expect drop down control to have 7 options', ->
+        countries.update [
+          [ { id: 6, label: "Portugal"   }, { id: 5, label: "Germany" } ]
+          [ { id: 8, label: "Madagascar" }, { id: 8, label: "Madagascar", selected: true } ]
+          [ { id: 4, label: "Japan"      }, { id: 4, label: "Italy" } ]
+        ]
+        
+        expect( select.length ).to.be 7
+      
+      it 'expect drop down control to be equal to content', ->
+        expect( drop_down_node.textContent ).to.be 'ChinaGermanyItalyMadagascarMoroccoSpainUSA'
+      
+      it 'expect selected value to be: "Madagascar"', ->
+        expect( select.selectedIndex ).to.be 3
