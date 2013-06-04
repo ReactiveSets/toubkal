@@ -60,17 +60,29 @@
     it('after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
       images_dataset.add([
         {
-          title: 'Space Station Freedom design 1991',
-          src: 'http://upload.wikimedia.org/wikipedia/commons/9/9f/Space_Station_Freedom_design_1991.jpg'
+          title: 'Villa Marrakech 1',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
         }, {
-          title: 'A wanderer dancing the dance of stars and space',
-          src: 'http://upload.wikimedia.org/wikipedia/commons/5/5b/A_wanderer_dancing_the_dance_of_stars_and_space.jpg'
+          title: 'Villa Marrakech 2',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
         }, {
-          title: 'Orion Nebula Space Galaxy',
-          src: 'http://www.public-domain-image.com/public-domain-images-pictures-free-stock-photos/space-public-domain-images-pictures/orion-nebula-space-galaxy.jpg'
+          title: 'Villa Marrakech 3',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
         }, {
-          title: 'Polycyclic Aromatic Hydrocarbons In Space',
-          src: 'http://upload.wikimedia.org/wikipedia/commons/a/a2/Polycyclic_Aromatic_Hydrocarbons_In_Space.jpg'
+          title: 'Villa Marrakech 4',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+        }, {
+          title: 'Villa Marrakech 5',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+        }, {
+          title: 'Villa Marrakech 7',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+        }, {
+          title: 'Villa Marrakech 8',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+        }, {
+          title: 'Villa Marrakech 9',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
         }
       ]);
       return images.fetch_all(function(values) {
@@ -78,20 +90,36 @@
           return expect(values).to.be.eql([
             {
               id: 1,
-              title: 'Space Station Freedom design 1991',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/9/9f/Space_Station_Freedom_design_1991.jpg'
+              title: 'Villa Marrakech 1',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
             }, {
               id: 2,
-              title: 'A wanderer dancing the dance of stars and space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/5/5b/A_wanderer_dancing_the_dance_of_stars_and_space.jpg'
+              title: 'Villa Marrakech 2',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
             }, {
               id: 3,
-              title: 'Orion Nebula Space Galaxy',
-              src: 'http://www.public-domain-image.com/public-domain-images-pictures-free-stock-photos/space-public-domain-images-pictures/orion-nebula-space-galaxy.jpg'
+              title: 'Villa Marrakech 3',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
             }, {
               id: 4,
-              title: 'Polycyclic Aromatic Hydrocarbons In Space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/a/a2/Polycyclic_Aromatic_Hydrocarbons_In_Space.jpg'
+              title: 'Villa Marrakech 4',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+            }, {
+              id: 5,
+              title: 'Villa Marrakech 5',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+            }, {
+              id: 6,
+              title: 'Villa Marrakech 7',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+            }, {
+              id: 7,
+              title: 'Villa Marrakech 8',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+            }, {
+              id: 8,
+              title: 'Villa Marrakech 9',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
             }
           ]);
         });
@@ -101,8 +129,8 @@
       images_dataset.remove([
         {
           id: 3,
-          title: 'Orion Nebula Space Galaxy',
-          src: 'http://www.public-domain-image.com/public-domain-images-pictures-free-stock-photos/space-public-domain-images-pictures/orion-nebula-space-galaxy.jpg'
+          title: 'Villa Marrakech 3',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
         }
       ]);
       return images.fetch_all(function(values) {
@@ -110,16 +138,32 @@
           return expect(values).to.be.eql([
             {
               id: 1,
-              title: 'Space Station Freedom design 1991',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/9/9f/Space_Station_Freedom_design_1991.jpg'
+              title: 'Villa Marrakech 1',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
             }, {
               id: 2,
-              title: 'A wanderer dancing the dance of stars and space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/5/5b/A_wanderer_dancing_the_dance_of_stars_and_space.jpg'
+              title: 'Villa Marrakech 2',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
             }, {
               id: 4,
-              title: 'Polycyclic Aromatic Hydrocarbons In Space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/a/a2/Polycyclic_Aromatic_Hydrocarbons_In_Space.jpg'
+              title: 'Villa Marrakech 4',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+            }, {
+              id: 5,
+              title: 'Villa Marrakech 5',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+            }, {
+              id: 6,
+              title: 'Villa Marrakech 7',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+            }, {
+              id: 7,
+              title: 'Villa Marrakech 8',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+            }, {
+              id: 8,
+              title: 'Villa Marrakech 9',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
             }
           ]);
         });
@@ -128,11 +172,11 @@
     it('after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
       images_dataset.add([
         {
-          title: 'Galaxy',
-          src: 'http://images.cdn.fotopedia.com/flickr-4398655085-hd.jpg'
+          title: 'Villa Marrakech 12',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
         }, {
-          title: 'The Moon',
-          src: 'http://farm3.staticflickr.com/2266/2270264345_cf5c82a8c3_o.jpg'
+          title: 'Villa Marrakech 13',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
         }
       ]);
       return images.fetch_all(function(values) {
@@ -140,24 +184,40 @@
           return expect(values).to.be.eql([
             {
               id: 1,
-              title: 'Space Station Freedom design 1991',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/9/9f/Space_Station_Freedom_design_1991.jpg'
+              title: 'Villa Marrakech 1',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
             }, {
               id: 2,
-              title: 'A wanderer dancing the dance of stars and space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/5/5b/A_wanderer_dancing_the_dance_of_stars_and_space.jpg'
+              title: 'Villa Marrakech 2',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
             }, {
               id: 4,
-              title: 'Polycyclic Aromatic Hydrocarbons In Space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/a/a2/Polycyclic_Aromatic_Hydrocarbons_In_Space.jpg'
+              title: 'Villa Marrakech 4',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
             }, {
               id: 5,
-              title: 'Galaxy',
-              src: 'http://images.cdn.fotopedia.com/flickr-4398655085-hd.jpg'
+              title: 'Villa Marrakech 5',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
             }, {
               id: 6,
-              title: 'The Moon',
-              src: 'http://farm3.staticflickr.com/2266/2270264345_cf5c82a8c3_o.jpg'
+              title: 'Villa Marrakech 7',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+            }, {
+              id: 7,
+              title: 'Villa Marrakech 8',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+            }, {
+              id: 8,
+              title: 'Villa Marrakech 9',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+            }, {
+              id: 9,
+              title: 'Villa Marrakech 12',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
+            }, {
+              id: 10,
+              title: 'Villa Marrakech 13',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
             }
           ]);
         });
@@ -167,25 +227,25 @@
       images_dataset.update([
         [
           {
-            id: 5,
-            title: 'Galaxy',
-            src: 'http://images.cdn.fotopedia.com/flickr-4398655085-hd.jpg'
+            id: 9,
+            title: 'Villa Marrakech 12',
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
           }, {
-            id: 5,
-            title: 'Galaxy',
+            id: 9,
+            title: 'Lotus Club 1',
             description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sed sapien ipsum, quis sollicitudin mi. Pellentesque habitant morbi tristique fames ac turpis egestas',
-            src: 'http://images.cdn.fotopedia.com/flickr-4398655085-hd.jpg'
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
           }
         ], [
           {
-            id: 6,
-            title: 'The Moon',
-            src: 'http://farm3.staticflickr.com/2266/2270264345_cf5c82a8c3_o.jpg'
+            id: 10,
+            title: 'Villa Marrakech 13',
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
           }, {
-            id: 6,
-            title: 'The Moon',
+            id: 10,
+            title: 'Lotus Club 2',
             description: 'Nullam bibendum, augue ac elementum commodo, nibh sapien laoreet metus, et sollicitudin arcu lectus in elit. Nam non est ipsum',
-            src: 'http://farm2.staticflickr.com/1280/1309917043_d50552d577_o.jpg'
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
           }
         ]
       ]);
@@ -194,26 +254,42 @@
           return expect(values).to.be.eql([
             {
               id: 1,
-              title: 'Space Station Freedom design 1991',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/9/9f/Space_Station_Freedom_design_1991.jpg'
+              title: 'Villa Marrakech 1',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
             }, {
               id: 2,
-              title: 'A wanderer dancing the dance of stars and space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/5/5b/A_wanderer_dancing_the_dance_of_stars_and_space.jpg'
+              title: 'Villa Marrakech 2',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
             }, {
               id: 4,
-              title: 'Polycyclic Aromatic Hydrocarbons In Space',
-              src: 'http://upload.wikimedia.org/wikipedia/commons/a/a2/Polycyclic_Aromatic_Hydrocarbons_In_Space.jpg'
+              title: 'Villa Marrakech 4',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
             }, {
               id: 5,
-              title: 'Galaxy',
-              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sed sapien ipsum, quis sollicitudin mi. Pellentesque habitant morbi tristique fames ac turpis egestas',
-              src: 'http://images.cdn.fotopedia.com/flickr-4398655085-hd.jpg'
+              title: 'Villa Marrakech 5',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
             }, {
               id: 6,
-              title: 'The Moon',
+              title: 'Villa Marrakech 7',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+            }, {
+              id: 7,
+              title: 'Villa Marrakech 8',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+            }, {
+              id: 8,
+              title: 'Villa Marrakech 9',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+            }, {
+              id: 9,
+              title: 'Lotus Club 1',
+              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sed sapien ipsum, quis sollicitudin mi. Pellentesque habitant morbi tristique fames ac turpis egestas',
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
+            }, {
+              id: 10,
+              title: 'Lotus Club 2',
               description: 'Nullam bibendum, augue ac elementum commodo, nibh sapien laoreet metus, et sollicitudin arcu lectus in elit. Nam non est ipsum',
-              src: 'http://farm2.staticflickr.com/1280/1309917043_d50552d577_o.jpg'
+              src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
             }
           ]);
         });
