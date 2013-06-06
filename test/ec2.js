@@ -70,6 +70,8 @@ var ubuntu_amis = xs
     // Region us-west-1
     { id: 'ami-42b39007', version: '12.10', type: 0, region: 'us-west-1' },
     { id: 'ami-00b39045', version: '12.10', type: 1, region: 'us-west-1' },
+    { id: 'ami-b6ad81f3', version: '12.10', type: 1, region: 'us-west-1',
+      features: [ 'node', 'desktop' ], created_at: new Date( 2013, 04, 20 ) },
     
     // Region eu-west-1
     { id: 'ami-5a60692e', version: '12.10', type: 0, region: 'eu-west-1' },
@@ -92,7 +94,8 @@ var ubuntu_amis = xs
 ;
 
 var AMI_regions = ubuntu_amis
-  .filter( function( ami ) { return ami.version == '12.10' } )
+// .filter( function( ami ) { return ami.version == '12.10' } )
+  .filter( function( ami ) { return ami.version == '12.10' && ami.type == 2 } )
   .aggregate( void 0, [ { id: 'region' } ] )
   .trace( 'AMI Regions' );
 ;
@@ -145,6 +148,7 @@ var previous;
 
 var spot_prices_stats = zones
   .ec2_describe_spot_price_history( d, [ 'm1.small' ], { products : [ 'Linux/UNIX' ], name: 'spot_price_history' } )
+//  .ec2_describe_spot_price_history( d, [ 'cc1.4xlarge' ], { products : [ 'Linux/UNIX' ], name: 'spot_price_history' } )
   
   .on( 'complete', function() { de&&ug( 'complete after ec2_describe_spot_price_history()' ) } )
   
