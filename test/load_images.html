@@ -20,6 +20,11 @@
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/expect.js/expect.js"></script>
     
+    <style>
+      #preloaded_images img {
+        width: 30%;
+      }
+    </style>
   </head>
   
   <body>
@@ -27,9 +32,11 @@
     <div id="mocha"></div>
     
     <script>
+      
       window.onload = function() {
         mocha.run()
       };
+      
     </script>
     
     <script src="xs_load_images_tests.js"></script>

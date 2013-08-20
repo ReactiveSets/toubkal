@@ -30,7 +30,7 @@
   check = function(done, test) {
     try {
       test();
-      return done();
+      return setTimeout(done, 0);
     } catch (e) {
       return done(e);
     }
@@ -47,20 +47,22 @@
   xs = XS.xs;
 
   describe('Load Images test suite:', function() {
-    var dom_node, images, images_dataset;
-    dom_node = document.getElementById('images');
+    var images, images_dataset;
     images_dataset = xs.set([], {
       auto_increment: true,
       name: 'Images dataset'
     });
-    images = images_dataset.load_images(document.getElementById('images'));
+    images = images_dataset.load_images();
     it('expect images.fetch_all() to be empty', function() {
       return expect(images.fetch_all()).to.be.empty();
     });
     it('after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
-      this.timeout(false);
+      this.timeout(0);
       images_dataset.add([
         {
+          title: 'Villa Marrakech 1',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+        }, {
           title: 'Villa Marrakech 2',
           src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
         }, {
@@ -73,134 +75,205 @@
           title: 'Villa Marrakech 5',
           src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
         }, {
+          title: 'Villa Marrakech 6',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+        }, {
           title: 'Villa Marrakech 7',
           src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+        }
+      ]);
+      return images.on('complete', function() {
+        console.log('test 1: add 7 objects');
+        return images.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                id: 1,
+                title: 'Villa Marrakech 1',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+              }, {
+                id: 2,
+                title: 'Villa Marrakech 2',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+              }, {
+                id: 3,
+                title: 'Villa Marrakech 3',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+              }, {
+                id: 4,
+                title: 'Villa Marrakech 4',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+              }, {
+                id: 5,
+                title: 'Villa Marrakech 5',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+              }, {
+                id: 6,
+                title: 'Villa Marrakech 6',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+              }, {
+                id: 7,
+                title: 'Villa Marrakech 7',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+              }
+            ]);
+          });
+        });
+      }, this, true);
+    });
+    it('after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
+      this.timeout(0);
+      images_dataset.add([
+        {
+          title: 'Villa Marrakech 8',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
         }, {
+          title: 'Villa Marrakech 9',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+        }
+      ]);
+      return images.on('complete', function() {
+        console.log('test 2: add 2 objects');
+        return images.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                id: 1,
+                title: 'Villa Marrakech 1',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+              }, {
+                id: 2,
+                title: 'Villa Marrakech 2',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+              }, {
+                id: 3,
+                title: 'Villa Marrakech 3',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+              }, {
+                id: 4,
+                title: 'Villa Marrakech 4',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+              }, {
+                id: 5,
+                title: 'Villa Marrakech 5',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+              }, {
+                id: 6,
+                title: 'Villa Marrakech 6',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+              }, {
+                id: 7,
+                title: 'Villa Marrakech 7',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+              }, {
+                id: 8,
+                title: 'Villa Marrakech 8',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+              }, {
+                id: 9,
+                title: 'Villa Marrakech 9',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+              }
+            ]);
+          });
+        });
+      }, this, true);
+    });
+    it('after images_dataset.remove( objects ), expect images.fetch_all() to be equal to result', function() {
+      images_dataset.remove([
+        {
+          id: 1,
+          title: 'Villa Marrakech 1',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+        }, {
+          id: 6,
+          title: 'Villa Marrakech 6',
+          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+        }, {
+          id: 8,
           title: 'Villa Marrakech 8',
           src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
         }
       ]);
       return images.on('complete', function() {
-        expect(images.fetch_all()).to.be.eql([
-          {
-            id: 1,
-            title: 'Villa Marrakech 2',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
-          }, {
-            id: 2,
-            title: 'Villa Marrakech 3',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
-          }, {
-            id: 3,
-            title: 'Villa Marrakech 4',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
-          }, {
-            id: 4,
-            title: 'Villa Marrakech 5',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
-          }, {
-            id: 5,
-            title: 'Villa Marrakech 7',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
-          }, {
-            id: 6,
-            title: 'Villa Marrakech 8',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
-          }
-        ]);
-        return setTimeout(done, false);
-      }, this, true);
-    });
-    it('after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
-      this.timeout(false);
-      images_dataset.add([
-        {
-          title: 'Villa Marrakech 12',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
-        }, {
-          title: 'Villa Marrakech 13',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
-        }
-      ]);
-      return images.on('complete', function() {
-        expect(images.fetch_all()).to.be.eql([
-          {
-            id: 1,
-            title: 'Villa Marrakech 2',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
-          }, {
-            id: 2,
-            title: 'Villa Marrakech 3',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
-          }, {
-            id: 3,
-            title: 'Villa Marrakech 4',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
-          }, {
-            id: 4,
-            title: 'Villa Marrakech 5',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
-          }, {
-            id: 5,
-            title: 'Villa Marrakech 7',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
-          }, {
-            id: 6,
-            title: 'Villa Marrakech 8',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
-          }, {
-            id: 7,
-            title: 'Villa Marrakech 12',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
-          }, {
-            id: 8,
-            title: 'Villa Marrakech 13',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
-          }
-        ]);
-        return setTimeout(done, false);
-      }, this, true);
-    });
-    return it('after images_dataset.remove( objects ), expect images.fetch_all() to be equal to result', function() {
-      images_dataset.remove([
-        {
-          id: 1,
-          title: 'Villa Marrakech 2',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
-        }, {
-          id: 5,
-          title: 'Villa Marrakech 7',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
-        }
-      ]);
-      return images.on('complete', function() {
+        console.log('test 3: remove 3 objects');
         return expect(images.fetch_all()).to.be.eql([
           {
             id: 2,
+            title: 'Villa Marrakech 2',
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+          }, {
+            id: 3,
             title: 'Villa Marrakech 3',
             src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
           }, {
-            id: 3,
+            id: 4,
             title: 'Villa Marrakech 4',
             src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
           }, {
-            id: 4,
+            id: 5,
             title: 'Villa Marrakech 5',
             src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
           }, {
-            id: 6,
-            title: 'Villa Marrakech 8',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
-          }, {
             id: 7,
-            title: 'Villa Marrakech 12',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
+            title: 'Villa Marrakech 7',
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
           }, {
-            id: 8,
-            title: 'Villa Marrakech 13',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
+            id: 9,
+            title: 'Villa Marrakech 9',
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
           }
         ]);
+      }, this, true);
+    });
+    return it('after images_dataset.update( objects ), expect images.fetch_all() to be equal to result', function(done) {
+      this.timeout(0);
+      images_dataset.update([
+        [
+          {
+            id: 9,
+            title: 'Villa Marrakech 9',
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+          }, {
+            id: 9,
+            title: 'Villa Marrakech 10',
+            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
+          }
+        ]
+      ]);
+      return images.on('complete', function() {
+        console.log('test 4: update 1 object');
+        return images.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
+                id: 2,
+                title: 'Villa Marrakech 2',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+              }, {
+                id: 3,
+                title: 'Villa Marrakech 3',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+              }, {
+                id: 4,
+                title: 'Villa Marrakech 4',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+              }, {
+                id: 5,
+                title: 'Villa Marrakech 5',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+              }, {
+                id: 7,
+                title: 'Villa Marrakech 7',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+              }, {
+                id: 9,
+                title: 'Villa Marrakech 10',
+                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
+              }
+            ]);
+          });
+        });
       }, this, true);
     });
   });
