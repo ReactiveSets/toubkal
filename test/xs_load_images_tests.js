@@ -341,7 +341,9 @@
       return images.on('complete', function() {
         return images.fetch_all(function(values) {
           return check(done, function() {
-            return expect(values).to.be.eql([
+            var found, result, v, _i, _len;
+            found = true;
+            result = xs.set([
               {
                 id: 2,
                 title: 'Villa Marrakech 2',
@@ -375,7 +377,18 @@
                 title: 'Villa Marrakech 12',
                 src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
               }
-            ]);
+            ], {
+              key: ['id', 'title', 'src']
+            });
+            for (_i = 0, _len = values.length; _i < _len; _i++) {
+              v = values[_i];
+              if (result.index_of(v) !== -1) {
+                continue;
+              }
+              found = false;
+              break;
+            }
+            return expect(found).to.be(true);
           });
         });
       }, this, true);
