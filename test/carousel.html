@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../node_modules/twitter-bootstrap/docs/assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="../node_modules/twitter-bootstrap/docs/assets/css/bootstrap-responsive.css" />
+    
+    <title>Carousel Tests</title>
+    
+    <script src="javascript/es5.js"></script>
+    <script src="javascript/json2.js"></script>
+    
+    <script src="../node_modules/twitter-bootstrap/docs/assets/js/jquery.js"></script>
+    <script src="../node_modules/twitter-bootstrap/docs/assets/js/bootstrap.js"></script>
+    
+    <script src="../lib/xs.js"></script>
+    <script src="../lib/code.js"></script>
+    <script src="../lib/pipelet.js"></script>
+    <script src="../lib/selector.js"></script>
+    <script src="../lib/load_images.js"></script>
+    <script src="../lib/carousel.js"></script>
+    
+    <style>
+    .carousel-controls {
+      position: absolute;
+      max-width: 1920px;
+      margin: 0 auto;
+      top: 50%;
+      left: 0;
+      right: 0;
+    }
+    
+    .carousel-inner {
+      max-width: 1920px;
+      margin: 0 auto;
+    }
+    
+    .carousel-control span {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+    
+    .carousel-caption {
+      padding: 0px;
+      color: #ccc;
+      text-align: center;
+    }
+    </style>
+  </head>
+  
+  <body>
+    <div id="carousel_1"></div>
+    <div id="carousel_2"></div>
+    
+    <script>
+      var xs = XS.xs
+        , source_1   = xs.set( [
+            { title: 'Villa Marrakech 1' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg' },
+            { title: 'Villa Marrakech 2' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg' },
+            { title: 'Villa Marrakech 3' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg' },
+            { title: 'Villa Marrakech 4' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg' }
+          ], { auto_increment: true, name: 'Images dataset 1' } )
+        , source_2 = xs.set( [
+            { title: 'Villa Marrakech 5' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg' },
+            { title: 'Villa Marrakech 7' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg' },
+            { title: 'Villa Marrakech 8' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' },
+            { title: 'Villa Marrakech 9' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
+          ], { auto_increment: true, name: 'Images dataset 2' } )
+        
+        , carousel_without_preloading = source_1              .carousel( document.getElementById( 'carousel_1' ) )
+        , carousel_with_preloading    = source_2.load_images().trace( 'out load' ).carousel( document.getElementById( 'carousel_2' ) )
+      ;
+      
+      $( "#carousel_1, #carousel_2" ).carousel();
+    </script>
+  </body>
+</html>
