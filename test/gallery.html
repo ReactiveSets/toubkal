@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+
+    <title>XS Gallery Tests</title>
+
+    <script src="javascript/es5.js"></script>
+    <script src="javascript/json2.js"></script>
+    
+    <script type="text/javascript" charset="utf-8" src="/socket.io/socket.io.js"></script>
+    
+    <script src="../lib/xs-min.js"></script>
+    <script src="javascript/mocha_expect_tests-min.js"></script>
+  </head>
+
+  <body>
+    <div id="mocha"></div>
+    <div id="gallery"></div>
+    
+    <script>
+    var xs = XS.xs;
+    
+    var images = xs
+      .socket_io_server()
+      .model( 'images' )
+      .ordered()
+      .trace( 'received images' )
+      .gallery( document.getElementById( 'gallery' ) )
+     ;
+     
+    /*
+      window.onload = function() {
+        mocha.run()
+      };
+    */
+    </script>
+  </body>
+</html>
