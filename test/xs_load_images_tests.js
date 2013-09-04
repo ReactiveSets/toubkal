@@ -61,25 +61,25 @@
       images_dataset.add([
         {
           title: 'Villa Marrakech 1',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
         }, {
           title: 'Villa Marrakech 2',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
         }, {
           title: 'Villa Marrakech 3',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
         }, {
           title: 'Villa Marrakech 4',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
         }, {
           title: 'Villa Marrakech 5',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
         }, {
           title: 'Villa Marrakech 6',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
         }, {
           title: 'Villa Marrakech 7',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
         }
       ]);
       return images.on('complete', function() {
@@ -89,31 +89,31 @@
               {
                 id: 1,
                 title: 'Villa Marrakech 1',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
               }, {
                 id: 2,
                 title: 'Villa Marrakech 2',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
               }, {
                 id: 3,
                 title: 'Villa Marrakech 3',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
               }, {
                 id: 4,
                 title: 'Villa Marrakech 4',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
               }, {
                 id: 5,
                 title: 'Villa Marrakech 5',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
               }, {
                 id: 6,
                 title: 'Villa Marrakech 6',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
               }, {
                 id: 7,
                 title: 'Villa Marrakech 7',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
               }
             ]);
           });
@@ -125,10 +125,10 @@
       images_dataset.add([
         {
           title: 'Villa Marrakech 8',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
         }, {
           title: 'Villa Marrakech 9',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
         }
       ]);
       return images.on('complete', function() {
@@ -138,39 +138,39 @@
               {
                 id: 1,
                 title: 'Villa Marrakech 1',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
               }, {
                 id: 2,
                 title: 'Villa Marrakech 2',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
               }, {
                 id: 3,
                 title: 'Villa Marrakech 3',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
               }, {
                 id: 4,
                 title: 'Villa Marrakech 4',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
               }, {
                 id: 5,
                 title: 'Villa Marrakech 5',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
               }, {
                 id: 6,
                 title: 'Villa Marrakech 6',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
               }, {
                 id: 7,
                 title: 'Villa Marrakech 7',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
               }, {
                 id: 8,
                 title: 'Villa Marrakech 8',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
               }, {
                 id: 9,
                 title: 'Villa Marrakech 9',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
               }
             ]);
           });
@@ -182,42 +182,42 @@
         {
           id: 1,
           title: 'Villa Marrakech 1',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg'
         }, {
           id: 6,
           title: 'Villa Marrakech 6',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
         }, {
           id: 8,
           title: 'Villa Marrakech 8',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
         }
       ]);
       return expect(images.fetch_all()).to.be.eql([
         {
           id: 2,
           title: 'Villa Marrakech 2',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
         }, {
           id: 3,
           title: 'Villa Marrakech 3',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
         }, {
           id: 4,
           title: 'Villa Marrakech 4',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
         }, {
           id: 5,
           title: 'Villa Marrakech 5',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
         }, {
           id: 7,
           title: 'Villa Marrakech 7',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
         }, {
           id: 9,
           title: 'Villa Marrakech 9',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
         }
       ]);
     });
@@ -228,11 +228,11 @@
           {
             id: 9,
             title: 'Villa Marrakech 9',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
+            name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
           }, {
             id: 9,
             title: 'Villa Marrakech 10',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
+            name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
           }
         ]
       ]);
@@ -243,27 +243,27 @@
               {
                 id: 2,
                 title: 'Villa Marrakech 2',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
               }, {
                 id: 3,
                 title: 'Villa Marrakech 3',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
               }, {
                 id: 4,
                 title: 'Villa Marrakech 4',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
               }, {
                 id: 5,
                 title: 'Villa Marrakech 5',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
               }, {
                 id: 7,
                 title: 'Villa Marrakech 7',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
               }, {
                 id: 9,
                 title: 'Villa Marrakech 10',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
               }
             ]);
           });
@@ -275,10 +275,10 @@
       images_dataset.add([
         {
           title: 'Villa Marrakech 11',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg'
         }, {
           title: 'Villa Marrakech 12',
-          src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
+          name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
         }
       ]);
       return images.on('complete', function() {
@@ -288,35 +288,35 @@
               {
                 id: 2,
                 title: 'Villa Marrakech 2',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
               }, {
                 id: 3,
                 title: 'Villa Marrakech 3',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
               }, {
                 id: 4,
                 title: 'Villa Marrakech 4',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
               }, {
                 id: 5,
                 title: 'Villa Marrakech 5',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
               }, {
                 id: 7,
                 title: 'Villa Marrakech 7',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
               }, {
                 id: 9,
                 title: 'Villa Marrakech 10',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
               }, {
                 id: 10,
                 title: 'Villa Marrakech 11',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg'
               }, {
                 id: 11,
                 title: 'Villa Marrakech 12',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
               }
             ]);
           });
@@ -330,11 +330,11 @@
           {
             id: 9,
             title: 'Villa Marrakech 10',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
+            name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg'
           }, {
             id: 9,
             title: 'Villa Marrakech 13',
-            src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
+            name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
           }
         ]
       ]);
@@ -347,38 +347,38 @@
               {
                 id: 2,
                 title: 'Villa Marrakech 2',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
               }, {
                 id: 3,
                 title: 'Villa Marrakech 3',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg'
               }, {
                 id: 4,
                 title: 'Villa Marrakech 4',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg'
               }, {
                 id: 5,
                 title: 'Villa Marrakech 5',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg'
               }, {
                 id: 7,
                 title: 'Villa Marrakech 7',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
               }, {
                 id: 9,
                 title: 'Villa Marrakech 13',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg'
               }, {
                 id: 10,
                 title: 'Villa Marrakech 11',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg'
               }, {
                 id: 11,
                 title: 'Villa Marrakech 12',
-                src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
+                name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
               }
             ], {
-              key: ['id', 'title', 'src']
+              key: ['id', 'title', 'name']
             });
             for (_i = 0, _len = values.length; _i < _len; _i++) {
               v = values[_i];

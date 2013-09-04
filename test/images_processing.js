@@ -35,7 +35,7 @@ require( '../lib/server/file.js' );
 var de = true;
   
 function ug( m ) {
-  log( "xs tests images processing, " + m );
+  log( "xs images processing tests, " + m );
 } // ug()
   
 /* -------------------------------------------------------------------------------------------
@@ -73,8 +73,8 @@ var xs_min = xs
     { name: 'lib/socket_io_server.js'    },
     
     // xs client
-    { name: 'lib/selector.js'            },
-    { name: 'lib/thumbnails.js'          }
+    { name: 'lib/selector.js'            }
+    //{ name: 'lib/thumbnails.js'          }
   ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
   
   // Update file contents in realtime
@@ -111,8 +111,8 @@ var thumbnails = images
 ;
 
 xs.set( [
-    { name: 'test/thumbnails.html'         },
-    { name: 'test/xs_thumbnails_tests.js'  },
+    { name: 'test/gallery.html'         },
+    { name: 'test/xs_gallery_tests.js'  },
     { name: 'node_modules/mocha/mocha.css' },
   ] )
   .union( [ images, thumbnails ] )

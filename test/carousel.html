@@ -56,16 +56,16 @@
     <script>
       var xs = XS.xs
         , source_1   = xs.set( [
-            { title: 'Villa Marrakech 1' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg' },
-            { title: 'Villa Marrakech 2' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg' },
-            { title: 'Villa Marrakech 3' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg' },
-            { title: 'Villa Marrakech 4' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg' }
+            { title: 'Villa Marrakech 1' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/01.jpg' },
+            { title: 'Villa Marrakech 2' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg' },
+            { title: 'Villa Marrakech 3' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg' },
+            { title: 'Villa Marrakech 4' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg' }
           ], { auto_increment: true, name: 'Images dataset 1' } )
         , source_2 = xs.set( [
-            { title: 'Villa Marrakech 5' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg' },
-            { title: 'Villa Marrakech 7' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg' },
-            { title: 'Villa Marrakech 8' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' },
-            { title: 'Villa Marrakech 9' , src: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
+            { title: 'Villa Marrakech 5' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg' },
+            { title: 'Villa Marrakech 7' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg' },
+            { title: 'Villa Marrakech 8' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' },
+            { title: 'Villa Marrakech 9' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
           ], { auto_increment: true, name: 'Images dataset 2' } )
         
         , carousel_without_preloading = source_1              .carousel( document.getElementById( 'carousel_1' ) )
