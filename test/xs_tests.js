@@ -976,18 +976,18 @@
         {
           id: 1,
           brand: "Mercedes",
-          model: "C Class"
+          car_model: "C Class"
         }, {
           id: 2,
           brand: "Mercedes",
-          model: "S Class"
+          car_model: "S Class"
         }, {
           id: 3,
           brand: "BMW",
-          model: "M Serie"
+          car_model: "M Serie"
         }
       ], {
-        key: ["id", "model"]
+        key: ["id", "car_model"]
       });
       employee = xs.set([
         {
@@ -1057,15 +1057,15 @@
                 {
                   id: 1,
                   brand: "Mercedes",
-                  model: "C Class"
+                  car_model: "C Class"
                 }, {
                   id: 2,
                   brand: "Mercedes",
-                  model: "S Class"
+                  car_model: "S Class"
                 }, {
                   id: 3,
                   brand: "BMW",
-                  model: "M Serie"
+                  car_model: "M Serie"
                 }
               ]);
             });
@@ -1121,16 +1121,16 @@
             id: 2
           })).to.be.eql(1);
         });
-        it('cars.index_of( { id: 2, model: "S Class" } ) should be 1', function() {
+        it('cars.index_of( { id: 2, car_model: "S Class" } ) should be 1', function() {
           return expect(cars.index_of({
             id: 2,
-            model: "S Class"
+            car_model: "S Class"
           })).to.be.eql(1);
         });
-        return it('cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', function() {
+        return it('cars.index_of( { id: 3, car_model: "S Class" } ) should be -1: not found', function() {
           return expect(cars.index_of({
             id: 3,
-            model: "S Class"
+            car_model: "S Class"
           })).to.be.eql(-1);
         });
       });

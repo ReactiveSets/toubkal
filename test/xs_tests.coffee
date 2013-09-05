@@ -774,11 +774,11 @@ describe 'XS test suite:', ->
     delayed_set = delayed_set.filter( () -> true )
     
     cars = xs.set [
-          { id: 1, brand: "Mercedes", model: "C Class" }
-          { id: 2, brand: "Mercedes", model: "S Class" }
-          { id: 3, brand: "BMW"     , model: "M Serie" }
+          { id: 1, brand: "Mercedes", car_model: "C Class" }
+          { id: 2, brand: "Mercedes", car_model: "S Class" }
+          { id: 3, brand: "BMW"     , car_model: "M Serie" }
         ]
-      , { key: [ "id", "model" ] }
+      , { key: [ "id", "car_model" ] }
     
     employee = xs.set [
       { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
@@ -801,9 +801,9 @@ describe 'XS test suite:', ->
       
       it 'cars.fetch_all() should be equal to result', ( done ) ->
         cars.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id: 1, brand: "Mercedes", model: "C Class" }
-          { id: 2, brand: "Mercedes", model: "S Class" }
-          { id: 3, brand: "BMW"     , model: "M Serie" }
+          { id: 1, brand: "Mercedes", car_model: "C Class" }
+          { id: 2, brand: "Mercedes", car_model: "S Class" }
+          { id: 3, brand: "BMW"     , car_model: "M Serie" }
         ]
     
     describe 'add():', ->
@@ -827,11 +827,11 @@ describe 'XS test suite:', ->
       it 'cities.index_of( { id: 2 } ) should be 1', ->
         expect( cities.index_of( { id: 2 } ) ).to.be.eql 1
       
-      it 'cars.index_of( { id: 2, model: "S Class" } ) should be 1', ->
-        expect( cars.index_of( { id: 2, model: "S Class" } ) ).to.be.eql 1
+      it 'cars.index_of( { id: 2, car_model: "S Class" } ) should be 1', ->
+        expect( cars.index_of( { id: 2, car_model: "S Class" } ) ).to.be.eql 1
       
-      it 'cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
-        expect( cars.index_of( { id: 3, model: "S Class" } ) ).to.be.eql -1
+      it 'cars.index_of( { id: 3, car_model: "S Class" } ) should be -1: not found', ->
+        expect( cars.index_of( { id: 3, car_model: "S Class" } ) ).to.be.eql -1
     
     describe 'remove():', ->
       it 'set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', ( done ) ->
