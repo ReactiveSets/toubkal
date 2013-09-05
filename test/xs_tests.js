@@ -987,7 +987,8 @@
           car_model: "M Serie"
         }
       ], {
-        key: ["id", "car_model"]
+        key: ["id", "car_model"],
+        set_model: 'car'
       });
       employee = xs.set([
         {
@@ -1055,14 +1056,17 @@
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
+                  model: "car",
                   id: 1,
                   brand: "Mercedes",
                   car_model: "C Class"
                 }, {
+                  model: "car",
                   id: 2,
                   brand: "Mercedes",
                   car_model: "S Class"
                 }, {
+                  model: "car",
                   id: 3,
                   brand: "BMW",
                   car_model: "M Serie"

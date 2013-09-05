@@ -778,7 +778,7 @@ describe 'XS test suite:', ->
           { id: 2, brand: "Mercedes", car_model: "S Class" }
           { id: 3, brand: "BMW"     , car_model: "M Serie" }
         ]
-      , { key: [ "id", "car_model" ] }
+      , { key: [ "id", "car_model" ], set_model: 'car' }
     
     employee = xs.set [
       { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
@@ -801,9 +801,9 @@ describe 'XS test suite:', ->
       
       it 'cars.fetch_all() should be equal to result', ( done ) ->
         cars.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id: 1, brand: "Mercedes", car_model: "C Class" }
-          { id: 2, brand: "Mercedes", car_model: "S Class" }
-          { id: 3, brand: "BMW"     , car_model: "M Serie" }
+          { model: "car", id: 1, brand: "Mercedes", car_model: "C Class" }
+          { model: "car", id: 2, brand: "Mercedes", car_model: "S Class" }
+          { model: "car", id: 3, brand: "BMW"     , car_model: "M Serie" }
         ]
     
     describe 'add():', ->
