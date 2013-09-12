@@ -261,16 +261,14 @@ describe 'XS test suite:', ->
         { model: 'user', id: 231 }
       ]
   
-  describe 'XS.Query_Tree(): ', ->
-    Query_Tree = XS.Query_Tree
-    
-    tree = new Query_Tree()
+  describe 'XS.Pipelet(): tests for Query Tree', ->
+    tree = new XS.Pipelet()
     
     recipient_1 = new xs.set( { name: 'recipient_1' } )
     recipient_2 = new xs.set( { name: 'recipient_2' } )
     recipient_3 = new xs.set( { name: 'recipient_3' } )
     
-    it 'Query_Tree() should allow to create a top query tree node', ->
+    it 'Pipelet() should allow to create a top query tree node', ->
       expect( tree.query_tree_top ).to.be.eql {
         branches  : {}
         keys      : []
@@ -664,9 +662,7 @@ describe 'XS test suite:', ->
       }
       
   describe 'Query_Tree routing:', () ->
-    Query_Tree = XS.Query_Tree
-    
-    tree = new Query_Tree()
+    tree = new XS.Pipelet()
     
     recipient_1 = new xs.set( { name: 'recipient_1' } )
     recipient_2 = new xs.set( { name: 'recipient_2' } )

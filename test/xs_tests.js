@@ -383,10 +383,9 @@
         ]);
       });
     });
-    describe('XS.Query_Tree(): ', function() {
-      var Query_Tree, recipient_1, recipient_2, recipient_3, tree;
-      Query_Tree = XS.Query_Tree;
-      tree = new Query_Tree();
+    describe('XS.Pipelet(): tests for Query Tree', function() {
+      var recipient_1, recipient_2, recipient_3, tree;
+      tree = new XS.Pipelet();
       recipient_1 = new xs.set({
         name: 'recipient_1'
       });
@@ -396,7 +395,7 @@
       recipient_3 = new xs.set({
         name: 'recipient_3'
       });
-      it('Query_Tree() should allow to create a top query tree node', function() {
+      it('Pipelet() should allow to create a top query tree node', function() {
         return expect(tree.query_tree_top).to.be.eql({
           branches: {},
           keys: [],
@@ -771,9 +770,8 @@
       });
     });
     describe('Query_Tree routing:', function() {
-      var Query_Tree, recipient_1, recipient_2, recipient_3, tree;
-      Query_Tree = XS.Query_Tree;
-      tree = new Query_Tree();
+      var recipient_1, recipient_2, recipient_3, tree;
+      tree = new XS.Pipelet();
       recipient_1 = new xs.set({
         name: 'recipient_1'
       });
