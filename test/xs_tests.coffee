@@ -271,7 +271,7 @@ describe 'XS test suite:', ->
     recipient_3 = new xs.set( { name: 'recipient_3' } )
     
     it 'Query_Tree() should allow to create a top query tree node', ->
-      expect( tree.top ).to.be.eql {
+      expect( tree.query_tree_top ).to.be.eql {
         branches  : {}
         keys      : []
         recipients: []
@@ -281,11 +281,11 @@ describe 'XS test suite:', ->
     
     it 'Adding a query should generate a query tree', ->
       expect( tree
-        .add( [
+        .query_tree_add( [
           { model: 'user' }
         ], { recipient: recipient_1 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "model": {
@@ -306,11 +306,11 @@ describe 'XS test suite:', ->
       
     it 'Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', ->
       expect( tree
-        .add( [
+        .query_tree_add( [
           {} # empty OR-term:
         ], { recipient: recipient_2 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "model": {
@@ -332,14 +332,14 @@ describe 'XS test suite:', ->
     it 'Adding an additional query should expand the query tree', ->
       expect( tree
         
-        .add( [
+        .query_tree_add( [
           { model: 'user' }
           { model: 'store', id: 527 }
           { id: 521, model: 'store' }
           { id: 425 }
         ], { recipient: recipient_3 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "model": {
@@ -397,11 +397,11 @@ describe 'XS test suite:', ->
     it 'Remove a query should shrink the query tree', ->
       expect( tree
         
-        .remove( [
+        .query_tree_remove( [
           {}
         ], { recipient: recipient_2 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "model": {
@@ -459,11 +459,11 @@ describe 'XS test suite:', ->
     it 'Remove another query should shrink the query tree further', ->
       expect( tree
         
-        .remove( [
+        .query_tree_remove( [
           { model: 'user' }
         ], { recipient: recipient_3 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "model": {
@@ -521,11 +521,11 @@ describe 'XS test suite:', ->
     it 'Remove another query should shrink the query tree even further', ->
       expect( tree
         
-        .remove( [
+        .query_tree_remove( [
           { model: 'user' }
         ], { recipient: recipient_1 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "model": {
@@ -573,7 +573,7 @@ describe 'XS test suite:', ->
       }
       
     it 'Add and Remove empty queries should not change anything', ->
-      expect( tree.add( [] ).remove( [] ).top
+      expect( tree.query_tree_add( [] ).query_tree_remove( [] ).query_tree_top
       ).to.be.eql {
         branches: {
           "model": {
@@ -623,12 +623,12 @@ describe 'XS test suite:', ->
     it 'Remove another query should shrink the query tree even further', ->
       expect( tree
         
-        .remove( [
+        .query_tree_remove( [
           { model: 'store', id: 521 }
           { id: 527, model: 'store' }
         ], { recipient: recipient_3 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "id" : {
@@ -650,11 +650,11 @@ describe 'XS test suite:', ->
     it 'Remove the last record, should empty the query tree', ->
       expect( tree
         
-        .remove( [
+        .query_tree_remove( [
           { id: 425 }
         ], { recipient: recipient_3 } )
         
-        .top
+        .query_tree_top
       ).to.be.eql {
         branches  : {}
         keys      : []
@@ -672,19 +672,19 @@ describe 'XS test suite:', ->
     recipient_2 = new xs.set( { name: 'recipient_2' } )
     recipient_3 = new xs.set( { name: 'recipient_3' } )
     
-    tree.add [
+    tree.query_tree_add [
       { model: 'user', id: 123 }
     ], { recipient: recipient_1 }
     
-    tree.add [
+    tree.query_tree_add [
       { model: 'user', id: 345 }
     ], { recipient: recipient_2 }
     
-    tree.add [
+    tree.query_tree_add [
       {}
     ], { recipient: recipient_3 }
     
-    tree.route 'add', [
+    tree.query_tree_route 'add', [
       { model: 'store' }
       { id: 123 }
       { model: 'user', id: 123 }
@@ -713,7 +713,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Should allow to route a remove operation filtered by a query to the first recipient', ( done ) ->
-      tree.route 'remove', [
+      tree.query_tree_route 'remove', [
         { model: 'user', id: 123 }
       ]
       
@@ -727,7 +727,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Third recipient set should have two record less after removing one more record', ( done ) ->
-      tree.route 'remove', [ { id: 123 } ]
+      tree.query_tree_route 'remove', [ { id: 123 } ]
       
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
@@ -736,7 +736,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Second recipient be empy after removing one more record', ( done ) ->
-      tree.route 'remove', [ { model: 'user', id: 345 } ]
+      tree.query_tree_route 'remove', [ { model: 'user', id: 345 } ]
       
       recipient_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -748,7 +748,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Finally third recipient should be empty after removing last record', ( done ) ->
-      tree.route 'remove', [ { model: 'store' } ]
+      tree.query_tree_route 'remove', [ { model: 'store' } ]
       
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []

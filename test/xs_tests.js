@@ -397,7 +397,7 @@
         name: 'recipient_3'
       });
       it('Query_Tree() should allow to create a top query tree node', function() {
-        return expect(tree.top).to.be.eql({
+        return expect(tree.query_tree_top).to.be.eql({
           branches: {},
           keys: [],
           recipients: [],
@@ -406,13 +406,13 @@
         });
       });
       it('Adding a query should generate a query tree', function() {
-        return expect(tree.add([
+        return expect(tree.query_tree_add([
           {
             model: 'user'
           }
         ], {
           recipient: recipient_1
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {
             "model": {
               "user": {
@@ -431,9 +431,9 @@
         });
       });
       it('Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', function() {
-        return expect(tree.add([{}], {
+        return expect(tree.query_tree_add([{}], {
           recipient: recipient_2
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {
             "model": {
               "user": {
@@ -452,7 +452,7 @@
         });
       });
       it('Adding an additional query should expand the query tree', function() {
-        return expect(tree.add([
+        return expect(tree.query_tree_add([
           {
             model: 'user'
           }, {
@@ -466,7 +466,7 @@
           }
         ], {
           recipient: recipient_3
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {
             "model": {
               "user": {
@@ -518,9 +518,9 @@
         });
       });
       it('Remove a query should shrink the query tree', function() {
-        return expect(tree.remove([{}], {
+        return expect(tree.query_tree_remove([{}], {
           recipient: recipient_2
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {
             "model": {
               "user": {
@@ -572,13 +572,13 @@
         });
       });
       it('Remove another query should shrink the query tree further', function() {
-        return expect(tree.remove([
+        return expect(tree.query_tree_remove([
           {
             model: 'user'
           }
         ], {
           recipient: recipient_3
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {
             "model": {
               "user": {
@@ -630,13 +630,13 @@
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
-        return expect(tree.remove([
+        return expect(tree.query_tree_remove([
           {
             model: 'user'
           }
         ], {
           recipient: recipient_1
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {
             "model": {
               "store": {
@@ -681,7 +681,7 @@
         });
       });
       it('Add and Remove empty queries should not change anything', function() {
-        return expect(tree.add([]).remove([]).top).to.be.eql({
+        return expect(tree.query_tree_add([]).query_tree_remove([]).query_tree_top).to.be.eql({
           branches: {
             "model": {
               "store": {
@@ -726,7 +726,7 @@
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
-        return expect(tree.remove([
+        return expect(tree.query_tree_remove([
           {
             model: 'store',
             id: 521
@@ -736,7 +736,7 @@
           }
         ], {
           recipient: recipient_3
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {
             "id": {
               "425": {
@@ -755,13 +755,13 @@
         });
       });
       return it('Remove the last record, should empty the query tree', function() {
-        return expect(tree.remove([
+        return expect(tree.query_tree_remove([
           {
             id: 425
           }
         ], {
           recipient: recipient_3
-        }).top).to.be.eql({
+        }).query_tree_top).to.be.eql({
           branches: {},
           keys: [],
           recipients: [],
@@ -783,7 +783,7 @@
       recipient_3 = new xs.set({
         name: 'recipient_3'
       });
-      tree.add([
+      tree.query_tree_add([
         {
           model: 'user',
           id: 123
@@ -791,7 +791,7 @@
       ], {
         recipient: recipient_1
       });
-      tree.add([
+      tree.query_tree_add([
         {
           model: 'user',
           id: 345
@@ -799,10 +799,10 @@
       ], {
         recipient: recipient_2
       });
-      tree.add([{}], {
+      tree.query_tree_add([{}], {
         recipient: recipient_3
       });
-      tree.route('add', [
+      tree.query_tree_route('add', [
         {
           model: 'store'
         }, {
@@ -859,7 +859,7 @@
         });
       });
       it('Should allow to route a remove operation filtered by a query to the first recipient', function(done) {
-        tree.route('remove', [
+        tree.query_tree_route('remove', [
           {
             model: 'user',
             id: 123
@@ -884,7 +884,7 @@
         });
       });
       it('Third recipient set should have two record less after removing one more record', function(done) {
-        tree.route('remove', [
+        tree.query_tree_route('remove', [
           {
             id: 123
           }
@@ -903,7 +903,7 @@
         });
       });
       it('Second recipient be empy after removing one more record', function(done) {
-        tree.route('remove', [
+        tree.query_tree_route('remove', [
           {
             model: 'user',
             id: 345
@@ -927,7 +927,7 @@
         });
       });
       return it('Finally third recipient should be empty after removing last record', function(done) {
-        tree.route('remove', [
+        tree.query_tree_route('remove', [
           {
             model: 'store'
           }
