@@ -680,26 +680,26 @@ describe 'XS test suite:', ->
       {}
     ], { recipient: recipient_3 }
     
-    tree.query_tree_route 'add', [
+    tree.query_tree_emit 'add', [
       { model: 'store' }
       { id: 123 }
       { model: 'user', id: 123 }
       { model: 'user', id: 345 }
     ]
     
-    it 'Should allow to route an add operation filtered by a query to the first recipient', ( done ) ->
+    it 'Should allow to emit an add operation filtered by a query to the first recipient', ( done ) ->
       recipient_1.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { model: 'user', id: 123 }
         ]
         
-    it 'Should route other values to the second recipient', ( done ) ->
+    it 'Should emit other values to the second recipient', ( done ) ->
       recipient_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { model: 'user', id: 345 }
         ]
       
-    it 'Should route all values to the third recipient', ( done ) ->
+    it 'Should emit all values to the third recipient', ( done ) ->
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { model: 'store' }
@@ -708,8 +708,8 @@ describe 'XS test suite:', ->
           { model: 'user', id: 345 }
         ]
       
-    it 'Should allow to route a remove operation filtered by a query to the first recipient', ( done ) ->
-      tree.query_tree_route 'remove', [
+    it 'Should allow to emit a remove operation filtered by a query to the first recipient', ( done ) ->
+      tree.query_tree_emit 'remove', [
         { model: 'user', id: 123 }
       ]
       
@@ -723,7 +723,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Third recipient set should have two record less after removing one more record', ( done ) ->
-      tree.query_tree_route 'remove', [ { id: 123 } ]
+      tree.query_tree_emit 'remove', [ { id: 123 } ]
       
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
@@ -732,7 +732,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Second recipient be empy after removing one more record', ( done ) ->
-      tree.query_tree_route 'remove', [ { model: 'user', id: 345 } ]
+      tree.query_tree_emit 'remove', [ { model: 'user', id: 345 } ]
       
       recipient_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -744,7 +744,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Finally third recipient should be empty after removing last record', ( done ) ->
-      tree.query_tree_route 'remove', [ { model: 'store' } ]
+      tree.query_tree_emit 'remove', [ { model: 'store' } ]
       
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
