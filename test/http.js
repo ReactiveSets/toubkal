@@ -127,24 +127,30 @@ xs.set( [
 // Socket.io Server tests
 var clients = servers.socket_io_clients();
 
-xs.set( [
-    { model: 'source', id: 1 },
-    { model: 'source', id: 2 },
-    { model: 'source', id: 3 },
-    { model: 'source', id: 4 }
-  ] )
-  
-  .union( [
-    xs.set( [ {}, {}, {}, {}, {} ], { set_model: 'source_1', auto_increment: true } )
-  ] )
+var source_set =
+  xs.set( [ {}, {}, {}, {} ], { set_model: 'source', auto_increment: true } )
+;
+
+source_set
+  //.union( [
+  //  xs.set( [ {}, {}, {}, {}, {} ], { set_model: 'source_1', auto_increment: true } )
+  //] )
   
   .trace( 'to socket.io clients' )
   
   .dispatch( clients, function( source, options ) {
     de&&ug( 'creating socket_io client id: ' + this.id );
     
-    return source.plug( this.socket ).set();
+    return source
+      .trace( 'source to client' )
+      .plug( this.socket )
+      .set()
+    ;
   } )
   
   .trace( 'from socket.io clients' )
 ;
+
+setInterval( function() {
+  source_set.add( [ {} ] )
+} , 10000 )
