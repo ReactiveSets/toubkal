@@ -134,6 +134,10 @@ xs.set( [
     { model: 'source', id: 4 }
   ] )
   
+  .union( [
+    xs.set( [ {}, {}, {}, {}, {} ], { set_model: 'source_1', auto_increment: true } )
+  ] )
+  
   .trace( 'to socket.io clients' )
   
   .dispatch( clients, function( source, options ) {
