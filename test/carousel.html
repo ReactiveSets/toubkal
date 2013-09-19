@@ -2,16 +2,16 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="../node_modules/twitter-bootstrap/docs/assets/css/bootstrap.css" />
-    <link rel="stylesheet" href="../node_modules/twitter-bootstrap/docs/assets/css/bootstrap-responsive.css" />
+    
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
     
     <title>Carousel Tests</title>
     
     <script src="javascript/es5.js"></script>
     <script src="javascript/json2.js"></script>
     
-    <script src="../node_modules/twitter-bootstrap/docs/assets/js/jquery.js"></script>
-    <script src="../node_modules/twitter-bootstrap/docs/assets/js/bootstrap.js"></script>
+    <script src="javascript/jquery-1.10.2.min.js"></script>
+    
     
     <script src="../lib/xs.js"></script>
     <script src="../lib/code.js"></script>
@@ -50,8 +50,13 @@
   </head>
   
   <body>
+    <h3>Carousel without image pre-loading</h3>
     <div id="carousel_1"></div>
+    
+    <h3>Carousel without image pre-loading</h3>
     <div id="carousel_2"></div>
+    
+    <script src="bootstrap/js/bootstrap.js"></script>
     
     <script>
       var xs = XS.xs
@@ -61,6 +66,7 @@
             { title: 'Villa Marrakech 3' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg' },
             { title: 'Villa Marrakech 4' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/04.jpg' }
           ], { auto_increment: true, name: 'Images dataset 1' } )
+        
         , source_2 = xs.set( [
             { title: 'Villa Marrakech 5' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/05.jpg' },
             { title: 'Villa Marrakech 7' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg' },
@@ -71,8 +77,6 @@
         , carousel_without_preloading = source_1              .carousel( document.getElementById( 'carousel_1' ) )
         , carousel_with_preloading    = source_2.load_images().trace( 'out load' ).carousel( document.getElementById( 'carousel_2' ) )
       ;
-      
-      $( "#carousel_1, #carousel_2" ).carousel();
     </script>
   </body>
 </html>
