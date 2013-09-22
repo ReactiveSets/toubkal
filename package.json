@@ -52,16 +52,28 @@
   },
   
   "keywords": [
-    "green software",
-    "high-efficiency",
-    "scalable",
+    "application framework",
+    
+    "database",    
     "realtime",
-    "web application framework",
-    "database",
+    "realtime database",
+    
+    "green software",
+    
+    "high-efficiency",
+    
+    "scalable",
+    
     "pipe",
+    
     "dataflow",
-    "data-flow",
-    "functional reactive programming"
+    "data flow",
+    "data flow programming",
+    
+    "reactive",
+    "reactive programming",
+    "functional reactive programming",
+    "reactive database"
   ],
   
   "author": "ConnectedSets",
