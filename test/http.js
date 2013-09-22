@@ -121,7 +121,7 @@ xs.set( [
   ] )
   .watch()
   .union( [ xs_min, tests_min ] )
-  .serve( servers )
+  .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 
 // Socket.io Server tests
