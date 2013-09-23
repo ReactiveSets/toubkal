@@ -97,8 +97,8 @@ var xs_min = xs
 ;
 
 var tests_min = xs.set( [
-    { name: 'node_modules/mocha/mocha.js'      },
-    { name: 'node_modules/expect.js/expect.js' },
+    { name: require.resolve( 'mocha/mocha.js'      ), uri_path: '/test/mocha/mocha.js'      },
+    { name: require.resolve( 'expect.js/expect.js' ), uri_path: '/test/expect.js/expect.js' },
     { name: 'test/xs_tests.js'                 },
     { name: 'test/xs_ui_tests.js'              }
   ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
@@ -108,12 +108,12 @@ var tests_min = xs.set( [
 ;
 
 xs.set( [
+    { name: require.resolve( 'mocha/mocha.css' ), uri_path: '/test/mocha/mocha.css' },
     { name: 'test/index.html'              },
     { name: 'test/index-min.html'          },
     { name: 'test/form.html'               },
     { name: 'test/xs_form_tests.js'        },
     { name: 'test/socketio.html'           },
-    { name: 'node_modules/mocha/mocha.css' },
     { name: 'test/css/mocha.css'           },
     { name: 'test/css/table.css'           },
     { name: 'test/css/images/ok.png'       },
