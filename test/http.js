@@ -119,7 +119,7 @@ xs.set( [
     { name: 'test/css/images/ok.png'       },
     { name: 'test/ui.html'                 }
   ] )
-  .watch()
+  .watch( { base_directory: __dirname + '/..' } )
   .union( [ xs_min, tests_min ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
