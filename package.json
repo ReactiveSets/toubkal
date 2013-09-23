@@ -1,7 +1,7 @@
 {
   "name": "excess",
   
-  "version": "0.1.23",
+  "version": "0.1.24",
   
   "description": "Excess is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers' environmental footprint and improving mobile clients battery life.",
   
@@ -52,11 +52,15 @@
   },
   
   "keywords": [
+    "realtime",
+    
     "application framework",
     
     "database",    
-    "realtime",
     "realtime database",
+    "reactive database",
+    "push database",
+    "events database",
     
     "green software",
     
@@ -73,7 +77,13 @@
     "reactive",
     "reactive programming",
     "functional reactive programming",
-    "reactive database"
+    "FRP",
+    
+    "push",
+    "push reactive programming",
+    "push functional reactive programming",
+    
+    "events"
   ],
   
   "author": "ConnectedSets",
