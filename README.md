@@ -194,6 +194,21 @@ node server.js
 
 # Releases
 
+Version 0.2.0 - ETA October 2013
+
+  Goals:
+
+    - Request / Response dataflows using optimized Query Trees
+    - Dynamic Authorizations Query Dataflow
+    - Photo Albums
+    - Watch directory metadata flow
+
+  Features:
+
+    - Virtual Hosts w/ optimized routing
+    - Boostrap Carousel
+    - Image Thumbnails using ImageMagick
+
 Version 0.1.0 - April 8th 2013:
 
   Features:
