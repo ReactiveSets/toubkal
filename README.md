@@ -195,7 +195,9 @@ node server.js
 # Releases
 
 Version 0.1.0 - April 8th 2013:
+
   Features:
+  
     - Core Database engine with order / aggregates / join / union, and much more
     - Automated tests
     - Dataflows between clients and server using socket.io
