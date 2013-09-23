@@ -800,7 +800,7 @@
       tree.query_tree_add([{}], {
         recipient: recipient_3
       });
-      tree.query_tree_route('add', [
+      tree.query_tree_emit('add', [
         {
           model: 'store'
         }, {
@@ -813,7 +813,7 @@
           id: 345
         }
       ]);
-      it('Should allow to route an add operation filtered by a query to the first recipient', function(done) {
+      it('Should allow to emit an add operation filtered by a query to the first recipient', function(done) {
         return recipient_1.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
@@ -825,7 +825,7 @@
           });
         });
       });
-      it('Should route other values to the second recipient', function(done) {
+      it('Should emit other values to the second recipient', function(done) {
         return recipient_2.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
@@ -837,7 +837,7 @@
           });
         });
       });
-      it('Should route all values to the third recipient', function(done) {
+      it('Should emit all values to the third recipient', function(done) {
         return recipient_3.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
@@ -856,8 +856,8 @@
           });
         });
       });
-      it('Should allow to route a remove operation filtered by a query to the first recipient', function(done) {
-        tree.query_tree_route('remove', [
+      it('Should allow to emit a remove operation filtered by a query to the first recipient', function(done) {
+        tree.query_tree_emit('remove', [
           {
             model: 'user',
             id: 123
@@ -882,7 +882,7 @@
         });
       });
       it('Third recipient set should have two record less after removing one more record', function(done) {
-        tree.query_tree_route('remove', [
+        tree.query_tree_emit('remove', [
           {
             id: 123
           }
@@ -901,7 +901,7 @@
         });
       });
       it('Second recipient be empy after removing one more record', function(done) {
-        tree.query_tree_route('remove', [
+        tree.query_tree_emit('remove', [
           {
             model: 'user',
             id: 345
@@ -925,7 +925,7 @@
         });
       });
       return it('Finally third recipient should be empty after removing last record', function(done) {
-        tree.query_tree_route('remove', [
+        tree.query_tree_emit('remove', [
           {
             model: 'store'
           }
