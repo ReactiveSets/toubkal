@@ -208,6 +208,7 @@ Version 0.2.0 - ETA October 2013
     - Virtual Hosts w/ optimized routing
     - Boostrap Carousel
     - Image Thumbnails using ImageMagick
+    - DOM controled image loading for image galleries
 
 Version 0.1.0 - April 8th 2013:
 
