@@ -200,7 +200,7 @@ Version 0.2.0 - ETA October 2013
 
     - Request / Response dataflows using optimized Query Trees
     - Dynamic Authorizations Query Dataflow
-    - Photo Albums
+    - Boostrap Photo Albums
     - Watch directory metadata flow
 
   Features:
@@ -209,6 +209,9 @@ Version 0.2.0 - ETA October 2013
     - Boostrap Carousel
     - Image Thumbnails using ImageMagick
     - DOM controled image loading for image galleries
+    - pipelet to resolve node module files absolute path
+    - pipelet to add timestamp attribute to values
+    - pipelet to add events metadata attributes
 
 Version 0.1.0 - April 8th 2013:
 

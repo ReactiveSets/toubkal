@@ -96,19 +96,29 @@ var xs_min = xs
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
+var node_modules_js = xs.set( [
+    { name: 'mocha/mocha.js'      },
+    { name: 'expect.js/expect.js' }
+  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
+  .require_resolve()
+;
+
 var tests_min = xs.set( [
-    { name: require.resolve( 'mocha/mocha.js'      ), uri_path: '/test/mocha/mocha.js'      },
-    { name: require.resolve( 'expect.js/expect.js' ), uri_path: '/test/expect.js/expect.js' },
     { name: 'test/xs_tests.js'                 },
     { name: 'test/xs_ui_tests.js'              }
-  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
+  ], { auto_increment: true, auto_increment_start: 3 }  ) // will auto-increment the id attribute starting at 3
+  .union( [ node_modules_js ] )
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'test/javascript/mocha_expect_tests-min.js' )
 ;
 
+var node_modules_css = xs.set( [ { name: 'mocha/mocha.css' } ] )
+  .require_resolve()
+  .watch()
+;
+
 xs.set( [
-    { name: require.resolve( 'mocha/mocha.css' ), uri_path: '/test/mocha/mocha.css' },
     { name: 'test/index.html'              },
     { name: 'test/index-min.html'          },
     { name: 'test/form.html'               },
@@ -120,7 +130,7 @@ xs.set( [
     { name: 'test/ui.html'                 }
   ] )
   .watch( { base_directory: __dirname + '/..' } )
-  .union( [ xs_min, tests_min ] )
+  .union( [ xs_min, tests_min, node_modules_css ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 
