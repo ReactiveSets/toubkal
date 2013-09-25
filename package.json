@@ -1,7 +1,7 @@
 {
   "name": "excess",
   
-  "version": "0.1.26",
+  "version": "0.1.27",
   
   "description": "Excess is a high-efficiency, scalable, realtime web application framework aiming at massively reducing servers' environmental footprint and improving mobile clients battery life.",
   
