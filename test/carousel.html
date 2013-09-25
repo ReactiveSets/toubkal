@@ -18,7 +18,7 @@
     <script src="../lib/pipelet.js"></script>
     <script src="../lib/selector.js"></script>
     <script src="../lib/load_images.js"></script>
-    <script src="../lib/carousel.js"></script>
+    <script src="../lib/bootstrap_carousel.js"></script>
     
     <style>
     .carousel-controls {
@@ -74,8 +74,13 @@
             { title: 'Villa Marrakech 9' , name: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
           ], { auto_increment: true, name: 'Images dataset 2' } )
         
-        , carousel_without_preloading = source_1              .carousel( document.getElementById( 'carousel_1' ) )
-        , carousel_with_preloading    = source_2.load_images().trace( 'out load' ).carousel( document.getElementById( 'carousel_2' ) )
+        , carousel_without_preloading = source_1
+            .bootstrap_carousel( document.getElementById( 'carousel_1' ) )
+        
+        , carousel_with_preloading    = source_2
+            .load_images()
+            .trace( 'out load' )
+            .bootstrap_carousel( document.getElementById( 'carousel_2' ) )
       ;
     </script>
   </body>
