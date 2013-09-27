@@ -7,24 +7,26 @@ reducing servers environmental footprint and improving mobile clients battery li
 server, network and client resources.
 
 #### Ecosystem
-XS backend runs on Node.js.
+XS backend runs on **Node.js**.
 
 On the frontend, XS can be coupled with any other framework but we recommend using reactive frameworks such as
-AngularJS or React which reactive model is closer to XS.
+**AngularJS** or **React** which reactive model is closer to XS.
 
-We also recommand Bootstrap for responsive HTML5 applications and we use it for our Carousel and Photo Albums.
+We also recommand **Bootstrap** for responsive HTML5 applications and we use it for our Carousel and Photo Albums.
 
 For DOM manipulations one can use any library as XS core has zero dependencies.
+
+XS can either be used to improve existing applications on the backend or frontend, or as full backend-and-frontend
+framework for new projects.
 
 #### Dataflow Programming Model
 XS intuitive **dataflow** programming model allows to very significantly decrease development time of complex
 realtime applications. This combination of runtime high-efficiency and reduction in programming complexity should
 allow to greatly reduce the cost of running greener startups.
 
-XS applications are programmed using an intuitive and consice declarative dataflow programming model where one describes
-the application.
+XS applications are programmed using an intuitive and consice declarative dataflow programming model.
 
-At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating the callback hell.
+At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating callback hell.
 
 Everything in XS is a pipelet, greatly simplifying the programming of highly reactive applications. Authorizations are
 also managed using pipelets, allowing instant changes all the way to the UI without ever requiring page refreshes.
