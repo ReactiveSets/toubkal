@@ -1,4 +1,4 @@
-/*  http.js
+/*  images_processing.js
     
     tests for http.js
     
@@ -53,28 +53,36 @@ var servers = xs.set( [
 */
 require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
+require( '../lib/join.js' );
 require( '../lib/thumbnails.js' );
 
 var xs_min = xs
   // Define JavaScript Assets to minify
   .set( [
     // IE8- compatibility
-    { name: 'test/javascript/es5.js'     },
-    { name: 'test/javascript/json2.js'   },
+    { name: 'test/javascript/es5.js'       },
+    { name: 'test/javascript/json2.js'     },
+    
+    // Third-party client libraries
+    { name: 'test/javascript/uuid.js'      },
     
     // xs core
-    { name: 'lib/xs.js'                  },
-    { name: 'lib/code.js'                },
-    { name: 'lib/pipelet.js'             },
-    { name: 'lib/order.js'               },
+    { name: 'lib/xs.js'                    },
+    { name: 'lib/code.js'                  },
+    { name: 'lib/pipelet.js'               },
+    { name: 'lib/filter.js'                },
+    { name: 'lib/order.js'                 },
+    { name: 'lib/events.js'                },
     
     // xs socket.io
-    { name: 'lib/socket_io_crossover.js' },
-    { name: 'lib/socket_io_server.js'    },
+    { name: 'lib/socket_io_crossover.js'   },
+    { name: 'lib/socket_io_server.js'      },
     
     // xs client
-    { name: 'lib/selector.js'            }
-    //{ name: 'lib/thumbnails.js'          }
+    { name: 'lib/selector.js'              },
+    { name: 'lib/load_images.js'           },
+    { name: 'lib/bootstrap_carousel.js'    },
+    { name: 'lib/bootstrap_photo_album.js' }
   ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
   
   // Update file contents in realtime
@@ -87,36 +95,45 @@ var xs_min = xs
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
-var tests_min = xs.set( [
-    { name: 'node_modules/mocha/mocha.js'         },
-    { name: 'node_modules/expect.js/expect.js'    },
-  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
-  .watch()
-  .order( [ { id: 'id' } ] ) // order loaded files
-  .uglify( 'test/javascript/mocha_expect_tests-min.js' )
-;
-
 var images = xs
   .set( [
     { name: 'test/images/14.jpg' },
     { name: 'test/images/15.jpg' },
     { name: 'test/images/16.jpg' },
     { name: 'test/images/17.jpg' }
-  ], { auto_increment: true } )
+  ], { auto_increment: true, set_flow: 'gallery_images' } )
 ;
 
 var thumbnails = images
-  .watch()
-  .thumbnails( { path: 'test/images/thumbnails/', width: 500, height: 500 } )
+  .thumbnails( { path: 'test/images/thumbnails/', width: 150, height: 150, set_flow: 'gallery_thumbnails' } )
 ;
 
 xs.set( [
-    { name: 'test/gallery.html'         },
-    { name: 'test/xs_gallery_tests.js'  },
-    { name: 'node_modules/mocha/mocha.css' },
+    { name: 'test/bootstrap_photo_album.html'            },
+    { name: 'test/xs_gallery_tests.js'                   },
+    { name: 'test/javascript/jquery-1.10.2.min.js'       },
+    { name: 'test/javascript/jquery.mobile-1.3.2.min.js' },
+    { name: 'test/bootstrap/css/bootstrap.css'           },
+    { name: 'test/bootstrap/js/bootstrap.js'             }
   ] )
   .union( [ images, thumbnails ] )
-  .watch()
-  .union( [ xs_min, tests_min ] )
-  .serve( servers )
+  .watch( { base_directory: __dirname + '/..' } )
+  .union( [ xs_min ] )
+  .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
+;
+
+// Serve contact_form_fields to socket.io clients
+images
+  .union( [ thumbnails ] )
+  
+  .to_uri()
+  
+  .trace( 'to socket.io clients' )
+  
+  // Start socket.io server, and dispatch client connections to provide contact_form_fields and get filled contact forms
+  .dispatch( servers.socket_io_clients(), function( source, options ) {
+    return source
+      .plug( this.socket )
+    ;
+  } )
 ;
