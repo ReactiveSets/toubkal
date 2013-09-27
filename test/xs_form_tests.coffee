@@ -48,7 +48,7 @@ validate_name = ( value, field ) ->
 fields = xs
   .set(
     [
-      { id: 'model', type: 'hidden', value: 'user_profile' }
+      { id: 'flow', type: 'hidden', value: 'user_profile' }
       
       { id: 'id'   , type: 'hidden', value: { type: 'UUID' } }
       

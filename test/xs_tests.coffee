@@ -216,49 +216,49 @@ describe 'XS test suite:', ->
     q = null
     
     it 'Query..or() should OR two queries', ->
-      expect( new Query( [ { model: 'stores' } ] ).or( [ { model: 'user' } ] ).query )
-        .to.be.eql [ { model: 'stores' }, { model: 'user' } ]
+      expect( new Query( [ { flow: 'stores' } ] ).or( [ { flow: 'user' } ] ).query )
+        .to.be.eql [ { flow: 'stores' }, { flow: 'user' } ]
     
     it 'Query..or() should OR two queries and result in optimized query', ->
-      expect( new Query( [ { model: 'store', id: 1465 } ] ).or( [ { model: 'store' } ] ).query )
-        .to.be.eql [ { model: 'store' } ]
+      expect( new Query( [ { flow: 'store', id: 1465 } ] ).or( [ { flow: 'store' } ] ).query )
+        .to.be.eql [ { flow: 'store' } ]
     
     it 'Query..and() should AND two queries', ->
-      expect( new Query( [ { model: 'store' } ] ).and( [ { id: 26 } ] ).query )
-        .to.be.eql [ { model: 'store', id: 26 } ]
+      expect( new Query( [ { flow: 'store' } ] ).and( [ { id: 26 } ] ).query )
+        .to.be.eql [ { flow: 'store', id: 26 } ]
     
     it 'Query..and() with one false sub term should AND two queries', ->
-      expect( new Query( [ { model: 'store', id: 26 }, { model: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
-        .to.be.eql [ { model: 'store', id: 26 } ]
+      expect( new Query( [ { flow: 'store', id: 26 }, { flow: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
+        .to.be.eql [ { flow: 'store', id: 26 } ]
     
     it 'Query..and() with only one false sub term should AND two queries to result in an empty query', ->
-      expect( new Query( [ { model: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
+      expect( new Query( [ { flow: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
         .to.be.eql []
     
     it 'Query..and() with two AND propositions should AND two queries and produce two propositions', ->
-      expect( new Query( [ { model: 'store' } ] ).and( [ { id: 26 }, { id: 27 } ] ).query )
-        .to.be.eql [ { model: 'store', id: 26 }, { model: 'store', id: 27 } ]
+      expect( new Query( [ { flow: 'store' } ] ).and( [ { id: 26 }, { id: 27 } ] ).query )
+        .to.be.eql [ { flow: 'store', id: 26 }, { flow: 'store', id: 27 } ]
     
     it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
-      expect( new Query( [ { model: 'store' } ] ).and( [ { model: 'store', id: 27 }, { model: 'user', id: 234 } ] ).query )
-        .to.be.eql [ { model: 'store', id: 27 } ]
+      expect( new Query( [ { flow: 'store' } ] ).and( [ { flow: 'store', id: 27 }, { flow: 'user', id: 234 } ] ).query )
+        .to.be.eql [ { flow: 'store', id: 27 } ]
     
     it 'generate() should generate a filter() function', ->
-      q = new Query( [ { model: 'store' }, { model: 'user', id: 231 } ] ).generate()
+      q = new Query( [ { flow: 'store' }, { flow: 'user', id: 231 } ] ).generate()
       
       expect( typeof ( q.filter ) ).to.be.eql 'function'
       
     it 'filter() should filter an Array of Objects', ->
       
       expect( q.filter [
-        { model: 'store', id: 826 }
-        { model: 'store', id: 295 }
-        { model: 'user', id: 231 }
-        { model: 'user', id: 235 }
+        { flow: 'store', id: 826 }
+        { flow: 'store', id: 295 }
+        { flow: 'user', id: 231 }
+        { flow: 'user', id: 235 }
       ] ).to.be.eql [
-        { model: 'store', id: 826 }
-        { model: 'store', id: 295 }
-        { model: 'user', id: 231 }
+        { flow: 'store', id: 826 }
+        { flow: 'store', id: 295 }
+        { flow: 'user', id: 231 }
       ]
   
   describe 'XS.Pipelet(): tests for Query Tree', ->
@@ -280,13 +280,13 @@ describe 'XS test suite:', ->
     it 'Adding a query should generate a query tree', ->
       expect( tree
         .query_tree_add( [
-          { model: 'user' }
+          { flow: 'user' }
         ], { recipient: recipient_1 } )
         
         .query_tree_top
       ).to.be.eql {
         branches: {
-          "model": {
+          "flow": {
             "user": {
               branches: {}
               keys: []
@@ -296,7 +296,7 @@ describe 'XS test suite:', ->
             }
           }
         }
-        keys      : [ "model" ]
+        keys      : [ "flow" ]
         recipients: []
         recipients_values: []
         transaction_ids  : {}
@@ -311,7 +311,7 @@ describe 'XS test suite:', ->
         .query_tree_top
       ).to.be.eql {
         branches: {
-          "model": {
+          "flow": {
             "user": {
               branches: {}
               keys: []
@@ -321,7 +321,7 @@ describe 'XS test suite:', ->
             }
           }
         }
-        keys      : [ "model" ]
+        keys      : [ "flow" ]
         recipients: [ recipient_2 ]
         recipients_values: []
         transaction_ids  : {}
@@ -331,16 +331,16 @@ describe 'XS test suite:', ->
       expect( tree
         
         .query_tree_add( [
-          { model: 'user' }
-          { model: 'store', id: 527 }
-          { id: 521, model: 'store' }
+          { flow: 'user' }
+          { flow: 'store', id: 527 }
+          { id: 521, flow: 'store' }
           { id: 425 }
         ], { recipient: recipient_3 } )
         
         .query_tree_top
       ).to.be.eql {
         branches: {
-          "model": {
+          "flow": {
             "user": {
               branches: {}
               keys: []
@@ -386,7 +386,7 @@ describe 'XS test suite:', ->
             }
           }
         }
-        keys      : [ "model", "id" ]
+        keys      : [ "flow", "id" ]
         recipients: [ recipient_2 ]
         recipients_values: []
         transaction_ids  : {}
@@ -402,7 +402,7 @@ describe 'XS test suite:', ->
         .query_tree_top
       ).to.be.eql {
         branches: {
-          "model": {
+          "flow": {
             "user": {
               branches: {}
               keys: []
@@ -448,7 +448,7 @@ describe 'XS test suite:', ->
             }
           }
         }
-        keys      : [ "model", "id" ]
+        keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
         transaction_ids  : {}
@@ -458,13 +458,13 @@ describe 'XS test suite:', ->
       expect( tree
         
         .query_tree_remove( [
-          { model: 'user' }
+          { flow: 'user' }
         ], { recipient: recipient_3 } )
         
         .query_tree_top
       ).to.be.eql {
         branches: {
-          "model": {
+          "flow": {
             "user": {
               branches: {}
               keys: []
@@ -510,7 +510,7 @@ describe 'XS test suite:', ->
             }
           }
         }
-        keys      : [ "model", "id" ]
+        keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
         transaction_ids  : {}
@@ -520,13 +520,13 @@ describe 'XS test suite:', ->
       expect( tree
         
         .query_tree_remove( [
-          { model: 'user' }
+          { flow: 'user' }
         ], { recipient: recipient_1 } )
         
         .query_tree_top
       ).to.be.eql {
         branches: {
-          "model": {
+          "flow": {
             "store": {
               branches: {
                 "id": {
@@ -564,7 +564,7 @@ describe 'XS test suite:', ->
             }
           }
         }
-        keys      : [ "model", "id" ]
+        keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
         transaction_ids  : {}
@@ -574,7 +574,7 @@ describe 'XS test suite:', ->
       expect( tree.query_tree_add( [] ).query_tree_remove( [] ).query_tree_top
       ).to.be.eql {
         branches: {
-          "model": {
+          "flow": {
             "store": {
               branches: {
                 "id": {
@@ -612,7 +612,7 @@ describe 'XS test suite:', ->
             }
           }
         }
-        keys      : [ "model", "id" ]
+        keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
         transaction_ids  : {}
@@ -622,8 +622,8 @@ describe 'XS test suite:', ->
       expect( tree
         
         .query_tree_remove( [
-          { model: 'store', id: 521 }
-          { id: 527, model: 'store' }
+          { flow: 'store', id: 521 }
+          { id: 527, flow: 'store' }
         ], { recipient: recipient_3 } )
         
         .query_tree_top
@@ -669,11 +669,11 @@ describe 'XS test suite:', ->
     recipient_3 = new xs.set( { name: 'recipient_3' } )
     
     tree.query_tree_add [
-      { model: 'user', id: 123 }
+      { flow: 'user', id: 123 }
     ], { recipient: recipient_1 }
     
     tree.query_tree_add [
-      { model: 'user', id: 345 }
+      { flow: 'user', id: 345 }
     ], { recipient: recipient_2 }
     
     tree.query_tree_add [
@@ -681,36 +681,36 @@ describe 'XS test suite:', ->
     ], { recipient: recipient_3 }
     
     tree.query_tree_emit 'add', [
-      { model: 'store' }
+      { flow: 'store' }
       { id: 123 }
-      { model: 'user', id: 123 }
-      { model: 'user', id: 345 }
+      { flow: 'user', id: 123 }
+      { flow: 'user', id: 345 }
     ]
     
     it 'Should allow to emit an add operation filtered by a query to the first recipient', ( done ) ->
       recipient_1.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { model: 'user', id: 123 }
+          { flow: 'user', id: 123 }
         ]
         
     it 'Should emit other values to the second recipient', ( done ) ->
       recipient_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { model: 'user', id: 345 }
+          { flow: 'user', id: 345 }
         ]
       
     it 'Should emit all values to the third recipient', ( done ) ->
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { model: 'store' }
+          { flow: 'store' }
           { id: 123 }
-          { model: 'user', id: 123 }
-          { model: 'user', id: 345 }
+          { flow: 'user', id: 123 }
+          { flow: 'user', id: 345 }
         ]
       
     it 'Should allow to emit a remove operation filtered by a query to the first recipient', ( done ) ->
       tree.query_tree_emit 'remove', [
-        { model: 'user', id: 123 }
+        { flow: 'user', id: 123 }
       ]
       
       recipient_1.fetch_all ( values ) -> check done, () ->
@@ -719,7 +719,7 @@ describe 'XS test suite:', ->
     it 'Second recipient set should be unchanged', ( done ) ->
       recipient_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { model: 'user', id: 345 }
+          { flow: 'user', id: 345 }
         ]
       
     it 'Third recipient set should have two record less after removing one more record', ( done ) ->
@@ -727,12 +727,12 @@ describe 'XS test suite:', ->
       
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { model: 'store' }
-          { model: 'user', id: 345 }
+          { flow: 'store' }
+          { flow: 'user', id: 345 }
         ]
       
     it 'Second recipient be empy after removing one more record', ( done ) ->
-      tree.query_tree_emit 'remove', [ { model: 'user', id: 345 } ]
+      tree.query_tree_emit 'remove', [ { flow: 'user', id: 345 } ]
       
       recipient_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -740,11 +740,11 @@ describe 'XS test suite:', ->
     it 'And third recipient should have only one record left', ( done ) ->
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { model: 'store' }
+          { flow: 'store' }
         ]
       
     it 'Finally third recipient should be empty after removing last record', ( done ) ->
-      tree.query_tree_emit 'remove', [ { model: 'store' } ]
+      tree.query_tree_emit 'remove', [ { flow: 'store' } ]
       
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -770,11 +770,11 @@ describe 'XS test suite:', ->
     delayed_set = delayed_set.filter( () -> true )
     
     cars = xs.set [
-          { id: 1, brand: "Mercedes", car_model: "C Class" }
-          { id: 2, brand: "Mercedes", car_model: "S Class" }
-          { id: 3, brand: "BMW"     , car_model: "M Serie" }
+          { id: 1, brand: "Mercedes", model: "C Class" }
+          { id: 2, brand: "Mercedes", model: "S Class" }
+          { id: 3, brand: "BMW"     , model: "M Serie" }
         ]
-      , { key: [ "id", "car_model" ], set_model: 'car' }
+      , { key: [ "id", "model" ], set_flow: 'car' }
     
     employee = xs.set [
       { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
@@ -797,9 +797,9 @@ describe 'XS test suite:', ->
       
       it 'cars.fetch_all() should be equal to result', ( done ) ->
         cars.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { model: "car", id: 1, brand: "Mercedes", car_model: "C Class" }
-          { model: "car", id: 2, brand: "Mercedes", car_model: "S Class" }
-          { model: "car", id: 3, brand: "BMW"     , car_model: "M Serie" }
+          { flow: "car", id: 1, brand: "Mercedes", model: "C Class" }
+          { flow: "car", id: 2, brand: "Mercedes", model: "S Class" }
+          { flow: "car", id: 3, brand: "BMW"     , model: "M Serie" }
         ]
     
     describe 'add():', ->
@@ -823,11 +823,11 @@ describe 'XS test suite:', ->
       it 'cities.index_of( { id: 2 } ) should be 1', ->
         expect( cities.index_of( { id: 2 } ) ).to.be.eql 1
       
-      it 'cars.index_of( { id: 2, car_model: "S Class" } ) should be 1', ->
-        expect( cars.index_of( { id: 2, car_model: "S Class" } ) ).to.be.eql 1
+      it 'cars.index_of( { id: 2, model: "S Class" } ) should be 1', ->
+        expect( cars.index_of( { id: 2, model: "S Class" } ) ).to.be.eql 1
       
-      it 'cars.index_of( { id: 3, car_model: "S Class" } ) should be -1: not found', ->
-        expect( cars.index_of( { id: 3, car_model: "S Class" } ) ).to.be.eql -1
+      it 'cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
+        expect( cars.index_of( { id: 3, model: "S Class" } ) ).to.be.eql -1
     
     describe 'remove():', ->
       it 'set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', ( done ) ->

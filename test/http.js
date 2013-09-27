@@ -142,12 +142,12 @@ xs.set( [
 var clients = servers.socket_io_clients();
 
 var source_set =
-  xs.set( [ {}, {}, {}, {} ], { set_model: 'source', auto_increment: true } )
+  xs.set( [ {}, {}, {}, {} ], { set_flow: 'source', auto_increment: true } )
 ;
 
 source_set
   //.union( [
-  //  xs.set( [ {}, {}, {}, {}, {} ], { set_model: 'source_1', auto_increment: true } )
+  //  xs.set( [ {}, {}, {}, {}, {} ], { set_flow: 'source_1', auto_increment: true } )
   //] )
   
   .trace( 'to socket.io clients' )

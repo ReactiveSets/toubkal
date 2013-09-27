@@ -224,40 +224,40 @@
       it('Query..or() should OR two queries', function() {
         return expect(new Query([
           {
-            model: 'stores'
+            flow: 'stores'
           }
         ]).or([
           {
-            model: 'user'
+            flow: 'user'
           }
         ]).query).to.be.eql([
           {
-            model: 'stores'
+            flow: 'stores'
           }, {
-            model: 'user'
+            flow: 'user'
           }
         ]);
       });
       it('Query..or() should OR two queries and result in optimized query', function() {
         return expect(new Query([
           {
-            model: 'store',
+            flow: 'store',
             id: 1465
           }
         ]).or([
           {
-            model: 'store'
+            flow: 'store'
           }
         ]).query).to.be.eql([
           {
-            model: 'store'
+            flow: 'store'
           }
         ]);
       });
       it('Query..and() should AND two queries', function() {
         return expect(new Query([
           {
-            model: 'store'
+            flow: 'store'
           }
         ]).and([
           {
@@ -265,7 +265,7 @@
           }
         ]).query).to.be.eql([
           {
-            model: 'store',
+            flow: 'store',
             id: 26
           }
         ]);
@@ -273,10 +273,10 @@
       it('Query..and() with one false sub term should AND two queries', function() {
         return expect(new Query([
           {
-            model: 'store',
+            flow: 'store',
             id: 26
           }, {
-            model: 'store',
+            flow: 'store',
             id: 27
           }
         ]).and([
@@ -285,7 +285,7 @@
           }
         ]).query).to.be.eql([
           {
-            model: 'store',
+            flow: 'store',
             id: 26
           }
         ]);
@@ -293,7 +293,7 @@
       it('Query..and() with only one false sub term should AND two queries to result in an empty query', function() {
         return expect(new Query([
           {
-            model: 'store',
+            flow: 'store',
             id: 27
           }
         ]).and([
@@ -305,7 +305,7 @@
       it('Query..and() with two AND propositions should AND two queries and produce two propositions', function() {
         return expect(new Query([
           {
-            model: 'store'
+            flow: 'store'
           }
         ]).and([
           {
@@ -315,10 +315,10 @@
           }
         ]).query).to.be.eql([
           {
-            model: 'store',
+            flow: 'store',
             id: 26
           }, {
-            model: 'store',
+            flow: 'store',
             id: 27
           }
         ]);
@@ -326,19 +326,19 @@
       it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
         return expect(new Query([
           {
-            model: 'store'
+            flow: 'store'
           }
         ]).and([
           {
-            model: 'store',
+            flow: 'store',
             id: 27
           }, {
-            model: 'user',
+            flow: 'user',
             id: 234
           }
         ]).query).to.be.eql([
           {
-            model: 'store',
+            flow: 'store',
             id: 27
           }
         ]);
@@ -346,9 +346,9 @@
       it('generate() should generate a filter() function', function() {
         q = new Query([
           {
-            model: 'store'
+            flow: 'store'
           }, {
-            model: 'user',
+            flow: 'user',
             id: 231
           }
         ]).generate();
@@ -357,27 +357,27 @@
       return it('filter() should filter an Array of Objects', function() {
         return expect(q.filter([
           {
-            model: 'store',
+            flow: 'store',
             id: 826
           }, {
-            model: 'store',
+            flow: 'store',
             id: 295
           }, {
-            model: 'user',
+            flow: 'user',
             id: 231
           }, {
-            model: 'user',
+            flow: 'user',
             id: 235
           }
         ])).to.be.eql([
           {
-            model: 'store',
+            flow: 'store',
             id: 826
           }, {
-            model: 'store',
+            flow: 'store',
             id: 295
           }, {
-            model: 'user',
+            flow: 'user',
             id: 231
           }
         ]);
@@ -407,13 +407,13 @@
       it('Adding a query should generate a query tree', function() {
         return expect(tree.query_tree_add([
           {
-            model: 'user'
+            flow: 'user'
           }
         ], {
           recipient: recipient_1
         }).query_tree_top).to.be.eql({
           branches: {
-            "model": {
+            "flow": {
               "user": {
                 branches: {},
                 keys: [],
@@ -423,7 +423,7 @@
               }
             }
           },
-          keys: ["model"],
+          keys: ["flow"],
           recipients: [],
           recipients_values: [],
           transaction_ids: {}
@@ -434,7 +434,7 @@
           recipient: recipient_2
         }).query_tree_top).to.be.eql({
           branches: {
-            "model": {
+            "flow": {
               "user": {
                 branches: {},
                 keys: [],
@@ -444,7 +444,7 @@
               }
             }
           },
-          keys: ["model"],
+          keys: ["flow"],
           recipients: [recipient_2],
           recipients_values: [],
           transaction_ids: {}
@@ -453,13 +453,13 @@
       it('Adding an additional query should expand the query tree', function() {
         return expect(tree.query_tree_add([
           {
-            model: 'user'
+            flow: 'user'
           }, {
-            model: 'store',
+            flow: 'store',
             id: 527
           }, {
             id: 521,
-            model: 'store'
+            flow: 'store'
           }, {
             id: 425
           }
@@ -467,7 +467,7 @@
           recipient: recipient_3
         }).query_tree_top).to.be.eql({
           branches: {
-            "model": {
+            "flow": {
               "user": {
                 branches: {},
                 keys: [],
@@ -510,7 +510,7 @@
               }
             }
           },
-          keys: ["model", "id"],
+          keys: ["flow", "id"],
           recipients: [recipient_2],
           recipients_values: [],
           transaction_ids: {}
@@ -521,7 +521,7 @@
           recipient: recipient_2
         }).query_tree_top).to.be.eql({
           branches: {
-            "model": {
+            "flow": {
               "user": {
                 branches: {},
                 keys: [],
@@ -564,7 +564,7 @@
               }
             }
           },
-          keys: ["model", "id"],
+          keys: ["flow", "id"],
           recipients: [],
           recipients_values: [],
           transaction_ids: {}
@@ -573,13 +573,13 @@
       it('Remove another query should shrink the query tree further', function() {
         return expect(tree.query_tree_remove([
           {
-            model: 'user'
+            flow: 'user'
           }
         ], {
           recipient: recipient_3
         }).query_tree_top).to.be.eql({
           branches: {
-            "model": {
+            "flow": {
               "user": {
                 branches: {},
                 keys: [],
@@ -622,7 +622,7 @@
               }
             }
           },
-          keys: ["model", "id"],
+          keys: ["flow", "id"],
           recipients: [],
           recipients_values: [],
           transaction_ids: {}
@@ -631,13 +631,13 @@
       it('Remove another query should shrink the query tree even further', function() {
         return expect(tree.query_tree_remove([
           {
-            model: 'user'
+            flow: 'user'
           }
         ], {
           recipient: recipient_1
         }).query_tree_top).to.be.eql({
           branches: {
-            "model": {
+            "flow": {
               "store": {
                 branches: {
                   "id": {
@@ -673,7 +673,7 @@
               }
             }
           },
-          keys: ["model", "id"],
+          keys: ["flow", "id"],
           recipients: [],
           recipients_values: [],
           transaction_ids: {}
@@ -682,7 +682,7 @@
       it('Add and Remove empty queries should not change anything', function() {
         return expect(tree.query_tree_add([]).query_tree_remove([]).query_tree_top).to.be.eql({
           branches: {
-            "model": {
+            "flow": {
               "store": {
                 branches: {
                   "id": {
@@ -718,7 +718,7 @@
               }
             }
           },
-          keys: ["model", "id"],
+          keys: ["flow", "id"],
           recipients: [],
           recipients_values: [],
           transaction_ids: {}
@@ -727,11 +727,11 @@
       it('Remove another query should shrink the query tree even further', function() {
         return expect(tree.query_tree_remove([
           {
-            model: 'store',
+            flow: 'store',
             id: 521
           }, {
             id: 527,
-            model: 'store'
+            flow: 'store'
           }
         ], {
           recipient: recipient_3
@@ -783,7 +783,7 @@
       });
       tree.query_tree_add([
         {
-          model: 'user',
+          flow: 'user',
           id: 123
         }
       ], {
@@ -791,7 +791,7 @@
       });
       tree.query_tree_add([
         {
-          model: 'user',
+          flow: 'user',
           id: 345
         }
       ], {
@@ -802,14 +802,14 @@
       });
       tree.query_tree_emit('add', [
         {
-          model: 'store'
+          flow: 'store'
         }, {
           id: 123
         }, {
-          model: 'user',
+          flow: 'user',
           id: 123
         }, {
-          model: 'user',
+          flow: 'user',
           id: 345
         }
       ]);
@@ -818,7 +818,7 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                model: 'user',
+                flow: 'user',
                 id: 123
               }
             ]);
@@ -830,7 +830,7 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                model: 'user',
+                flow: 'user',
                 id: 345
               }
             ]);
@@ -842,14 +842,14 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                model: 'store'
+                flow: 'store'
               }, {
                 id: 123
               }, {
-                model: 'user',
+                flow: 'user',
                 id: 123
               }, {
-                model: 'user',
+                flow: 'user',
                 id: 345
               }
             ]);
@@ -859,7 +859,7 @@
       it('Should allow to emit a remove operation filtered by a query to the first recipient', function(done) {
         tree.query_tree_emit('remove', [
           {
-            model: 'user',
+            flow: 'user',
             id: 123
           }
         ]);
@@ -874,7 +874,7 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                model: 'user',
+                flow: 'user',
                 id: 345
               }
             ]);
@@ -891,9 +891,9 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                model: 'store'
+                flow: 'store'
               }, {
-                model: 'user',
+                flow: 'user',
                 id: 345
               }
             ]);
@@ -903,7 +903,7 @@
       it('Second recipient be empy after removing one more record', function(done) {
         tree.query_tree_emit('remove', [
           {
-            model: 'user',
+            flow: 'user',
             id: 345
           }
         ]);
@@ -918,7 +918,7 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                model: 'store'
+                flow: 'store'
               }
             ]);
           });
@@ -927,7 +927,7 @@
       return it('Finally third recipient should be empty after removing last record', function(done) {
         tree.query_tree_emit('remove', [
           {
-            model: 'store'
+            flow: 'store'
           }
         ]);
         return recipient_3.fetch_all(function(values) {
@@ -974,19 +974,19 @@
         {
           id: 1,
           brand: "Mercedes",
-          car_model: "C Class"
+          model: "C Class"
         }, {
           id: 2,
           brand: "Mercedes",
-          car_model: "S Class"
+          model: "S Class"
         }, {
           id: 3,
           brand: "BMW",
-          car_model: "M Serie"
+          model: "M Serie"
         }
       ], {
-        key: ["id", "car_model"],
-        set_model: 'car'
+        key: ["id", "model"],
+        set_flow: 'car'
       });
       employee = xs.set([
         {
@@ -1054,20 +1054,20 @@
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
-                  model: "car",
+                  flow: "car",
                   id: 1,
                   brand: "Mercedes",
-                  car_model: "C Class"
+                  model: "C Class"
                 }, {
-                  model: "car",
+                  flow: "car",
                   id: 2,
                   brand: "Mercedes",
-                  car_model: "S Class"
+                  model: "S Class"
                 }, {
-                  model: "car",
+                  flow: "car",
                   id: 3,
                   brand: "BMW",
-                  car_model: "M Serie"
+                  model: "M Serie"
                 }
               ]);
             });
@@ -1123,16 +1123,16 @@
             id: 2
           })).to.be.eql(1);
         });
-        it('cars.index_of( { id: 2, car_model: "S Class" } ) should be 1', function() {
+        it('cars.index_of( { id: 2, model: "S Class" } ) should be 1', function() {
           return expect(cars.index_of({
             id: 2,
-            car_model: "S Class"
+            model: "S Class"
           })).to.be.eql(1);
         });
-        return it('cars.index_of( { id: 3, car_model: "S Class" } ) should be -1: not found', function() {
+        return it('cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', function() {
           return expect(cars.index_of({
             id: 3,
-            car_model: "S Class"
+            model: "S Class"
           })).to.be.eql(-1);
         });
       });

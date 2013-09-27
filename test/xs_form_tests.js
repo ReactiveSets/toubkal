@@ -60,7 +60,7 @@
 
   fields = xs.set([
     {
-      id: 'model',
+      id: 'flow',
       type: 'hidden',
       value: 'user_profile'
     }, {
