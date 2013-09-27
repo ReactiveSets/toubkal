@@ -83,7 +83,8 @@ var xs_min = xs
     { name: 'lib/selector.js'            },
     { name: 'lib/table.js'               },
     { name: 'lib/control.js'             },
-    { name: 'lib/form.js'                }
+    { name: 'lib/form.js'                },
+    { name: 'lib/load_images.js'         }
   ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
   
   // Update file contents in realtime
@@ -127,7 +128,10 @@ xs.set( [
     { name: 'test/css/mocha.css'           },
     { name: 'test/css/table.css'           },
     { name: 'test/css/images/ok.png'       },
-    { name: 'test/ui.html'                 }
+    { name: 'test/ui.html'                 },
+    { name: 'test/load_images.html'        },
+    { name: 'test/css/xs_tests.css'        },
+    { name: 'test/xs_load_images_tests.js' }
   ] )
   .watch( { base_directory: __dirname + '/..' } )
   .union( [ xs_min, tests_min, node_modules_css ] )
