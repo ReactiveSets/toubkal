@@ -2,37 +2,50 @@
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Connected Sets (XS) is a high-efficiency, scalable, realtime web application framework aiming at **massively reducing servers
-environmental footprint** and improving mobile clients battery life by making an optimal use of server, network and client
-resources.
+Connected Sets ( **XS** ) is a high-efficiency, scalable, realtime web application framework aiming at massively
+reducing servers environmental footprint and improving mobile clients battery life by making an optimal use of
+server, network and client resources.
 
-XS intuitive Architect DSL allows to very **significantly decrease development time** of complex realtime applications.
+#### Ecosystem
+XS backend runs on Node.js.
 
-This rare combination of runtime high-efficiency and reduction in programming complexity should allow to **greatly reduce
-the cost of running green startups**.
+On the frontend, XS can be coupled with any other framework but we recommend using reactive frameworks such as
+AngularJS or React which reactive model is closer to XS.
 
-Using a dataflow programming model for XS *pipelet* programmers and a fluent interface for XS application architects, XS
-features a **no-compromise built-in chardable document database** with joins, aggregates, filters and transactions with eventual
-consistency allowing both normalized and denormalized schemes.
+We also recommand Bootstrap for responsive HTML5 applications and we use it for our Carousel and Photo Albums.
 
-Everything in XS is a pipelet, including models, controllers, and views, greatly simplifying the programming of highly
-interactive applications.
+For DOM manipulations one can use any library as XS core has zero dependencies.
 
-Authorizations are also managed using pipelets, allowing instant changes all the way to the UI without ever requiring
-page refreshes. Likewise, application code can be upgraded without requiring refreshes, every change becomes realtime.
+#### Dataflow Programming Model
+XS intuitive **dataflow** programming model allows to very significantly decrease development time of complex
+realtime applications. This combination of runtime high-efficiency and reduction in programming complexity should
+allow to greatly reduce the cost of running greener startups.
 
-Capable of handling **millions of records per second**, XS is particularly well suited for low-power devices such as
-tablets and smartphones as well as less-efficient or older JavaScript engines.
+XS applications are programmed using an intuitive and consice declarative dataflow programming model where one describes
+the application.
 
-Highest performances are provided thanks to **Just-In-Time code generators** delivering performances only available to
+At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating the callback hell.
+
+Everything in XS is a pipelet, greatly simplifying the programming of highly reactive applications. Authorizations are
+also managed using pipelets, allowing instant changes all the way to the UI without ever requiring page refreshes.
+
+#### Integrated database and model
+XS features a chardable document database with joins, aggregates, filters and transactions with eventual consistency allowing
+both normalized and denormalized schemes.
+
+#### Performances
+Capable of handling millions of operations per second, XS is particularly well suited for low-power devices such as
+tablets and smartphones.
+
+Highest performances are provided thanks to Just-In-Time code generators delivering performances only available to
 compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing
 JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
 
-**Incremental query execution** allows to split large datasets into optimal chunks of data rendering data to
-end-users' interface with low-latency, dramatically improving end-user experience. Data changes update Connected
-Sets in real-time, both in clients and servers, using push technology (over socketio by default).
+Incremental query execution allows to split large datasets into optimal chunks of data rendering data to
+end-users' interface with low-latency, dramatically improving end-user experience. Data changes update dataflows in
+real-time, on both clients and servers (using socketio by default).
 
-Incremental aggregates allow to deliver realtime OLAP cubes suitable for **realtime data analysis** and reporting
+Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data analysis and reporting
 over virtually unlimited size datasets.
 
 ### Installation
@@ -98,11 +111,11 @@ function client() {
   var server = xs.socket_io_server(); // exchange dataflows with server using socket.io
   
   // Get employees from server
-  var employees = server.model( 'employee' ); // filter values which model attribute equals 'employee'
+  var employees = server.flow( 'employee' ); // filter values which "flow" attribute equals 'employee'
   
   // Produce report after joining sales and employees
   server
-    .model( 'sale' )
+    .flow( 'sale' )
     .join( employees, merge, { left: true } ) // this is a left join
     .aggregate( sales, by_year )
     .order( by_year_employee )
@@ -110,7 +123,7 @@ function client() {
   ;
   
   // Merge function for sales and employees
-  // Returns sales with employee names coming from employee model
+  // Returns sales with employee names coming from employee flow
   function merge( sale, employee ) {
       // Employee can be undefined because this is a left join
       if ( employee ) return extend( { employee_name: employee.name }, sale )
@@ -137,17 +150,25 @@ var servers = xs
 // Merge and mimify client javascript assets in realtime
 var all_min_js = xs
   .set( [ // Define the minimum set of javascript files required to serve this client application
-    { name: 'node_modules/excess/lib/xs.js'        },
-    { name: 'node_modules/excess/lib/pipelet.js'   },
-    { name: 'node_modules/excess/lib/filter.js'    },
-    { name: 'node_modules/excess/lib/join.js'      },
-    { name: 'node_modules/excess/lib/aggregate.js' },
-    { name: 'node_modules/excess/lib/order.js'     },
-    { name: 'node_modules/excess/lib/table.js'     },
-    { name: 'javascript/client.js'                 }
-  ], { auto_increment: true } ) // use auto_increment option to keep track of files order
+    { name: 'excess/lib/xs.js'        },
+    { name: 'excess/lib/pipelet.js'   },
+    { name: 'excess/lib/filter.js'    },
+    { name: 'excess/lib/join.js'      },
+    { name: 'excess/lib/aggregate.js' },
+    { name: 'excess/lib/order.js'     },
+    { name: 'excess/lib/table.js'     }
+  ], { auto_increment: true } ) // Use auto_increment option to keep track of files order
+  
+  .require_resolve()            // Resolve node module paths
+  
+  .union( xs.set( [             // Add other javascript assets
+    { name: 'javascript/client.js', id: 8 } // client code must be loaded after excess
+  ] ) )
+  
   .watch()                      // Retrieves files content with realtime updates
+  
   .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
+  
   .uglify( 'all-min.js' )       // Minify in realtime using uglify-js
 ;
 
@@ -200,13 +221,13 @@ Version 0.2.0 - ETA October 2013
 
     - Request / Response dataflows using optimized Query Trees
     - Dynamic Authorizations Query Dataflow
-    - Boostrap Photo Albums
+    - Bootstrap Photo Albums
     - Watch directory metadata flow
 
   Features:
 
     - Virtual Hosts w/ optimized routing
-    - Boostrap Carousel
+    - Bootstrap Carousel
     - Image Thumbnails using ImageMagick
     - DOM controled image loading for image galleries
     - pipelet to resolve node module files absolute path
