@@ -14,6 +14,21 @@
     <script type="text/javascript" charset="utf-8" src="/socket.io/socket.io.js"></script>
     
     <script src="../lib/xs-min.js"></script>
+    
+    <style>
+      .xs-photo-matrix div {
+        display: inline-block;
+        padding: 5px;
+      }
+      
+      .xs-photo-matrix img {
+        cursor: pointer;
+      }
+      
+      .xs-photo-matrix div img.active {
+        border: 2px solid #4f9fcf;
+      }
+    </style>
   </head>
 
   <body>
@@ -27,6 +42,7 @@
         
         , images = XS.xs
           .socket_io_server()
+          .order( [ { id: 'id' } ] )
           .trace( 'bootstrap photo album, images received' )
           .bootstrap_photo_album( thumbnails, carousel, {
               album          : 'album_1'
