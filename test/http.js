@@ -141,15 +141,12 @@ xs.set( [
 // Socket.io Server tests
 var clients = servers.socket_io_clients();
 
-var source_set =
-  xs.set( [ {}, {}, {}, {} ], { set_flow: 'source', auto_increment: true } )
+var source_set = xs.set( [ {}, {}, {}, {} ], { set_flow: 'source', auto_increment: true } )
+  , source_1 = xs.set( [ {}, {}, {}, {}, {} ], { set_flow: 'source_1', auto_increment: true } )
 ;
 
-source_set
-  //.union( [
-  //  xs.set( [ {}, {}, {}, {}, {} ], { set_flow: 'source_1', auto_increment: true } )
-  //] )
-  
+xs.union( [ source_set, source_1 ] )
+
   .trace( 'to socket.io clients' )
   
   .dispatch( clients, function( source, options ) {
