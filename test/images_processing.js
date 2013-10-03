@@ -111,6 +111,7 @@ var thumbnails = images
 xs.set( [
     { name: 'test/bootstrap_photo_album.html'            },
     { name: 'test/javascript/jquery-1.10.2.min.js'       },
+    { name: 'test/javascript/jquery-1.10.2.min.map'      },
     { name: 'test/javascript/jquery.mobile-1.3.2.min.js' },
     { name: 'test/bootstrap/css/bootstrap.css'           },
     { name: 'test/bootstrap/js/bootstrap.js'             }
