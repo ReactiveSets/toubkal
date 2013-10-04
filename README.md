@@ -52,9 +52,17 @@ over virtually unlimited size datasets.
 
 ### Installation
 
+From npm, latest release:
 ```bash
 npm install excess
 ```
+
+Some image manipulation pipelets require ImageMagick that [you can download here](http://www.imagemagick.org/script/binary-releases.php.).
+
+## Demonstration Site
+A [demonstration and beta test site is available here](http://www.castorcad.com/).
+
+The source code for this deminstration site is in the GitHub repository [ConnectedSets / demo](https://github.com/ConnectedSets/demo).
 
 ## Example
 
@@ -223,13 +231,13 @@ Version 0.2.0 - ETA October 2013
 
     - Request / Response dataflows using optimized Query Trees
     - Dynamic Authorizations Query Dataflow
-    - Bootstrap Photo Albums
     - Watch directory metadata flow
 
-  Features:
+  Features already developped:
 
     - Virtual Hosts w/ optimized routing
     - Bootstrap Carousel
+    - Bootstrap Photo Albums
     - Image Thumbnails using ImageMagick
     - DOM controled image loading for image galleries
     - pipelet to resolve node module files absolute path
