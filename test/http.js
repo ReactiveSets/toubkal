@@ -27,6 +27,7 @@ var XS = require( '../lib/server/http.js' ).XS
   , extend     = XS.extend
 ;
 
+require( '../lib/server/socket_io_clients.js' );
 require( '../lib/server/file.js' );
 
 /* -------------------------------------------------------------------------------------------
