@@ -264,9 +264,9 @@ describe 'XS test suite:', ->
   describe 'XS.Pipelet(): tests for Query Tree', ->
     tree = new XS.Pipelet()
     
-    recipient_1 = new xs.set( { name: 'recipient_1' } )
-    recipient_2 = new xs.set( { name: 'recipient_2' } )
-    recipient_3 = new xs.set( { name: 'recipient_3' } )
+    recipient_1 = xs.set( { name: 'recipient_1' } )
+    recipient_2 = xs.set( { name: 'recipient_2' } )
+    recipient_3 = xs.set( { name: 'recipient_3' } )
     
     it 'Pipelet() should allow to create a top query tree node', ->
       expect( tree.query_tree_top ).to.be.eql {
@@ -664,9 +664,9 @@ describe 'XS test suite:', ->
   describe 'Query_Tree routing:', () ->
     tree = new XS.Pipelet()
     
-    recipient_1 = new xs.set( { name: 'recipient_1' } )
-    recipient_2 = new xs.set( { name: 'recipient_2' } )
-    recipient_3 = new xs.set( { name: 'recipient_3' } )
+    recipient_1 = xs.set( { name: 'recipient_1' } )
+    recipient_2 = xs.set( { name: 'recipient_2' } )
+    recipient_3 = xs.set( { name: 'recipient_3' } )
     
     tree.query_tree_add [
       { flow: 'user', id: 123 }

@@ -387,13 +387,13 @@
     describe('XS.Pipelet(): tests for Query Tree', function() {
       var recipient_1, recipient_2, recipient_3, tree;
       tree = new XS.Pipelet();
-      recipient_1 = new xs.set({
+      recipient_1 = xs.set({
         name: 'recipient_1'
       });
-      recipient_2 = new xs.set({
+      recipient_2 = xs.set({
         name: 'recipient_2'
       });
-      recipient_3 = new xs.set({
+      recipient_3 = xs.set({
         name: 'recipient_3'
       });
       it('Pipelet() should allow to create a top query tree node', function() {
@@ -773,13 +773,13 @@
     describe('Query_Tree routing:', function() {
       var recipient_1, recipient_2, recipient_3, tree;
       tree = new XS.Pipelet();
-      recipient_1 = new xs.set({
+      recipient_1 = xs.set({
         name: 'recipient_1'
       });
-      recipient_2 = new xs.set({
+      recipient_2 = xs.set({
         name: 'recipient_2'
       });
-      recipient_3 = new xs.set({
+      recipient_3 = xs.set({
         name: 'recipient_3'
       });
       tree.query_tree_add([
