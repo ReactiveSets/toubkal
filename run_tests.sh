@@ -9,4 +9,4 @@
 #
 # Tests results are then available in test.out
 
-npm test > test.out
+npm test > test.out && ( tail test.out | grep passing ) || printf "\nfailed\n"
