@@ -50,6 +50,18 @@ real-time, on both clients and servers (using socketio by default).
 Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data analysis and reporting
 over virtually unlimited size datasets.
 
+### Documentation
+This readme provides a short introcution to Connected Sets.
+
+The bulk of the documentation is currently embedded in the code of ````lib/pipelet.js```` for the core as well as individual pipelets' sources.
+
+Eventually we plan on extracting and completing this documentation to provide the following manuals:
+
+- An Introduction to ConnectedSets (featuring a tutorial)
+- ConnectedSets Application Architect Manual
+- ConnectedSets Pipelet Developper's Guide
+- Individual Reference Manuals for each module
+
 ### Installation
 
 From npm, latest release:
@@ -243,6 +255,8 @@ Version 0.2.0 - ETA October 2013
     - pipelet to resolve node module files absolute path
     - pipelet to add timestamp attribute to values
     - pipelet to add events metadata attributes
+    - pipelet to auto-increment an attribute
+    - pipelet to set the flow attribute
 
 Version 0.1.0 - April 8th 2013:
 
