@@ -769,12 +769,16 @@ describe 'XS test suite:', ->
     
     delayed_set = delayed_set.filter( () -> true )
     
-    cars = xs.set [
-          { id: 1, brand: "Mercedes", model: "C Class" }
-          { id: 2, brand: "Mercedes", model: "S Class" }
-          { id: 3, brand: "BMW"     , model: "M Serie" }
-        ]
-      , { key: [ "id", "model" ], set_flow: 'car' }
+    cars = xs
+      .set( [
+            { id: 1, brand: "Mercedes", model: "C Class" }
+            { id: 2, brand: "Mercedes", model: "S Class" }
+            { id: 3, brand: "BMW"     , model: "M Serie" }
+          ]
+        , { key: [ "id", "model" ] }
+      )
+      .set_flow( 'car' )
+      .set()
     
     employee = xs.set [
       { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }

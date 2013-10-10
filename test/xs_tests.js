@@ -986,9 +986,8 @@
           model: "M Serie"
         }
       ], {
-        key: ["id", "model"],
-        set_flow: 'car'
-      });
+        key: ["id", "model"]
+      }).set_flow('car').set();
       employee = xs.set([
         {
           id: 1,

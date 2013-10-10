@@ -106,13 +106,21 @@ var node_modules_js = xs.set( [
 ;
 
 var tests_min = xs.set( [
-    { name: 'test/xs_tests.js'                 },
-    { name: 'test/xs_ui_tests.js'              }
+    { name: 'test/xs_tests.js'    }
   ], { auto_increment: true, auto_increment_start: 3 }  ) // will auto-increment the id attribute starting at 3
   .union( [ node_modules_js ] )
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'test/javascript/mocha_expect_tests-min.js' )
+;
+
+var ui_tests_min = xs.set( [
+    { name: 'test/xs_ui_tests.js' }
+  ], { auto_increment: true, auto_increment_start: 3 }  ) // will auto-increment the id attribute starting at 3
+  .union( [ node_modules_js ] )
+  .watch()
+  .order( [ { id: 'id' } ] ) // order loaded files
+  .uglify( 'test/javascript/mocha_expect_ui_tests-min.js' )
 ;
 
 var node_modules_css = xs.set( [ { name: 'mocha/mocha.css' } ] )
@@ -135,18 +143,18 @@ xs.set( [
     { name: 'test/xs_load_images_tests.js' }
   ] )
   .watch( { base_directory: __dirname + '/..' } )
-  .union( [ xs_min, tests_min, node_modules_css ] )
+  .union( [ xs_min, tests_min, ui_tests_min, node_modules_css ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 
 // Socket.io Server tests
 var clients = servers.socket_io_clients();
 
-var source_set = xs.set( [ {}, {}, {}, {} ], { set_flow: 'source', auto_increment: true } )
-  , source_1 = xs.set( [ {}, {}, {}, {}, {} ], { set_flow: 'source_1', auto_increment: true } )
+var source_set = xs.set( [ {}, {}, {}, {} ], { auto_increment: true } )
+  , source_1 = xs.set( [ {}, {}, {}, {}, {} ], { auto_increment: true } )
 ;
 
-xs.union( [ source_set, source_1 ] )
+xs.union( [ source_set.set_flow( 'source' ), source_1.set_flow( 'source_1' ) ] )
 
   .trace( 'to socket.io clients' )
   
