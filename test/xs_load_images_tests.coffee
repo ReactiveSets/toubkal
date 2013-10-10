@@ -43,8 +43,8 @@ if require?
 xs = XS.xs
 
 describe 'Load Images test suite:', ->
-  images_dataset = xs.set [], { auto_increment: true, name: 'Images dataset' }
-  images         = images_dataset.load_images()
+  images_dataset = xs.set( [], { name: 'Images dataset' } )
+  images         = images_dataset.auto_increment().load_images()
   
   it 'expect images.fetch_all() to be empty', ->
     expect( images.fetch_all() ).to.be.empty()

@@ -165,8 +165,9 @@
       ]).order(organizer)
     }
   ], {
-    name: 'Fields Set',
-    auto_increment: 'order'
+    name: 'Fields Set'
+  }).auto_increment({
+    attribute: 'order'
   }).order([
     {
       id: 'order'

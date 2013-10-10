@@ -42,9 +42,9 @@ function ug( m ) {
    Start HTTP Servers
 */
 var servers = xs.set( [
-    { ip_address: '0.0.0.0', port: 8012 },
+    { id: 1, ip_address: '0.0.0.0', port: 8012 },
     // { port: 8043, key: '', cert: '' }, // https server usimg key and cert
-  ], { auto_increment: true } )
+  ] )
   .http_servers()
 ;
 
@@ -83,7 +83,8 @@ var xs_min = xs
     { name: 'lib/load_images.js'           },
     { name: 'lib/bootstrap_carousel.js'    },
     { name: 'lib/bootstrap_photo_album.js' }
-  ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
+  ], { name: 'javascript assets' } )
+  .auto_increment() // will auto-increment the id attribute starting at 1
   
   // Update file contents in realtime
   .watch()
@@ -101,11 +102,14 @@ var images = xs
     { name: 'test/images/15.jpg' },
     { name: 'test/images/16.jpg' },
     { name: 'test/images/17.jpg' }
-  ], { auto_increment: true, set_flow: 'gallery_images' } )
+  ] )
+  .set_flow( 'gallery_images' )
+  .auto_increment()
 ;
 
 var thumbnails = images
-  .thumbnails( { path: 'test/images/thumbnails/', width: 150, height: 150, set_flow: 'gallery_thumbnails' } )
+  .thumbnails( { path: 'test/images/thumbnails/', width: 150, height: 150 } )
+  .set_flow( 'gallery_thumbnails' )
 ;
 
 xs.set( [

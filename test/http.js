@@ -47,7 +47,8 @@ var servers = xs.set( [
     { port: 8080 },
     { port: 8043, key: '', cert: '' }, // https server usimg key and cert
     { port: 8044, pfx: '' }, // https server using pfx
-  ], { auto_increment: true } )
+  ] )
+  .auto_increment()
   .http_servers()
 ;
 
@@ -86,7 +87,9 @@ var xs_min = xs
     { name: 'lib/control.js'             },
     { name: 'lib/form.js'                },
     { name: 'lib/load_images.js'         }
-  ], { auto_increment: true, name: 'javascript assets' }  ) // will auto-increment the id attribute starting at 1
+  ], { name: 'javascript assets' }  )
+  
+  .auto_increment() // will auto-increment the id attribute starting at 1
   
   // Update file contents in realtime
   .watch()
@@ -101,23 +104,21 @@ var xs_min = xs
 var node_modules_js = xs.set( [
     { name: 'mocha/mocha.js'      },
     { name: 'expect.js/expect.js' }
-  ], { auto_increment: true }  ) // will auto-increment the id attribute starting at 1
+  ] )
   .require_resolve()
 ;
 
-var tests_min = xs.set( [
-    { name: 'test/xs_tests.js'    }
-  ], { auto_increment: true, auto_increment_start: 3 }  ) // will auto-increment the id attribute starting at 3
-  .union( [ node_modules_js ] )
+var tests_min = xs
+  .union( [ node_modules_js, xs.set( [ { name: 'test/xs_tests.js' } ] ) ] )
+  .auto_increment() // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'test/javascript/mocha_expect_tests-min.js' )
 ;
 
-var ui_tests_min = xs.set( [
-    { name: 'test/xs_ui_tests.js' }
-  ], { auto_increment: true, auto_increment_start: 3 }  ) // will auto-increment the id attribute starting at 3
-  .union( [ node_modules_js ] )
+var ui_tests_min = xs
+  .union( [ node_modules_js, xs.set( [ { name: 'test/xs_ui_tests.js' } ] ) ] )
+  .auto_increment() // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'test/javascript/mocha_expect_ui_tests-min.js' )
@@ -150,11 +151,14 @@ xs.set( [
 // Socket.io Server tests
 var clients = servers.socket_io_clients();
 
-var source_set = xs.set( [ {}, {}, {}, {} ], { auto_increment: true } )
-  , source_1 = xs.set( [ {}, {}, {}, {}, {} ], { auto_increment: true } )
+var source_set = xs.set( [ {}, {}, {}, {} ] )
+  , source_1 = xs.set( [ {}, {}, {}, {}, {} ] )
 ;
 
-xs.union( [ source_set.set_flow( 'source' ), source_1.set_flow( 'source_1' ) ] )
+xs.union( [
+    source_set.set_flow( 'source' ).auto_increment(),
+    source_1.set_flow( 'source_1' ).auto_increment()
+  ] )
 
   .trace( 'to socket.io clients' )
   
@@ -162,13 +166,11 @@ xs.union( [ source_set.set_flow( 'source' ), source_1.set_flow( 'source_1' ) ] )
     de&&ug( 'creating socket_io client id: ' + this.id );
     
     return source
-      .trace( 'source to client' )
       .plug( this.socket )
+      .trace( 'from socket.io clients' )
       .set()
     ;
   } )
-  
-  .trace( 'from socket.io clients' )
 ;
 
 setInterval( function() {

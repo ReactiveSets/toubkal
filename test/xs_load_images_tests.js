@@ -50,10 +50,9 @@
   describe('Load Images test suite:', function() {
     var images, images_dataset;
     images_dataset = xs.set([], {
-      auto_increment: true,
       name: 'Images dataset'
     });
-    images = images_dataset.load_images();
+    images = images_dataset.auto_increment().load_images();
     it('expect images.fetch_all() to be empty', function() {
       return expect(images.fetch_all()).to.be.empty();
     });
