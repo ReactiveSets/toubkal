@@ -27,6 +27,7 @@ var XS = require( '../lib/server/http.js' ).XS
   , extend     = XS.extend
 ;
 
+require( '../lib/server/socket_io_clients.js' );
 require( '../lib/server/file.js' );
 
 /* -------------------------------------------------------------------------------------------
@@ -53,7 +54,6 @@ var servers = xs.set( [
 */
 require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
-require( '../lib/join.js' );
 require( '../lib/thumbnails.js' );
 
 var xs_min = xs
@@ -79,6 +79,7 @@ var xs_min = xs
     { name: 'lib/socket_io_server.js'      },
     
     // xs client
+    { name: 'lib/uri.js'                   },
     { name: 'lib/selector.js'              },
     { name: 'lib/load_images.js'           },
     { name: 'lib/bootstrap_carousel.js'    },
@@ -129,8 +130,6 @@ xs.set( [
 // Serve contact_form_fields to socket.io clients
 images
   .union( [ thumbnails ] )
-  
-  .to_uri()
   
   .trace( 'to socket.io clients' )
   
