@@ -149,15 +149,15 @@ xs.set( [
 ;
 
 // Socket.io Server tests
-var clients = servers.socket_io_clients();
+var clients = servers.socket_io_clients( { remove_timeout: 10 } );
 
-var source_set = xs.set( [ {}, {}, {}, {} ] )
-  , source_1 = xs.set( [ {}, {}, {}, {}, {} ] )
+var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
+  , source_1 = xs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
 ;
 
 xs.union( [
-    source_set.set_flow( 'source' ).auto_increment(),
-    source_1.set_flow( 'source_1' ).auto_increment()
+    source_set.set_flow( 'source' ),
+    source_1.set_flow( 'source_1' )
   ] )
 
   .trace( 'to socket.io clients' )
@@ -168,11 +168,11 @@ xs.union( [
     return source
       .plug( this.socket )
       .trace( 'from socket.io clients' )
-      .set()
     ;
   } )
+  .set()
 ;
 
 setInterval( function() {
-  source_set.add( [ {} ] )
+  source_set.add( [ {} ] ); // this should add to the source of the auto_increment() pipelet of source_set
 } , 10000 )
