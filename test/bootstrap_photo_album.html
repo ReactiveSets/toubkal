@@ -42,10 +42,10 @@
         
         , images = XS.xs
           .socket_io_server()
-          .order( [ { id: 'id' } ] )
+          .to_uri()
           .trace( 'bootstrap photo album, images received' )
           .bootstrap_photo_album( thumbnails, carousel, {
-              album          : 'album_1'
+              album_name     : 'album_1'
             , images_flow    : 'gallery_images'
             , thumbnails_flow: 'gallery_thumbnails'
           } )
