@@ -279,10 +279,7 @@ describe 'XS test suite:', ->
     
     it 'Adding a query should generate a query tree', ->
       expect( tree
-        .query_tree_add( [
-          { flow: 'user' }
-        ], { recipient: recipient_1 } )
-        
+        .query_tree_add( [ { flow: 'user' } ], recipient_1 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -304,10 +301,7 @@ describe 'XS test suite:', ->
       
     it 'Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', ->
       expect( tree
-        .query_tree_add( [
-          {} # empty OR-term:
-        ], { recipient: recipient_2 } )
-        
+        .query_tree_add( [ {} ], recipient_2 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -335,7 +329,7 @@ describe 'XS test suite:', ->
           { flow: 'store', id: 527 }
           { id: 521, flow: 'store' }
           { id: 425 }
-        ], { recipient: recipient_3 } )
+        ], recipient_3 )
         
         .query_tree_top
       ).to.be.eql {
@@ -394,11 +388,7 @@ describe 'XS test suite:', ->
       
     it 'Remove a query should shrink the query tree', ->
       expect( tree
-        
-        .query_tree_remove( [
-          {}
-        ], { recipient: recipient_2 } )
-        
+        .query_tree_remove( [ {} ], recipient_2 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -456,11 +446,7 @@ describe 'XS test suite:', ->
       
     it 'Remove another query should shrink the query tree further', ->
       expect( tree
-        
-        .query_tree_remove( [
-          { flow: 'user' }
-        ], { recipient: recipient_3 } )
-        
+        .query_tree_remove( [ { flow: 'user' } ], recipient_3 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -518,11 +504,7 @@ describe 'XS test suite:', ->
       
     it 'Remove another query should shrink the query tree even further', ->
       expect( tree
-        
-        .query_tree_remove( [
-          { flow: 'user' }
-        ], { recipient: recipient_1 } )
-        
+        .query_tree_remove( [ { flow: 'user' } ], recipient_1 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -571,7 +553,9 @@ describe 'XS test suite:', ->
       }
       
     it 'Add and Remove empty queries should not change anything', ->
-      expect( tree.query_tree_add( [] ).query_tree_remove( [] ).query_tree_top
+      expect( tree
+        .query_tree_add( [] ).query_tree_remove( [] )
+        .query_tree_top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -624,7 +608,7 @@ describe 'XS test suite:', ->
         .query_tree_remove( [
           { flow: 'store', id: 521 }
           { id: 527, flow: 'store' }
-        ], { recipient: recipient_3 } )
+        ], recipient_3 )
         
         .query_tree_top
       ).to.be.eql {
@@ -647,11 +631,7 @@ describe 'XS test suite:', ->
       
     it 'Remove the last record, should empty the query tree', ->
       expect( tree
-        
-        .query_tree_remove( [
-          { id: 425 }
-        ], { recipient: recipient_3 } )
-        
+        .query_tree_remove( [ { id: 425 } ], recipient_3 )
         .query_tree_top
       ).to.be.eql {
         branches  : {}
@@ -668,17 +648,11 @@ describe 'XS test suite:', ->
     recipient_2 = xs.set( { name: 'recipient_2' } )
     recipient_3 = xs.set( { name: 'recipient_3' } )
     
-    tree.query_tree_add [
-      { flow: 'user', id: 123 }
-    ], { recipient: recipient_1 }
+    tree.query_tree_add [ { flow: 'user', id: 123 } ], recipient_1
     
-    tree.query_tree_add [
-      { flow: 'user', id: 345 }
-    ], { recipient: recipient_2 }
+    tree.query_tree_add [ { flow: 'user', id: 345 } ], recipient_2
     
-    tree.query_tree_add [
-      {}
-    ], { recipient: recipient_3 }
+    tree.query_tree_add [ {} ], recipient_3
     
     tree.query_tree_emit 'add', [
       { flow: 'store' }
@@ -709,9 +683,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'Should allow to emit a remove operation filtered by a query to the first recipient', ( done ) ->
-      tree.query_tree_emit 'remove', [
-        { flow: 'user', id: 123 }
-      ]
+      tree.query_tree_emit 'remove', [ { flow: 'user', id: 123 } ]
       
       recipient_1.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []

@@ -410,9 +410,7 @@
           {
             flow: 'user'
           }
-        ], {
-          recipient: recipient_1
-        }).query_tree_top).to.be.eql({
+        ], recipient_1).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
@@ -431,9 +429,7 @@
         });
       });
       it('Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', function() {
-        return expect(tree.query_tree_add([{}], {
-          recipient: recipient_2
-        }).query_tree_top).to.be.eql({
+        return expect(tree.query_tree_add([{}], recipient_2).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
@@ -464,9 +460,7 @@
           }, {
             id: 425
           }
-        ], {
-          recipient: recipient_3
-        }).query_tree_top).to.be.eql({
+        ], recipient_3).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
@@ -518,9 +512,7 @@
         });
       });
       it('Remove a query should shrink the query tree', function() {
-        return expect(tree.query_tree_remove([{}], {
-          recipient: recipient_2
-        }).query_tree_top).to.be.eql({
+        return expect(tree.query_tree_remove([{}], recipient_2).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
@@ -576,9 +568,7 @@
           {
             flow: 'user'
           }
-        ], {
-          recipient: recipient_3
-        }).query_tree_top).to.be.eql({
+        ], recipient_3).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
@@ -634,9 +624,7 @@
           {
             flow: 'user'
           }
-        ], {
-          recipient: recipient_1
-        }).query_tree_top).to.be.eql({
+        ], recipient_1).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "store": {
@@ -734,9 +722,7 @@
             id: 527,
             flow: 'store'
           }
-        ], {
-          recipient: recipient_3
-        }).query_tree_top).to.be.eql({
+        ], recipient_3).query_tree_top).to.be.eql({
           branches: {
             "id": {
               "425": {
@@ -759,9 +745,7 @@
           {
             id: 425
           }
-        ], {
-          recipient: recipient_3
-        }).query_tree_top).to.be.eql({
+        ], recipient_3).query_tree_top).to.be.eql({
           branches: {},
           keys: [],
           recipients: [],
@@ -787,20 +771,14 @@
           flow: 'user',
           id: 123
         }
-      ], {
-        recipient: recipient_1
-      });
+      ], recipient_1);
       tree.query_tree_add([
         {
           flow: 'user',
           id: 345
         }
-      ], {
-        recipient: recipient_2
-      });
-      tree.query_tree_add([{}], {
-        recipient: recipient_3
-      });
+      ], recipient_2);
+      tree.query_tree_add([{}], recipient_3);
       tree.query_tree_emit('add', [
         {
           flow: 'store'
