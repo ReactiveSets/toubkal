@@ -7,16 +7,17 @@ reducing servers environmental footprint and improving mobile clients battery li
 server, network and client resources.
 
 #### Ecosystem
-XS backend runs on **Node.js**.
+XS backend runs on **Node.js** providing a scalable database, web server, validation, and authorizations.
 
-On the frontend, XS can be coupled with any other framework but we recommend using reactive frameworks such as
-**AngularJS** or **React** which reactive model is closer to XS.
+On the frontend, XS provides reactive controls and views driven by dataflows.
+XS can optionally be coupled with any other framework but we recommend using reactive libraries such as
+**AngularJS**, **Bacon.js**, **React**, which model is the closest to XS.
 
-We also recommand **Bootstrap** for responsive HTML5 applications and we use it for our Carousel and Photo Albums.
+For layout, we recommand **Bootstrap** for responsive HTML5 applications and we use it for our Carousel and Photo Albums.
 
-For DOM manipulations one can use any library as XS core has zero dependencies.
+For DOM manipulation one can use any library, or none at all, as XS core has zero dependencies.
 
-XS can either be used to improve existing applications on the backend or frontend, or as full backend-and-frontend
+XS can either be used to improve existing applications on the backend or frontend, or as a full backend-and-frontend
 framework for new projects.
 
 #### Dataflow Programming Model
@@ -248,16 +249,24 @@ Version 0.2.0 - ETA October 2013
   Features already developped:
 
     - Virtual Hosts w/ optimized routing
-    - Bootstrap Carousel
-    - Bootstrap Photo Albums
-    - Image Thumbnails using ImageMagick
-    - DOM controled image loading for image galleries
-    - pipelet to resolve node module files absolute path
-    - pipelet to add timestamp attribute to values
-    - pipelet to add events metadata attributes
-    - pipelet to auto-increment an attribute
-    - pipelet to set the flow attribute
-
+    
+  New pipelets (available now):
+  
+  Pipelet                   | Short Description                              
+  --------------------------|------------------------------------------------
+  encapsulate()             | Hide a graph of pipelets behind one pipelet
+  require_resolve()         | Resolve node module files absolute path
+  timestamp()               | Add timestamp attribute
+  events_metadata()         | Add events metadata attributes
+  auto_increment()          | Add auto-increment attribute
+  set_flow()                | Add flow attribute
+  to_uri()                  | Transforms a relative file name into a DOM uri
+  thumbnails()              | Image thumbnails using ImageMagick
+  load_images()             | Load images in the DOM one at a time
+  bootstrap_carousel()      | Bootstrap responsive images carousel 
+  bootstrap_photos_matrix() | Bootstrap responsive photo matrix
+  bootstrap_photo_album()   | Bootstrap responsive photo album
+  
 Version 0.1.0 - April 8th 2013:
 
   Features:
@@ -272,7 +281,23 @@ Version 0.1.0 - April 8th 2013:
     - HTTP(s) servers
     - File watch w/ realtime updates
     - JSON Configuration Files w/ realtime updates
-    
+
+  Pipelet                   | Short Description                              
+  --------------------------|------------------------------------------------
+  set()                     | Base stateful pipelet
+  filter()                  | Filters a dataflow
+  order()                   | Order a set
+  ordered()                 | Follow an ordered set (typically derived)
+  aggregate()               | Aggregates measures along dimensions (GROUP BY)
+  join()                    | Joins two dataflows
+  watch()                   | Creates a dataflow of file contents
+  uglify()                  | Minifies a dataflow of files into a bundle, using Uglify-JS
+  dispatch()                | Dispatches dataflows to a dataflow of branches
+  http_servers()            | A dataflow of http servers
+  socket_io_clients()       | A dataflow server for socket.io clients
+  socket_io_server()        | A dataflow client for socket.io server
+  
+  
 # Licence
 
     Copyright (C) 2013, Connected Sets
