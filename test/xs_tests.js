@@ -755,7 +755,7 @@
       });
     });
     describe('Query_Tree routing:', function() {
-      var recipient_1, recipient_2, recipient_3, tree;
+      var recipient_1, recipient_2, recipient_3, recipient_4, tree;
       tree = new XS.Pipelet();
       recipient_1 = xs.set({
         name: 'recipient_1'
@@ -765,6 +765,9 @@
       });
       recipient_3 = xs.set({
         name: 'recipient_3'
+      });
+      recipient_4 = xs.set({
+        name: 'recipient_4'
       });
       tree.query_tree_add([
         {
@@ -779,6 +782,13 @@
         }
       ], recipient_2);
       tree.query_tree_add([{}], recipient_3);
+      tree.query_tree_add([
+        {
+          id: 123
+        }, {
+          flow: 'user'
+        }
+      ], recipient_4);
       tree.query_tree_emit('add', [
         {
           flow: 'store'
@@ -823,6 +833,23 @@
               {
                 flow: 'store'
               }, {
+                id: 123
+              }, {
+                flow: 'user',
+                id: 123
+              }, {
+                flow: 'user',
+                id: 345
+              }
+            ]);
+          });
+        });
+      });
+      it('Should not duplicate or reorder values emited to fourth recipient', function(done) {
+        return recipient_4.fetch_all(function(values) {
+          return check(done, function() {
+            return expect(values).to.be.eql([
+              {
                 id: 123
               }, {
                 flow: 'user',
@@ -903,7 +930,7 @@
           });
         });
       });
-      return it('Finally third recipient should be empty after removing last record', function(done) {
+      return it('third recipient should be empty after removing last record', function(done) {
         tree.query_tree_emit('remove', [
           {
             flow: 'store'

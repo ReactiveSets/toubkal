@@ -647,12 +647,15 @@ describe 'XS test suite:', ->
     recipient_1 = xs.set( { name: 'recipient_1' } )
     recipient_2 = xs.set( { name: 'recipient_2' } )
     recipient_3 = xs.set( { name: 'recipient_3' } )
+    recipient_4 = xs.set( { name: 'recipient_4' } )
     
     tree.query_tree_add [ { flow: 'user', id: 123 } ], recipient_1
     
     tree.query_tree_add [ { flow: 'user', id: 345 } ], recipient_2
     
     tree.query_tree_add [ {} ], recipient_3
+    
+    tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], recipient_4
     
     tree.query_tree_emit 'add', [
       { flow: 'store' }
@@ -681,7 +684,15 @@ describe 'XS test suite:', ->
           { flow: 'user', id: 123 }
           { flow: 'user', id: 345 }
         ]
-      
+
+    it 'Should not duplicate or reorder values emited to fourth recipient', ( done ) ->
+      recipient_4.fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { id: 123 }
+          { flow: 'user', id: 123 }
+          { flow: 'user', id: 345 }
+        ]
+
     it 'Should allow to emit a remove operation filtered by a query to the first recipient', ( done ) ->
       tree.query_tree_emit 'remove', [ { flow: 'user', id: 123 } ]
       
@@ -715,7 +726,7 @@ describe 'XS test suite:', ->
           { flow: 'store' }
         ]
       
-    it 'Finally third recipient should be empty after removing last record', ( done ) ->
+    it 'third recipient should be empty after removing last record', ( done ) ->
       tree.query_tree_emit 'remove', [ { flow: 'store' } ]
       
       recipient_3.fetch_all ( values ) -> check done, () ->
