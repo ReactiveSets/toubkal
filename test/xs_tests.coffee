@@ -1655,8 +1655,8 @@ describe 'XS test suite:', ->
             { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
             { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
             { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
-            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
             { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
+            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
           ]
