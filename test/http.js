@@ -165,14 +165,15 @@ xs.union( [
   .dispatch( clients, function( source, options ) {
     de&&ug( 'creating socket_io client id: ' + this.id );
     
-    return source
-      .plug( this.socket )
-      .trace( 'from socket.io clients' )
+    var input  = source.plug( this.socket )
+      , output = input.trace( 'from socket.io clients' )
     ;
-  } )
+    
+    return { input: input, output: output };
+  }, { no_encapsulate: true, input_output: true } )
   .set()
 ;
 
 setInterval( function() {
-  source_set.add( [ {} ] ); // this should add to the source of the auto_increment() pipelet of source_set
+  source_set.add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 )
