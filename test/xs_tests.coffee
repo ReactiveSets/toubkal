@@ -732,6 +732,38 @@ describe 'XS test suite:', ->
       recipient_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
       
+    it 'clear should clear all records from all recipients', ( done ) ->
+      tree.query_tree_add [ { flow: 'user', id: 123 } ], recipient_1
+      
+      tree.query_tree_add [ { flow: 'user', id: 345 } ], recipient_2
+      
+      tree.query_tree_add [ {} ], recipient_3
+      
+      tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], recipient_4
+      
+      tree.query_tree_emit 'add', [
+        { flow: 'store' }
+        { id: 123 }
+        { flow: 'user', id: 123 }
+        { flow: 'user', id: 345 }
+      ]
+      
+      tree.query_tree_emit 'clear'
+      
+      count = 4
+      all_values = []
+
+      fetched = ( values ) ->
+        all_values.push( values )
+        
+        --count || check done, () ->
+          expect( all_values ).to.be.eql [ [], [], [], [] ]
+
+      recipient_1.fetch_all fetched
+      recipient_2.fetch_all fetched
+      recipient_3.fetch_all fetched
+      recipient_4.fetch_all fetched
+      
   describe 'XS.Set():', ->
     set = xs.set();
     

@@ -930,7 +930,7 @@
           });
         });
       });
-      return it('third recipient should be empty after removing last record', function(done) {
+      it('third recipient should be empty after removing last record', function(done) {
         tree.query_tree_emit('remove', [
           {
             flow: 'store'
@@ -941,6 +941,55 @@
             return expect(values).to.be.eql([]);
           });
         });
+      });
+      return it('clear should clear all records from all recipients', function(done) {
+        var all_values, count, fetched;
+        tree.query_tree_add([
+          {
+            flow: 'user',
+            id: 123
+          }
+        ], recipient_1);
+        tree.query_tree_add([
+          {
+            flow: 'user',
+            id: 345
+          }
+        ], recipient_2);
+        tree.query_tree_add([{}], recipient_3);
+        tree.query_tree_add([
+          {
+            id: 123
+          }, {
+            flow: 'user'
+          }
+        ], recipient_4);
+        tree.query_tree_emit('add', [
+          {
+            flow: 'store'
+          }, {
+            id: 123
+          }, {
+            flow: 'user',
+            id: 123
+          }, {
+            flow: 'user',
+            id: 345
+          }
+        ]);
+        tree.query_tree_emit('clear');
+        count = 4;
+        all_values = [];
+        fetched = function(values) {
+          all_values.push(values);
+          return --count || check(done, function() {
+            return expect(all_values).to.be.eql([[], [], [], []]);
+          });
+        };
+        recipient_1.fetch_all(fetched);
+        recipient_2.fetch_all(fetched);
+        recipient_3.fetch_all(fetched);
+        return recipient_4.fetch_all(fetched);
       });
     });
     describe('XS.Set():', function() {
