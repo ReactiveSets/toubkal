@@ -74,6 +74,9 @@ var xs_min = xs
     { name: 'lib/aggregate.js'           },
     { name: 'lib/join.js'                },
     
+    // xs utilities
+    { name: 'lib/json.js'                },
+    
     // xs socket.io
     { name: 'lib/socket_io_crossover.js' },
     { name: 'lib/socket_io_server.js'    },
@@ -109,7 +112,7 @@ var node_modules_js = xs.set( [
 ;
 
 var tests_min = xs
-  .union( [ node_modules_js, xs.set( [ { name: 'test/xs_tests.js' } ] ) ] )
+  .union( [ node_modules_js, xs.set( [ { name: 'test/xs_core.js' } ] ) ] )
   .auto_increment() // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
