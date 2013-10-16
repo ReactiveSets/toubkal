@@ -36,6 +36,8 @@ also managed using pipelets, allowing instant changes all the way to the UI with
 XS features a chardable document database with joins, aggregates, filters and transactions with eventual consistency allowing
 both normalized and denormalized schemes.
 
+Persistance will be implemented in version 0.3.
+
 #### Performances
 Capable of handling millions of operations per second, XS is particularly well suited for low-power devices such as
 tablets and smartphones.
@@ -52,7 +54,7 @@ Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtim
 over virtually unlimited size datasets.
 
 ### Documentation
-This readme provides a short introcution to Connected Sets.
+This readme provides a short introduction to Connected Sets.
 
 The bulk of the documentation is currently embedded in the code of ````lib/pipelet.js```` for the core as well as individual pipelets' sources.
 
@@ -63,6 +65,19 @@ Eventually we plan on extracting and completing this documentation to provide th
 - ConnectedSets Pipelet Developper's Guide
 - Individual Reference Manuals for each module
 
+### Automated Tests, Continuous Integration
+We have curently developped 125 tests for the XS core pipelets that run after every commit on Travis CI under node
+versions 0.6, 0.8, 0.10, and 0.11.
+
+Our continuous integration process also requires that before each commit the developper runs these tests so travis
+usually passes all tests. In the event that a test does not pass the top priority is to fix the test before anything
+else.
+
+We have developped many other ui tests that are not currently automated because we have not yet integrated Phantomjs.
+
+We also do manual testing on the following web browsers: Chrome (latest), Firefox (latest), IE 8, IE 9, IE 10.
+
+We publish to npm regularily, typically when we want to update our demonstration site. 
 ### Installation
 
 From npm, latest release:
@@ -71,6 +86,19 @@ npm install excess
 ```
 
 Some image manipulation pipelets require ImageMagick that [you can download here](http://www.imagemagick.org/script/binary-releases.php.).
+
+### Reunning tests
+```bash
+npm install mocha
+npm install expect.js
+npm install coffee-script
+
+./run_tests.sh
+125 passing (2s)
+
+less test.out # for tests detailed traces
+```
+
 
 ## Demonstration Site
 A [demonstration and beta test site is available here](http://www.castorcad.com/).
@@ -238,76 +266,88 @@ node server.js
 
 # Releases
 
-Version 0.2.0 - ETA October 2013
+## Version 0.3.0 - ETA December 2013
 
-  Goals:
+### Goals:
 
-    - Request / Response dataflows using optimized Query Trees
-    - Dynamic Authorizations Query Dataflow
-    - Watch directory metadata flow
-
-  Features already developped:
-
-    - Virtual Hosts w/ optimized routing
-    
-  New pipelets (available now):
+- Persistance
+- Finalize module pattern
+- Horizontal distribution of web socket dispatcher
   
-  Pipelet                   | Short Description                              
-  --------------------------|------------------------------------------------
-  encapsulate()             | Hide a graph of pipelets behind one pipelet
-  require_resolve()         | Resolve node module files absolute path
-  timestamp()               | Add timestamp attribute
-  events_metadata()         | Add events metadata attributes
-  auto_increment()          | Add auto-increment attribute
-  set_flow()                | Add flow attribute
-  to_uri()                  | Transforms a relative file name into a DOM uri
-  thumbnails()              | Image thumbnails using ImageMagick
-  load_images()             | Load images in the DOM one at a time
-  bootstrap_carousel()      | Bootstrap responsive images carousel 
-  bootstrap_photos_matrix() | Bootstrap responsive photo matrix
-  bootstrap_photo_album()   | Bootstrap responsive photo album
-  
-Version 0.1.0 - April 8th 2013:
+##Version 0.2.0 - ETA October 2013
 
-  Features:
-  
-    - Core Database engine with order / aggregates / join / union, and much more
-    - Automated tests
-    - Dataflows between clients and server using socket.io
-    - DOM Tables w/ realtime updates
-    - DOM Controls as dataflows: Drop-Down / Radio / Checkboxes
-    - DOM Forms with client-side and server-side validation
-    - Realtime Minification using Uglify w/ source maps
-    - HTTP(s) servers
-    - File watch w/ realtime updates
-    - JSON Configuration Files w/ realtime updates
+### Goals:
 
-  Pipelet                   | Short Description                              
-  --------------------------|------------------------------------------------
-  set()                     | Base stateful pipelet
-  filter()                  | Filters a dataflow
-  order()                   | Order a set
-  ordered()                 | Follow an ordered set (typically derived)
-  aggregate()               | Aggregates measures along dimensions (GROUP BY)
-  join()                    | Joins two dataflows
-  watch()                   | Dataflow updated on file content changes
-  uglify()                  | Minifies a dataflow of files into a bundle, using [Uglify JS 2](https://github.com/mishoo/UglifyJS2)
-  dispatch()                | Dispatches dataflows to a dataflow of branches
-  http_servers()            | A dataflow of http servers
-  serve()                   | Serve a dataflow of resources contents to http (or other) servers
-  socket_io_clients()       | A dataflow server for socket.io clients
-  socket_io_server()        | A dataflow client for socket.io server
-  table()                   | DOM table bound to incoming dataflows
-  form()                    | DOM Form using fields dataflow, emiting submited forms
-  form_validate()           | Client and server form validation
-  checkbox()                | DOM input checkbox
-  checkbox_group()          | DOM input chexbox group
-  radio()                   | DOM radio button
-  drop_down()               | DOM drop-down menu
-  send_mail()               | Send emails from email dataflow
-  configuration()           | Dataflow of application configuration parameters
-  parse_JSON()              | JSON dataflow to parsed JSON dataflow
-  
+- Request / Response dataflows using optimized Query Trees
+- Dynamic Authorizations Query Dataflow
+- Watch directory metadata flow
+
+### Features already developped:
+
+- Virtual Hosts w/ optimized routing
+
+### New pipelets (available now):
+
+Pipelet                   | Short Description                              
+--------------------------|------------------------------------------------
+encapsulate()             | Hide a graph of pipelets behind one pipelet
+require_resolve()         | Resolve node module files absolute path
+timestamp()               | Add timestamp attribute
+events_metadata()         | Add events metadata attributes
+auto_increment()          | Add auto-increment attribute
+set_flow()                | Add flow attribute
+to_uri()                  | Transforms a relative file name into a DOM uri
+thumbnails()              | Image thumbnails using ImageMagick
+load_images()             | Load images in the DOM one at a time
+bootstrap_carousel()      | Bootstrap responsive images carousel 
+bootstrap_photos_matrix() | Bootstrap responsive photo matrix
+bootstrap_photo_album()   | Bootstrap responsive photo album
+json_stringify()          | JSON Stringifies content attribute
+json_parse()              | JSON parse content attribute
+attribute_to_value()      | Replace value with the value of an attribute
+value_to_attribute()      | Sets value as an attribute and add other default attributes
+
+## Version 0.1.0 - April 8th 2013:
+
+### Features:
+
+- Core Database engine with order / aggregates / join / union, and much more
+- Automated tests
+- Dataflows between clients and server using socket.io
+- DOM Tables w/ realtime updates
+- DOM Controls as dataflows: Drop-Down / Radio / Checkboxes
+- DOM Forms with client-side and server-side validation
+- Realtime Minification using Uglify w/ source maps
+- HTTP(s) servers
+- File watch w/ realtime updates
+- JSON Configuration Files w/ realtime updates
+
+Pipelet                   | Short Description                              
+--------------------------|------------------------------------------------
+set()                     | Base stateful pipelet
+filter()                  | Filters a dataflow
+order()                   | Order a set
+ordered()                 | Follow an ordered set (typically derived)
+aggregate()               | Aggregates measures along dimensions (GROUP BY)
+join()                    | Joins two dataflows
+watch()                   | Dataflow updated on file content changes
+uglify()                  | Minifies a dataflow of files into a bundle, using [Uglify JS 2](https://github.com/mishoo/UglifyJS2)
+dispatch()                | Dispatches dataflows to a dataflow of branches
+http_servers()            | A dataflow of http servers
+serve()                   | Serve a dataflow of resources contents to http (or other) servers
+socket_io_clients()       | A dataflow server for socket.io clients
+socket_io_server()        | A dataflow client for socket.io server
+table()                   | DOM table bound to incoming dataflows
+form()                    | DOM Form using fields dataflow, emiting submited forms
+form_validate()           | Client and server form validation
+checkbox()                | DOM input checkbox
+checkbox_group()          | DOM input chexbox group
+radio()                   | DOM radio button
+drop_down()               | DOM drop-down menu
+send_mail()               | Send emails from email dataflow
+configuration()           | Dataflow of application configuration parameters
+parse_JSON()              | JSON dataflow to parsed JSON dataflow
+
 # Licence
 
     Copyright (C) 2013, Connected Sets
