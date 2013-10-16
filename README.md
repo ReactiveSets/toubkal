@@ -290,13 +290,23 @@ Version 0.1.0 - April 8th 2013:
   ordered()                 | Follow an ordered set (typically derived)
   aggregate()               | Aggregates measures along dimensions (GROUP BY)
   join()                    | Joins two dataflows
-  watch()                   | Creates a dataflow of file contents
-  uglify()                  | Minifies a dataflow of files into a bundle, using Uglify-JS
+  watch()                   | Dataflow updated on file content changes
+  uglify()                  | Minifies a dataflow of files into a bundle, using [Uglify JS 2](https://github.com/mishoo/UglifyJS2)
   dispatch()                | Dispatches dataflows to a dataflow of branches
   http_servers()            | A dataflow of http servers
+  serve()                   | Serve a dataflow of resources contents to http (or other) servers
   socket_io_clients()       | A dataflow server for socket.io clients
   socket_io_server()        | A dataflow client for socket.io server
-  
+  table()                   | DOM table bound to incoming dataflows
+  form()                    | DOM Form using fields dataflow, emiting submited forms
+  form_validate()           | Client and server form validation
+  checkbox()                | DOM input checkbox
+  checkbox_group()          | DOM input chexbox group
+  radio()                   | DOM radio button
+  drop_down()               | DOM drop-down menu
+  send_mail()               | Send emails from email dataflow
+  configuration()           | Dataflow of application configuration parameters
+  parse_JSON()              | JSON dataflow to parsed JSON dataflow
   
 # Licence
 
