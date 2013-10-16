@@ -1,5 +1,5 @@
 ###
-    xs_tests.coffee
+    xs_core.coffee
 
     Copyright (C) 2013, Connected Sets
 
@@ -80,18 +80,21 @@ if require?
   require '../lib/order.js'
   require '../lib/aggregate.js'
   require '../lib/join.js'
+  require '../lib/json.js'
 
 xs = XS.xs
 
 Set = XS.Set
 
-log = ( message ) -> XS.log( 'xs tests, ' + message )
+log = ( message ) ->
+  XS.log( 'xs tests, ' + message )
 
 describe 'XS test suite:', ->
-  it 'XS should be defined:', ->
+  it( 'XS should be defined:', ->
     expect( XS ).to.exist
-  
-  describe 'XS.extend():', ->
+  )
+
+  describe( 'XS.extend():', ->
     extend = XS.extend
     
     it 'extend() should be a function', ->
@@ -136,7 +139,8 @@ describe 'XS test suite:', ->
     
     it 'o3 should be deep equal to _o3', ->
       expect( o3 ).to.be.eql _o3
-    
+  ) # extend
+  
   describe 'XS.subclass():', ->
     subclass = XS.subclass
     
@@ -1989,3 +1993,31 @@ describe 'XS test suite:', ->
           break
 
         expect( found ).to.be true
+
+
+describe 'json.js', ->
+  books = [
+    { operation: "add", content: { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         } }
+    { operation: "add", content: { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        } }
+    { operation: "add", content: { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        } }
+  ]
+  
+  book_operations = xs.set books
+  
+  books_stringified = book_operations.json_stringify()
+  
+  books_parsed = books_stringified.json_parse()
+  
+  it 'json_stringify() should stringify content attributes', ( done ) ->
+    books_stringified.fetch_all ( books ) ->
+      check done, () ->
+        expect( books ).to.be.eql [
+          { operation: "add", content: '{"id":1,"title":"A Tale of Two Cities","author_id":1,"author_name":"Charles Dickens"}' }
+          { operation: "add", content: '{"id":8,"title":"The Hobbit","author_id":2,"author_name":"J. R. R. Tolkien"}' }
+          { operation: "add", content: '{"id":2,"title":"The Lord of the Rings","author_id":2,"author_name":"J. R. R. Tolkien"}' }
+        ]
+
+  it 'json_parse() should parse stringified content', ( done ) ->
+    books_parsed.fetch_all ( _books ) ->
+      check done, () ->
+        expect( _books ).to.be.eql books

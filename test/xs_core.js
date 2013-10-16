@@ -97,6 +97,7 @@
     require('../lib/order.js');
     require('../lib/aggregate.js');
     require('../lib/join.js');
+    require('../lib/json.js');
   }
 
   xs = XS.xs;
@@ -5175,6 +5176,65 @@
             }
             return expect(found).to.be(true);
           });
+        });
+      });
+    });
+  });
+
+  describe('json.js', function() {
+    var book_operations, books, books_parsed, books_stringified;
+    books = [
+      {
+        operation: "add",
+        content: {
+          id: 1,
+          title: "A Tale of Two Cities",
+          author_id: 1,
+          author_name: "Charles Dickens"
+        }
+      }, {
+        operation: "add",
+        content: {
+          id: 8,
+          title: "The Hobbit",
+          author_id: 2,
+          author_name: "J. R. R. Tolkien"
+        }
+      }, {
+        operation: "add",
+        content: {
+          id: 2,
+          title: "The Lord of the Rings",
+          author_id: 2,
+          author_name: "J. R. R. Tolkien"
+        }
+      }
+    ];
+    book_operations = xs.set(books);
+    books_stringified = book_operations.json_stringify();
+    books_parsed = books_stringified.json_parse();
+    it('json_stringify() should stringify content attributes', function(done) {
+      return books_stringified.fetch_all(function(books) {
+        return check(done, function() {
+          return expect(books).to.be.eql([
+            {
+              operation: "add",
+              content: '{"id":1,"title":"A Tale of Two Cities","author_id":1,"author_name":"Charles Dickens"}'
+            }, {
+              operation: "add",
+              content: '{"id":8,"title":"The Hobbit","author_id":2,"author_name":"J. R. R. Tolkien"}'
+            }, {
+              operation: "add",
+              content: '{"id":2,"title":"The Lord of the Rings","author_id":2,"author_name":"J. R. R. Tolkien"}'
+            }
+          ]);
+        });
+      });
+    });
+    return it('json_parse() should parse stringified content', function(done) {
+      return books_parsed.fetch_all(function(_books) {
+        return check(done, function() {
+          return expect(_books).to.be.eql(books);
         });
       });
     });
