@@ -89,10 +89,13 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 
 ### Reunning tests
 ```bash
+npm install -g coffee-script
 npm install mocha
 npm install expect.js
-npm install coffee-script
 
+git clone https://github.com/ConnectedSets/ConnectedSets.git
+
+cd ConnectedSets
 ./run_tests.sh
 125 passing (2s)
 
