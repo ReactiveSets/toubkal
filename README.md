@@ -7,16 +7,19 @@ Connected Sets (**XS**) is a high-efficiency, scalable, realtime, secure, web ap
 aiming at massively reducing servers environmental footprint and improving mobile clients battery
 life by making an optimal use of server, network and client resources.
 
+Although XS is currently used to deliver a basic web application, some features described here are
+still work in progress. XS should provide most of the features described bellow by version 0.3 in
+December 2013.
+
 ### Why yet-another JavaScript Web Application Framework?
 
-The short answer is because we are not satisfied at all with the performances, productivity, and
-authorization models, of any existing framework.
+The short answer is because we are not satisfied at all with the performances, authorization
+models, and productivity, of any existing framework.
 
 ### What do you mean by performances?
 
-- Raw CPU performance that consume server ressources, burn hard-cash, consume massive amounts
-of usually not-so-green energy to run and cool-down, and drain client batteries faster than
-anyone desires
+- Raw CPU performance that burn hard-cash, consume massive amounts of usually not-so-green energy
+to run and cool-down server, and drain client batteries faster than anyone desires
 - Scalability to hundreds of millions of simultaneous connexions while keeping good raw
 performances system-wide
 - Lowest latency essential to the responsiveness of applications and best user experiences
@@ -27,7 +30,7 @@ lower-bandwidth networks
 Connected Sets addresses all of these issues thanks to its unique subscribe/push dataflow router
 that works accross and betwwen web browsers and nodejs servers.
 
-#### What's the big deal about authorizations?
+### What's the big deal about authorizations?
 
 Writing a complex application is hard-enough, add to this any significantly-complex authorization
 scheme and the whole thing breaks appart, slows-down to a crawl, clutters the code with plenty of
@@ -58,15 +61,33 @@ that forgot to test a role or a corner-case.
 By allowing you to describe **what** you want instead of **how-the-hell** this could ever be
 accomplished.
 
+The following provides an example for a non-trivial data server with realtime updates on
+everything including authorization changes:
+
 ```javascript
-var database = xs.file_store( 'data_store.json' ); // Input/Output dataflows to/from datastore, no external database required
+var xs = require( 'excess' ); // Loads XS core pipelets, returns xs head pipelet
+
+require( 'excess/lib/server/file.js' ); // Loads file server pipelets
+require( 'excess/lib/server/http.js' ); // Loads http server pipelets
+require( 'excess/lib/server/socket_io_clients.js' ); // Loads socket.io server pipelets
+
+var database = xs.file_store( 'data_store.json' ); // Input/Output dataflows to/from datastore, one-line, no external database required
+
+var users = database.flow( 'users' ); // Dataflow of users' credentials
+
+var clients = xs
+  // Define a set of web servers
+  .set( [ 
+    { ip_address: '0.0.0.0', port: 80 },                                        // http://server.com/
+    { ip_address: '0.0.0.0', port:443, key: 'key string', cert: 'cert string' } // https://server.com/
+  ] )
+  
+  .http_servers()              // Dataflow of one http and https server
+  .socket_io_clients()         // Dataflow of socket.io client connections
+  .authenticate_users( users ) // Dataflow of authenticated users' connections providing user_id
+;
 
 var authorizations = database.flow( 'authorizations' ); // Dataflow of all users' authorizations
-
-var clients = http_servers
-  .socket_io_clients()  // Dataflow of socket.io client connections
-  .authenticate_users() // Dataflow of authenticated users' connections providing user_id
-;
 
 database
   .dispatch( clients, client )  // Serve 50k simultaneous user connexions over one core
@@ -77,19 +98,19 @@ function client( source ) {
   var user_id = this.user_id; // id of authenticated user
   
   var get_query = authorizations
-    .filter( [ { user_id: user_id, get: true } ] )    // Get authorizations for this user
+    .query( [ { user_id: user_id, get: true } ] )    // Get authorizations for this user
     .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
   ;
   
   var set_query = authorizations               
-    .filter( [ { user_id: user_id, set: true } ] )    // Set authorizations for this user
+    .query( [ { user_id: user_id, set: true } ] )    // Set authorizations for this user
     .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
   ;
   
   return source
-    .filter( get_query ) // delivers only what this user is authorized to get
-    .plug( this.socket )
-    .filter( set_query, { discards: true } ) // discards unauthorized write attempts
+    .query( get_query )  // delivers only what this user is authorized to get
+    .plug( this.socket ) // Send and Receive data to/from web browser
+    .filter( set_query ) // discards unauthorized write attempts
   ;
 }
 ```
