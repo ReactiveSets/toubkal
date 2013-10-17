@@ -1,64 +1,180 @@
-# Connected Sets
+# Connected Sets -- JavaScript Web Application Framework
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
-Connected Sets ( **XS** ) is a high-efficiency, scalable, realtime web application framework aiming at massively
-reducing servers environmental footprint and improving mobile clients battery life by making an optimal use of
-server, network and client resources.
+## Introduction
+Connected Sets (**XS**) is a high-efficiency, scalable, realtime, secure, web application framework
+aiming at massively reducing servers environmental footprint and improving mobile clients battery
+life by making an optimal use of server, network and client resources.
 
-#### Ecosystem
-XS backend runs on **Node.js** providing a scalable database, web server, validation, and authorizations.
+### Why yet-another JavaScript Web Application Framework?
 
-On the frontend, XS provides reactive controls and views driven by dataflows.
-XS can optionally be coupled with any other framework but we recommend using reactive libraries such as
-**AngularJS**, **Bacon.js**, **React**, which model is the closest to XS.
+The short answer is because we are not satisfied at all with the performances, productivity, and
+authorization models, of any existing framework.
 
-For layout, we recommand **Bootstrap** for responsive HTML5 applications and we use it for our Carousel and Photo Albums.
+### What do you mean by performances?
 
-For DOM manipulation one can use any library, or none at all, as XS core has zero dependencies.
+- Raw CPU performance that consume server ressources, burn hard-cash, consume massive amounts
+of usually not-so-green energy to run and cool-down, and drain client batteries faster than
+anyone desires
+- Scalability to hundreds of millions of simultaneous connexions while keeping good raw
+performances system-wide
+- Lowest latency essential to the responsiveness of applications and best user experiences
+- Lowest bandwidth usage that burn hard-cash, consume energy, and incrase latency over
+lower-bandwidth networks
+- Running the whole thing with less cash while sleeping at night
 
-XS can either be used to improve existing applications on the backend or frontend, or as a full backend-and-frontend
-framework for new projects.
+Connected Sets addresses all of these issues thanks to its unique subscribe/push dataflow router
+that works accross and betwwen web browsers and nodejs servers.
 
-#### Dataflow Programming Model
-XS intuitive **dataflow** programming model allows to very significantly decrease development time of complex
-realtime applications. This combination of runtime high-efficiency and reduction in programming complexity should
-allow to greatly reduce the cost of running greener startups.
+#### What's the big deal about authorizations?
 
-XS applications are programmed using an intuitive and consice declarative dataflow programming model.
+Writing a complex application is hard-enough, add to this any significantly-complex authorization
+scheme and the whole thing breaks appart, slows-down to a crawl, clutters the code with plenty of
+unspotted security holes throughout every part of the application, and every now and then exposing
+user data to unauthorized users.
 
-At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating callback hell.
+Most companies try to get away with it by sweeping every leak under the carpet and promissing
+end-users that this will never happen again, or better yet, that this never happened. Internally,
+this usually ends-up with more meetings and paperwork, less things done for a system that although
+marginally improved, will at best remain unproven.
 
-Everything in XS is a pipelet, greatly simplifying the programming of highly reactive applications. Authorizations are
-also managed using pipelets, allowing instant changes all the way to the UI without ever requiring page refreshes.
+Because it is so hard, most frameworks take a 'this-is-not-our-problem' approach to authorizations
+by stating that you should use third-party libraries or plugins to deal with it, all of which have
+shortcomming and usually will not fit the complexity of any real-world application let alone
+provide acceptable performances and scalability.
+
+Connected Sets provides a simple yet highly-efficient dataflow authorization model and system
+architecture that delivers what no application ever provided: **realtime data updates on
+authorization changes**.
+
+Now you might consider that you don't need this, that users can refresh their page on authorization
+changes, but the reality is that we can do this because we provide a model that works in all cases
+so that you can sleep at night knowing that end-user data cannot be exposed by some piece of code
+that forgot to test a role or a corner-case.
+
+### How do you improve Productivity?
+
+By allowing you to describe **what** you want instead of **how-the-hell** this could ever be
+accomplished.
+
+```javascript
+var database = xs.file_store( 'data_store.json' ); // Input/Output dataflows to/from datastore, no external database required
+
+var authorizations = database.flow( 'authorizations' ); // Dataflow of all users' authorizations
+
+var clients = http_servers
+  .socket_io_clients()  // Dataflow of socket.io client connections
+  .authenticate_users() // Dataflow of authenticated users' connections providing user_id
+;
+
+database
+  .dispatch( clients, client )  // Serve 50k simultaneous user connexions over one core
+  .plug( database )             // Output dataflow back to database
+;
+
+function client( source ) {
+  var user_id = this.user_id; // id of authenticated user
+  
+  var get_query = authorizations
+    .filter( [ { user_id: user_id, get: true } ] )    // Get authorizations for this user
+    .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
+  ;
+  
+  var set_query = authorizations               
+    .filter( [ { user_id: user_id, set: true } ] )    // Set authorizations for this user
+    .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
+  ;
+  
+  return source
+    .filter( get_query ) // delivers only what this user is authorized to get
+    .plug( this.socket )
+    .filter( set_query, { discards: true } ) // discards unauthorized write attempts
+  ;
+}
+```
+
+Figuring-out **how** this should a) work securely, b) scale and c) have best possible performances
+as stated above, is hard, really hard. So hard that there is not a single company today able to
+achieve that without throwing millions of dollars at the problem, and/or not struggling with bugs,
+bottlenecks and hard-to-work-around architecture limitations.
+
+Our unique subscribe/push dataflow model allows to solve the **how** so that you don't have to
+deal with it but to make it better, our unique API to describe **what** you want delivers in **plain
+JavaScript** what no other dataflow library can offer and without requiring a graphical UI to glue
+hard-coded and hard-to-comprehend xml or json "nodes" and "links" together.
+
+Our dataflow model provides higher level abstraction than any other dataflow library handling
+under the hood both subscribe dataflows and information push dataflows that allows to move in
+realtime the least amount of information possible between clients and servers.
+
+### Ecosystem
+
+XS backend runs on **Node.js** providing a scalable database, web server, validation, and
+authorizations.
+
+On the frontend, XS provides reactive controlers and views driven by dataflows.
+XS can optionally be coupled with any other framework but we recommend using reactive libraries
+such as **AngularJS**, **Ember**, **Bacon.js**, **React**, which model is closer to XS.
+
+For responsive layoutx, we recommand **Bootstrap** that we use it for our Carousel and Photo
+Albums.
+
+For DOM manipulation one can use any library, or none at all, as XS core has no dependencies.
+
+XS can either be used to gradually improve existing applications on the backend or frontend, or as
+a full backend-and-frontend framework for new projects.
+
+### Dataflow Programming Model
+
+XS intuitive **dataflow** programming model allows to very significantly decrease development
+time of complex realtime applications. This combination of runtime high-efficiency and reduction
+in programming complexity should allow to greatly reduce the cost of running greener startups.
+
+XS applications are programmed using an intuitive and consice declarative dataflow programming
+model.
+
+At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating
+callback hell.
+
+Everything in XS is a pipelet, greatly simplifying the programming of highly reactive
+applications. Authorizations are also managed using pipelets, allowing instant changes all the
+way to the UI without ever requiring full page refreshes.
 
 #### Integrated database and model
-XS features a chardable document database with joins, aggregates, filters and transactions with eventual consistency allowing
-both normalized and denormalized schemes.
 
-Persistance will be implemented in version 0.3.
+XS features a chardable document database with joins, aggregates, filters and transactions
+with eventual consistency allowing both normalized and denormalized schemes.
 
-#### Performances
-Capable of handling millions of operations per second, XS is particularly well suited for low-power devices such as
-tablets and smartphones.
+*Persistance and charding will be implemented in version 0.3.
 
-Highest performances are provided thanks to Just-In-Time code generators delivering performances only available to
-compiled languages such as C or C++. Unrolling nested loops provide maximum performance while in turn allowing
-JavaScript JIT compilers to generate code that may be executed optimally in microprocessors' pipelines.
+### Performances
 
-Incremental query execution allows to split large datasets into optimal chunks of data rendering data to
-end-users' interface with low-latency, dramatically improving end-user experience. Data changes update dataflows in
-real-time, on both clients and servers (using socketio by default).
+Highest performances are provided thanks to Just-In-Time code generators delivering performances
+only available to compiled languages such as C or C++. Unrolling nested loops provide maximum
+performance while in turn allowing JavaScript JIT compilers to generate code that may be executed
+optimally in microprocessors' pipelines.
 
-Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data analysis and reporting
-over virtually unlimited size datasets.
+Incremental query execution allows to split large datasets into optimal chunks of data rendering
+data to end-users' interface with low-latency, dramatically improving end-user experience. Data
+changes update dataflows in real-time, on both clients and servers.
+
+Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data analysis
+and reporting over virtually unlimited size datasets.
+
+### Demonstration Site
+A [demonstration and beta test site is available here](http://www.castorcad.com/).
+
+The source code for this deminstration site is in the GitHub repository [ConnectedSets / demo](https://github.com/ConnectedSets/demo).
 
 ### Documentation
 This readme provides a short introduction to Connected Sets.
 
-The bulk of the documentation is currently embedded in the code of ````lib/pipelet.js```` for the core as well as individual pipelets' sources.
+The bulk of the documentation is currently embedded in the code of ````lib/pipelet.js```` for
+the core as well as individual pipelets' sources.
 
-Eventually we plan on extracting and completing this documentation to provide the following manuals:
+Eventually we plan on extracting and completing this documentation to provide the following
+manuals:
 
 - An Introduction to ConnectedSets (featuring a tutorial)
 - ConnectedSets Application Architect Manual
@@ -66,19 +182,23 @@ Eventually we plan on extracting and completing this documentation to provide th
 - Individual Reference Manuals for each module
 
 ### Automated Tests, Continuous Integration
-We have curently developped 125 tests for the XS core pipelets that run after every commit on Travis CI under node
-versions 0.6, 0.8, 0.10, and 0.11.
 
-Our continuous integration process also requires that before each commit the developper runs these tests so travis
-usually passes all tests. In the event that a test does not pass the top priority is to fix the test before anything
-else.
+We have curently developped 125 automated tests for the XS core pipelets that run after every
+commit on Travis CI under node versions 0.6, 0.8, 0.10, and 0.11.
 
-We have developped many other ui tests that are not currently automated because we have not yet integrated Phantomjs.
+Our continuous integration process also requires that before each commit the developper runs
+these tests so travis usually passes all tests. In the event that a test does not pass the top
+priority is to fix the test before anything else.
 
-We also do manual testing on the following web browsers: Chrome (latest), Firefox (latest), IE 8, IE 9, IE 10.
+We have developped many other ui tests that are not currently automated because we have not yet
+integrated Phantomjs.
 
-We publish to npm regularily, typically when we want to update our demonstration site. 
-### Installation
+We also do manual testing on the following web browsers: Chrome (latest), Firefox (latest),
+IE 8, 9, and 10.
+
+We publish to npm regularily, typically when we want to update our demonstration site.
+
+## Installation
 
 From npm, latest release:
 ```bash
@@ -87,7 +207,7 @@ npm install excess
 
 Some image manipulation pipelets require ImageMagick that [you can download here](http://www.imagemagick.org/script/binary-releases.php.).
 
-### Reunning tests
+## Running tests
 ```bash
 npm install -g coffee-script
 npm install mocha
@@ -102,13 +222,7 @@ cd ConnectedSets
 less test.out # for tests detailed traces
 ```
 
-
-## Demonstration Site
-A [demonstration and beta test site is available here](http://www.castorcad.com/).
-
-The source code for this deminstration site is in the GitHub repository [ConnectedSets / demo](https://github.com/ConnectedSets/demo).
-
-## Example
+## Example of complete client and server application
 
 Application retrieving sales and employees from a server, aggregates these by year and displays the results
 incrementally in an html table (a * indicates that a pipelet is not yet implemented or is work in progress).
@@ -117,7 +231,7 @@ This example also shows how to produce in realtime minified `all.css` and `all-m
 is prefetched in this example for maximum performance. The less css compiler is also used to compile in real
 time .less files. The same could be done to compile coffee script or use any other code compiler.
 
-### index.html
+#### index.html
 
 ```html
 <!DOCTYPE html>
@@ -140,7 +254,7 @@ time .less files. The same could be done to compile coffee script or use any oth
 </html>
 ```
 
-### javacript/client.js
+#### javacript/client.js
 
 ```javascript
 "use strict";
@@ -187,7 +301,7 @@ function client() {
 }
 ```
 
-### server.js
+#### server.js
 
 ```javascript
 var xs = require( 'excess' ); // this is the target API, not currently available
@@ -249,9 +363,7 @@ xs.set( [ // Other static assets to deliver to clients
 // Start socket servers on all servers using socket.io
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
-xs.file( 'database.json' ) // * The log of all database transactions
-  .parse_JSON()            // Parse to JavaScript Objects
-  .transactions_to_sets()  // * Transform log into a stream of sets
+xs.file_store( 'database.json' ) // * The dataflow store of all database transactions
 
   .dispatch( clients, function( source, options ) { // Serve realtime content to all socket.io clients
     return source
@@ -261,35 +373,35 @@ xs.file( 'database.json' ) // * The log of all database transactions
 ;
 ```
 
-## Start server
+#### Start server
 
 ```bash
 node server.js
 ```
 
-# Releases
+## Releases
 
-## Version 0.3.0 - ETA December 2013
+### Version 0.3.0 - ETA December 2013
 
-### Goals:
+#### Goals:
 
 - Persistance
 - Finalize module pattern
 - Horizontal distribution of web socket dispatcher
   
-##Version 0.2.0 - ETA October 2013
+### Version 0.2.0 - ETA October 2013
 
-### Goals:
+#### Goals:
 
 - Request / Response dataflows using optimized Query Trees
 - Dynamic Authorizations Query Dataflow
 - Watch directory metadata flow
 
-### Features already developped:
+#### Features already developped:
 
 - Virtual Hosts w/ optimized routing
 
-### New pipelets (available now):
+#### New pipelets (available now):
 
 Pipelet                   | Short Description                              
 --------------------------|------------------------------------------------
@@ -310,9 +422,9 @@ json_parse()              | JSON parse content attribute
 attribute_to_value()      | Replace value with the value of an attribute
 value_to_attribute()      | Sets value as an attribute and add other default attributes
 
-## Version 0.1.0 - April 8th 2013:
+### Version 0.1.0 - April 8th 2013:
 
-### Features:
+#### Features:
 
 - Core Database engine with order / aggregates / join / union, and much more
 - Automated tests
@@ -351,7 +463,7 @@ send_mail()               | Send emails from email dataflow
 configuration()           | Dataflow of application configuration parameters
 parse_JSON()              | JSON dataflow to parsed JSON dataflow
 
-# Licence
+## Licence
 
     Copyright (C) 2013, Connected Sets
 
