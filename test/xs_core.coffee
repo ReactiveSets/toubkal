@@ -18,76 +18,38 @@
 
 ###
 
-mocha.setup 'bdd' if typeof mocha isnt 'undefined'
-
 # ----------------------------------------------------------------------------------------------
-# deep clone of object
-# --------------------
+# xs test utils
+# -------------
 
-clone = ( o ) ->
-  return o if typeof o isnt 'object' or o is null
+utils = require( './xs_tests_utils.js' ) if require?
 
-  r = if o instanceof Array then [] else {}
+expect = this.expect || utils.expect
+clone  = this.clone  || utils.clone
+check  = this.check  || utils.check
+log    = this.log    || utils.log
+XS     = this.XS     || utils.XS
 
-  r[ p ] = clone o[ p ] for p of o when o.hasOwnProperty p
-
-  return r
-
-describe 'clone():', ->
-  foo =
-    id: 10
-    array: [ 1, 2, "a", "b", 3, { x: 10, y: undefined, z: null } ]
-    obj:
-      coordinate: 1
-      label: "Coordinate"
-      values: [ 24, null, undefined ]
-
-  bar = clone foo
-
-  it 'foo should be deep equal to bar', ->
-    expect( bar ).to.be.eql foo
-
-# ----------------------------------------------------------------------------------------------
-# Asynchrnous tests exception catcher
-# -----------------------------------
-
-check = ( done, test ) ->
-  try
-    test()
-    
-    done()
-  catch e
-    done e
-
-describe 'Aynchronous test check()', ->
-  it 'should succeed in 50 ms', ( done ) ->
-    setTimeout ( () -> check done, () -> expect( [] ).to.be.eql [] ), 50
-
-# ----------------------------------------------------------------------------------------------
-# xs unit test suite
-# ------------------
-
-# include modules
-XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
-expect = if require? then ( require 'expect.js' ) else this.expect
-
+xs     = XS.xs
 extend = XS.extend
+
+# ----------------------------------------------------------------------------------------------
+# Require tested modules
+# ----------------------
 
 if require?
   require '../lib/code.js'
-  require '../lib/pipelet.js'
   require '../lib/filter.js'
   require '../lib/order.js'
   require '../lib/aggregate.js'
   require '../lib/join.js'
   require '../lib/json.js'
 
-xs = XS.xs
-
 Set = XS.Set
 
-log = ( message ) ->
-  XS.log( 'xs tests, ' + message )
+# ----------------------------------------------------------------------------------------------
+# xs unit test suite
+# ------------------
 
 describe 'XS test suite:', ->
   it( 'XS should be defined:', ->
@@ -772,7 +734,7 @@ describe 'XS test suite:', ->
     set = xs.set();
     
     it 'set should be a Set', ->
-      expect( set ).to.be.a Set
+      expect( set ).to.be.a XS.Set
     
     cities = xs.set [
       { id: 1, name: "Marrakech", country: "Morocco"  }
@@ -829,7 +791,7 @@ describe 'XS test suite:', ->
       cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
       
       it 'cities.add( object ) should be a Set', ->
-        expect( cities ).to.be.a Set
+        expect( cities ).to.be.a XS.Set
       
       it 'cities.add( object ) should be equal to result', ( done ) ->
         cities.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
