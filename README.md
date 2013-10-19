@@ -1,9 +1,10 @@
-# Connected Sets -- JavaScript Web Application Framework
+# Connected Sets
+**High-Performances JavaScript Web Application Framework**
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
 ## Introduction
-Connected Sets (**XS**) is a high-efficiency, scalable, realtime, secure, web application framework
+Connected Sets (**XS**) is a high-performance, scalable, realtime web application framework
 aiming at massively reducing servers environmental footprint and improving mobile clients battery
 life by making an optimal use of server, network and client resources.
 
@@ -13,56 +14,79 @@ December 2013.
 
 ### Why yet-another JavaScript Web Application Framework?
 
-The short answer is because we are not satisfied at all with the performances, authorization
-models, and productivity, of any existing framework.
+The short answer is because we are not satisfied with the performances, authorization models,
+and productivity, of existing frameworks.
 
-### What do you mean by performances?
+#### What do you mean by performances?
 
-- Raw CPU performance that burn hard-cash, consume massive amounts of usually not-so-green energy
-to run and cool-down server, and drain client batteries faster than anyone desires
-- Scalability to hundreds of millions of simultaneous connexions while keeping good raw
-performances system-wide
-- Lowest latency essential to the responsiveness of applications and best user experiences
-- Lowest bandwidth usage that burn hard-cash, consume energy, and incrase latency over
-lower-bandwidth networks
-- Running the whole thing with less cash while sleeping at night
+Our first priority is high-performances, because we believe that performance is the key to better
+user experience, lowest operational costs, and a lower environemental footprint. We believe that
+internet applications growth is limited by energy consumption and consequent environmental
+impacts.
 
-Connected Sets addresses all of these issues thanks to its unique subscribe/push dataflow router
-that works accross and betwwen web browsers and nodejs servers.
+We are fighting simultaneously against:
+- **CPU cycles** that consume energy to run and cool-down servers, slow-down mobile clients,
+and **drain mobile batteries** faster than anyone desires
+- **Latency** decreasing the responsiveness of applications and user experiences
+- **Bandwidth** usage that consume energy, and increase latency over lower-bandwidth networks
 
-### What's the big deal about authorizations?
+We also want to keep **good performances at scale**. Most frameworks either do-not-scale or
+scale with much lower performances further increasing the need for cash while increasing
+environemental footprints.
+
+The bottom-line is that we want to be in better business faster, with less cash, and a lower
+environemental footprint that current technologies allow.
+
+Connected Sets addresses all of these issues thanks to its unique **Subscribe / Push** dataflow
+model that works accross and betwwen web browsers and nodejs servers, as well as just-in-time
+code generators and other optimizations.
+
+#### What's the big deal about authorizations?
 
 Writing a complex application is hard-enough, add to this any significantly-complex authorization
 scheme and the whole thing breaks appart, slows-down to a crawl, clutters the code with plenty of
-unspotted security holes throughout every part of the application, and every now and then exposing
-user data to unauthorized users.
+unspotted security holes throughout every part of the application, and every now and then exposes
+end-user data to unauthorized users.
 
-Most companies try to get away with it by sweeping every leak under the carpet and promissing
+Most companies try to get away with it by sweeping each leak under the carpet and promissing
 end-users that this will never happen again, or better yet, that this never happened. Internally,
 this usually ends-up with more meetings and paperwork, less things done for a system that although
 marginally improved, will at best remain unproven.
 
-Because it is so hard, most frameworks take a 'this-is-not-our-problem' approach to authorizations
+Because it is so hard, most frameworks take a this-is-not-our-problem approach to authorizations
 by stating that you should use third-party libraries or plugins to deal with it, all of which have
 shortcomming and usually will not fit the complexity of any real-world application let alone
-provide acceptable performances and scalability.
+provide acceptable performances at scale.
 
 Connected Sets provides a simple yet highly-efficient dataflow authorization model and system
-architecture that delivers what no application ever provided: **realtime data updates on
-authorization changes**.
+architecture that delivers **realtime UI updates on authorization changes** at scale.
 
-Now you might consider that you don't need this, that users can refresh their page on authorization
-changes, but the reality is that we can do this because we provide a model that works in all cases
-so that you can sleep at night knowing that end-user data cannot be exposed by some piece of code
-that forgot to test a role or a corner-case.
+Now, you might consider that you don't need this, that end-users can refresh their page on
+authorization changes. But the reality is that we can do this because we provide a model that works
+in all cases, without requiring you to write a single additional line of code, so that you can sleep
+at night knowing that end-user data cannot be exposed by some piece of code that forgot to test a
+role in a corner-case.
 
-### How do you improve Productivity?
+#### How do you improve Productivity?
 
 By allowing you to describe **what** you want instead of **how-the-hell** this could ever be
 accomplished.
 
-The following provides an example for a non-trivial data server with realtime updates on
-everything including authorization changes:
+Figuring-out **how** this should a) work securely, b) scale and c) have best possible performances
+as stated above, is hard, really hard. So hard that there is not a single company today able to
+achieve that without throwing millions of dollars at the problem, and/or not struggling with bugs,
+bottlenecks and hard-to-work-around architecture limitations.
+
+The following provides an example of a non-trivial, high-performance, data server with realtime
+updates on everything including authorization changes, in 50 lines of code, comments included.
+
+The only thing you need to know to understand this code is about **Pipelets**:
+- An XS pipelet, aka a "node" in other dataflow libraries, is a JavaScript function that
+processes data events with no side effects on other pipelets
+- it processes events emitted by **upstream** pipelets
+- it emits events for **downstream pipelets**
+- it's name describes what it provides or does
+- pipelets are connected together using JavaScript '.' operator or as parameters
 
 ```javascript
 var xs = require( 'excess' ); // Loads XS core pipelets, returns xs head pipelet
@@ -71,18 +95,18 @@ require( 'excess/lib/server/file.js' ); // Loads file server pipelets
 require( 'excess/lib/server/http.js' ); // Loads http server pipelets
 require( 'excess/lib/server/socket_io_clients.js' ); // Loads socket.io server pipelets
 
-var database = xs.file_store( 'data_store.json' ); // Input/Output dataflows to/from datastore, one-line, no external database required
+var database = xs.file_json_store( 'data_store.json' ); // Input/Output dataflows to/from datastore, one-line, no external database required
 
 var users = database.flow( 'users' ); // Dataflow of users' credentials
 
 var clients = xs
   // Define a set of web servers
   .set( [ 
-    { ip_address: '0.0.0.0', port: 80 },                                        // http://server.com/
-    { ip_address: '0.0.0.0', port:443, key: 'key string', cert: 'cert string' } // https://server.com/
+    { ip_address: '0.0.0.0', port: 80 },                         // http://example.com/
+    { ip_address: '0.0.0.0', port:443, key: '***', cert: '***' } // https://example.com/
   ] )
   
-  .http_servers()              // Dataflow of one http and https server
+  .http_servers()              // Start http and https servers
   .socket_io_clients()         // Dataflow of socket.io client connections
   .authenticate_users( users ) // Dataflow of authenticated users' connections providing user_id
 ;
@@ -90,20 +114,21 @@ var clients = xs
 var authorizations = database.flow( 'authorizations' ); // Dataflow of all users' authorizations
 
 database
-  .dispatch( clients, client )  // Serve 50k simultaneous user connexions over one core
-  .plug( database )             // Output dataflow back to database
+  .dispatch( clients, client )  // Serve 64k simultaneous user connexions over one core
+  .plug( database )             // plug() links to output of the dispatcher the database pipelet
 ;
 
-function client( source ) {
+// Individual client composition
+function client( source ) { // source refers to the output of the database here
   var user_id = this.user_id; // id of authenticated user
   
   var get_query = authorizations
-    .query( [ { user_id: user_id, get: true } ] )    // Get authorizations for this user
+    .query( [ { user_id: user_id, get: true } ] )     // Get authorizations for this user
     .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
   ;
   
   var set_query = authorizations               
-    .query( [ { user_id: user_id, set: true } ] )    // Set authorizations for this user
+    .query( [ { user_id: user_id, set: true } ] )     // Set authorizations for this user
     .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
   ;
   
@@ -115,19 +140,92 @@ function client( source ) {
 }
 ```
 
-Figuring-out **how** this should a) work securely, b) scale and c) have best possible performances
-as stated above, is hard, really hard. So hard that there is not a single company today able to
-achieve that without throwing millions of dollars at the problem, and/or not struggling with bugs,
-bottlenecks and hard-to-work-around architecture limitations.
+Our unique **Subscribe / Push** dataflow model allows to solve the **how** so that you don't have
+to deal with it. To make it even better, our unique API to describe **what** you want delivers in
+**plain JavaScript** what no other dataflow library can offer and without requiring a graphical
+UI to glue hard-coded and hard-to-comprehend xml or json "nodes" and "links" together.
 
-Our unique subscribe/push dataflow model allows to solve the **how** so that you don't have to
-deal with it but to make it better, our unique API to describe **what** you want delivers in **plain
-JavaScript** what no other dataflow library can offer and without requiring a graphical UI to glue
-hard-coded and hard-to-comprehend xml or json "nodes" and "links" together.
-
-Our dataflow model provides higher level abstraction than any other dataflow library handling
+Our dataflow model provides higher level abstractions than any other dataflow library handling
 under the hood both subscribe dataflows and information push dataflows that allows to move in
 realtime the least amount of information possible between clients and servers.
+
+### XS Subscribe / Push Dataflow Model
+
+The following describes implementation details implemented at XS low level. Application
+Architects do not need do program anything for this to happen as it is entirely hidden by
+XS pipelets. Understanding of the underlying model helps understand why XS is so efficient
+and how it scales.
+
+Dataflow libraries usually implement one of two models:
+- push: all data is pushed downstream as it happens, allowing realtime updates
+- pull: data is pulled upstream when needed, allowing lazy programming, pulling only what is
+reauired
+
+For web applications' communications between servers and clients these two models are usually
+not acceptable for these reasons:
+
+- The pull method is not realtime, introducing average latency of have the pulling period.
+Worse it and can consume large amounts of bandwidth if the pulling period is too small.
+It can nonetheless be used efficiently on the client side along with requestAnimationFrame()
+to prevent over-updating the DOM between refreshes.
+- The push method pushes all data regardless of what the downstream many need. This can result
+in the transmission of large amounts of unused data, usually introducing unacceptable latency
+and bandwidth charges.
+
+Connected Sets implements a more sophisticated **Subcribe / Push** model where downstream
+pipelets subscribe to the subset of data they are interested in and subsequently receive all
+updates in a push fashion only for that subset. This allows XS to move the least amount of
+data between clients and servers while remaining realtime.
+
+XS stateless pipelets also use a lazy model where they will not subscribe to anything from
+upstream unless initial data is fetched by a downstream stateful pipelet. This again
+allows to transmit only what is really used by downstream pipelets.
+
+A subscription is done using a query dataflow that represents a kind of filter on the upstream
+dataflow. Because the query is itself a dataflow, the subcription can change over time.
+
+When tens of thousands of downstream pipelets subscribe to a single pipelet using different
+queries, XS provides a query tree that routes data events very efficiently in O( 1 ) time
+(i.e. that does not depend on the number of connected clients) therefore providing a more
+scalable solution within a single server. Sending actual data to n clients out of N connected
+clients is O( n ) so actual performances depends on the application (i.e. whether n << N or
+not).
+
+A network of Connected Sets servers can be arranged in a tree-like fashion to provide
+unlimited size query trees, e.g. to dispatch data to millions of simultaneous clients. Each
+server subscribes to its upstream server the subset of data it dispatches to downstream
+servers and clients. This allows efficient and low-latency routing thanks in part to the
+high performances of each individual server query tree.
+
+### Datasets Changes Flows
+
+Internally, Connected Sets dataflows represent the evolution of datasets over time where
+each event modifies a dataset. The flows are therefore datasets change flows.
+
+Each event carries an opperation such as 'add' or 'remove' that adds or removes values
+in the abstracted dataset. It is abstracted in the sense that most of the time, this
+dataset is not materialized either in memory or on disk.
+
+This higher-level abstraction allows a number of additional optimizations:
+
+Incremental datasets processing allows to split large datasets into optimal chunks of data
+rendering data to end-users' interface with low-latency, dramatically improving end-user
+experience. Data changes update dataflows in real-time, on both clients and servers.
+
+Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data analysis
+and reporting over virtually unlimited size datasets.
+
+### Just-In-Time Code Generation
+
+Highest performances are provided thanks to Just-In-Time code generators delivering performances
+only available to compiled languages such as C or C++. Unrolling nested loops provide maximum
+performance while in turn allowing JavaScript JIT compilers to generate code that may be executed
+optimally in microprocessors' pipelines.
+
+### XS Pipelet Programming
+
+At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating
+the typicall callback hell of assynchronous request-response programming models.
 
 ### Ecosystem
 
@@ -146,22 +244,6 @@ For DOM manipulation one can use any library, or none at all, as XS core has no 
 XS can either be used to gradually improve existing applications on the backend or frontend, or as
 a full backend-and-frontend framework for new projects.
 
-### Dataflow Programming Model
-
-XS intuitive **dataflow** programming model allows to very significantly decrease development
-time of complex realtime applications. This combination of runtime high-efficiency and reduction
-in programming complexity should allow to greatly reduce the cost of running greener startups.
-
-XS applications are programmed using an intuitive and consice declarative dataflow programming
-model.
-
-At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating
-callback hell.
-
-Everything in XS is a pipelet, greatly simplifying the programming of highly reactive
-applications. Authorizations are also managed using pipelets, allowing instant changes all the
-way to the UI without ever requiring full page refreshes.
-
 #### Integrated database and model
 
 XS features a chardable document database with joins, aggregates, filters and transactions
@@ -169,24 +251,10 @@ with eventual consistency allowing both normalized and denormalized schemes.
 
 *Persistance and charding will be implemented in version 0.3.
 
-### Performances
-
-Highest performances are provided thanks to Just-In-Time code generators delivering performances
-only available to compiled languages such as C or C++. Unrolling nested loops provide maximum
-performance while in turn allowing JavaScript JIT compilers to generate code that may be executed
-optimally in microprocessors' pipelines.
-
-Incremental query execution allows to split large datasets into optimal chunks of data rendering
-data to end-users' interface with low-latency, dramatically improving end-user experience. Data
-changes update dataflows in real-time, on both clients and servers.
-
-Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data analysis
-and reporting over virtually unlimited size datasets.
-
 ### Demonstration Site
 A [demonstration and beta test site is available here](http://www.castorcad.com/).
 
-The source code for this deminstration site is in the GitHub repository [ConnectedSets / demo](https://github.com/ConnectedSets/demo).
+The source code for this demonstration site is in [the GitHub repository ConnectedSets / demo](https://github.com/ConnectedSets/demo).
 
 ### Documentation
 This readme provides a short introduction to Connected Sets.
@@ -407,14 +475,20 @@ node server.js
 #### Goals:
 
 - Persistance
+- Authentication
 - Finalize module pattern
 - Horizontal distribution of web socket dispatcher
-  
+- Implement SocksJS pipelets
+- Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, modules
+- Navigation pipelets
+- Out-of-band, global dataflows for: exceptions, errors, and debug information
+
 ### Version 0.2.0 - ETA October 2013
 
 #### Goals:
 
-- Request / Response dataflows using optimized Query Trees
+- Finalize integration of Subcribe / Push model using optimized Query Tree Router and lazy
+connection of stateless pipelets
 - Dynamic Authorizations Query Dataflow
 - Watch directory metadata flow
 
@@ -443,10 +517,12 @@ json_parse()              | JSON parse content attribute
 attribute_to_value()      | Replace value with the value of an attribute
 value_to_attribute()      | Sets value as an attribute and add other default attributes
 
+
 ### Version 0.1.0 - April 8th 2013:
 
 #### Features:
 
+- Push dataflow model with lazy evaluation of stateless pipelets
 - Core Database engine with order / aggregates / join / union, and much more
 - Automated tests
 - Dataflows between clients and server using socket.io
@@ -467,12 +543,17 @@ ordered()                 | Follow an ordered set (typically derived)
 aggregate()               | Aggregates measures along dimensions (GROUP BY)
 join()                    | Joins two dataflows
 watch()                   | Dataflow updated on file content changes
-uglify()                  | Minifies a dataflow of files into a bundle, using [Uglify JS 2](https://github.com/mishoo/UglifyJS2)
 dispatch()                | Dispatches dataflows to a dataflow of branches
+parse_JSON()              | JSON dataflow to parsed JSON dataflow
+--------------------------|------------------------------------------------
+uglify()                  | Minifies a dataflow of files into a bundle, using [Uglify JS 2](https://github.com/mishoo/UglifyJS2)
 http_servers()            | A dataflow of http servers
 serve()                   | Serve a dataflow of resources contents to http (or other) servers
 socket_io_clients()       | A dataflow server for socket.io clients
 socket_io_server()        | A dataflow client for socket.io server
+send_mail()               | Send emails from email dataflow
+configuration()           | Dataflow of application configuration parameters
+--------------------------|------------------------------------------------
 table()                   | DOM table bound to incoming dataflows
 form()                    | DOM Form using fields dataflow, emiting submited forms
 form_validate()           | Client and server form validation
@@ -480,9 +561,9 @@ checkbox()                | DOM input checkbox
 checkbox_group()          | DOM input chexbox group
 radio()                   | DOM radio button
 drop_down()               | DOM drop-down menu
-send_mail()               | Send emails from email dataflow
-configuration()           | Dataflow of application configuration parameters
-parse_JSON()              | JSON dataflow to parsed JSON dataflow
+--------------------------|------------------------------------------------
+ec2_regions()             | Set of AWS EC2 regions, starts ec2 clients
+
 
 ## Licence
 
