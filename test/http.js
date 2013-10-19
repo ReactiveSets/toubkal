@@ -21,12 +21,13 @@
 */
 "use strict";
 
-var XS = require( '../lib/server/http.js' ).XS
-  , xs         = XS.xs
-  , log        = XS.log
-  , extend     = XS.extend
+var xs      = require( '../lib/pipelet.js' )
+  , XS      = xs.XS
+  , log     = XS.log
+  , extend  = XS.extend
 ;
 
+require( '../lib/server/http.js' )
 require( '../lib/server/socket_io_clients.js' );
 require( '../lib/server/file.js' );
 

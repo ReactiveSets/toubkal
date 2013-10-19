@@ -28,9 +28,9 @@ expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 log    = this.log    || utils.log
-XS     = this.XS     || utils.XS
+xs     = this.xs     || utils.xs
 
-xs     = XS.xs
+XS     = xs.XS
 extend = XS.extend
 
 # ----------------------------------------------------------------------------------------------

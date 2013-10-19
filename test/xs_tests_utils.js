@@ -21,7 +21,7 @@
 
 
 (function() {
-  var XS, check, clone, expect;
+  var XS, check, clone, expect, xs;
 
   if (typeof mocha !== 'undefined') {
     mocha.setup('bdd');
@@ -52,7 +52,9 @@
     }
   };
 
-  XS = this.XS = this.XS || require('../lib/pipelet.js').XS;
+  xs = this.xs = this.xs || require('../lib/pipelet.js');
+
+  XS = xs.XS;
 
   this.log = function(message) {
     return XS.log('xs tests, ' + message);

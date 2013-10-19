@@ -393,7 +393,7 @@ function client() {
 #### server.js
 
 ```javascript
-var xs = require( 'excess' ); // this is the target API, not currently available
+var xs = require( 'excess' );
 
 var servers = xs
   .set( [ // Define http servers
@@ -429,19 +429,12 @@ var all_min_js = xs
   .uglify( 'all-min.js' )       // Minify in realtime using uglify-js
 ;
 
-var all_css = xs
-  .set( [
-    { name: 'css/*.less' }, // these will be compiled
-    { name: 'css/*.css'  }  // these will only be merged
+// Other static assets
+xs.set( [
+    { name: 'index.html' },
+    { name: 'css/*.css'  }
   ] )
   .glob()                  // * Retrrieves files list with realtime updates (watching the css directory)
-  .watch()                 // Retrieves files content with realtime updates
-  .less_css( 'all.css' )   // * Compile .less files using less css compiler, merge all
-;
-
-xs.set( [ // Other static assets to deliver to clients
-    { name: 'index.html'      }
-  ] )
   .watch()                 // Retrieves file content with realtime updates
   .union(                  // Add other compiled assets
     [ all-min.js, all.css ]
@@ -452,7 +445,7 @@ xs.set( [ // Other static assets to deliver to clients
 // Start socket servers on all servers using socket.io
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
-xs.file_store( 'database.json' ) // * The dataflow store of all database transactions
+xs.file_json_store( 'database.json' ) // * The dataflow store of all database transactions
 
   .dispatch( clients, function( source, options ) { // Serve realtime content to all socket.io clients
     return source
@@ -534,7 +527,7 @@ value_to_attribute()      | Sets value as an attribute and add other default att
 - File watch w/ realtime updates
 - JSON Configuration Files w/ realtime updates
 
-Pipelet                   | Short Description                              
+Core Pipelets             | Short Description                              
 --------------------------|------------------------------------------------
 set()                     | Base stateful pipelet
 filter()                  | Filters a dataflow
@@ -545,6 +538,8 @@ join()                    | Joins two dataflows
 watch()                   | Dataflow updated on file content changes
 dispatch()                | Dispatches dataflows to a dataflow of branches
 parse_JSON()              | JSON dataflow to parsed JSON dataflow
+
+Server Pipelets           | Short Description                              
 --------------------------|------------------------------------------------
 uglify()                  | Minifies a dataflow of files into a bundle, using [Uglify JS 2](https://github.com/mishoo/UglifyJS2)
 http_servers()            | A dataflow of http servers
@@ -553,6 +548,8 @@ socket_io_clients()       | A dataflow server for socket.io clients
 socket_io_server()        | A dataflow client for socket.io server
 send_mail()               | Send emails from email dataflow
 configuration()           | Dataflow of application configuration parameters
+
+DOM Pipelets              | Short Description                              
 --------------------------|------------------------------------------------
 table()                   | DOM table bound to incoming dataflows
 form()                    | DOM Form using fields dataflow, emiting submited forms
@@ -561,6 +558,8 @@ checkbox()                | DOM input checkbox
 checkbox_group()          | DOM input chexbox group
 radio()                   | DOM radio button
 drop_down()               | DOM drop-down menu
+
+EC2 Pipelets              | Short Description                              
 --------------------------|------------------------------------------------
 ec2_regions()             | Set of AWS EC2 regions, starts ec2 clients
 

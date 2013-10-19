@@ -55,7 +55,9 @@ check = this.check = ( done, test ) ->
 # xs
 # --
 
-XS = this.XS = this.XS || require( '../lib/pipelet.js' ).XS
+xs = this.xs = this.xs || require( '../lib/pipelet.js' )
+
+XS = xs.XS
 
 this.log = ( message ) ->
   XS.log( 'xs tests, ' + message )
