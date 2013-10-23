@@ -267,6 +267,120 @@
         }) && expect(more_9.transaction_id).to.match(valid_uuid_v4);
       });
     });
+    describe('XS.only_more():', function() {
+      var valid_uuid_v4;
+      valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+      it('XS.only_more should be a function with one parameter', function() {
+        return expect(XS.only_more).to.be.a('function') && expect(XS.only_more.length).to.be.eql(1);
+      });
+      it('XS.only_more() should return { more: false }', function() {
+        return expect(XS.only_more()).to.be.eql({
+          more: false
+        });
+      });
+      it('XS.only_more( { more: false, a: 1; b: {} } ) should return { more: false }', function() {
+        return expect(XS.only_more({
+          more: false,
+          a: 1,
+          b: {}
+        })).to.be.eql({
+          more: false
+        });
+      });
+      it('XS.only_more( { a: 1; b: {} } ) should return { more: false }', function() {
+        return expect(XS.only_more({
+          a: 1,
+          b: {}
+        })).to.be.eql({
+          more: false
+        });
+      });
+      it('XS.only_more( { more: "", a: 1; b: {} } ) should return { more: false }', function() {
+        return expect(XS.only_more({
+          more: '',
+          a: 1,
+          b: {}
+        })).to.be.eql({
+          more: false
+        });
+      });
+      it('XS.only_more( { more: true, a: 1; b: {} } ) should return { more: true, transaction_id: uuid v4 }', function() {
+        var more;
+        more = XS.only_more({
+          more: true,
+          a: 1,
+          b: {}
+        });
+        return expect(more).to.be.eql({
+          more: true,
+          transaction_id: more.transaction_id
+        }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      });
+      it('XS.only_more( { more: true, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
+        var more;
+        more = {
+          more: true,
+          transaction_id: XS.uuid_v4(),
+          a: 1,
+          b: {}
+        };
+        return expect(XS.only_more(more)).to.be.eql({
+          more: true,
+          transaction_id: more.transaction_id
+        }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      });
+      it('XS.only_more( { more: false, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
+        var more;
+        more = {
+          more: false,
+          transaction_id: XS.uuid_v4(),
+          a: 1,
+          b: {}
+        };
+        return expect(XS.only_more(more)).to.be.eql({
+          more: false,
+          transaction_id: more.transaction_id
+        }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      });
+      it('XS.only_more( { more: 1, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
+        var more;
+        more = {
+          more: 1,
+          transaction_id: XS.uuid_v4(),
+          a: 1,
+          b: {}
+        };
+        return expect(XS.only_more(more)).to.be.eql({
+          more: true,
+          transaction_id: more.transaction_id
+        }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      });
+      it('XS.only_more( { more: 0, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
+        var more;
+        more = {
+          more: 0,
+          transaction_id: XS.uuid_v4(),
+          a: 1,
+          b: {}
+        };
+        return expect(XS.only_more(more)).to.be.eql({
+          more: false,
+          transaction_id: more.transaction_id
+        }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      });
+      return it('XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
+        var more;
+        more = {
+          transaction_id: XS.uuid_v4(),
+          a: 1,
+          b: {}
+        };
+        return expect(XS.only_more(more)).to.be.eql({
+          more: false,
+          transaction_id: more.transaction_id
+        }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      });
+    });
     describe('XS.Query():', function() {
       var Query, q;
       Query = XS.Query;
