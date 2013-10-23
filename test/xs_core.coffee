@@ -23,7 +23,6 @@
 # -------------
 
 utils = require( './xs_tests_utils.js' ) if require?
-
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
@@ -176,6 +175,88 @@ describe 'XS test suite:', ->
     it 'the index of 1 should be 8', ->
       expect( g( 1 ) ).to.be.eql 8
   
+  describe 'XS.uuid_v4():', ->
+    v4 = XS.uuid_v4()
+
+    valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+    
+    it 'XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', ->
+      expect( v4 ).to.match valid_uuid_v4
+
+  describe 'XS.more():', ->
+    v4 = XS.uuid_v4()
+
+    valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/ 
+
+    more_0 = XS.more()
+    more_1 = XS.more {}
+    more_2 = XS.more { a: 1, b: {} }
+    more_3 = XS.more more_2
+
+    more_4 = extend {}, more_3
+    more_4.more = false
+    more_5 = XS.more more_4
+
+    more_6 = extend {}, more_3
+    delete more_6.more
+    more_7 = XS.more more_6
+
+    more_8 = extend {}, more_7
+    more_8.transaction_id = 1
+    more_9 = XS.more more_8
+    
+    it 'XS.more() should set more', ->
+      expect( more_0.more ).to.be.eql true
+
+    it 'XS.more() should provide a transaction_id string', ->
+      expect( more_0.transaction_id ).to.be.a 'string'
+
+    it 'XS.more() transaction id should match uuid v4 string', ->
+      expect( more_0.transaction_id ).to.match valid_uuid_v4
+
+    it 'XS.more( {} ) should set more', ->
+      expect( more_1.more ).to.be.eql true
+
+    it 'XS.more( {} ) should provide a transaction_id string', ->
+      expect( more_1.transaction_id ).to.be.a 'string'
+
+    it 'XS.more( {} ) transaction id should match uuid v4 string', ->
+      expect( more_1.transaction_id ).to.match valid_uuid_v4
+
+    it 'XS.more( { a: 1, b: {} } ) should set more', ->
+      expect( more_2.more ).to.be.eql true
+
+    it 'XS.more( { a: 1, b: {} } ) should provide a transaction_id string', ->
+      expect( more_2.transaction_id ).to.be.a 'string'
+
+    it 'XS.more( { a: 1, b: {} } ) transaction id should match uuid v4 string', ->
+      expect( more_2.transaction_id ).to.match valid_uuid_v4
+
+    it 'XS.more( { a: 1, b: {} } ) should conserve a and b', ->
+      expect( more_2 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: more_2.transaction_id }
+
+    it 'XS.more( { a: 1, b: {}, more: true, transaction_id: XS.uuid_v4() } ) should return self', ->
+      expect( more_3 ).to.be.equal more_2
+
+    it 'check test value { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() }', ->
+      expect( more_4 ).to.be.eql { a: 1, b: {}, more: false, transaction_id: more_3.transaction_id }
+
+    it 'XS.more( { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() } ) should set more to true', ->
+      expect( more_5 ).to.be.eql more_2
+
+    it 'check test value { a: 1, b: {}, transaction_id: XS.uuid_v4() }', ->
+      expect( more_6 ).to.be.eql { a: 1, b: {}, transaction_id: more_3.transaction_id }
+
+    it 'XS.more( { a: 1, b: {}, transaction_id: XS.uuid_v4() } ) should set more to true', ->
+      expect( more_7 ).to.be.eql more_2
+
+    it 'check test value { a: 1, b: {}, transaction_id: 1 }', ->
+      expect( more_8 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: 1 }
+
+    it 'XS.more( { a: 1, b: {}, transaction_id: XS.uuid_v4() } ) should set transaction id to uuid v4 ', ->
+      expect( more_9 ).to.be.eql( { a: 1, b: {}, more: true, transaction_id: more_9.transaction_id } ) &&
+      expect( more_9.transaction_id ).to.match valid_uuid_v4
+
   describe 'XS.Query():', ->
     Query = XS.Query
     
