@@ -51,9 +51,8 @@ Set = XS.Set
 # ------------------
 
 describe 'XS test suite:', ->
-  it( 'XS should be defined:', ->
+  it 'XS should be defined:', ->
     expect( XS ).to.exist
-  )
 
   describe( 'XS.extend():', ->
     extend = XS.extend
@@ -80,7 +79,7 @@ describe 'XS test suite:', ->
     it 'extend( object ) should be equal to object', ->
       result = extend o1
       
-      expect( result ).to.be.eql o1
+      expect( result ).to.be.eql( o1 ) and expect( result ).to.not.be( o1 )
     
     it 'extend( object1, object2 ) should be equal to object', ->
       result = extend o1, o2
@@ -89,6 +88,9 @@ describe 'XS test suite:', ->
     
     it 'o2 should be deep equal to _o2', ->
       expect( o2 ).to.be.eql _o2
+    
+    it 'o2 should not be strictly equal to _o2', ->
+      expect( o2 ).to.not.be _o2
     
     it 'extend( object1, object2, object3 ) should be equal to object', ->
       result = extend o1, o2, o3
@@ -236,7 +238,7 @@ describe 'XS test suite:', ->
       expect( more_2 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: more_2.transaction_id }
 
     it 'XS.more( { a: 1, b: {}, more: true, transaction_id: XS.uuid_v4() } ) should return self', ->
-      expect( more_3 ).to.be.equal more_2
+      expect( more_3 ).to.be more_2
 
     it 'check test value { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() }', ->
       expect( more_4 ).to.be.eql { a: 1, b: {}, more: false, transaction_id: more_3.transaction_id }

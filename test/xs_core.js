@@ -93,6 +93,9 @@
       it('o2 should be deep equal to _o2', function() {
         return expect(o2).to.be.eql(_o2);
       });
+      it('o2 should not be strictly equal to _o2', function() {
+        return expect(o2).to.not.be(_o2);
+      });
       it('extend( object1, object2, object3 ) should be equal to object', function() {
         var result;
         result = extend(o1, o2, o3);
@@ -227,7 +230,7 @@
         });
       });
       it('XS.more( { a: 1, b: {}, more: true, transaction_id: XS.uuid_v4() } ) should return self', function() {
-        return expect(more_3).to.be.equal(more_2);
+        return expect(more_3).to.be(more_2);
       });
       it('check test value { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() }', function() {
         return expect(more_4).to.be.eql({
