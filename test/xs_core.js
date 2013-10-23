@@ -79,7 +79,7 @@
       it('extend( object ) should be equal to object', function() {
         var result;
         result = extend(o1);
-        return expect(result).to.be.eql(o1);
+        return expect(result).to.be(o1);
       });
       it('extend( object1, object2 ) should be equal to object', function() {
         var result;
@@ -88,7 +88,7 @@
           id: 1,
           name: 'khalifa',
           email: 'knassik@gmail.com'
-        });
+        }) && expect(result).to.be(o1);
       });
       it('o2 should be deep equal to _o2', function() {
         return expect(o2).to.be.eql(_o2);
@@ -104,7 +104,7 @@
           name: 'khalifa nassik',
           email: 'khalifan@gmail.com',
           country: 'Morocco'
-        });
+        }) && expect(result).to.be(o1);
       });
       it('o2 should be deep equal to _o2', function() {
         return expect(o2).to.be.eql(_o2);

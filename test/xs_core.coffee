@@ -54,7 +54,7 @@ describe 'XS test suite:', ->
   it 'XS should be defined:', ->
     expect( XS ).to.exist
 
-  describe( 'XS.extend():', ->
+  describe 'XS.extend():', ->
     extend = XS.extend
     
     it 'extend() should be a function', ->
@@ -79,12 +79,13 @@ describe 'XS test suite:', ->
     it 'extend( object ) should be equal to object', ->
       result = extend o1
       
-      expect( result ).to.be.eql( o1 ) and expect( result ).to.not.be( o1 )
+      expect( result ).to.be o1
     
     it 'extend( object1, object2 ) should be equal to object', ->
       result = extend o1, o2
       
-      expect( result ).to.be.eql { id: 1, name: 'khalifa', email: 'knassik@gmail.com' }
+      expect( result ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } ) and
+      expect( result ).to.be o1
     
     it 'o2 should be deep equal to _o2', ->
       expect( o2 ).to.be.eql _o2
@@ -95,14 +96,15 @@ describe 'XS test suite:', ->
     it 'extend( object1, object2, object3 ) should be equal to object', ->
       result = extend o1, o2, o3
       
-      expect( result ).to.be.eql { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' }
+      expect( result ).to.be.eql( { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' } ) and
+      expect( result ).to.be o1
      
     it 'o2 should be deep equal to _o2', ->
        expect( o2 ).to.be.eql _o2
     
     it 'o3 should be deep equal to _o3', ->
       expect( o3 ).to.be.eql _o3
-  ) # extend
+  # XS.extend()
   
   describe 'XS.subclass():', ->
     subclass = XS.subclass
