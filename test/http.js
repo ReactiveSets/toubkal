@@ -66,6 +66,9 @@ var xs_min = xs
     { name: 'test/javascript/es5.js'     },
     { name: 'test/javascript/json2.js'   },
     
+    // Dependencies
+    { name: 'test/javascript/uuid.js'    },
+    
     // xs core
     { name: 'lib/xs.js'                  },
     { name: 'lib/code.js'                },
@@ -81,9 +84,6 @@ var xs_min = xs
     // xs socket.io
     { name: 'lib/socket_io_crossover.js' },
     { name: 'lib/socket_io_server.js'    },
-    
-    // Third-party client libraries
-    { name: 'test/javascript/uuid.js'    },
     
     // xs client
     { name: 'lib/selector.js'            },
