@@ -180,12 +180,31 @@ describe 'XS test suite:', ->
       expect( g( 1 ) ).to.be.eql 8
   
   describe 'XS.uuid_v4():', ->
-    v4 = XS.uuid_v4()
+    # Generate 10 random uuid v4 to verify that they al match
+    v4_0 = XS.uuid_v4()
+    v4_1 = XS.uuid_v4()
+    v4_2 = XS.uuid_v4()
+    v4_3 = XS.uuid_v4()
+    v4_4 = XS.uuid_v4()
+    v4_5 = XS.uuid_v4()
+    v4_6 = XS.uuid_v4()
+    v4_7 = XS.uuid_v4()
+    v4_8 = XS.uuid_v4()
+    v4_9 = XS.uuid_v4()
 
     valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
     
-    it 'XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', ->
-      expect( v4 ).to.match valid_uuid_v4
+    it '10 XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', ->
+      expect( v4_0 ).to.match( valid_uuid_v4 ) and
+      expect( v4_1 ).to.match( valid_uuid_v4 ) and
+      expect( v4_2 ).to.match( valid_uuid_v4 ) and
+      expect( v4_3 ).to.match( valid_uuid_v4 ) and
+      expect( v4_4 ).to.match( valid_uuid_v4 ) and
+      expect( v4_5 ).to.match( valid_uuid_v4 ) and
+      expect( v4_6 ).to.match( valid_uuid_v4 ) and
+      expect( v4_7 ).to.match( valid_uuid_v4 ) and
+      expect( v4_8 ).to.match( valid_uuid_v4 ) and
+      expect( v4_9 ).to.match( valid_uuid_v4 )
 
   describe 'XS.more():', ->
     v4 = XS.uuid_v4()

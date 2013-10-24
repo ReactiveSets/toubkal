@@ -167,11 +167,20 @@
       });
     });
     describe('XS.uuid_v4():', function() {
-      var v4, valid_uuid_v4;
-      v4 = XS.uuid_v4();
+      var v4_0, v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8, v4_9, valid_uuid_v4;
+      v4_0 = XS.uuid_v4();
+      v4_1 = XS.uuid_v4();
+      v4_2 = XS.uuid_v4();
+      v4_3 = XS.uuid_v4();
+      v4_4 = XS.uuid_v4();
+      v4_5 = XS.uuid_v4();
+      v4_6 = XS.uuid_v4();
+      v4_7 = XS.uuid_v4();
+      v4_8 = XS.uuid_v4();
+      v4_9 = XS.uuid_v4();
       valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-      return it('XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', function() {
-        return expect(v4).to.match(valid_uuid_v4);
+      return it('10 XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', function() {
+        return expect(v4_0).to.match(valid_uuid_v4) && expect(v4_1).to.match(valid_uuid_v4) && expect(v4_2).to.match(valid_uuid_v4) && expect(v4_3).to.match(valid_uuid_v4) && expect(v4_4).to.match(valid_uuid_v4) && expect(v4_5).to.match(valid_uuid_v4) && expect(v4_6).to.match(valid_uuid_v4) && expect(v4_7).to.match(valid_uuid_v4) && expect(v4_8).to.match(valid_uuid_v4) && expect(v4_9).to.match(valid_uuid_v4);
       });
     });
     describe('XS.more():', function() {
