@@ -81,6 +81,9 @@ describe 'Test utilities', ->
     it 'should deep clone foo into bar', ->
       expect( bar ).to.be.eql foo
 
+    it 'should not return self', ->
+      expect( bar ).to.not.be foo
+
   describe 'Aynchronous test check()', ->
     it 'should succeed in 50 ms', ( done ) ->
       setTimeout ( () -> check done, () -> expect( [] ).to.be.eql [] ), 50
