@@ -130,6 +130,73 @@ describe 'XS test suite:', ->
 
   # XS.extend()
   
+  describe 'XS.extend_2():', ->
+    extend_2 = XS.extend_2
+    
+    it 'should be a function', ->
+      expect( extend_2 ).to.be.a 'function'
+
+    it 'should not be XS.extend()', ->
+      expect( extend_2 ).to.not.be XS.extend
+    
+    o1 = 
+      id: 1
+      name: 'khalifa'
+    
+    o2 = 
+      email: 'knassik@gmail.com'
+    
+    _o1 = clone o1
+    _o2 = clone o2
+
+    result = undefined
+    
+    it 'should be identity, i.e. extend_2( object ) should be strictly equal to object', ->
+      result = extend_2 o1
+      
+      expect( result ).to.be o1
+    
+    it 'should modify o1 in extend_2( o1, o2 )', ->
+      result = extend_2 o1, o2
+      
+      expect( o1 ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } )
+
+    it 'should return o1', ->
+      expect( result ).to.be o1
+    
+    it 'should not modify o2', ->
+      expect( o2 ).to.be.eql _o2
+    
+    it 'should return null in extend_2( null )', ->
+      expect( extend_2( null ) ).to.be null
+
+    it 'should return undefined in extend_2( undefined )', ->
+      expect( extend_2( undefined ) ).to.be undefined
+
+    it 'should return null in extend_2( null, null )', ->
+      expect( extend_2( null, null ) ).to.be null
+
+    it 'should return undefined in extend_2( undefined, undefined )', ->
+      expect( extend_2( undefined, undefined ) ).to.be undefined
+
+    it 'should return null in extend_2( null, undefined )', ->
+      expect( extend_2( null, undefined ) ).to.be null
+
+    it 'should return undefined in extend_2( undefined, null )', ->
+      expect( extend_2( undefined, null ) ).to.be undefined
+
+    it 'should throw in extend_2( null, o2 )', ->
+      f = -> extend_2 null, o2
+
+      expect( f ).to.throwException()
+
+    it 'should throw in extend_2( undefined, o2 )', ->
+      f = -> extend_2 undefined, o2
+
+      expect( f ).to.throwException()
+
+  # XS.extend_2()
+  
   describe 'XS.subclass():', ->
     subclass = XS.subclass
     

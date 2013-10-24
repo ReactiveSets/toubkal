@@ -132,6 +132,76 @@
         return expect(result).to.be.eql(o3) && expect(result).to.not.be(o3);
       });
     });
+    describe('XS.extend_2():', function() {
+      var extend_2, o1, o2, result, _o1, _o2;
+      extend_2 = XS.extend_2;
+      it('should be a function', function() {
+        return expect(extend_2).to.be.a('function');
+      });
+      it('should not be XS.extend()', function() {
+        return expect(extend_2).to.not.be(XS.extend);
+      });
+      o1 = {
+        id: 1,
+        name: 'khalifa'
+      };
+      o2 = {
+        email: 'knassik@gmail.com'
+      };
+      _o1 = clone(o1);
+      _o2 = clone(o2);
+      result = void 0;
+      it('should be identity, i.e. extend_2( object ) should be strictly equal to object', function() {
+        result = extend_2(o1);
+        return expect(result).to.be(o1);
+      });
+      it('should modify o1 in extend_2( o1, o2 )', function() {
+        result = extend_2(o1, o2);
+        return expect(o1).to.be.eql({
+          id: 1,
+          name: 'khalifa',
+          email: 'knassik@gmail.com'
+        });
+      });
+      it('should return o1', function() {
+        return expect(result).to.be(o1);
+      });
+      it('should not modify o2', function() {
+        return expect(o2).to.be.eql(_o2);
+      });
+      it('should return null in extend_2( null )', function() {
+        return expect(extend_2(null)).to.be(null);
+      });
+      it('should return undefined in extend_2( undefined )', function() {
+        return expect(extend_2(void 0)).to.be(void 0);
+      });
+      it('should return null in extend_2( null, null )', function() {
+        return expect(extend_2(null, null)).to.be(null);
+      });
+      it('should return undefined in extend_2( undefined, undefined )', function() {
+        return expect(extend_2(void 0, void 0)).to.be(void 0);
+      });
+      it('should return null in extend_2( null, undefined )', function() {
+        return expect(extend_2(null, void 0)).to.be(null);
+      });
+      it('should return undefined in extend_2( undefined, null )', function() {
+        return expect(extend_2(void 0, null)).to.be(void 0);
+      });
+      it('should throw in extend_2( null, o2 )', function() {
+        var f;
+        f = function() {
+          return extend_2(null, o2);
+        };
+        return expect(f).to.throwException();
+      });
+      return it('should throw in extend_2( undefined, o2 )', function() {
+        var f;
+        f = function() {
+          return extend_2(void 0, o2);
+        };
+        return expect(f).to.throwException();
+      });
+    });
     describe('XS.subclass():', function() {
       var Animal, Snake, a, s, subclass;
       subclass = XS.subclass;
