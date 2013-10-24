@@ -169,6 +169,12 @@
       it('should not modify o2', function() {
         return expect(o2).to.be.eql(_o2);
       });
+      it('should return object in extend_2( object, null )', function() {
+        return expect(extend_2(o2, null)).to.be(o2);
+      });
+      it('should return object in extend_2( object, undefined )', function() {
+        return expect(extend_2(o2, void 0)).to.be(o2);
+      });
       it('should return null in extend_2( null )', function() {
         return expect(extend_2(null)).to.be(null);
       });

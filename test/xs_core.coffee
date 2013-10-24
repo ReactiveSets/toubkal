@@ -167,6 +167,12 @@ describe 'XS test suite:', ->
     it 'should not modify o2', ->
       expect( o2 ).to.be.eql _o2
     
+    it 'should return object in extend_2( object, null )', ->
+      expect( extend_2( o2, null ) ).to.be o2
+
+    it 'should return object in extend_2( object, undefined )', ->
+      expect( extend_2( o2, undefined ) ).to.be o2
+
     it 'should return null in extend_2( null )', ->
       expect( extend_2( null ) ).to.be null
 
