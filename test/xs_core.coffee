@@ -55,9 +55,7 @@ describe 'XS test suite:', ->
     expect( XS ).to.exist
 
   describe 'XS.extend():', ->
-    extend = XS.extend
-    
-    it 'extend() should be a function', ->
+    it 'should be a function', ->
       expect( extend ).to.be.a 'function'
     
     o1 = 
@@ -67,43 +65,69 @@ describe 'XS test suite:', ->
     o2 = 
       email: 'knassik@gmail.com'
     
-    _o2 = clone o2
-    
     o3 =
       country: 'Morocco'
       name: 'khalifa nassik'
       email: 'khalifan@gmail.com'
 
+    _o1 = clone o1
+    _o2 = clone o2
     _o3 = clone o3
+
+    result = undefined
     
-    it 'extend( object ) should be equal to object', ->
+    it 'should be identity, i.e. extend( object ) should be strictly equal to object', ->
       result = extend o1
       
       expect( result ).to.be o1
     
-    it 'extend( object1, object2 ) should be equal to object', ->
+    it 'should modify o1 in extend( o1, o2 )', ->
       result = extend o1, o2
       
-      expect( result ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } ) and
+      expect( o1 ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } )
+
+    it 'should return o1', ->
       expect( result ).to.be o1
     
-    it 'o2 should be deep equal to _o2', ->
+    it 'should not modify o2', ->
       expect( o2 ).to.be.eql _o2
     
-    it 'o2 should not be strictly equal to _o2', ->
-      expect( o2 ).to.not.be _o2
-    
-    it 'extend( object1, object2, object3 ) should be equal to object', ->
+    it 'should modify o1 after extend( o1, o2, o3 )', ->
+      o1 = clone _o1 # restore o1 original value
+
       result = extend o1, o2, o3
       
-      expect( result ).to.be.eql( { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' } ) and
+      expect( o1 ).to.be.eql( { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' } ) and
       expect( result ).to.be o1
-     
-    it 'o2 should be deep equal to _o2', ->
-       expect( o2 ).to.be.eql _o2
     
-    it 'o3 should be deep equal to _o3', ->
+    it 'should not have modified o2', ->
+      expect( o2 ).to.be.eql _o2
+
+    it 'should not have modified o3', ->
       expect( o3 ).to.be.eql _o3
+
+    it 'should return {} in extend( null )', ->
+      expect( extend( null ) ).to.be.eql {}
+
+    it 'should return {} in extend( undefined )', ->
+      expect( extend( undefined ) ).to.be.eql {}
+
+    it 'should return {} in extend( null, null )', ->
+      expect( extend( null, null ) ).to.be.eql {}
+
+    it 'should return {} in extend( undefined, undefined )', ->
+      expect( extend( undefined, undefined ) ).to.be.eql {}
+
+    it 'should return o3 clone in extend( null, null, null, o3, null )', ->
+      result = extend null, null, null, o3, null
+      
+      expect( result ).to.be.eql( o3 ) and expect( result ).to.not.be o3
+
+    it 'should return o3 clone in extend( undefined, undefined, undefined, o3, undefined )', ->
+      result = extend( undefined, undefined, undefined, o3, undefined )
+
+      expect( result ).to.be.eql( o3 ) and expect( result ).to.not.be o3
+
   # XS.extend()
   
   describe 'XS.subclass():', ->

@@ -57,9 +57,8 @@
       return expect(XS).to.exist;
     });
     describe('XS.extend():', function() {
-      var o1, o2, o3, _o2, _o3;
-      extend = XS.extend;
-      it('extend() should be a function', function() {
+      var o1, o2, o3, result, _o1, _o2, _o3;
+      it('should be a function', function() {
         return expect(extend).to.be.a('function');
       });
       o1 = {
@@ -69,48 +68,68 @@
       o2 = {
         email: 'knassik@gmail.com'
       };
-      _o2 = clone(o2);
       o3 = {
         country: 'Morocco',
         name: 'khalifa nassik',
         email: 'khalifan@gmail.com'
       };
+      _o1 = clone(o1);
+      _o2 = clone(o2);
       _o3 = clone(o3);
-      it('extend( object ) should be equal to object', function() {
-        var result;
+      result = void 0;
+      it('should be identity, i.e. extend( object ) should be strictly equal to object', function() {
         result = extend(o1);
         return expect(result).to.be(o1);
       });
-      it('extend( object1, object2 ) should be equal to object', function() {
-        var result;
+      it('should modify o1 in extend( o1, o2 )', function() {
         result = extend(o1, o2);
-        return expect(result).to.be.eql({
+        return expect(o1).to.be.eql({
           id: 1,
           name: 'khalifa',
           email: 'knassik@gmail.com'
-        }) && expect(result).to.be(o1);
+        });
       });
-      it('o2 should be deep equal to _o2', function() {
+      it('should return o1', function() {
+        return expect(result).to.be(o1);
+      });
+      it('should not modify o2', function() {
         return expect(o2).to.be.eql(_o2);
       });
-      it('o2 should not be strictly equal to _o2', function() {
-        return expect(o2).to.not.be(_o2);
-      });
-      it('extend( object1, object2, object3 ) should be equal to object', function() {
-        var result;
+      it('should modify o1 after extend( o1, o2, o3 )', function() {
+        o1 = clone(_o1);
         result = extend(o1, o2, o3);
-        return expect(result).to.be.eql({
+        return expect(o1).to.be.eql({
           id: 1,
           name: 'khalifa nassik',
           email: 'khalifan@gmail.com',
           country: 'Morocco'
         }) && expect(result).to.be(o1);
       });
-      it('o2 should be deep equal to _o2', function() {
+      it('should not have modified o2', function() {
         return expect(o2).to.be.eql(_o2);
       });
-      return it('o3 should be deep equal to _o3', function() {
+      it('should not have modified o3', function() {
         return expect(o3).to.be.eql(_o3);
+      });
+      it('should return {} in extend( null )', function() {
+        return expect(extend(null)).to.be.eql({});
+      });
+      it('should return {} in extend( undefined )', function() {
+        return expect(extend(void 0)).to.be.eql({});
+      });
+      it('should return {} in extend( null, null )', function() {
+        return expect(extend(null, null)).to.be.eql({});
+      });
+      it('should return {} in extend( undefined, undefined )', function() {
+        return expect(extend(void 0, void 0)).to.be.eql({});
+      });
+      it('should return o3 clone in extend( null, null, null, o3, null )', function() {
+        result = extend(null, null, null, o3, null);
+        return expect(result).to.be.eql(o3) && expect(result).to.not.be(o3);
+      });
+      return it('should return o3 clone in extend( undefined, undefined, undefined, o3, undefined )', function() {
+        result = extend(void 0, void 0, void 0, o3, void 0);
+        return expect(result).to.be.eql(o3) && expect(result).to.not.be(o3);
       });
     });
     describe('XS.subclass():', function() {
