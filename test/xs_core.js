@@ -374,6 +374,32 @@
         }) && expect(more_9.transaction_id).to.match(valid_uuid_v4);
       });
     });
+    describe('XS.no_more():', function() {
+      var more_0, more_0_clone, more_1, more_1_clone;
+      more_0 = XS.more();
+      more_0_clone = clone(more_0);
+      more_1 = XS.more({
+        a: 1
+      });
+      more_1_clone = clone(more_1);
+      it('should have original transaction id but no "more" flag', function() {
+        return expect(XS.no_more(more_0)).to.be.eql({
+          transaction_id: more_0.transaction_id
+        });
+      });
+      it('should not alter original object', function() {
+        return expect(more_0).to.be.eql(more_0_clone);
+      });
+      it('should have original transaction id with other attributes but no "more" flag', function() {
+        return expect(XS.no_more(more_1)).to.be.eql({
+          transaction_id: more_1.transaction_id,
+          a: 1
+        });
+      });
+      return it('should not alter original object', function() {
+        return expect(more_1).to.be.eql(more_1_clone);
+      });
+    });
     describe('XS.only_more():', function() {
       var valid_uuid_v4;
       valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
