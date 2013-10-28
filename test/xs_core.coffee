@@ -888,7 +888,7 @@ describe 'XS test suite:', ->
         transaction_ids  : {}
       }
       
-  describe 'Query_Tree routing:', () ->
+  describe 'Query_Tree routing:', ->
     tree = new XS.Pipelet()
     
     recipient_1 = xs.set( { name: 'recipient_1' } )
@@ -940,18 +940,18 @@ describe 'XS test suite:', ->
           { flow: 'user', id: 345 }
         ]
 
-    it 'Should allow to emit a remove operation filtered by a query to the first recipient', ( done ) ->
+    it "should alter first recepient's set", ( done ) ->
       tree.query_tree_emit 'remove', [ { flow: 'user', id: 123 } ]
       
       recipient_1.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
         
-    it 'Second recipient set should be unchanged', ( done ) ->
+    it "should not alter second recipient's set", ( done ) ->
       recipient_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'user', id: 345 }
         ]
-      
+    
     it 'Third recipient set should have two record less after removing one more record', ( done ) ->
       tree.query_tree_emit 'remove', [ { id: 123 } ]
       

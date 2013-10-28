@@ -1158,7 +1158,7 @@
           });
         });
       });
-      it('Should allow to emit a remove operation filtered by a query to the first recipient', function(done) {
+      it("should alter first recepient's set", function(done) {
         tree.query_tree_emit('remove', [
           {
             flow: 'user',
@@ -1171,7 +1171,7 @@
           });
         });
       });
-      it('Second recipient set should be unchanged', function(done) {
+      it("should not alter second recipient's set", function(done) {
         return recipient_2.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
