@@ -697,8 +697,7 @@
           branches: {},
           keys: [],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Adding a query should generate a query tree', function() {
@@ -713,15 +712,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["flow"],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', function() {
@@ -732,15 +729,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["flow"],
           recipients: [recipient_2],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Adding an additional query should expand the query tree', function() {
@@ -763,8 +758,7 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1, recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               },
               "store": {
                 branches: {
@@ -773,22 +767,19 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             },
             "id": {
@@ -796,15 +787,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["flow", "id"],
           recipients: [recipient_2],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Remove a query should shrink the query tree', function() {
@@ -815,8 +804,7 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1, recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               },
               "store": {
                 branches: {
@@ -825,22 +813,19 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             },
             "id": {
@@ -848,15 +833,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["flow", "id"],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Remove another query should shrink the query tree further', function() {
@@ -871,8 +854,7 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_1],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               },
               "store": {
                 branches: {
@@ -881,22 +863,19 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             },
             "id": {
@@ -904,15 +883,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["flow", "id"],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
@@ -930,22 +907,19 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             },
             "id": {
@@ -953,15 +927,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["flow", "id"],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Add and Remove empty queries should not change anything', function() {
@@ -975,22 +947,19 @@
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
                       recipients: [recipient_3],
-                      recipients_values: [],
-                      transaction_ids: {}
+                      recipients_values: []
                     }
                   }
                 },
                 keys: ["id"],
                 recipients: [],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             },
             "id": {
@@ -998,15 +967,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["flow", "id"],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
@@ -1025,15 +992,13 @@
                 branches: {},
                 keys: [],
                 recipients: [recipient_3],
-                recipients_values: [],
-                transaction_ids: {}
+                recipients_values: []
               }
             }
           },
           keys: ["id"],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
       return it('Remove the last record, should empty the query tree', function() {
@@ -1045,8 +1010,7 @@
           branches: {},
           keys: [],
           recipients: [],
-          recipients_values: [],
-          transaction_ids: {}
+          recipients_values: []
         });
       });
     });

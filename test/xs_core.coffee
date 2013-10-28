@@ -521,7 +521,6 @@ describe 'XS test suite:', ->
         keys      : []
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
     
     it 'Adding a query should generate a query tree', ->
@@ -536,14 +535,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_1 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "flow" ]
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', ->
@@ -558,14 +555,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_1 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "flow" ]
         recipients: [ recipient_2 ]
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Adding an additional query should expand the query tree', ->
@@ -587,7 +582,6 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_1, recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
             
             "store": {
@@ -598,7 +592,6 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                   
                   "521": {
@@ -606,14 +599,12 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
               recipients_values: []
-              transaction_ids  : {}
             }
           }
           
@@ -623,14 +614,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "flow", "id" ]
         recipients: [ recipient_2 ]
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Remove a query should shrink the query tree', ->
@@ -645,7 +634,6 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_1, recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
             
             "store": {
@@ -656,7 +644,6 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                   
                   "521": {
@@ -664,14 +651,12 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
               recipients_values: []
-              transaction_ids  : {}
             }
           }
           
@@ -681,14 +666,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Remove another query should shrink the query tree further', ->
@@ -703,7 +686,6 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_1 ]
               recipients_values: []
-              transaction_ids  : {}
             }
             
             "store": {
@@ -714,7 +696,6 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                   
                   "521": {
@@ -722,14 +703,12 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
               recipients_values: []
-              transaction_ids  : {}
             }
           }
           
@@ -739,14 +718,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Remove another query should shrink the query tree even further', ->
@@ -764,7 +741,6 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                   
                   "521": {
@@ -772,14 +748,12 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
               recipients_values: []
-              transaction_ids  : {}
             }
           }
           
@@ -789,14 +763,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Add and Remove empty queries should not change anything', ->
@@ -814,7 +786,6 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                   
                   "521": {
@@ -822,14 +793,12 @@ describe 'XS test suite:', ->
                     keys: []
                     recipients: [ recipient_3 ]
                     recipients_values: []
-                    transaction_ids  : {}
                   }
                 }
               }
               keys: [ "id" ]
               recipients: []
               recipients_values: []
-              transaction_ids  : {}
             }
           }
           
@@ -839,14 +808,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "flow", "id" ]
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Remove another query should shrink the query tree even further', ->
@@ -866,14 +833,12 @@ describe 'XS test suite:', ->
               keys: []
               recipients: [ recipient_3 ]
               recipients_values: []
-              transaction_ids  : {}
             }
           }
         }
         keys      : [ "id" ]
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
       
     it 'Remove the last record, should empty the query tree', ->
@@ -885,7 +850,6 @@ describe 'XS test suite:', ->
         keys      : []
         recipients: []
         recipients_values: []
-        transaction_ids  : {}
       }
       
   describe 'Query_Tree routing:', ->
