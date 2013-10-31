@@ -48,11 +48,19 @@
   xs = XS.xs;
 
   describe('Load Images test suite:', function() {
-    var images, images_dataset;
+    var images, images_dataset, node;
     images_dataset = xs.set([], {
       name: 'Images dataset'
+    }).auto_increment();
+    images = images_dataset.load_images({
+      loading_max: 2,
+      display: 'visible'
     });
-    images = images_dataset.auto_increment().load_images();
+    node = document.getElementById('xs_load_images');
+    it('should have created xs_preoloaded_images div', function() {
+      expect(node).to.be.ok();
+      return expect(node.nodeName).to.be('DIV');
+    });
     it('expect images.fetch_all() to be empty', function() {
       return expect(images.fetch_all()).to.be.empty();
     });
@@ -82,15 +90,15 @@
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/07.jpg'
         }
       ]);
+      expect(images._loading_count).to.be(2);
       return images.on('complete', function() {
         return images.fetch_all(function(values) {
           return check(done, function() {
+            values.sort(function(a, b) {
+              return a.id > b.id;
+            });
             return expect(values).to.be.eql([
               {
-                id: 1,
-                title: 'Villa Marrakech 1',
-                uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/011.jpg'
-              }, {
                 id: 2,
                 title: 'Villa Marrakech 2',
                 uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
@@ -120,8 +128,37 @@
         });
       }, this, true);
     });
+    it('should no longer have any image loading', function() {
+      return expect(images._loading_count).to.be(0);
+    });
+    it('should have added 6 images to the DOM', function() {
+      expect(node.childNodes[0].nodeName).to.be('IMG');
+      expect(node.childNodes[1].nodeName).to.be('IMG');
+      expect(node.childNodes[2].nodeName).to.be('IMG');
+      expect(node.childNodes[3].nodeName).to.be('IMG');
+      expect(node.childNodes[4].nodeName).to.be('IMG');
+      expect(node.childNodes[5].nodeName).to.be('IMG');
+      return expect(node.childNodes[6]).to.not.be.ok();
+    });
+    it('should set the attribute loaded to 1 for these 6 images', function(done) {
+      return images.fetch_all(function(values) {
+        return check(done, function() {
+          var image, value, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = values.length; _i < _len; _i++) {
+            value = values[_i];
+            image = images._get_image_from_uri(value.uri);
+            expect(image.nodeName).to.be('IMG');
+            expect(image.src).to.be(value.uri);
+            _results.push(expect(image.getAttribute('loaded')).to.be('1'));
+          }
+          return _results;
+        });
+      });
+    });
     it('after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
       this.timeout(0);
+      images._loading_max = 1;
       images_dataset.add([
         {
           title: 'Villa Marrakech 8',
@@ -131,15 +168,15 @@
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg'
         }
       ]);
+      expect(images._loading_count).to.be(1);
       return images.on('complete', function() {
         return images.fetch_all(function(values) {
           return check(done, function() {
+            values.sort(function(a, b) {
+              return a.id > b.id;
+            });
             return expect(values).to.be.eql([
               {
-                id: 1,
-                title: 'Villa Marrakech 1',
-                uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/011.jpg'
-              }, {
                 id: 2,
                 title: 'Villa Marrakech 2',
                 uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg'
@@ -177,13 +214,37 @@
         });
       }, this, true);
     });
+    it('should have added 2 images to the DOM', function() {
+      expect(node.childNodes[0].nodeName).to.be('IMG');
+      expect(node.childNodes[1].nodeName).to.be('IMG');
+      expect(node.childNodes[2].nodeName).to.be('IMG');
+      expect(node.childNodes[3].nodeName).to.be('IMG');
+      expect(node.childNodes[4].nodeName).to.be('IMG');
+      expect(node.childNodes[5].nodeName).to.be('IMG');
+      expect(node.childNodes[6].nodeName).to.be('IMG');
+      expect(node.childNodes[7].nodeName).to.be('IMG');
+      return expect(node.childNodes[8]).to.not.be.ok();
+    });
+    it('should set the attribute loaded_count to 1 for these 6 images', function(done) {
+      return images.fetch_all(function(values) {
+        return check(done, function() {
+          var image, value, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = values.length; _i < _len; _i++) {
+            value = values[_i];
+            image = images._get_image_from_uri(value.uri);
+            expect(image.nodeName).to.be('IMG');
+            expect(image.src).to.be(value.uri);
+            _results.push(expect(image.getAttribute('loaded')).to.be('1'));
+          }
+          return _results;
+        });
+      });
+    });
     it('after images_dataset.remove( objects ), expect images.fetch_all() to be equal to result', function() {
+      var values;
       images_dataset.remove([
         {
-          id: 1,
-          title: 'Villa Marrakech 1',
-          uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/011.jpg'
-        }, {
           id: 6,
           title: 'Villa Marrakech 6',
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg'
@@ -193,7 +254,10 @@
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
         }
       ]);
-      return expect(images.fetch_all()).to.be.eql([
+      values = images.fetch_all().sort(function(a, b) {
+        return a.id > b.id;
+      });
+      return expect(values).to.be.eql([
         {
           id: 2,
           title: 'Villa Marrakech 2',
@@ -221,6 +285,15 @@
         }
       ]);
     });
+    it('should have removed 2 images from the DOM', function() {
+      expect(node.childNodes[0].nodeName).to.be('IMG');
+      expect(node.childNodes[1].nodeName).to.be('IMG');
+      expect(node.childNodes[2].nodeName).to.be('IMG');
+      expect(node.childNodes[3].nodeName).to.be('IMG');
+      expect(node.childNodes[4].nodeName).to.be('IMG');
+      expect(node.childNodes[5].nodeName).to.be('IMG');
+      return expect(node.childNodes[6]).to.not.be.ok();
+    });
     it('after images_dataset.update( objects ), expect images.fetch_all() to be equal to result', function(done) {
       this.timeout(0);
       images_dataset.update([
@@ -239,6 +312,9 @@
       return images.on('complete', function() {
         return images.fetch_all(function(values) {
           return check(done, function() {
+            values.sort(function(a, b) {
+              return a.id > b.id;
+            });
             return expect(values).to.be.eql([
               {
                 id: 2,
@@ -284,6 +360,9 @@
       return images.on('complete', function() {
         return images.fetch_all(function(values) {
           return check(done, function() {
+            values.sort(function(a, b) {
+              return a.id > b.id;
+            });
             return expect(values).to.be.eql([
               {
                 id: 2,
@@ -341,9 +420,10 @@
       return images.on('complete', function() {
         return images.fetch_all(function(values) {
           return check(done, function() {
-            var found, result, v, _i, _len;
-            found = true;
-            result = xs.set([
+            values.sort(function(a, b) {
+              return a.id > b.id;
+            });
+            return expect(values).to.be.eql([
               {
                 id: 2,
                 title: 'Villa Marrakech 2',
@@ -377,18 +457,7 @@
                 title: 'Villa Marrakech 12',
                 uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg'
               }
-            ], {
-              key: ['id', 'title', 'uri']
-            });
-            for (_i = 0, _len = values.length; _i < _len; _i++) {
-              v = values[_i];
-              if (result.index_of(v) !== -1) {
-                continue;
-              }
-              found = false;
-              break;
-            }
-            return expect(found).to.be(true);
+            ]);
           });
         });
       }, this, true);
