@@ -105,7 +105,7 @@ var xs_min = xs
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
-var node_modules_js = xs.set( [
+var mocha_expect = xs.set( [
     { name: 'mocha/mocha.js'      },
     { name: 'expect.js/expect.js' }
   ] )
@@ -113,7 +113,7 @@ var node_modules_js = xs.set( [
 ;
 
 var tests_min = xs
-  .union( [ node_modules_js, xs.set( [
+  .union( [ mocha_expect, xs.set( [
     { name: 'test/xs_tests_utils.js' },
     { name: 'test/xs_core.js'       }
   ] ) ] )
@@ -124,11 +124,18 @@ var tests_min = xs
 ;
 
 var ui_tests_min = xs
-  .union( [ node_modules_js, xs.set( [ { name: 'test/xs_ui_tests.js' } ] ) ] )
+  .union( [ mocha_expect, xs.set( [ { name: 'test/xs_ui_tests.js' } ] ) ] )
   .auto_increment() // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'test/javascript/mocha_expect_ui_tests-min.js' )
+;
+
+var mocha_expect_min = mocha_expect
+  .auto_increment() // will auto-increment the id attribute starting at 1
+  .watch()
+  .order( [ { id: 'id' } ] ) // order loaded files
+  .uglify( 'test/javascript/mocha_expect-min.js' )
 ;
 
 var node_modules_css = xs.set( [ { name: 'mocha/mocha.css' } ] )
@@ -147,11 +154,12 @@ xs.set( [
     { name: 'test/css/images/ok.png'       },
     { name: 'test/ui.html'                 },
     { name: 'test/load_images.html'        },
+    { name: 'test/load_images-min.html'    },
     { name: 'test/css/xs_tests.css'        },
     { name: 'test/xs_load_images_tests.js' }
   ] )
   .watch( { base_directory: __dirname + '/..' } )
-  .union( [ xs_min, tests_min, ui_tests_min, node_modules_css ] )
+  .union( [ xs_min, tests_min, ui_tests_min, mocha_expect_min, node_modules_css ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 

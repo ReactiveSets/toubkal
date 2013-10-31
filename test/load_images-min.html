@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <link rel="stylesheet" href="css/xs_tests.css" />
+    
+    <title>Load Images Tests</title>
+    
+    <script src="../lib/xs-min.js"></script>
+    
+    <script src="javascript/mocha_expect-min.js"></script>
+    
+    <style>
+      #xs_preloaded_images img {
+        width: 30%;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div id="images"></div>
+    <div id="mocha"></div>
+    
+    <script>
+      
+      window.onload = function() {
+        mocha.run()
+      };
+      
+    </script>
+    
+    <script src="xs_load_images_tests.js"></script>
+  </body>
+</html>
