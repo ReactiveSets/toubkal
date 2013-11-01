@@ -24,7 +24,7 @@
   "dependencies": {
     "socket.io" : ">=0.9.13",
     "uglify-js" : ">=2.2.5",
-    "mime"      : ">=1.2.9",
+    "mime"      : ">=1.2.11",
     "node-uuid" : ">=1.4.0",
     "aws-sdk"   : ">=0.9.7-pre.8",
     "moment"    : ">=2.0.0",

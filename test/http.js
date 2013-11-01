@@ -136,15 +136,6 @@ var mocha_expect = xs.set( [
 
 var tests = xs
   .set( [
-    // Test suites
-    { name: 'test/xs_tests_utils.coffee'       },
-    { name: 'test/xs_core.coffee'              },
-    { name: 'test/xs_ui_tests.coffee'          },
-    { name: 'test/xs_form_tests.coffee'        },
-    { name: 'test/xs_load_images_tests.coffee' },
-    { name: 'test/xs_control_tests.coffee'     },
-    { name: 'test/xs_table_tests.coffee'       },
-    
     // HTML test pages
     { name: 'test/index.html'                  },
     { name: 'test/index-min.html'              },
@@ -180,6 +171,19 @@ var tests = xs
   .watch( { base_directory: __dirname + '/..' } )
 ;
 
+var coffee_source = xs.set( [
+    { name: 'test/xs_tests_utils.coffee'       },
+    { name: 'test/xs_core.coffee'              },
+    { name: 'test/xs_ui_tests.coffee'          },
+    { name: 'test/xs_form_tests.coffee'        },
+    { name: 'test/xs_load_images_tests.coffee' },
+    { name: 'test/xs_control_tests.coffee'     },
+    { name: 'test/xs_table_tests.coffee'       },
+  ] )
+  
+  .watch( { base_directory: __dirname + '/..' } )
+;
+
 var compiled_coffee = xs.set( [
     { name: 'test/xs_tests_utils.js'           },
     { name: 'test/xs_core.js'                  },
@@ -189,7 +193,9 @@ var compiled_coffee = xs.set( [
     { name: 'test/xs_control_tests.js'         },
     { name: 'test/xs_table_tests.js'           },
   ] )
+  
   .watch( { base_directory: __dirname + '/..' } )
+  
   .alter( function( v ) {
     // Fix Coffee-script sourceMappingURL
     v.content = v.content
@@ -207,7 +213,6 @@ var source_maps = xs.set( [
     { name: 'test/xs_control_tests.map'        },
     { name: 'test/xs_table_tests.map'          },
   ] )
-  .alter( { mime_type: 'application/json' } )
   .watch( { base_directory: __dirname + '/..' } )
   .alter( function( v ) {
     // Fix Coffee-script source map 
@@ -220,7 +225,7 @@ var source_maps = xs.set( [
 ;
 
 // Serve assets to http servers
-xs.union( [ xs_min, mocha_expect, tests, compiled_coffee, source_maps ] )
+xs.union( [ xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 
