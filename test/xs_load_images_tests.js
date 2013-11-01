@@ -465,3 +465,7 @@
   });
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=xs_load_images_tests.map
+*/

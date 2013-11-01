@@ -824,3 +824,7 @@
   });
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=xs_ui_tests.map
+*/

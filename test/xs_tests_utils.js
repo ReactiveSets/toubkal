@@ -99,3 +99,7 @@
   });
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=xs_tests_utils.map
+*/

@@ -177,3 +177,7 @@
   xs.form(document.getElementById('form'), 'user_profile', fields).socket_io_server();
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=xs_form_tests.map
+*/

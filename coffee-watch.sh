@@ -1,3 +1,3 @@
 #!/bin/sh
 
-coffee --watch -c test
+coffee --watch -m -c test

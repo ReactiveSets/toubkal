@@ -5499,3 +5499,7 @@
   });
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=xs_core.map
+*/

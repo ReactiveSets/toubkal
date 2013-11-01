@@ -59,41 +59,52 @@ var servers = xs.set( [
 require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
 
-var xs_min = xs
-  // Define JavaScript Assets to minify
+// XS Dependencies
+var xs_dependencies = xs
   .set( [
-    // IE8- compatibility
-    { name: 'test/javascript/es5.js'     },
-    { name: 'test/javascript/json2.js'   },
-    
-    // Dependencies
-    { name: 'test/javascript/uuid.js'    },
+    { name: 'node-uuid/uuid.js'          },
+  ] )
+  .require_resolve()
+;
+
+// lib/xs-min.js
+var xs_min = xs
+  .union( [ xs_dependencies, xs.set( [
+    // IE compatibility
+    { name: 'test/javascript/es5.js'       },
+    { name: 'test/javascript/json2.js'     },
     
     // xs core
-    { name: 'lib/xs.js'                  },
-    { name: 'lib/code.js'                },
-    { name: 'lib/pipelet.js'             },
-    { name: 'lib/filter.js'              },
-    { name: 'lib/order.js'               },
-    { name: 'lib/aggregate.js'           },
-    { name: 'lib/join.js'                },
+    { name: 'lib/xs.js'                    },
+    { name: 'lib/code.js'                  },
+    { name: 'lib/pipelet.js'               },
+    { name: 'lib/filter.js'                },
+    { name: 'lib/order.js'                 },
+    { name: 'lib/aggregate.js'             },
+    { name: 'lib/join.js'                  },
     
     // xs utilities
-    { name: 'lib/json.js'                },
+    { name: 'lib/json.js'                  },
+    { name: 'lib/uri.js'                   },
+    { name: 'lib/events.js'                },
     
     // xs socket.io
-    { name: 'lib/socket_io_crossover.js' },
-    { name: 'lib/socket_io_server.js'    },
+    { name: 'lib/socket_io_crossover.js'   },
+    { name: 'lib/socket_io_server.js'      },
     
     // xs client
-    { name: 'lib/selector.js'            },
-    { name: 'lib/table.js'               },
-    { name: 'lib/control.js'             },
-    { name: 'lib/form.js'                },
-    { name: 'lib/load_images.js'         }
-  ], { name: 'javascript assets' }  )
+    { name: 'lib/selector.js'              },
+    { name: 'lib/table.js'                 },
+    { name: 'lib/control.js'               },
+    { name: 'lib/form.js'                  },
+    { name: 'lib/load_images.js'           },
+    
+    // bootstrap
+    { name: 'lib/bootstrap_carousel.js'    },
+    { name: 'lib/bootstrap_photo_album.js' },
+  ] ) ] )
   
-  .auto_increment() // will auto-increment the id attribute starting at 1
+  .auto_increment( { name: 'javascript assets' } ) // will auto-increment the id attribute starting at 1
   
   // Update file contents in realtime
   .watch()
@@ -105,61 +116,111 @@ var xs_min = xs
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
+var mocha_css = xs
+  .set( [ { name: 'mocha/mocha.css' } ] )
+  .require_resolve()
+  .watch()
+;
+
 var mocha_expect = xs.set( [
     { name: 'mocha/mocha.js'      },
     { name: 'expect.js/expect.js' }
   ] )
   .require_resolve()
-;
-
-var tests_min = xs
-  .union( [ mocha_expect, xs.set( [
-    { name: 'test/xs_tests_utils.js' },
-    { name: 'test/xs_core.js'       }
-  ] ) ] )
-  .auto_increment() // will auto-increment the id attribute starting at 1
-  .watch()
-  .order( [ { id: 'id' } ] ) // order loaded files
-  .uglify( 'test/javascript/mocha_expect_tests-min.js' )
-;
-
-var ui_tests_min = xs
-  .union( [ mocha_expect, xs.set( [ { name: 'test/xs_ui_tests.js' } ] ) ] )
-  .auto_increment() // will auto-increment the id attribute starting at 1
-  .watch()
-  .order( [ { id: 'id' } ] ) // order loaded files
-  .uglify( 'test/javascript/mocha_expect_ui_tests-min.js' )
-;
-
-var mocha_expect_min = mocha_expect
   .auto_increment() // will auto-increment the id attribute starting at 1
   .watch()
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'test/javascript/mocha_expect-min.js' )
+  .union( [ mocha_css ] )
 ;
 
-var node_modules_css = xs.set( [ { name: 'mocha/mocha.css' } ] )
-  .require_resolve()
-  .watch()
+var tests = xs
+  .set( [
+    // Test suites
+    { name: 'test/xs_tests_utils.coffee'       },
+    { name: 'test/xs_core.coffee'              },
+    { name: 'test/xs_ui_tests.coffee'          },
+    { name: 'test/xs_form_tests.coffee'        },
+    { name: 'test/xs_load_images_tests.coffee' },
+    { name: 'test/xs_control_tests.coffee'     },
+    { name: 'test/xs_table_tests.coffee'       },
+    
+    // HTML test pages
+    { name: 'test/index.html'                  },
+    { name: 'test/index-min.html'              },
+    
+    { name: 'test/bootstrap_photo_album.html'  },
+    { name: 'test/carousel.html'               },
+    { name: 'test/control.html'                },
+    { name: 'test/form.html'                   },
+    { name: 'test/load_images.html'            },
+    { name: 'test/load_images-min.html'        },
+    { name: 'test/socketio.html'               },
+    { name: 'test/table.html'                  },
+    { name: 'test/table_controls.html'         },
+    { name: 'test/ui.html'                     },
+    
+    // JavaScript for tests
+    { name : 'test/javascript/jquery-1.10.2.min.js' },
+    
+    // Bootstrap
+    { name: 'test/bootstrap/css/bootstrap.css' },
+    { name: 'test/bootstrap/js/bootstrap.js'   },
+    
+    // CSS for tests
+    { name: 'test/css/mocha.css'               },
+    { name: 'test/css/table.css'               },
+    { name: 'test/css/xs_tests.css'            },
+    
+    // Images for tests
+    { name: 'test/css/images/ok.png'           },
+    { name: 'test/css/images/error.png'        },
+  ] )
+  
+  .watch( { base_directory: __dirname + '/..' } )
 ;
 
-xs.set( [
-    { name: 'test/index.html'              },
-    { name: 'test/index-min.html'          },
-    { name: 'test/form.html'               },
-    { name: 'test/xs_form_tests.js'        },
-    { name: 'test/socketio.html'           },
-    { name: 'test/css/mocha.css'           },
-    { name: 'test/css/table.css'           },
-    { name: 'test/css/images/ok.png'       },
-    { name: 'test/ui.html'                 },
-    { name: 'test/load_images.html'        },
-    { name: 'test/load_images-min.html'    },
-    { name: 'test/css/xs_tests.css'        },
-    { name: 'test/xs_load_images_tests.js' }
+var compiled_coffee = xs.set( [
+    { name: 'test/xs_tests_utils.js'           },
+    { name: 'test/xs_core.js'                  },
+    { name: 'test/xs_ui_tests.js'              },
+    { name: 'test/xs_form_tests.js'            },
+    { name: 'test/xs_load_images_tests.js'     },
+    { name: 'test/xs_control_tests.js'         },
+    { name: 'test/xs_table_tests.js'           },
   ] )
   .watch( { base_directory: __dirname + '/..' } )
-  .union( [ xs_min, tests_min, ui_tests_min, mocha_expect_min, node_modules_css ] )
+  .alter( function( v ) {
+    // Fix Coffee-script sourceMappingURL
+    v.content = v.content
+      .replace( /\/\/@ sourceMappingURL=/, '//# sourceMappingURL=' )
+    ;
+  } )
+;
+
+var source_maps = xs.set( [
+    { name: 'test/xs_tests_utils.map'          },
+    { name: 'test/xs_core.map'                 },
+    { name: 'test/xs_ui_tests.map'             },
+    { name: 'test/xs_form_tests.map'           },
+    { name: 'test/xs_load_images_tests.map'    },
+    { name: 'test/xs_control_tests.map'        },
+    { name: 'test/xs_table_tests.map'          },
+  ] )
+  .alter( { mime_type: 'application/json' } )
+  .watch( { base_directory: __dirname + '/..' } )
+  .alter( function( v ) {
+    // Fix Coffee-script source map 
+    v.content = v.content
+      .replace( /"sourceRoot": ".."/, '"sourceRoot": ""' )
+      .replace( /test\\\\/, '' )
+      .replace( /test[\/]/, '' )
+    ;
+  } )
+;
+
+// Serve assets to http servers
+xs.union( [ xs_min, mocha_expect, tests, compiled_coffee, source_maps ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 

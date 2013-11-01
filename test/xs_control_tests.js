@@ -554,3 +554,7 @@
   });
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=xs_control_tests.map
+*/

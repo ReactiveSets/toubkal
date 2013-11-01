@@ -566,3 +566,7 @@
   });
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=xs_table_tests.map
+*/

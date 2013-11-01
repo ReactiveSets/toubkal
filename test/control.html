@@ -8,8 +8,9 @@
     
     <script src="javascript/es5.js"></script>
 
-    <script src="javascript/mocha.js"></script>
-    <script src="javascript/expect.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/expect.js/expect.js"></script>
+    
     <script>
       mocha.setup( 'bdd' );
 
@@ -18,15 +19,17 @@
     
     <title>XS Control</title>
     
-    <script type="text/javascript" charset="utf-8" src="../lib/xs.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/code.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/pipelet.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/filter.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/order.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/aggregate.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/selector.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/table.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../lib/control.js"></script>
+    <script src="../node_modules/node-uuid/uuid.js"></script>
+    
+    <script src="../lib/xs.js"></script>
+    <script src="../lib/code.js"></script>
+    <script src="../lib/pipelet.js"></script>
+    <script src="../lib/filter.js"></script>
+    <script src="../lib/order.js"></script>
+    <script src="../lib/aggregate.js"></script>
+    <script src="../lib/selector.js"></script>
+    <script src="../lib/table.js"></script>
+    <script src="../lib/control.js"></script>
     
     <script>
       window.onload = function() { mocha.run() };
