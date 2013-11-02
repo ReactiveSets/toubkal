@@ -1590,8 +1590,8 @@ describe 'XS test suite:', ->
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
-            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
+            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
           ]
         
         it 'update organizer, books_ordered_by_year should be ordered by ascending by title', ( done ) ->
@@ -1767,8 +1767,8 @@ describe 'XS test suite:', ->
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: null }
-            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
             { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
+            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
           ]
         
         it 'after books.notify( 4 updates transaction ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
