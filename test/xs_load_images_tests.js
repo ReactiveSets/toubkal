@@ -51,8 +51,11 @@
     var images, images_dataset, node;
     images_dataset = xs.set([], {
       name: 'Images dataset'
-    }).auto_increment();
+    }).auto_increment({
+      name: 'images_dataset'
+    });
     images = images_dataset.load_images({
+      name: 'images',
       loading_max: 2,
       display: 'visible'
     });

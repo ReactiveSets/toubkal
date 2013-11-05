@@ -43,8 +43,8 @@ if require?
 xs = XS.xs
 
 describe 'Load Images test suite:', ->
-  images_dataset = xs.set( [], { name: 'Images dataset' } ).auto_increment()
-  images         = images_dataset.load_images( { loading_max: 2, display: 'visible' } )
+  images_dataset = xs.set( [], { name: 'Images dataset' } ).auto_increment( { name: 'Images dataset' } )
+  images         = images_dataset.load_images( { name: 'images', loading_max: 2, display: 'visible' } )
   node           = document.getElementById( 'xs_load_images' )
   
   it 'should have created xs_preoloaded_images div', ->
