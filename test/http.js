@@ -50,6 +50,7 @@ var servers = xs.set( [
     { port: 8044, pfx: '' }, // https server using pfx
   ] )
   .auto_increment()
+  .trace( 'http servers' )
   .http_servers()
 ;
 

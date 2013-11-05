@@ -52,7 +52,7 @@
     images_dataset = xs.set([], {
       name: 'Images dataset'
     }).auto_increment({
-      name: 'images_dataset'
+      name: 'Images dataset'
     });
     images = images_dataset.load_images({
       name: 'images',
