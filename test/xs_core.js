@@ -1644,7 +1644,9 @@
             }
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
+              return expect(values.sort(function(a, b) {
+                return a.id > b.id;
+              })).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -1670,7 +1672,7 @@
         });
       });
       describe('update():', function() {
-        it('set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', function(done) {
+        it('set.update( [ [ { id: 1 }, { id: 1, v: "test" } ] ] ) should be equal to set: empty set', function(done) {
           return set.update([
             [
               {
@@ -1682,12 +1684,7 @@
             ]
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
-                {
-                  id: 1,
-                  v: 'test'
-                }
-              ]);
+              return expect(values).to.be.eql([]);
             });
           });
         });
@@ -1718,7 +1715,9 @@
             }
           ]).fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
+              return expect(values.sort(function(a, b) {
+                return a.id > b.id;
+              })).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -1758,7 +1757,9 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
+              return expect(values.sort(function(a, b) {
+                return a.id > b.id;
+              })).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -1890,7 +1891,9 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return expect(values).to.be.eql([
+                return expect(values.sort(function(a, b) {
+                  return a.id > b.id;
+                })).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -1928,7 +1931,9 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return expect(values).to.be.eql([
+                return expect(values.sort(function(a, b) {
+                  return a.id > b.id;
+                })).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
@@ -1961,22 +1966,24 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return expect(values).to.be.eql([
+                return expect(values.sort(function(a, b) {
+                  return a.id > b.id;
+                })).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
                     country: "USA",
                     state: "California"
                   }, {
-                    id: 8,
-                    name: "Detroit",
-                    country: "USA",
-                    state: "Michigan"
-                  }, {
                     id: 5,
                     name: "NY",
                     country: "USA",
                     state: "NY"
+                  }, {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
                   }
                 ]);
               });
@@ -1998,22 +2005,24 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return expect(values).to.be.eql([
+                return expect(values.sort(function(a, b) {
+                  return a.id > b.id;
+                })).to.be.eql([
                   {
                     id: 2,
                     name: "Mountain View",
                     country: "USA",
                     state: "California"
                   }, {
-                    id: 8,
-                    name: "Detroit",
-                    country: "USA",
-                    state: "Michigan"
-                  }, {
                     id: 5,
                     name: "NY",
                     country: "USA",
                     state: "NY"
+                  }, {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
                   }
                 ]);
               });
@@ -2032,17 +2041,19 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return expect(values).to.be.eql([
+                return expect(values.sort(function(a, b) {
+                  return a.id > b.id;
+                })).to.be.eql([
                   {
-                    id: 8,
-                    name: "Detroit",
-                    country: "USA",
-                    state: "Michigan"
-                  }, {
                     id: 5,
                     name: "NY",
                     country: "USA",
                     state: "NY"
+                  }, {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
                   }
                 ]);
               });
@@ -2058,17 +2069,19 @@
             ]);
             return cities_in_usa.fetch_all(function(values) {
               return check(done, function() {
-                return expect(values).to.be.eql([
+                return expect(values.sort(function(a, b) {
+                  return a.id > b.id;
+                })).to.be.eql([
                   {
-                    id: 8,
-                    name: "Detroit",
-                    country: "USA",
-                    state: "Michigan"
-                  }, {
                     id: 5,
                     name: "NY",
                     country: "USA",
                     state: "NY"
+                  }, {
+                    id: 8,
+                    name: "Detroit",
+                    country: "USA",
+                    state: "Michigan"
                   }
                 ]);
               });
@@ -2100,7 +2113,9 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
+              return expect(values.sort(function(a, b) {
+                return a.id > b.id;
+              })).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -2149,7 +2164,9 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
+              return expect(values.sort(function(a, b) {
+                return a.id > b.id;
+              })).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -2218,7 +2235,9 @@
           ]);
           return employee.fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
+              return expect(values.sort(function(a, b) {
+                return a.id > b.id;
+              })).to.be.eql([
                 {
                   id: 2,
                   name: "Josephin Tan",
@@ -2335,7 +2354,9 @@
           ]);
           return cities_in_morocco.fetch_all(function(values) {
             return check(done, function() {
-              return expect(values).to.be.eql([
+              return expect(values.sort(function(a, b) {
+                return a.id > b.id;
+              })).to.be.eql([
                 {
                   id: 1,
                   name: "Marrakech",
@@ -2379,12 +2400,16 @@
             author: "Dan Brown",
             year: 2000
           }
-        ]);
+        ], {
+          name: 'books'
+        });
         organizer = xs.set([
           {
             id: "year"
           }
-        ]);
+        ], {
+          name: 'by_year'
+        });
         by_ascending_author = function(a, b) {
           if ((a = a.author) === (b = b.author)) {
             return 0;
@@ -2421,7 +2446,9 @@
             id: "year",
             descending: true
           }
-        ]).trace('By Descending Year Organizer, before delay').delay(by_descending_year_delay).trace('By Descending Year Organizer, after delay');
+        ], {
+          name: 'by_descending_year'
+        }).trace('By Descending Year Organizer, before delay').delay(by_descending_year_delay).trace('By Descending Year Organizer, after delay');
         books_ordered_by_descending_year = books.order(by_descending_year, {
           name: 'books_ordered_by_descending_year',
           insert_before: true
@@ -4352,7 +4379,7 @@
             });
           });
         });
-        return describe('remove( books 12, 13, 15 ):', function() {
+        return describe('remove( books 12, 13, 3, 15 ):', function() {
           it('after books.remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
             books.remove([
               {
@@ -4365,6 +4392,11 @@
                 title: "Lolita",
                 author: "Vladimir Nabokov",
                 year: 1955
+              }, {
+                id: 3,
+                title: "The Da Vinci Code",
+                author: "Dan Brown",
+                year: 2003
               }, {
                 id: 15,
                 title: "Steps to Christ",
@@ -4385,11 +4417,6 @@
                     title: "A Tale of Two Cities",
                     author: "Charles Dickens",
                     year: 1859
-                  }, {
-                    id: 3,
-                    title: "The Da Vinci Code",
-                    author: "Dan Brown",
-                    year: 2003
                   }, {
                     id: 5,
                     title: "Angels and Demons",
@@ -4494,11 +4521,6 @@
                     title: "The Lord of the Rings 1",
                     author: "J. R. R. Tolkien 2",
                     year: 1954
-                  }, {
-                    id: 3,
-                    title: "The Da Vinci Code",
-                    author: "Dan Brown",
-                    year: 2003
                   }, {
                     id: 5,
                     title: "Angels and Demons",

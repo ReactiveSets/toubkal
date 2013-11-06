@@ -1114,19 +1114,18 @@ describe 'XS test suite:', ->
       it 'employee.remove( [ { id: 6 } ] ) should be equal to result: last record', ( done ) ->
         employee
           .remove( [ { id: 6 } ] )
-          .fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
-            { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
-            { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
-          ]
+          .fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+              { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+              { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+            ]
     
     describe 'update():', ->
-      it 'set.update( [ [ { id: 1 } ] ] ) should be equal to set: empty set', ( done ) ->
+      it 'set.update( [ [ { id: 1 }, { id: 1, v: "test" } ] ] ) should be equal to set: empty set', ( done ) ->
         set
           .update( [ [ { id: 1 }, { id: 1, v: 'test' } ] ] )
-          .fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id: 1, v: 'test' }
-          ]
+          .fetch_all ( values ) -> check done, -> expect( values ).to.be.eql []
       
       it 'employee with add, update and remove inverted should end with update done', ( done ) ->
         employee
@@ -1134,22 +1133,22 @@ describe 'XS test suite:', ->
           .update( [ [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" }
                        { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] ] )
           .add(      [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" } ] )
-          .fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
-            { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
-            { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
-            #{ id: 15, name: "Khalifa P Nassik", salary: "$2500" }
-          ]
+          .fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
+              { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
+              { id:  4, name: "James A. Pentel", salary: "$1750", customer_id: "225", order_id: "1225" }
+            ]
       
       it 'employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', ( done ) ->
         employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" } ] ] )
 
-        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
-          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
-          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
-          #{ id: 15, name: "Khalifa P Nassik", salary: "$2500" }
-        ]
+        employee.fetch_all ( values ) -> check done, ->
+          expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+            { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
+            { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
+            { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+          ]
     
     describe 'filter():', ->
       is_in_usa = ( city, c, cities ) ->
@@ -1188,54 +1187,60 @@ describe 'XS test suite:', ->
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', ( done ) ->
           cities.update [ [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ]
 
-          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-            { id: 7, name: "Housten", country: "USA", state: "Texas" }
-          ]
+          cities_in_usa.fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id: 2, name: "Mountain View", country: "USA", state: "California" }
+              { id: 5, name: "NY", country: "USA", state: "NY" }
+              { id: 7, name: "Housten", country: "USA", state: "Texas" }
+            ]
         
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', ( done ) ->
           cities.update [ [ { id: 7, name: "Housten", country: "USA", state: "Texas" }, { id: 7, name: "Venice", country: "Italy" } ] ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-          ]
+          cities_in_usa.fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id: 2, name: "Mountain View", country: "USA", state: "California" }
+              { id: 5, name: "NY", country: "USA", state: "NY" }
+            ]
         
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-          ]
+          cities_in_usa.fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id: 2, name: "Mountain View", country: "USA", state: "California" }
+              { id: 5, name: "NY", country: "USA", state: "NY" }
+              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            ]
         
         it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 9, name: "Madrid", country: "Spain" } ] ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-          ]
+          cities_in_usa.fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id: 2, name: "Mountain View", country: "USA", state: "California" }
+              { id: 5, name: "NY", country: "USA", state: "NY" }
+              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            ]
         
       describe 'remove()', ->
         it 'cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', ( done ) ->
           cities.remove [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-          ]
+          cities_in_usa.fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id: 5, name: "NY", country: "USA", state: "NY" }
+              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            ]
         
         it 'cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', ( done ) ->
           cities.remove [ { id: 7, name: "Venice", country: "Italy" } ]
           
-          cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-            { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
-            { id: 5, name: "NY", country: "USA", state: "NY" }
-          ]
+          cities_in_usa.fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id: 5, name: "NY", country: "USA", state: "NY" }
+              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+            ]
       
     describe 'notify():', ->
       
@@ -1250,23 +1255,25 @@ describe 'XS test suite:', ->
           }
         ]
         
-        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
-          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
-          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
-          { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
-          { id: 8, name: "Thomas Buch"     , salary: "$2500", customer_id: "229", order_id: "1229" }
-        ]
+        employee.fetch_all ( values ) -> check done, ->
+          expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+            { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
+            { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
+            { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+            { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
+            { id: 8, name: "Thomas Buch"     , salary: "$2500", customer_id: "229", order_id: "1229" }
+          ]
       
       it 'remove(): employee.notify( transaction ) should be equal to result', ( done ) ->
         employee.notify [ { action: "remove", objects: [ { id: 8 } ] } ]
         
-        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
-          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
-          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
-          { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
-        ]
+        employee.fetch_all ( values ) -> check done, ->
+          expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+            { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
+            { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
+            { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+            { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
+          ]
       
       it 'update(): employee.notify( transaction ) should be equal to result', ( done ) ->
         employee.notify [ {
@@ -1284,12 +1291,13 @@ describe 'XS test suite:', ->
           ]
         } ]
 
-        employee.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id: 2, name: "Josephin Tan"    , salary: "$2750", customer_id: "223", order_id: "1223" }
-          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
-          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
-          { id: 7, name: "John Morrison"   , salary: "$3500", customer_id: "228", order_id: "1228" }
-        ]
+        employee.fetch_all ( values ) -> check done, ->
+          expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+            { id: 2, name: "Josephin Tan"    , salary: "$2750", customer_id: "223", order_id: "1223" }
+            { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
+            { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
+            { id: 7, name: "John Morrison"   , salary: "$3500", customer_id: "228", order_id: "1228" }
+          ]
       
       it 'filter(): cities.filter( is_in_morocco ) should be equal to result', ( done ) ->
         cities_in_morocco = cities.filter ( city ) -> return city.country is "Morocco"
@@ -1321,10 +1329,11 @@ describe 'XS test suite:', ->
           }
         ]
         
-        cities_in_morocco.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id:  1, name: "Marrakech", country: "Morocco" }
-          { id:  6, name: "Casa"     , country: "Morocco" }
-        ]
+        cities_in_morocco.fetch_all ( values ) -> check done, ->
+          expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+            { id:  1, name: "Marrakech", country: "Morocco" }
+            { id:  6, name: "Casa"     , country: "Morocco" }
+          ]
       
     describe 'order():', ->
       books = xs.set [
@@ -1333,9 +1342,9 @@ describe 'XS test suite:', ->
         { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
         { id: 4, title: "The Alchemist"        , author: "Paulo Coelho"    , year: 1988 }
         { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
-      ]
+      ], { name: 'books' }
       
-      organizer = xs.set [ { id: "year" } ]
+      organizer = xs.set [ { id: "year" } ], { name: 'by_year' }
       
       by_ascending_author  = ( a, b ) ->
         if ( a = a.author ) == ( b = b.author ) then return 0
@@ -1360,7 +1369,7 @@ describe 'XS test suite:', ->
       by_descending_year_delay = 100
       
       by_descending_year = xs
-        .set( [ { id: "year", descending: true } ] )
+        .set( [ { id: "year", descending: true } ], { name: 'by_descending_year' } )
         .trace( 'By Descending Year Organizer, before delay' )
         .delay( by_descending_year_delay )
         .trace( 'By Descending Year Organizer, after delay' )
@@ -1863,18 +1872,18 @@ describe 'XS test suite:', ->
             { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , year: undefined }
           ]
         
-      describe 'remove( books 12, 13, 15 ):', ->
+      describe 'remove( books 12, 13, 3, 15 ):', ->
         it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', ( done ) ->
           books.remove [
-            { id: 12, title: "Breaking Dawn"  , author: "Stephenie Meyer" , year: 2008 }
-            { id: 13, title: "Lolita"         , author: "Vladimir Nabokov", year: 1955 }
-            { id: 15, title: "Steps to Christ", author: "Ellen G. White"  , year: undefined }
+            { id: 12, title: "Breaking Dawn"    , author: "Stephenie Meyer" , year: 2008 }
+            { id: 13, title: "Lolita"           , author: "Vladimir Nabokov", year: 1955 }
+            { id:  3, title: "The Da Vinci Code", author: "Dan Brown"       , year: 2003 }
+            { id: 15, title: "Steps to Christ"  , author: "Ellen G. White"  , year: undefined }
           ]
           
           books_ordered_by_ascending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
             { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
             { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
-            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
             { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
             { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
             { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
@@ -1888,21 +1897,22 @@ describe 'XS test suite:', ->
           ]
 
         it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
-          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
-            { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
-            { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
-            { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
-            { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
-            { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 1999 }
-            { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
-            { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
-            { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
-            { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
-            { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
-            { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
-            { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
-            { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
-          ]
+          books_ordered_by_descending_author.fetch_all ( books ) -> check done, () ->
+            # books.sort ( a, b ) -> a.author < b.author
+            expect( books ).to.be.eql [
+              { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
+              { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , year: 1942 }
+              { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
+              { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , year: 1970 }
+              { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , year: 1999 }
+              { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , year: 1988 }
+              { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , year: 1999 }
+              { id:  8, title: "The Hobbit Changed"                      , author: "J. R. R. Tolkien 8"     , year: 1937 }
+              { id:  2, title: "The Lord of the Rings 1"                 , author: "J. R. R. Tolkien 2"     , year: 1954 }
+              { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , year: 2001 }
+              { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , year: 1859 }
+              { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
+            ]
 
   describe 'xs.aggregate() and XS.Compose():', ->
     books_sales = xs.set [
