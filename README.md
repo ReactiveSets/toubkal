@@ -10,7 +10,7 @@ life by making an optimal use of server, network and client resources.
 
 Although XS is currently used to deliver a basic web application, some features described here are
 still work in progress. XS should provide most of the features described bellow by version 0.3 in
-December 2013.
+January 2014.
 
 ### Why yet-another JavaScript Web Application Framework?
 
@@ -225,7 +225,7 @@ optimally in microprocessors' pipelines.
 ### XS Pipelet Programming
 
 At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating
-the typicall callback hell of assynchronous request-response programming models.
+the typical callback hell of assynchronous request-response programming models.
 
 ### Ecosystem
 
@@ -236,13 +236,13 @@ On the frontend, XS provides reactive controlers and views driven by dataflows.
 XS can optionally be coupled with any other framework but we recommend using reactive libraries
 such as **AngularJS**, **Ember**, **Bacon.js**, **React**, which model is closer to XS.
 
-For responsive layoutx, we recommand **Bootstrap** that we use it for our Carousel and Photo
+For responsive layouts, we recommand **Bootstrap** that we use it for our Carousel and Photo
 Albums.
 
 For DOM manipulation one can use any library, or none at all, as XS core has no dependencies.
 
 XS can either be used to gradually improve existing applications on the backend or frontend, or as
-a full backend-and-frontend framework for new projects.
+a full backend-and-frontend framework.
 
 #### Integrated database and model
 
@@ -272,20 +272,20 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 125 automated tests for the XS core pipelets that run after every
+We have curently developped 182 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.6, 0.8, 0.10, and 0.11.
 
 Our continuous integration process also requires that before each commit the developper runs
 these tests so travis usually passes all tests. In the event that a test does not pass the top
 priority is to fix the test before anything else.
 
-We have developped many other ui tests that are not currently automated because we have not yet
-integrated Phantomjs.
+We have developped at least 100 other ui tests that are not currently automated because we have not yet
+integrated Phantomjs or another headless browser.
 
 We also do manual testing on the following web browsers: Chrome (latest), Firefox (latest),
 IE 8, 9, and 10.
 
-We publish to npm regularily, typically when we want to update our demonstration site.
+We publish to npm regularily, typically when we want to update the demonstration site.
 
 ## Installation
 
@@ -463,7 +463,7 @@ node server.js
 
 ## Releases
 
-### Version 0.3.0 - ETA December 2013
+### Version 0.3.0 - ETA January 2014
 
 #### Goals:
 
@@ -476,18 +476,21 @@ node server.js
 - Navigation pipelets
 - Out-of-band, global dataflows for: exceptions, errors, and debug information
 
-### Version 0.2.0 - ETA October 2013
+### Version 0.2.0 - ETA December 2013
 
 #### Goals:
 
-- Finalize integration of Subcribe / Push model using optimized Query Tree Router and lazy
-connection of stateless pipelets
+- Automate UI tests on Travis
+- Develop additional tests, goal is at least 300 automated tests
+- Finalize Subcribe / Push model using optimized Query Tree Router and lazy connection of stateless pipelets
 - Dynamic Authorizations Query Dataflow
 - Watch directory metadata flow
 
 #### Features already developped:
 
+- Transactions
 - Virtual Hosts w/ optimized routing
+- Touch Events on bootstrap pipelets
 
 #### New pipelets (available now):
 
@@ -509,7 +512,6 @@ json_stringify()          | JSON Stringifies content attribute
 json_parse()              | JSON parse content attribute
 attribute_to_value()      | Replace value with the value of an attribute
 value_to_attribute()      | Sets value as an attribute and add other default attributes
-
 
 ### Version 0.1.0 - April 8th 2013:
 
