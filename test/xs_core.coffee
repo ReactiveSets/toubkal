@@ -407,23 +407,20 @@ describe 'XS test suite:', ->
       expect( XS.only_more ).to.be.a( 'function' ) &&
       expect( XS.only_more.length ).to.be.eql 1
 
-    it 'XS.only_more() should return { more: false }', ->
-      expect( XS.only_more() ).to.be.eql { more: false }
+    it 'XS.only_more() should return undefined', ->
+      expect( XS.only_more() ).to.be.eql {}
 
-    it 'XS.only_more( { more: false, a: 1; b: {} } ) should return { more: false }', ->
-      expect( XS.only_more( { more: false, a: 1; b: {} } ) ).to.be.eql { more: false }
+    it 'XS.only_more( { more: false, a: 1; b: {} } ) should return {}', ->
+      expect( XS.only_more( { more: false, a: 1; b: {} } ) ).to.be.eql {}
 
-    it 'XS.only_more( { a: 1; b: {} } ) should return { more: false }', ->
-      expect( XS.only_more( { a: 1; b: {} } ) ).to.be.eql { more: false }
+    it 'XS.only_more( { a: 1; b: {} } ) should return {}', ->
+      expect( XS.only_more( { a: 1; b: {} } ) ).to.be.eql {}
 
-    it 'XS.only_more( { more: "", a: 1; b: {} } ) should return { more: false }', ->
-      expect( XS.only_more( { more: '', a: 1; b: {} } ) ).to.be.eql { more: false }
+    it 'XS.only_more( { more: "", a: 1; b: {} } ) should return {}', ->
+      expect( XS.only_more( { more: '', a: 1; b: {} } ) ).to.be.eql {}
 
-    it 'XS.only_more( { more: true, a: 1; b: {} } ) should return { more: true, transaction_id: uuid v4 }', ->
-      more = XS.only_more( { more: true, a: 1; b: {} } )
-
-      expect( more ).to.be.eql( { more: true, transaction_id: more.transaction_id } ) &&
-      expect( more.transaction_id ).to.match valid_uuid_v4
+    it 'XS.only_more( { more: true, a: 1; b: {} } ) should throw an exception for missing transaction id', ->
+      expect( () -> XS.only_more( { more: true, a: 1; b: {} } ) ).to.throwException()
 
     it 'XS.only_more( { more: true, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
       more = { more: true, transaction_id: XS.uuid_v4(), a: 1; b: {} }
@@ -434,7 +431,7 @@ describe 'XS test suite:', ->
     it 'XS.only_more( { more: false, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
       more = { more: false, transaction_id: XS.uuid_v4(), a: 1; b: {} }
 
-      expect( XS.only_more( more ) ).to.be.eql( { more: false, transaction_id: more.transaction_id } ) &&
+      expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
     it 'XS.only_more( { more: 1, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
@@ -443,16 +440,16 @@ describe 'XS test suite:', ->
       expect( XS.only_more( more ) ).to.be.eql( { more: true, transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
-    it 'XS.only_more( { more: 0, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
+    it 'XS.only_more( { more: 0, transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', ->
       more = { more: 0, transaction_id: XS.uuid_v4(), a: 1; b: {} }
 
-      expect( XS.only_more( more ) ).to.be.eql( { more: false, transaction_id: more.transaction_id } ) &&
+      expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
-    it 'XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
+    it 'XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', ->
       more = { transaction_id: XS.uuid_v4(), a: 1; b: {} }
 
-      expect( XS.only_more( more ) ).to.be.eql( { more: false, transaction_id: more.transaction_id } ) &&
+      expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
   # only_more()
@@ -1896,7 +1893,7 @@ describe 'XS test suite:', ->
             { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853 }
           ]
 
-        it 'after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
+        it 'after books.remove( objects 12, 13, 3, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', ( done ) ->
           books_ordered_by_descending_author.fetch_all ( books ) -> check done, () ->
             # books.sort ( a, b ) -> a.author < b.author
             expect( books ).to.be.eql [

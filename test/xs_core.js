@@ -405,48 +405,37 @@
       it('XS.only_more should be a function with one parameter', function() {
         return expect(XS.only_more).to.be.a('function') && expect(XS.only_more.length).to.be.eql(1);
       });
-      it('XS.only_more() should return { more: false }', function() {
-        return expect(XS.only_more()).to.be.eql({
-          more: false
-        });
+      it('XS.only_more() should return undefined', function() {
+        return expect(XS.only_more()).to.be.eql({});
       });
-      it('XS.only_more( { more: false, a: 1; b: {} } ) should return { more: false }', function() {
+      it('XS.only_more( { more: false, a: 1; b: {} } ) should return {}', function() {
         return expect(XS.only_more({
           more: false,
           a: 1,
           b: {}
-        })).to.be.eql({
-          more: false
-        });
+        })).to.be.eql({});
       });
-      it('XS.only_more( { a: 1; b: {} } ) should return { more: false }', function() {
+      it('XS.only_more( { a: 1; b: {} } ) should return {}', function() {
         return expect(XS.only_more({
           a: 1,
           b: {}
-        })).to.be.eql({
-          more: false
-        });
+        })).to.be.eql({});
       });
-      it('XS.only_more( { more: "", a: 1; b: {} } ) should return { more: false }', function() {
+      it('XS.only_more( { more: "", a: 1; b: {} } ) should return {}', function() {
         return expect(XS.only_more({
           more: '',
           a: 1,
           b: {}
-        })).to.be.eql({
-          more: false
-        });
+        })).to.be.eql({});
       });
-      it('XS.only_more( { more: true, a: 1; b: {} } ) should return { more: true, transaction_id: uuid v4 }', function() {
-        var more;
-        more = XS.only_more({
-          more: true,
-          a: 1,
-          b: {}
-        });
-        return expect(more).to.be.eql({
-          more: true,
-          transaction_id: more.transaction_id
-        }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      it('XS.only_more( { more: true, a: 1; b: {} } ) should throw an exception for missing transaction id', function() {
+        return expect(function() {
+          return XS.only_more({
+            more: true,
+            a: 1,
+            b: {}
+          });
+        }).to.throwException();
       });
       it('XS.only_more( { more: true, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
         var more;
@@ -470,7 +459,6 @@
           b: {}
         };
         return expect(XS.only_more(more)).to.be.eql({
-          more: false,
           transaction_id: more.transaction_id
         }) && expect(more.transaction_id).to.match(valid_uuid_v4);
       });
@@ -487,7 +475,7 @@
           transaction_id: more.transaction_id
         }) && expect(more.transaction_id).to.match(valid_uuid_v4);
       });
-      it('XS.only_more( { more: 0, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
+      it('XS.only_more( { more: 0, transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', function() {
         var more;
         more = {
           more: 0,
@@ -496,11 +484,10 @@
           b: {}
         };
         return expect(XS.only_more(more)).to.be.eql({
-          more: false,
           transaction_id: more.transaction_id
         }) && expect(more.transaction_id).to.match(valid_uuid_v4);
       });
-      return it('XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', function() {
+      return it('XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', function() {
         var more;
         more = {
           transaction_id: XS.uuid_v4(),
@@ -508,7 +495,6 @@
           b: {}
         };
         return expect(XS.only_more(more)).to.be.eql({
-          more: false,
           transaction_id: more.transaction_id
         }) && expect(more.transaction_id).to.match(valid_uuid_v4);
       });
@@ -4472,7 +4458,7 @@
               });
             });
           });
-          return it('after books.remove( objects 12, 13, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
+          return it('after books.remove( objects 12, 13, 3, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
             return books_ordered_by_descending_author.fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
