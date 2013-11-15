@@ -20,7 +20,7 @@
 
 
 (function() {
-  var Set, XS, check, clone, expect, extend, log, utils, xs;
+  var Set, XS, check, clone, expect, extend, log, utils, valid_uuid_v4, xs;
 
   if (typeof require !== "undefined" && require !== null) {
     utils = require('./xs_tests_utils.js');
@@ -50,6 +50,8 @@
   }
 
   Set = XS.Set;
+
+  valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
   describe('XS test suite:', function() {
     it('XS should be defined:', function() {
@@ -261,7 +263,7 @@
       });
     });
     describe('XS.uuid_v4():', function() {
-      var v4_0, v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8, v4_9, valid_uuid_v4;
+      var v4_0, v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8, v4_9;
       v4_0 = XS.uuid_v4();
       v4_1 = XS.uuid_v4();
       v4_2 = XS.uuid_v4();
@@ -272,15 +274,13 @@
       v4_7 = XS.uuid_v4();
       v4_8 = XS.uuid_v4();
       v4_9 = XS.uuid_v4();
-      valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
       return it('10 XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', function() {
         return expect(v4_0).to.match(valid_uuid_v4) && expect(v4_1).to.match(valid_uuid_v4) && expect(v4_2).to.match(valid_uuid_v4) && expect(v4_3).to.match(valid_uuid_v4) && expect(v4_4).to.match(valid_uuid_v4) && expect(v4_5).to.match(valid_uuid_v4) && expect(v4_6).to.match(valid_uuid_v4) && expect(v4_7).to.match(valid_uuid_v4) && expect(v4_8).to.match(valid_uuid_v4) && expect(v4_9).to.match(valid_uuid_v4);
       });
     });
     describe('XS.more():', function() {
-      var more_0, more_1, more_2, more_3, more_4, more_5, more_6, more_7, more_8, more_9, v4, valid_uuid_v4;
+      var more_0, more_1, more_2, more_3, more_4, more_5, more_6, more_7, more_8, more_9, v4;
       v4 = XS.uuid_v4();
-      valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
       more_0 = XS.more();
       more_1 = XS.more({});
       more_2 = XS.more({
@@ -400,8 +400,6 @@
       });
     });
     describe('XS.only_more():', function() {
-      var valid_uuid_v4;
-      valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
       it('XS.only_more should be a function with one parameter', function() {
         return expect(XS.only_more).to.be.a('function') && expect(XS.only_more.length).to.be.eql(1);
       });
@@ -497,6 +495,142 @@
         return expect(XS.only_more(more)).to.be.eql({
           transaction_id: more.transaction_id
         }) && expect(more.transaction_id).to.match(valid_uuid_v4);
+      });
+    });
+    describe('XS.Transaction():', function() {
+      var Transaction, options, t, tid, transactions;
+      Transaction = XS.Transaction;
+      transactions = {};
+      t = new Transaction(transactions, 4);
+      options = void 0;
+      tid = void 0;
+      it('should be a Transaction with a count of 4', function() {
+        expect(t).to.be.a(Transaction);
+        expect(t.source_options).to.be(void 0);
+        expect(t.emit_options).to.be.eql({});
+        expect(t.o.__t).to.be(t);
+        return expect(t.transactions).to.be(transactions);
+      });
+      it('t.toJSON() should return a representation of the new transaction', function() {
+        return expect(t.toJSON()).to.be.eql({
+          name: '',
+          count: 4,
+          state: 0,
+          need_close: false,
+          closed: false,
+          added_length: 0,
+          removed_length: 0
+        });
+      });
+      it('transactions should remain empty', function() {
+        return expect(transactions).to.be.eql({});
+      });
+      it('after t.next(), count should be 3', function() {
+        return expect(t.next().toJSON()).to.be.eql({
+          name: '',
+          count: 3,
+          state: 0,
+          need_close: false,
+          closed: false,
+          added_length: 0,
+          removed_length: 0
+        });
+      });
+      it('t.get_options() should set more', function() {
+        return expect(t.get_options()).to.be.eql({
+          more: true,
+          __t: t
+        });
+      });
+      it('t.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', function() {
+        options = t.get_emit_options();
+        expect(options.more).to.be.eql(true);
+        return expect(tid = options.transaction_id).to.match(valid_uuid_v4);
+      });
+      it('need_close should be true', function() {
+        return expect(t.toJSON()).to.be.eql({
+          name: '',
+          count: 3,
+          state: 0,
+          need_close: true,
+          closed: false,
+          added_length: 0,
+          removed_length: 0
+        });
+      });
+      it('should continue to provide "more" and the same "transaction_id" after next().get_emit_options()', function() {
+        expect(t.next().get_emit_options()).to.be(options);
+        return expect(options).to.be.eql({
+          more: true,
+          transaction_id: tid
+        });
+      });
+      it('should decrease count to 1 and set added_length to 2 after t.emit_add( [{}{}] )', function() {
+        return expect(t.emit_add([{}, {}]).toJSON()).to.be.eql({
+          name: '',
+          count: 1,
+          state: 0,
+          need_close: true,
+          closed: false,
+          added_length: 2,
+          removed_length: 0
+        });
+      });
+      it('should decrease count to zero and set removed_length to 1 after t.emit_remove( [{}] )', function() {
+        return expect(t.emit_remove([{}]).toJSON()).to.be.eql({
+          name: '',
+          count: 0,
+          state: 0,
+          need_close: true,
+          closed: false,
+          added_length: 2,
+          removed_length: 1
+        });
+      });
+      it('should return more with t.get_options()', function() {
+        return expect(t.get_options()).to.be.eql({
+          __t: t,
+          more: true
+        });
+      });
+      it('should return more with transaction id with t.get_emit_options()', function() {
+        return expect(t.get_emit_options()).to.be.eql({
+          more: true,
+          transaction_id: tid
+        });
+      });
+      it('should no longer need close but it should now be closed', function() {
+        return expect(t.toJSON()).to.be.eql({
+          name: '',
+          count: 0,
+          state: 0,
+          need_close: true,
+          closed: false,
+          added_length: 2,
+          removed_length: 1
+        });
+      });
+      it('should allow to retrieve options with t.get_emit_options()', function() {
+        return expect(options = t.get_emit_options()).to.be.eql({
+          more: true,
+          transaction_id: tid
+        });
+      });
+      it('should not change the state of the transaction', function() {
+        return expect(t.toJSON()).to.be.eql({
+          name: '',
+          count: 0,
+          state: 0,
+          need_close: true,
+          closed: false,
+          added_length: 2,
+          removed_length: 1
+        });
+      });
+      return it('should throw an exception after 1 more t.next()', function() {
+        return expect(function() {
+          return t.next();
+        }).to.throwException();
       });
     });
     describe('XS.Query():', function() {
