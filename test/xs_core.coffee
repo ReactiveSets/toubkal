@@ -458,124 +458,153 @@ describe 'XS test suite:', ->
   describe 'XS.Transaction():', ->
     Transaction = XS.Transaction
     
-    transactions = {}
-    
-    t = new Transaction transactions, 4
-    
-    options = undefined
-    tid = undefined
-    
-    it 'should be a Transaction with a count of 4', ->
-      expect( t ).to.be.a Transaction
-      expect( t.source_options ).to.be undefined
-      expect( t.emit_options ).to.be.eql {}
-      expect( t.o.__t ).to.be t
-      expect( t.transactions ).to.be transactions
+    describe 'Transaction with no pipelet', ->
+      transactions = {}
       
-    it 't.toJSON() should return a representation of the new transaction', ->
-      expect( t.toJSON() ).to.be.eql {
-        name          : ''
-        count         : 4
-        state         : 0
-        need_close    : false
-        closed        : false
-        added_length  : 0
-        removed_length: 0
-      }
-    
-    it 'transactions should remain empty', ->
-      expect( transactions ).to.be.eql {}
-    
-    it 'after t.next(), count should be 3', ->
-      expect( t.next().toJSON() ).to.be.eql {
-        name          : ''
-        count         : 3
-        state         : 0
-        need_close    : false
-        closed        : false
-        added_length  : 0
-        removed_length: 0
-      }
-    
-    it 't.get_options() should set more', ->
-      expect( t.get_options() ).to.be.eql { more: true, __t: t }
-    
-    it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
-      options = t.get_emit_options()
+      t = new Transaction transactions, 4
       
-      expect( options.more ).to.be.eql true
-      expect( tid = options.transaction_id ).to.match valid_uuid_v4
-    
-    it 'need_close should be true', ->
-      expect( t.toJSON() ).to.be.eql {
-        name          : ''
-        count         : 3
-        state         : 0
-        need_close    : true
-        closed        : false
-        added_length  : 0
-        removed_length: 0
-      }
-    
-    it 'should continue to provide "more" and the same "transaction_id" after next().get_emit_options()', ->
-      expect( t.next().get_emit_options() ).to.be     options
-      expect( options                     ).to.be.eql { more: true, transaction_id: tid }
-    
-    it 'should decrease count to 1 and set added_length to 2 after t.emit_add( [{}{}] )', ->
-      expect( t.emit_add( [{},{}] ).toJSON() ).to.be.eql {
-        name          : ''
-        count         : 1
-        state         : 0
-        need_close    : true
-        closed        : false
-        added_length  : 2
-        removed_length: 0
-      }
-    
-    it 'should decrease count to zero and set removed_length to 1 after t.emit_remove( [{}] )', ->
-      expect( t.emit_remove( [{}] ).toJSON() ).to.be.eql {
-        name          : ''
-        count         : 0
-        state         : 0
-        need_close    : true
-        closed        : false
-        added_length  : 2
-        removed_length: 1
-      }
-    
-    it 'should return more with t.get_options()', ->
-      expect( t.get_options() ).to.be.eql { __t: t, more: true }
-    
-    it 'should return more with transaction id with t.get_emit_options()', ->
-      expect( t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid }
-    
-    it 'should no longer need close but it should now be closed', ->
-      expect( t.toJSON() ).to.be.eql {
-        name          : ''
-        count         : 0
-        state         : 0
-        need_close    : true
-        closed        : false
-        added_length  : 2
-        removed_length: 1
-      }
-    
-    it 'should allow to retrieve options with t.get_emit_options()', ->
-      expect( options = t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid }
+      options = undefined
+      tid = undefined
       
-    it 'should not change the state of the transaction', ->
-      expect( t.toJSON() ).to.be.eql {
-        name          : ''
-        count         : 0
-        state         : 0
-        need_close    : true
-        closed        : false
-        added_length  : 2
-        removed_length: 1
-      }
+      it 'should be a Transaction with a count of 4', ->
+        expect( t ).to.be.a Transaction
+        expect( t.source_options ).to.be undefined
+        expect( t.emit_options ).to.be.eql {}
+        expect( t.o.__t ).to.be t
+        expect( t.transactions ).to.be transactions
+        
+      it 't.toJSON() should return a representation of the new transaction', ->
+        expect( t.toJSON() ).to.be.eql {
+          name          : ''
+          count         : 4
+          state         : 0
+          need_close    : false
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 'transactions should remain empty', ->
+        expect( transactions ).to.be.eql {}
+      
+      it 'after t.next(), count should be 3', ->
+        expect( t.next().toJSON() ).to.be.eql {
+          name          : ''
+          count         : 3
+          state         : 0
+          need_close    : false
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 't.get_options() should set more', ->
+        expect( t.get_options() ).to.be.eql { more: true, __t: t }
+      
+      it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
+        options = t.get_emit_options()
+        
+        expect( options.more ).to.be.eql true
+        expect( tid = options.transaction_id ).to.match valid_uuid_v4
+      
+      it 'need_close should be true', ->
+        expect( t.toJSON() ).to.be.eql {
+          name          : ''
+          count         : 3
+          state         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 'should continue to provide "more" and the same "transaction_id" after next().get_emit_options()', ->
+        expect( t.next().get_emit_options() ).to.be     options
+        expect( options                     ).to.be.eql { more: true, transaction_id: tid }
+      
+      it 'should decrease count to 1 and set added_length to 2 after t.emit_add( [{}{}] )', ->
+        expect( t.emit_add( [{},{}] ).toJSON() ).to.be.eql {
+          name          : ''
+          count         : 1
+          state         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 2
+          removed_length: 0
+        }
+      
+      it 'should decrease count to zero and set removed_length to 1 after t.emit_remove( [{}] )', ->
+        expect( t.emit_remove( [{}] ).toJSON() ).to.be.eql {
+          name          : ''
+          count         : 0
+          state         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 2
+          removed_length: 1
+        }
+      
+      it 'should return more with t.get_options()', ->
+        expect( t.get_options() ).to.be.eql { __t: t, more: true }
+      
+      it 'should return more with transaction id with t.get_emit_options()', ->
+        expect( t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid }
+      
+      it 'should no longer need close but it should now be closed', ->
+        expect( t.toJSON() ).to.be.eql {
+          name          : ''
+          count         : 0
+          state         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 2
+          removed_length: 1
+        }
+      
+      it 'should allow to retrieve options with t.get_emit_options()', ->
+        expect( options = t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid }
+        
+      it 'should not change the state of the transaction', ->
+        expect( t.toJSON() ).to.be.eql {
+          name          : ''
+          count         : 0
+          state         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 2
+          removed_length: 1
+        }
+      
+      it 'should throw an exception after 1 more t.next()', ->
+        expect( () -> return t.next() ).to.throwException()
     
-    it 'should throw an exception after 1 more t.next()', ->
-      expect( () -> return t.next() ).to.throwException()
+    describe 'Transaction for four operations with pipelet, options, and an upstream tid', ->
+      transactions = {}
+      
+      pipelet = {
+        _get_name: -> "Pipelet"
+      }
+      
+      options = { a: 1, b: [1,2] }
+      
+      tid = XS.uuid_v4()
+      
+      t = new Transaction transactions, 4, options, pipelet, tid
+      
+      it 'should create a transaction with a count of 4, and a name', ->
+        expect( t.toJSON() ).to.be.eql {
+          name          : 'Pipelet'
+          count         : 4
+          state         : 0
+          need_close    : false
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 'should set one transaction in transactions', ->
+        expect( Object.keys( transactions ) ).to.be.eql [ tid ]
+        expect( transactions[ tid ] ).to.be t
     
   # XS.Transaction
   
