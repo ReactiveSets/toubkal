@@ -595,8 +595,8 @@ describe 'XS test suite:', ->
       t = transactions.get_transaction 4, options, pipelet
       
       it 'should create a transaction with a count of 4, and a name', ->
-        expect( t.is_closed() ).to.be false
         expect( t.get_tid()   ).to.be tid
+        expect( t.is_closed() ).to.be false
         expect( t.toJSON()    ).to.be.eql {
           name          : 'Pipelet'
           tid           : tid
@@ -610,6 +610,71 @@ describe 'XS test suite:', ->
       it 'should set one transaction in transactions', ->
         expect( transactions.get_tids() ).to.be.eql [ tid ]
         expect( transactions.get( tid ) ).to.be t
+        
+      it 'should decrease count after t.emit_nothing()', ->
+        t.emit_nothing()
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 3
+          need_close    : false
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 'should decrease count after t.emit_add( [] )', ->
+        t.emit_add( [] )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 2
+          need_close    : false
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+        
+      it 'should decrease count and increse added_length after t.emit_add( [ { id: 1 } ] )', ->
+        t.emit_add( [ { id: 1 } ] )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 1
+          need_close    : false
+          closed        : false
+          added_length  : 1
+          removed_length: 0
+        }
+        
+      it 'should decrease count and need close after t.emit_add( [ { id: 1 } ], true )', ->
+        t.emit_add( [ { id: 1 } ], true )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 1
+          removed_length: 0
+        }
+        
+      it 'should raise an exception on extra t.emit_add( [ { id: 1 } ], true )', ->
+        expect( -> t.emit_add( [ { id: 1 } ], true ) ).to.throwException()
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 1
+          removed_length: 0
+        }
     
   # XS.Transactions() and XS.Transaction()
   

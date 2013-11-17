@@ -655,8 +655,8 @@
         };
         t = transactions.get_transaction(4, options, pipelet);
         it('should create a transaction with a count of 4, and a name', function() {
-          expect(t.is_closed()).to.be(false);
           expect(t.get_tid()).to.be(tid);
+          expect(t.is_closed()).to.be(false);
           return expect(t.toJSON()).to.be.eql({
             name: 'Pipelet',
             tid: tid,
@@ -667,9 +667,83 @@
             removed_length: 0
           });
         });
-        return it('should set one transaction in transactions', function() {
+        it('should set one transaction in transactions', function() {
           expect(transactions.get_tids()).to.be.eql([tid]);
           return expect(transactions.get(tid)).to.be(t);
+        });
+        it('should decrease count after t.emit_nothing()', function() {
+          t.emit_nothing();
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 3,
+            need_close: false,
+            closed: false,
+            added_length: 0,
+            removed_length: 0
+          });
+        });
+        it('should decrease count after t.emit_add( [] )', function() {
+          t.emit_add([]);
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 2,
+            need_close: false,
+            closed: false,
+            added_length: 0,
+            removed_length: 0
+          });
+        });
+        it('should decrease count and increse added_length after t.emit_add( [ { id: 1 } ] )', function() {
+          t.emit_add([
+            {
+              id: 1
+            }
+          ]);
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 1,
+            need_close: false,
+            closed: false,
+            added_length: 1,
+            removed_length: 0
+          });
+        });
+        it('should decrease count and need close after t.emit_add( [ { id: 1 } ], true )', function() {
+          t.emit_add([
+            {
+              id: 1
+            }
+          ], true);
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 0,
+            need_close: true,
+            closed: false,
+            added_length: 1,
+            removed_length: 0
+          });
+        });
+        return it('should raise an exception on extra t.emit_add( [ { id: 1 } ], true )', function() {
+          expect(function() {
+            return t.emit_add([
+              {
+                id: 1
+              }
+            ], true);
+          }).to.throwException();
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 0,
+            need_close: true,
+            closed: false,
+            added_length: 1,
+            removed_length: 0
+          });
         });
       });
     });
