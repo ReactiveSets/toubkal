@@ -29,8 +29,9 @@ check  = this.check  || utils.check
 log    = this.log    || utils.log
 xs     = this.xs     || utils.xs
 
-XS     = xs.XS
-extend = XS.extend
+XS      = xs.XS
+extend  = XS.extend
+uuid_v4 = XS.uuid_v4
 
 # ----------------------------------------------------------------------------------------------
 # Require tested modules
@@ -285,18 +286,18 @@ describe 'XS test suite:', ->
   
   describe 'XS.uuid_v4():', ->
     # Generate 10 random uuid v4 to verify that they al match
-    v4_0 = XS.uuid_v4()
-    v4_1 = XS.uuid_v4()
-    v4_2 = XS.uuid_v4()
-    v4_3 = XS.uuid_v4()
-    v4_4 = XS.uuid_v4()
-    v4_5 = XS.uuid_v4()
-    v4_6 = XS.uuid_v4()
-    v4_7 = XS.uuid_v4()
-    v4_8 = XS.uuid_v4()
-    v4_9 = XS.uuid_v4()
+    v4_0 = uuid_v4()
+    v4_1 = uuid_v4()
+    v4_2 = uuid_v4()
+    v4_3 = uuid_v4()
+    v4_4 = uuid_v4()
+    v4_5 = uuid_v4()
+    v4_6 = uuid_v4()
+    v4_7 = uuid_v4()
+    v4_8 = uuid_v4()
+    v4_9 = uuid_v4()
 
-    it '10 XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', ->
+    it '10 uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', ->
       expect( v4_0 ).to.match( valid_uuid_v4 ) and
       expect( v4_1 ).to.match( valid_uuid_v4 ) and
       expect( v4_2 ).to.match( valid_uuid_v4 ) and
@@ -309,7 +310,7 @@ describe 'XS test suite:', ->
       expect( v4_9 ).to.match( valid_uuid_v4 )
 
   describe 'XS.more():', ->
-    v4 = XS.uuid_v4()
+    v4 = uuid_v4()
 
     more_0 = XS.more()
     more_1 = XS.more {}
@@ -358,25 +359,25 @@ describe 'XS test suite:', ->
     it 'XS.more( { a: 1, b: {} } ) should conserve a and b', ->
       expect( more_2 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: more_2.transaction_id }
 
-    it 'XS.more( { a: 1, b: {}, more: true, transaction_id: XS.uuid_v4() } ) should return self', ->
+    it 'XS.more( { a: 1, b: {}, more: true, transaction_id: uuid_v4() } ) should return self', ->
       expect( more_3 ).to.be more_2
 
-    it 'check test value { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() }', ->
+    it 'check test value { a: 1, b: {}, more: false, transaction_id: uuid_v4() }', ->
       expect( more_4 ).to.be.eql { a: 1, b: {}, more: false, transaction_id: more_3.transaction_id }
 
-    it 'XS.more( { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() } ) should set more to true', ->
+    it 'XS.more( { a: 1, b: {}, more: false, transaction_id: uuid_v4() } ) should set more to true', ->
       expect( more_5 ).to.be.eql more_2
 
-    it 'check test value { a: 1, b: {}, transaction_id: XS.uuid_v4() }', ->
+    it 'check test value { a: 1, b: {}, transaction_id: uuid_v4() }', ->
       expect( more_6 ).to.be.eql { a: 1, b: {}, transaction_id: more_3.transaction_id }
 
-    it 'XS.more( { a: 1, b: {}, transaction_id: XS.uuid_v4() } ) should set more to true', ->
+    it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set more to true', ->
       expect( more_7 ).to.be.eql more_2
 
     it 'check test value { a: 1, b: {}, transaction_id: 1 }', ->
       expect( more_8 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: 1 }
 
-    it 'XS.more( { a: 1, b: {}, transaction_id: XS.uuid_v4() } ) should set transaction id to uuid v4 ', ->
+    it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set transaction id to uuid v4 ', ->
       expect( more_9 ).to.be.eql( { a: 1, b: {}, more: true, transaction_id: more_9.transaction_id } ) &&
       expect( more_9.transaction_id ).to.match valid_uuid_v4
 
@@ -424,44 +425,43 @@ describe 'XS test suite:', ->
       expect( () -> XS.only_more( { more: true, a: 1; b: {} } ) ).to.throwException()
 
     it 'XS.only_more( { more: true, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
-      more = { more: true, transaction_id: XS.uuid_v4(), a: 1; b: {} }
+      more = { more: true, transaction_id: uuid_v4(), a: 1; b: {} }
 
       expect( XS.only_more( more ) ).to.be.eql( { more: true, transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
     it 'XS.only_more( { more: false, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
-      more = { more: false, transaction_id: XS.uuid_v4(), a: 1; b: {} }
+      more = { more: false, transaction_id: uuid_v4(), a: 1; b: {} }
 
       expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
     it 'XS.only_more( { more: 1, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
-      more = { more: 1, transaction_id: XS.uuid_v4(), a: 1; b: {} }
+      more = { more: 1, transaction_id: uuid_v4(), a: 1; b: {} }
 
       expect( XS.only_more( more ) ).to.be.eql( { more: true, transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
     it 'XS.only_more( { more: 0, transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', ->
-      more = { more: 0, transaction_id: XS.uuid_v4(), a: 1; b: {} }
+      more = { more: 0, transaction_id: uuid_v4(), a: 1; b: {} }
 
       expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
     it 'XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', ->
-      more = { transaction_id: XS.uuid_v4(), a: 1; b: {} }
+      more = { transaction_id: uuid_v4(), a: 1; b: {} }
 
       expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
       expect( more.transaction_id ).to.match valid_uuid_v4
 
   # only_more()
 
-  describe 'XS.Transaction():', ->
-    Transaction = XS.Transaction
+  describe 'XS.Transactions() and XS.Transaction():', ->
+    Transaction  = XS.Transaction
+    Transactions = XS.Transactions
     
-    describe 'Transaction with no pipelet', ->
-      transactions = {}
-      
-      t = new Transaction transactions, 4
+    describe 'Transaction with no options or pipelet', ->
+      t = new Transaction 4
       
       options = undefined
       tid = undefined
@@ -469,29 +469,25 @@ describe 'XS test suite:', ->
       it 'should be a Transaction with a count of 4', ->
         expect( t ).to.be.a Transaction
         expect( t.source_options ).to.be undefined
-        expect( t.emit_options ).to.be.eql {}
+        expect( t.emit_options ).to.be undefined
         expect( t.o.__t ).to.be t
-        expect( t.transactions ).to.be transactions
         
       it 't.toJSON() should return a representation of the new transaction', ->
         expect( t.toJSON() ).to.be.eql {
           name          : ''
+          tid           : undefined
           count         : 4
-          state         : 0
           need_close    : false
           closed        : false
           added_length  : 0
           removed_length: 0
         }
       
-      it 'transactions should remain empty', ->
-        expect( transactions ).to.be.eql {}
-      
       it 'after t.next(), count should be 3', ->
         expect( t.next().toJSON() ).to.be.eql {
           name          : ''
+          tid           : undefined
           count         : 3
-          state         : 0
           need_close    : false
           closed        : false
           added_length  : 0
@@ -510,8 +506,8 @@ describe 'XS test suite:', ->
       it 'need_close should be true', ->
         expect( t.toJSON() ).to.be.eql {
           name          : ''
+          tid           : tid
           count         : 3
-          state         : 0
           need_close    : true
           closed        : false
           added_length  : 0
@@ -525,8 +521,8 @@ describe 'XS test suite:', ->
       it 'should decrease count to 1 and set added_length to 2 after t.emit_add( [{}{}] )', ->
         expect( t.emit_add( [{},{}] ).toJSON() ).to.be.eql {
           name          : ''
+          tid           : tid
           count         : 1
-          state         : 0
           need_close    : true
           closed        : false
           added_length  : 2
@@ -536,8 +532,8 @@ describe 'XS test suite:', ->
       it 'should decrease count to zero and set removed_length to 1 after t.emit_remove( [{}] )', ->
         expect( t.emit_remove( [{}] ).toJSON() ).to.be.eql {
           name          : ''
+          tid           : tid
           count         : 0
-          state         : 0
           need_close    : true
           closed        : false
           added_length  : 2
@@ -553,8 +549,8 @@ describe 'XS test suite:', ->
       it 'should no longer need close but it should now be closed', ->
         expect( t.toJSON() ).to.be.eql {
           name          : ''
+          tid           : tid
           count         : 0
-          state         : 0
           need_close    : true
           closed        : false
           added_length  : 2
@@ -567,8 +563,8 @@ describe 'XS test suite:', ->
       it 'should not change the state of the transaction', ->
         expect( t.toJSON() ).to.be.eql {
           name          : ''
+          tid           : tid
           count         : 0
-          state         : 0
           need_close    : true
           closed        : false
           added_length  : 2
@@ -578,24 +574,33 @@ describe 'XS test suite:', ->
       it 'should throw an exception after 1 more t.next()', ->
         expect( () -> return t.next() ).to.throwException()
     
-    describe 'Transaction for four operations with pipelet, options, and an upstream tid', ->
-      transactions = {}
+    describe 'Transactions()..get_transaction() for four operations with pseudo pipelet, options with more', ->
+      transactions = new Transactions()
       
       pipelet = {
-        _get_name: -> "Pipelet"
+        _operations: []
+        
+        _get_name: -> 'Pipelet'
+        
+        emit : ( operation, values, options ) ->
+          this._operations.push( arguments )
+          
+          return this
       }
       
-      options = { a: 1, b: [1,2] }
+      tid = uuid_v4()
       
-      tid = XS.uuid_v4()
+      options = { more: true, transaction_id: tid, a: 1, b: [1,2] }
       
-      t = new Transaction transactions, 4, options, pipelet, tid
+      t = transactions.get_transaction 4, options, pipelet
       
       it 'should create a transaction with a count of 4, and a name', ->
-        expect( t.toJSON() ).to.be.eql {
+        expect( t.is_closed() ).to.be false
+        expect( t.get_tid()   ).to.be tid
+        expect( t.toJSON()    ).to.be.eql {
           name          : 'Pipelet'
+          tid           : tid
           count         : 4
-          state         : 0
           need_close    : false
           closed        : false
           added_length  : 0
@@ -603,10 +608,10 @@ describe 'XS test suite:', ->
         }
       
       it 'should set one transaction in transactions', ->
-        expect( Object.keys( transactions ) ).to.be.eql [ tid ]
-        expect( transactions[ tid ] ).to.be t
+        expect( transactions.get_tids() ).to.be.eql [ tid ]
+        expect( transactions.get( tid ) ).to.be t
     
-  # XS.Transaction
+  # XS.Transactions() and XS.Transaction()
   
   describe 'XS.Query():', ->
     Query = XS.Query

@@ -20,7 +20,7 @@
 
 
 (function() {
-  var Set, XS, check, clone, expect, extend, log, utils, valid_uuid_v4, xs;
+  var Set, XS, check, clone, expect, extend, log, utils, uuid_v4, valid_uuid_v4, xs;
 
   if (typeof require !== "undefined" && require !== null) {
     utils = require('./xs_tests_utils.js');
@@ -39,6 +39,8 @@
   XS = xs.XS;
 
   extend = XS.extend;
+
+  uuid_v4 = XS.uuid_v4;
 
   if (typeof require !== "undefined" && require !== null) {
     require('../lib/code.js');
@@ -264,23 +266,23 @@
     });
     describe('XS.uuid_v4():', function() {
       var v4_0, v4_1, v4_2, v4_3, v4_4, v4_5, v4_6, v4_7, v4_8, v4_9;
-      v4_0 = XS.uuid_v4();
-      v4_1 = XS.uuid_v4();
-      v4_2 = XS.uuid_v4();
-      v4_3 = XS.uuid_v4();
-      v4_4 = XS.uuid_v4();
-      v4_5 = XS.uuid_v4();
-      v4_6 = XS.uuid_v4();
-      v4_7 = XS.uuid_v4();
-      v4_8 = XS.uuid_v4();
-      v4_9 = XS.uuid_v4();
-      return it('10 XS.uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', function() {
+      v4_0 = uuid_v4();
+      v4_1 = uuid_v4();
+      v4_2 = uuid_v4();
+      v4_3 = uuid_v4();
+      v4_4 = uuid_v4();
+      v4_5 = uuid_v4();
+      v4_6 = uuid_v4();
+      v4_7 = uuid_v4();
+      v4_8 = uuid_v4();
+      v4_9 = uuid_v4();
+      return it('10 uuid_v4() should return a uuid v4 string: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where x is hexadecimal and y [89ab]', function() {
         return expect(v4_0).to.match(valid_uuid_v4) && expect(v4_1).to.match(valid_uuid_v4) && expect(v4_2).to.match(valid_uuid_v4) && expect(v4_3).to.match(valid_uuid_v4) && expect(v4_4).to.match(valid_uuid_v4) && expect(v4_5).to.match(valid_uuid_v4) && expect(v4_6).to.match(valid_uuid_v4) && expect(v4_7).to.match(valid_uuid_v4) && expect(v4_8).to.match(valid_uuid_v4) && expect(v4_9).to.match(valid_uuid_v4);
       });
     });
     describe('XS.more():', function() {
       var more_0, more_1, more_2, more_3, more_4, more_5, more_6, more_7, more_8, more_9, v4;
-      v4 = XS.uuid_v4();
+      v4 = uuid_v4();
       more_0 = XS.more();
       more_1 = XS.more({});
       more_2 = XS.more({
@@ -332,10 +334,10 @@
           transaction_id: more_2.transaction_id
         });
       });
-      it('XS.more( { a: 1, b: {}, more: true, transaction_id: XS.uuid_v4() } ) should return self', function() {
+      it('XS.more( { a: 1, b: {}, more: true, transaction_id: uuid_v4() } ) should return self', function() {
         return expect(more_3).to.be(more_2);
       });
-      it('check test value { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() }', function() {
+      it('check test value { a: 1, b: {}, more: false, transaction_id: uuid_v4() }', function() {
         return expect(more_4).to.be.eql({
           a: 1,
           b: {},
@@ -343,17 +345,17 @@
           transaction_id: more_3.transaction_id
         });
       });
-      it('XS.more( { a: 1, b: {}, more: false, transaction_id: XS.uuid_v4() } ) should set more to true', function() {
+      it('XS.more( { a: 1, b: {}, more: false, transaction_id: uuid_v4() } ) should set more to true', function() {
         return expect(more_5).to.be.eql(more_2);
       });
-      it('check test value { a: 1, b: {}, transaction_id: XS.uuid_v4() }', function() {
+      it('check test value { a: 1, b: {}, transaction_id: uuid_v4() }', function() {
         return expect(more_6).to.be.eql({
           a: 1,
           b: {},
           transaction_id: more_3.transaction_id
         });
       });
-      it('XS.more( { a: 1, b: {}, transaction_id: XS.uuid_v4() } ) should set more to true', function() {
+      it('XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set more to true', function() {
         return expect(more_7).to.be.eql(more_2);
       });
       it('check test value { a: 1, b: {}, transaction_id: 1 }', function() {
@@ -364,7 +366,7 @@
           transaction_id: 1
         });
       });
-      return it('XS.more( { a: 1, b: {}, transaction_id: XS.uuid_v4() } ) should set transaction id to uuid v4 ', function() {
+      return it('XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set transaction id to uuid v4 ', function() {
         return expect(more_9).to.be.eql({
           a: 1,
           b: {},
@@ -439,7 +441,7 @@
         var more;
         more = {
           more: true,
-          transaction_id: XS.uuid_v4(),
+          transaction_id: uuid_v4(),
           a: 1,
           b: {}
         };
@@ -452,7 +454,7 @@
         var more;
         more = {
           more: false,
-          transaction_id: XS.uuid_v4(),
+          transaction_id: uuid_v4(),
           a: 1,
           b: {}
         };
@@ -464,7 +466,7 @@
         var more;
         more = {
           more: 1,
-          transaction_id: XS.uuid_v4(),
+          transaction_id: uuid_v4(),
           a: 1,
           b: {}
         };
@@ -477,7 +479,7 @@
         var more;
         more = {
           more: 0,
-          transaction_id: XS.uuid_v4(),
+          transaction_id: uuid_v4(),
           a: 1,
           b: {}
         };
@@ -488,7 +490,7 @@
       return it('XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', function() {
         var more;
         more = {
-          transaction_id: XS.uuid_v4(),
+          transaction_id: uuid_v4(),
           a: 1,
           b: {}
         };
@@ -497,41 +499,37 @@
         }) && expect(more.transaction_id).to.match(valid_uuid_v4);
       });
     });
-    describe('XS.Transaction():', function() {
-      var Transaction;
+    describe('XS.Transactions() and XS.Transaction():', function() {
+      var Transaction, Transactions;
       Transaction = XS.Transaction;
-      describe('Transaction with no pipelet', function() {
-        var options, t, tid, transactions;
-        transactions = {};
-        t = new Transaction(transactions, 4);
+      Transactions = XS.Transactions;
+      describe('Transaction with no options or pipelet', function() {
+        var options, t, tid;
+        t = new Transaction(4);
         options = void 0;
         tid = void 0;
         it('should be a Transaction with a count of 4', function() {
           expect(t).to.be.a(Transaction);
           expect(t.source_options).to.be(void 0);
-          expect(t.emit_options).to.be.eql({});
-          expect(t.o.__t).to.be(t);
-          return expect(t.transactions).to.be(transactions);
+          expect(t.emit_options).to.be(void 0);
+          return expect(t.o.__t).to.be(t);
         });
         it('t.toJSON() should return a representation of the new transaction', function() {
           return expect(t.toJSON()).to.be.eql({
             name: '',
+            tid: void 0,
             count: 4,
-            state: 0,
             need_close: false,
             closed: false,
             added_length: 0,
             removed_length: 0
           });
         });
-        it('transactions should remain empty', function() {
-          return expect(transactions).to.be.eql({});
-        });
         it('after t.next(), count should be 3', function() {
           return expect(t.next().toJSON()).to.be.eql({
             name: '',
+            tid: void 0,
             count: 3,
-            state: 0,
             need_close: false,
             closed: false,
             added_length: 0,
@@ -552,8 +550,8 @@
         it('need_close should be true', function() {
           return expect(t.toJSON()).to.be.eql({
             name: '',
+            tid: tid,
             count: 3,
-            state: 0,
             need_close: true,
             closed: false,
             added_length: 0,
@@ -570,8 +568,8 @@
         it('should decrease count to 1 and set added_length to 2 after t.emit_add( [{}{}] )', function() {
           return expect(t.emit_add([{}, {}]).toJSON()).to.be.eql({
             name: '',
+            tid: tid,
             count: 1,
-            state: 0,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -581,8 +579,8 @@
         it('should decrease count to zero and set removed_length to 1 after t.emit_remove( [{}] )', function() {
           return expect(t.emit_remove([{}]).toJSON()).to.be.eql({
             name: '',
+            tid: tid,
             count: 0,
-            state: 0,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -604,8 +602,8 @@
         it('should no longer need close but it should now be closed', function() {
           return expect(t.toJSON()).to.be.eql({
             name: '',
+            tid: tid,
             count: 0,
-            state: 0,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -621,8 +619,8 @@
         it('should not change the state of the transaction', function() {
           return expect(t.toJSON()).to.be.eql({
             name: '',
+            tid: tid,
             count: 0,
-            state: 0,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -635,25 +633,34 @@
           }).to.throwException();
         });
       });
-      return describe('Transaction for four operations with pipelet, options, and an upstream tid', function() {
+      return describe('Transactions()..get_transaction() for four operations with pseudo pipelet, options with more', function() {
         var options, pipelet, t, tid, transactions;
-        transactions = {};
+        transactions = new Transactions();
         pipelet = {
+          _operations: [],
           _get_name: function() {
-            return "Pipelet";
+            return 'Pipelet';
+          },
+          emit: function(operation, values, options) {
+            this._operations.push(arguments);
+            return this;
           }
         };
+        tid = uuid_v4();
         options = {
+          more: true,
+          transaction_id: tid,
           a: 1,
           b: [1, 2]
         };
-        tid = XS.uuid_v4();
-        t = new Transaction(transactions, 4, options, pipelet, tid);
+        t = transactions.get_transaction(4, options, pipelet);
         it('should create a transaction with a count of 4, and a name', function() {
+          expect(t.is_closed()).to.be(false);
+          expect(t.get_tid()).to.be(tid);
           return expect(t.toJSON()).to.be.eql({
             name: 'Pipelet',
+            tid: tid,
             count: 4,
-            state: 0,
             need_close: false,
             closed: false,
             added_length: 0,
@@ -661,8 +668,8 @@
           });
         });
         return it('should set one transaction in transactions', function() {
-          expect(Object.keys(transactions)).to.be.eql([tid]);
-          return expect(transactions[tid]).to.be(t);
+          expect(transactions.get_tids()).to.be.eql([tid]);
+          return expect(transactions.get(tid)).to.be(t);
         });
       });
     });
