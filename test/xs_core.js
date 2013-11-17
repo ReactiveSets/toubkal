@@ -634,7 +634,7 @@
         });
       });
       return describe('Transactions()..get_transaction() for four operations with pseudo pipelet, options with more', function() {
-        var options, pipelet, t, tid, transactions;
+        var options, options_original, pipelet, t, tid, transactions;
         transactions = new Transactions();
         pipelet = {
           _operations: [],
@@ -653,6 +653,7 @@
           a: 1,
           b: [1, 2]
         };
+        options_original = clone(options);
         t = transactions.get_transaction(4, options, pipelet);
         it('should create a transaction with a count of 4, and a name', function() {
           expect(t.get_tid()).to.be(tid);
@@ -711,10 +712,10 @@
             removed_length: 0
           });
         });
-        it('should decrease count and need close after t.emit_add( [ { id: 1 } ], true )', function() {
+        it('should decrease count and need close after t.emit_add( [ { id: 2 } ], true )', function() {
           t.emit_add([
             {
-              id: 1
+              id: 2
             }
           ], true);
           return expect(t.toJSON()).to.be.eql({
@@ -727,11 +728,22 @@
             removed_length: 0
           });
         });
-        return it('should raise an exception on extra t.emit_add( [ { id: 1 } ], true )', function() {
+        it('should have emited an add operation to the pipelet', function() {
+          return expect(pipelet._operations).to.be.eql([
+            [
+              'add', [
+                {
+                  id: 2
+                }
+              ], options_original
+            ]
+          ]);
+        });
+        it('should raise an exception on extra t.emit_add( [ { id: 1 } ], true )', function() {
           expect(function() {
             return t.emit_add([
               {
-                id: 1
+                id: 3
               }
             ], true);
           }).to.throwException();
@@ -744,6 +756,38 @@
             added_length: 1,
             removed_length: 0
           });
+        });
+        it('should not terinate the transaction after transactions.end_transaction( t ) because of more from upstream', function() {
+          transactions.end_transaction(t);
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 0,
+            need_close: true,
+            closed: false,
+            added_length: 0,
+            removed_length: 0
+          });
+        });
+        it('should not have removed the transaction from transactions', function() {
+          return expect(transactions.get_tids()).to.be.eql([tid]);
+        });
+        return it('should have emited two operations in total to the pipelet', function() {
+          return expect(pipelet._operations).to.be.eql([
+            [
+              'add', [
+                {
+                  id: 2
+                }
+              ], options_original
+            ], [
+              'add', [
+                {
+                  id: 1
+                }
+              ], options_original
+            ]
+          ]);
         });
       });
     });

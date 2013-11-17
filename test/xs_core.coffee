@@ -591,6 +591,7 @@ describe 'XS test suite:', ->
       tid = uuid_v4()
       
       options = { more: true, transaction_id: tid, a: 1, b: [1,2] }
+      options_original = clone( options );
       
       t = transactions.get_transaction 4, options, pipelet
       
@@ -650,8 +651,8 @@ describe 'XS test suite:', ->
           removed_length: 0
         }
         
-      it 'should decrease count and need close after t.emit_add( [ { id: 1 } ], true )', ->
-        t.emit_add( [ { id: 1 } ], true )
+      it 'should decrease count and need close after t.emit_add( [ { id: 2 } ], true )', ->
+        t.emit_add( [ { id: 2 } ], true )
         
         expect( t.toJSON()    ).to.be.eql {
           name          : 'Pipelet'
@@ -662,9 +663,14 @@ describe 'XS test suite:', ->
           added_length  : 1
           removed_length: 0
         }
+      
+      it 'should have emited an add operation to the pipelet', ->
+        expect( pipelet._operations ).to.be.eql [
+          [ 'add', [ { id: 2 } ], options_original ]
+        ]
         
       it 'should raise an exception on extra t.emit_add( [ { id: 1 } ], true )', ->
-        expect( -> t.emit_add( [ { id: 1 } ], true ) ).to.throwException()
+        expect( -> t.emit_add( [ { id: 3 } ], true ) ).to.throwException()
         
         expect( t.toJSON()    ).to.be.eql {
           name          : 'Pipelet'
@@ -675,6 +681,28 @@ describe 'XS test suite:', ->
           added_length  : 1
           removed_length: 0
         }
+        
+      it 'should not terinate the transaction after transactions.end_transaction( t ) because of more from upstream', ->
+        transactions.end_transaction( t )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 0
+          need_close    : true
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 'should not have removed the transaction from transactions', ->
+        expect( transactions.get_tids() ).to.be.eql [ tid ]
+      
+      it 'should have emited two operations in total to the pipelet', ->
+        expect( pipelet._operations ).to.be.eql [
+          [ 'add', [ { id: 2 } ], options_original ]
+          [ 'add', [ { id: 1 } ], options_original ]
+        ]
     
   # XS.Transactions() and XS.Transaction()
   
