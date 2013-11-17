@@ -691,7 +691,7 @@ describe 'XS test suite:', ->
           count         : 0
           need_close    : true
           closed        : false
-          added_length  : 0
+          added_length  : 1
           removed_length: 0
         }
       
@@ -701,8 +701,40 @@ describe 'XS test suite:', ->
       it 'should have emited two operations in total to the pipelet', ->
         expect( pipelet._operations ).to.be.eql [
           [ 'add', [ { id: 2 } ], options_original ]
-          [ 'add', [ { id: 1 } ], options_original ]
         ]
+        
+      it 'should return the same transaction after follow-up transactions.get_transaction()', ->
+        options.more = false
+        orginal_options = clone options
+        
+        t1 = transactions.get_transaction 4, options, pipelet
+        
+        expect( t1 ).to.be t
+        
+      it 'should have increased transaction\'s operations count by 4', ->
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 4
+          need_close    : true
+          closed        : false
+          added_length  : 1
+          removed_length: 0
+        }
+      
+      it 'should increase removed_length to 2 after t.emit_remove( [ { id:1 }, { id: 2 } ] )', ->
+        t.emit_remove( [ { id:1 }, { id: 2 } ] )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'Pipelet'
+          tid           : tid
+          count         : 3
+          need_close    : true
+          closed        : false
+          added_length  : 1
+          removed_length: 2
+        }
+      
     
   # XS.Transactions() and XS.Transaction()
   

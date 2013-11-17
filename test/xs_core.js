@@ -765,14 +765,14 @@
             count: 0,
             need_close: true,
             closed: false,
-            added_length: 0,
+            added_length: 1,
             removed_length: 0
           });
         });
         it('should not have removed the transaction from transactions', function() {
           return expect(transactions.get_tids()).to.be.eql([tid]);
         });
-        return it('should have emited two operations in total to the pipelet', function() {
+        it('should have emited two operations in total to the pipelet', function() {
           return expect(pipelet._operations).to.be.eql([
             [
               'add', [
@@ -780,14 +780,44 @@
                   id: 2
                 }
               ], options_original
-            ], [
-              'add', [
-                {
-                  id: 1
-                }
-              ], options_original
             ]
           ]);
+        });
+        it('should return the same transaction after follow-up transactions.get_transaction()', function() {
+          var orginal_options, t1;
+          options.more = false;
+          orginal_options = clone(options);
+          t1 = transactions.get_transaction(4, options, pipelet);
+          return expect(t1).to.be(t);
+        });
+        it('should have increased transaction\'s operations count by 4', function() {
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 4,
+            need_close: true,
+            closed: false,
+            added_length: 1,
+            removed_length: 0
+          });
+        });
+        return it('should increase removed_length to 2 after t.emit_remove( [ { id:1 }, { id: 2 } ] )', function() {
+          t.emit_remove([
+            {
+              id: 1
+            }, {
+              id: 2
+            }
+          ]);
+          return expect(t.toJSON()).to.be.eql({
+            name: 'Pipelet',
+            tid: tid,
+            count: 3,
+            need_close: true,
+            closed: false,
+            added_length: 1,
+            removed_length: 2
+          });
         });
       });
     });
