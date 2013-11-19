@@ -280,127 +280,103 @@
         return expect(v4_0).to.match(valid_uuid_v4) && expect(v4_1).to.match(valid_uuid_v4) && expect(v4_2).to.match(valid_uuid_v4) && expect(v4_3).to.match(valid_uuid_v4) && expect(v4_4).to.match(valid_uuid_v4) && expect(v4_5).to.match(valid_uuid_v4) && expect(v4_6).to.match(valid_uuid_v4) && expect(v4_7).to.match(valid_uuid_v4) && expect(v4_8).to.match(valid_uuid_v4) && expect(v4_9).to.match(valid_uuid_v4);
       });
     });
-    describe('XS.more():', function() {
-      var more_0, more_1, more_2, more_3, more_4, more_5, more_6, more_7, more_8, more_9, v4;
-      v4 = uuid_v4();
-      more_0 = XS.more();
-      more_1 = XS.more({});
-      more_2 = XS.more({
-        a: 1,
-        b: {}
-      });
-      more_3 = XS.more(more_2);
-      more_4 = extend({}, more_3);
-      more_4.more = false;
-      more_5 = XS.more(more_4);
-      more_6 = extend({}, more_3);
-      delete more_6.more;
-      more_7 = XS.more(more_6);
-      more_8 = extend({}, more_7);
-      more_8.transaction_id = 1;
-      more_9 = XS.more(more_8);
-      it('XS.more() should set more', function() {
-        return expect(more_0.more).to.be.eql(true);
-      });
-      it('XS.more() should provide a transaction_id string', function() {
-        return expect(more_0.transaction_id).to.be.a('string');
-      });
-      it('XS.more() transaction id should match uuid v4 string', function() {
-        return expect(more_0.transaction_id).to.match(valid_uuid_v4);
-      });
-      it('XS.more( {} ) should set more', function() {
-        return expect(more_1.more).to.be.eql(true);
-      });
-      it('XS.more( {} ) should provide a transaction_id string', function() {
-        return expect(more_1.transaction_id).to.be.a('string');
-      });
-      it('XS.more( {} ) transaction id should match uuid v4 string', function() {
-        return expect(more_1.transaction_id).to.match(valid_uuid_v4);
-      });
-      it('XS.more( { a: 1, b: {} } ) should set more', function() {
-        return expect(more_2.more).to.be.eql(true);
-      });
-      it('XS.more( { a: 1, b: {} } ) should provide a transaction_id string', function() {
-        return expect(more_2.transaction_id).to.be.a('string');
-      });
-      it('XS.more( { a: 1, b: {} } ) transaction id should match uuid v4 string', function() {
-        return expect(more_2.transaction_id).to.match(valid_uuid_v4);
-      });
-      it('XS.more( { a: 1, b: {} } ) should conserve a and b', function() {
-        return expect(more_2).to.be.eql({
-          a: 1,
-          b: {},
-          more: true,
-          transaction_id: more_2.transaction_id
-        });
-      });
-      it('XS.more( { a: 1, b: {}, more: true, transaction_id: uuid_v4() } ) should return self', function() {
-        return expect(more_3).to.be(more_2);
-      });
-      it('check test value { a: 1, b: {}, more: false, transaction_id: uuid_v4() }', function() {
-        return expect(more_4).to.be.eql({
-          a: 1,
-          b: {},
-          more: false,
-          transaction_id: more_3.transaction_id
-        });
-      });
-      it('XS.more( { a: 1, b: {}, more: false, transaction_id: uuid_v4() } ) should set more to true', function() {
-        return expect(more_5).to.be.eql(more_2);
-      });
-      it('check test value { a: 1, b: {}, transaction_id: uuid_v4() }', function() {
-        return expect(more_6).to.be.eql({
-          a: 1,
-          b: {},
-          transaction_id: more_3.transaction_id
-        });
-      });
-      it('XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set more to true', function() {
-        return expect(more_7).to.be.eql(more_2);
-      });
-      it('check test value { a: 1, b: {}, transaction_id: 1 }', function() {
-        return expect(more_8).to.be.eql({
-          a: 1,
-          b: {},
-          more: true,
-          transaction_id: 1
-        });
-      });
-      return it('XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set transaction id to uuid v4 ', function() {
-        return expect(more_9).to.be.eql({
-          a: 1,
-          b: {},
-          more: true,
-          transaction_id: more_9.transaction_id
-        }) && expect(more_9.transaction_id).to.match(valid_uuid_v4);
-      });
-    });
-    describe('XS.no_more():', function() {
-      var more_0, more_0_clone, more_1, more_1_clone;
-      more_0 = XS.more();
-      more_0_clone = clone(more_0);
-      more_1 = XS.more({
-        a: 1
-      });
-      more_1_clone = clone(more_1);
-      it('should have original transaction id but no "more" flag', function() {
-        return expect(XS.no_more(more_0)).to.be.eql({
-          transaction_id: more_0.transaction_id
-        });
-      });
-      it('should not alter original object', function() {
-        return expect(more_0).to.be.eql(more_0_clone);
-      });
-      it('should have original transaction id with other attributes but no "more" flag', function() {
-        return expect(XS.no_more(more_1)).to.be.eql({
-          transaction_id: more_1.transaction_id,
-          a: 1
-        });
-      });
-      return it('should not alter original object', function() {
-        return expect(more_1).to.be.eql(more_1_clone);
-      });
-    });
+    /*
+    describe 'XS.more():', ->
+      v4 = uuid_v4()
+    
+      more_0 = XS.more()
+      more_1 = XS.more {}
+      more_2 = XS.more { a: 1, b: {} }
+      more_3 = XS.more more_2
+    
+      more_4 = extend {}, more_3
+      more_4.more = false
+      more_5 = XS.more more_4
+    
+      more_6 = extend {}, more_3
+      delete more_6.more
+      more_7 = XS.more more_6
+    
+      more_8 = extend {}, more_7
+      more_8.transaction_id = 1
+      more_9 = XS.more more_8
+      
+      it 'XS.more() should set more', ->
+        expect( more_0.more ).to.be.eql true
+    
+      it 'XS.more() should provide a transaction_id string', ->
+        expect( more_0.transaction_id ).to.be.a 'string'
+    
+      it 'XS.more() transaction id should match uuid v4 string', ->
+        expect( more_0.transaction_id ).to.match valid_uuid_v4
+    
+      it 'XS.more( {} ) should set more', ->
+        expect( more_1.more ).to.be.eql true
+    
+      it 'XS.more( {} ) should provide a transaction_id string', ->
+        expect( more_1.transaction_id ).to.be.a 'string'
+    
+      it 'XS.more( {} ) transaction id should match uuid v4 string', ->
+        expect( more_1.transaction_id ).to.match valid_uuid_v4
+    
+      it 'XS.more( { a: 1, b: {} } ) should set more', ->
+        expect( more_2.more ).to.be.eql true
+    
+      it 'XS.more( { a: 1, b: {} } ) should provide a transaction_id string', ->
+        expect( more_2.transaction_id ).to.be.a 'string'
+    
+      it 'XS.more( { a: 1, b: {} } ) transaction id should match uuid v4 string', ->
+        expect( more_2.transaction_id ).to.match valid_uuid_v4
+    
+      it 'XS.more( { a: 1, b: {} } ) should conserve a and b', ->
+        expect( more_2 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: more_2.transaction_id }
+    
+      it 'XS.more( { a: 1, b: {}, more: true, transaction_id: uuid_v4() } ) should return self', ->
+        expect( more_3 ).to.be more_2
+    
+      it 'check test value { a: 1, b: {}, more: false, transaction_id: uuid_v4() }', ->
+        expect( more_4 ).to.be.eql { a: 1, b: {}, more: false, transaction_id: more_3.transaction_id }
+    
+      it 'XS.more( { a: 1, b: {}, more: false, transaction_id: uuid_v4() } ) should set more to true', ->
+        expect( more_5 ).to.be.eql more_2
+    
+      it 'check test value { a: 1, b: {}, transaction_id: uuid_v4() }', ->
+        expect( more_6 ).to.be.eql { a: 1, b: {}, transaction_id: more_3.transaction_id }
+    
+      it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set more to true', ->
+        expect( more_7 ).to.be.eql more_2
+    
+      it 'check test value { a: 1, b: {}, transaction_id: 1 }', ->
+        expect( more_8 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: 1 }
+    
+      it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set transaction id to uuid v4 ', ->
+        expect( more_9 ).to.be.eql( { a: 1, b: {}, more: true, transaction_id: more_9.transaction_id } ) &&
+        expect( more_9.transaction_id ).to.match valid_uuid_v4
+    
+    # more()
+    
+    describe 'XS.no_more():', ->
+      more_0 = XS.more()
+      more_0_clone = clone more_0
+    
+      more_1 = XS.more { a: 1 }
+      more_1_clone = clone more_1
+    
+      it 'should have original transaction id but no "more" flag', ->
+        expect( XS.no_more more_0 ).to.be.eql { transaction_id: more_0.transaction_id }
+    
+      it 'should not alter original object', ->
+        expect( more_0 ).to.be.eql more_0_clone
+    
+      it 'should have original transaction id with other attributes but no "more" flag', ->
+        expect( XS.no_more more_1 ).to.be.eql { transaction_id: more_1.transaction_id, a: 1 }
+    
+      it 'should not alter original object', ->
+        expect( more_1 ).to.be.eql more_1_clone
+    
+    # no_more()
+    */
+
     describe('XS.only_more():', function() {
       it('XS.only_more should be a function with one parameter', function() {
         return expect(XS.only_more).to.be.a('function') && expect(XS.only_more.length).to.be.eql(1);
@@ -519,6 +495,7 @@
             name: '',
             tid: void 0,
             count: 4,
+            source_more: false,
             need_close: false,
             closed: false,
             added_length: 0,
@@ -530,6 +507,7 @@
             name: '',
             tid: void 0,
             count: 3,
+            source_more: false,
             need_close: false,
             closed: false,
             added_length: 0,
@@ -552,6 +530,7 @@
             name: '',
             tid: tid,
             count: 3,
+            source_more: false,
             need_close: true,
             closed: false,
             added_length: 0,
@@ -570,6 +549,7 @@
             name: '',
             tid: tid,
             count: 1,
+            source_more: false,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -581,6 +561,7 @@
             name: '',
             tid: tid,
             count: 0,
+            source_more: false,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -604,6 +585,7 @@
             name: '',
             tid: tid,
             count: 0,
+            source_more: false,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -621,6 +603,7 @@
             name: '',
             tid: tid,
             count: 0,
+            source_more: false,
             need_close: true,
             closed: false,
             added_length: 2,
@@ -662,6 +645,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 4,
+            source_more: true,
             need_close: false,
             closed: false,
             added_length: 0,
@@ -678,6 +662,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 3,
+            source_more: true,
             need_close: false,
             closed: false,
             added_length: 0,
@@ -690,6 +675,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 2,
+            source_more: true,
             need_close: false,
             closed: false,
             added_length: 0,
@@ -706,6 +692,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 1,
+            source_more: true,
             need_close: false,
             closed: false,
             added_length: 1,
@@ -722,6 +709,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 0,
+            source_more: true,
             need_close: true,
             closed: false,
             added_length: 1,
@@ -751,6 +739,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 0,
+            source_more: true,
             need_close: true,
             closed: false,
             added_length: 1,
@@ -763,6 +752,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 0,
+            source_more: true,
             need_close: true,
             closed: false,
             added_length: 1,
@@ -795,6 +785,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 4,
+            source_more: false,
             need_close: true,
             closed: false,
             added_length: 1,
@@ -813,6 +804,7 @@
             name: 'Pipelet',
             tid: tid,
             count: 3,
+            source_more: false,
             need_close: true,
             closed: false,
             added_length: 1,

@@ -43,21 +43,26 @@ if require?
 xs = XS.xs
 
 describe 'Load Images test suite:', ->
-  images_dataset = xs.set( [], { name: 'Images dataset' } ).auto_increment( { name: 'Images dataset' } )
-  images         = images_dataset.load_images( { name: 'images', loading_max: 2, display: 'visible' } )
-  node           = document.getElementById( 'xs_load_images' )
+  images_source = xs
+    .set( [], { name: 'images_source' } )
+    .auto_increment( { name: 'images_source_auto_increment' } )
+  
+  images = images_source
+    .load_images( { name: 'images', loading_max: 2, display: 'visible' } )
+  
+  node = document.getElementById( 'xs_load_images' )
   
   it 'should have created xs_preoloaded_images div', ->
     expect( node ).to.be.ok()
     expect( node.nodeName ).to.be 'DIV'
-
+  
   it 'expect images.fetch_all() to be empty', ->
     expect( images.fetch_all() ).to.be.empty()
   
-  it 'after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
-    this.timeout 0
+  it 'after images_source.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+    this.timeout 15000
     
-    images_dataset.add [
+    images_source.add [
       { title: 'Villa Marrakech 1' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/011.jpg' }
       { title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg' }
       { title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg' }
@@ -105,12 +110,12 @@ describe 'Load Images test suite:', ->
          expect( image.src                   ).to.be value.uri
          expect( image.getAttribute 'loaded' ).to.be '1'
 
-  it 'after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
-    this.timeout 0
+  it 'after images_source.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+    this.timeout 5000
 
     images._loading_max = 1
 
-    images_dataset.add [
+    images_source.add [
       { title: 'Villa Marrakech 8', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' }
       { title: 'Villa Marrakech 9', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
     ]
@@ -154,8 +159,8 @@ describe 'Load Images test suite:', ->
          expect( image.src                   ).to.be value.uri
          expect( image.getAttribute 'loaded' ).to.be '1'
 
-  it 'after images_dataset.remove( objects ), expect images.fetch_all() to be equal to result', ->
-    images_dataset.remove [
+  it 'after images_source.remove( objects ), expect images.fetch_all() to be equal to result', ->
+    images_source.remove [
       { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg' }
       { id: 8 , title: 'Villa Marrakech 8' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' }
     ]
@@ -180,15 +185,8 @@ describe 'Load Images test suite:', ->
      expect( node.childNodes[ 5 ].nodeName ).to.be( 'IMG' )
      expect( node.childNodes[ 6 ] ).to.not.be.ok()
 
-  it 'after images_dataset.update( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
-    this.timeout 0
-    
-    images_dataset.update [
-      [
-        { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
-        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg' }
-      ]
-    ]
+  it 'after images_source.update( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+    this.timeout 5000
     
     images.on( 'complete', ->
       images.fetch_all ( values ) -> check done, ->
@@ -204,15 +202,17 @@ describe 'Load Images test suite:', ->
         ]
       
     , this, true )
-  
-  it 'after images_dataset.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
-    this.timeout 0
-
-    images_dataset.add [
-      { title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg' }
-      { title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg' }
+    
+    images_source.update [
+      [
+        { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
+        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg' }
+      ]
     ]
-
+    
+  it 'after images_source.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+    this.timeout 5000
+    
     images.on( 'complete', ->
       images.fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
@@ -229,16 +229,14 @@ describe 'Load Images test suite:', ->
         ]
 
     , this, true )
-  
-  it 'after images_dataset.update( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
-    this.timeout 0
     
-    images_dataset.update [
-      [
-        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg' }
-        { id: 9 , title: 'Villa Marrakech 13', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg' }
-      ]
+    images_source.add [
+      { title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg' }
+      { title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg' }
     ]
+  
+  it 'after images_source.update( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+    this.timeout 5000
     
     images.on( 'complete', ->
       images.fetch_all ( values ) -> check done, () ->
@@ -256,4 +254,12 @@ describe 'Load Images test suite:', ->
         ]
         
     , this, true )
+    
+    images_source.update [
+      [
+        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg' }
+        { id: 9 , title: 'Villa Marrakech 13', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg' }
+      ]
+    ]
+    
   

@@ -308,7 +308,10 @@ describe 'XS test suite:', ->
       expect( v4_7 ).to.match( valid_uuid_v4 ) and
       expect( v4_8 ).to.match( valid_uuid_v4 ) and
       expect( v4_9 ).to.match( valid_uuid_v4 )
-
+  
+  # XS.uuid_v4()
+  
+  ###
   describe 'XS.more():', ->
     v4 = uuid_v4()
 
@@ -403,6 +406,7 @@ describe 'XS test suite:', ->
       expect( more_1 ).to.be.eql more_1_clone
 
   # no_more()
+  ###
 
   describe 'XS.only_more():', ->
     it 'XS.only_more should be a function with one parameter', ->
@@ -477,6 +481,7 @@ describe 'XS test suite:', ->
           name          : ''
           tid           : undefined
           count         : 4
+          source_more   : false
           need_close    : false
           closed        : false
           added_length  : 0
@@ -488,6 +493,7 @@ describe 'XS test suite:', ->
           name          : ''
           tid           : undefined
           count         : 3
+          source_more   : false
           need_close    : false
           closed        : false
           added_length  : 0
@@ -508,6 +514,7 @@ describe 'XS test suite:', ->
           name          : ''
           tid           : tid
           count         : 3
+          source_more   : false
           need_close    : true
           closed        : false
           added_length  : 0
@@ -523,6 +530,7 @@ describe 'XS test suite:', ->
           name          : ''
           tid           : tid
           count         : 1
+          source_more   : false
           need_close    : true
           closed        : false
           added_length  : 2
@@ -534,6 +542,7 @@ describe 'XS test suite:', ->
           name          : ''
           tid           : tid
           count         : 0
+          source_more   : false
           need_close    : true
           closed        : false
           added_length  : 2
@@ -551,6 +560,7 @@ describe 'XS test suite:', ->
           name          : ''
           tid           : tid
           count         : 0
+          source_more   : false
           need_close    : true
           closed        : false
           added_length  : 2
@@ -565,6 +575,7 @@ describe 'XS test suite:', ->
           name          : ''
           tid           : tid
           count         : 0
+          source_more   : false
           need_close    : true
           closed        : false
           added_length  : 2
@@ -602,6 +613,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 4
+          source_more   : true
           need_close    : false
           closed        : false
           added_length  : 0
@@ -619,6 +631,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 3
+          source_more   : true
           need_close    : false
           closed        : false
           added_length  : 0
@@ -632,6 +645,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 2
+          source_more   : true
           need_close    : false
           closed        : false
           added_length  : 0
@@ -645,6 +659,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 1
+          source_more   : true
           need_close    : false
           closed        : false
           added_length  : 1
@@ -658,6 +673,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 0
+          source_more   : true
           need_close    : true
           closed        : false
           added_length  : 1
@@ -676,6 +692,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 0
+          source_more   : true
           need_close    : true
           closed        : false
           added_length  : 1
@@ -689,6 +706,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 0
+          source_more   : true
           need_close    : true
           closed        : false
           added_length  : 1
@@ -716,6 +734,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 4
+          source_more   : false
           need_close    : true
           closed        : false
           added_length  : 1
@@ -729,6 +748,7 @@ describe 'XS test suite:', ->
           name          : 'Pipelet'
           tid           : tid
           count         : 3
+          source_more   : false
           need_close    : true
           closed        : false
           added_length  : 1
