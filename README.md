@@ -496,6 +496,8 @@ node server.js
 
 Pipelet                   | Short Description                              
 --------------------------|------------------------------------------------
+url_events()              | Browser url changes
+animation_frames()        | Request Animation Frame events
 encapsulate()             | Hide a graph of pipelets behind one pipelet
 require_resolve()         | Resolve node module files absolute path
 timestamp()               | Add timestamp attribute

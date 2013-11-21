@@ -1,6 +1,6 @@
 #!/bin/sh
 
-files='lib/*js lib/server/*js'
+files='lib/*js lib/server/*js lib/client/*js'
 
 if ( [ "$1" != "" ]; ) then
   files="$1 $2 $3 $4 $5 $6"
