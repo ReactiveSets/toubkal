@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" href="css/mocha.css" />
+    
+    <title>XS Tests</title>
+    
+    <script src="../lib/xs-min.js"></script>
+    
+  </head>
+  
+  <body>
+    <p><a href="#test_1">Test 1</a></p>
+    <p><a href="#test_2">Test 2</a></p>
+    <p><a href="#test_3">Test 3</a></p>
+    <script>
+      var xs = XS.xs
+        , animation_frames = xs
+            .animation_frames()
+            .events_metadata( { set_flow: 'request_animation_frame' } )
+      ;
+      
+      xs
+        .url_events( animation_frames )
+        .trace( 'url events' )
+      ;
+    </script>
+  </body>
+</html>

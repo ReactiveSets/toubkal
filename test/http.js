@@ -94,11 +94,13 @@ var xs_min = xs
     { name: 'lib/socket_io_server.js'      },
     
     // xs client
-    { name: 'lib/selector.js'              },
-    { name: 'lib/table.js'                 },
-    { name: 'lib/control.js'               },
-    { name: 'lib/form.js'                  },
-    { name: 'lib/load_images.js'           },
+    { name: 'lib/selector.js'                },
+    { name: 'lib/client/animation_frames.js' },
+    { name: 'lib/client/url.js'              },
+    { name: 'lib/table.js'                   },
+    { name: 'lib/control.js'                 },
+    { name: 'lib/form.js'                    },
+    { name: 'lib/load_images.js'             },
     
     // bootstrap
     { name: 'lib/bootstrap_carousel.js'    },
@@ -151,6 +153,7 @@ var tests = xs
     { name: 'test/table.html'                  },
     { name: 'test/table_controls.html'         },
     { name: 'test/ui.html'                     },
+    { name: 'test/url.html'                    },
     
     // JavaScript for tests
     { name : 'test/javascript/jquery-1.10.2.min.js' },
