@@ -16,15 +16,11 @@
     <p><a href="#test_2">Test 2</a></p>
     <p><a href="#test_3">Test 3</a></p>
     <script>
-      var xs = XS.xs
-        , animation_frames = xs
-            .animation_frames()
-            .events_metadata( { set_flow: 'request_animation_frame' } )
-      ;
-      
-      xs
-        .url_events( animation_frames )
+      XS.xs
+        .url_events()
+        .events_metadata( { set_flow: 'url_events' } )
         .trace( 'url events' )
+        .set()
       ;
     </script>
   </body>
