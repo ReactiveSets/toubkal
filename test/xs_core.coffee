@@ -311,6 +311,30 @@ describe 'XS test suite:', ->
   
   # XS.uuid_v4()
   
+  describe 'XS.Event_Emitter(): ', ->
+    emitter = new XS.Event_Emitter()
+    values = null
+    
+    it 'should be an Event_Emitter', ->
+      expect( emitter ).to.be.a XS.Event_Emitter
+    
+    it 'should allow to emit a "data" event with no exception', ->
+      expect( emitter._emit_event( 'data', {} ) ).to.be emitter
+      
+    it 'should allow to set a "data" event listener', ->
+      emitter.on "data", () ->
+        values = arguments
+        
+      expect( values ).to.be null
+      expect( Object.keys emitter._events ).to.be.eql [ "data" ]
+      expect( emitter._events.data.length ).to.be 1
+      
+    it 'should allow to emit a "data" event that sends values to the listener', ->
+      expect( emitter._emit_event( 'data', [ { a: 1 } ] ) ).to.be emitter
+      expect( values ).to.be.eql [ { a: 1 } ]
+        
+  # XS.Event_Emitter()
+  
   ###
   describe 'XS.more():', ->
     v4 = uuid_v4()

@@ -280,6 +280,37 @@
         return expect(v4_0).to.match(valid_uuid_v4) && expect(v4_1).to.match(valid_uuid_v4) && expect(v4_2).to.match(valid_uuid_v4) && expect(v4_3).to.match(valid_uuid_v4) && expect(v4_4).to.match(valid_uuid_v4) && expect(v4_5).to.match(valid_uuid_v4) && expect(v4_6).to.match(valid_uuid_v4) && expect(v4_7).to.match(valid_uuid_v4) && expect(v4_8).to.match(valid_uuid_v4) && expect(v4_9).to.match(valid_uuid_v4);
       });
     });
+    describe('XS.Event_Emitter(): ', function() {
+      var emitter, values;
+      emitter = new XS.Event_Emitter();
+      values = null;
+      it('should be an Event_Emitter', function() {
+        return expect(emitter).to.be.a(XS.Event_Emitter);
+      });
+      it('should allow to emit a "data" event with no exception', function() {
+        return expect(emitter._emit_event('data', {})).to.be(emitter);
+      });
+      it('should allow to set a "data" event listener', function() {
+        emitter.on("data", function() {
+          return values = arguments;
+        });
+        expect(values).to.be(null);
+        expect(Object.keys(emitter._events)).to.be.eql(["data"]);
+        return expect(emitter._events.data.length).to.be(1);
+      });
+      return it('should allow to emit a "data" event that sends values to the listener', function() {
+        expect(emitter._emit_event('data', [
+          {
+            a: 1
+          }
+        ])).to.be(emitter);
+        return expect(values).to.be.eql([
+          {
+            a: 1
+          }
+        ]);
+      });
+    });
     /*
     describe 'XS.more():', ->
       v4 = uuid_v4()

@@ -164,9 +164,9 @@ describe 'Load Images test suite:', ->
       { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg' }
       { id: 8 , title: 'Villa Marrakech 8' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' }
     ]
-
+    
     values = images.fetch_all().sort ( a, b ) -> a.id > b.id
-
+    
     expect( values ).to.be.eql [
       { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg' }
       { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg' }
