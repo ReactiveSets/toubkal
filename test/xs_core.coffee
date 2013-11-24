@@ -313,7 +313,8 @@ describe 'XS test suite:', ->
   
   describe 'XS.Event_Emitter(): ', ->
     emitter = new XS.Event_Emitter()
-    values = null
+    data = null
+    complete = null
     
     it 'should be an Event_Emitter', ->
       expect( emitter ).to.be.a XS.Event_Emitter
@@ -322,17 +323,36 @@ describe 'XS test suite:', ->
       expect( emitter._emit_event( 'data', {} ) ).to.be emitter
       
     it 'should allow to set a "data" event listener', ->
-      emitter.on "data", () ->
-        values = arguments
+      emitter.on "data", () -> data = arguments
         
-      expect( values ).to.be null
       expect( Object.keys emitter._events ).to.be.eql [ "data" ]
       expect( emitter._events.data.length ).to.be 1
       
     it 'should allow to emit a "data" event that sends values to the listener', ->
       expect( emitter._emit_event( 'data', [ { a: 1 } ] ) ).to.be emitter
-      expect( values ).to.be.eql [ { a: 1 } ]
+      expect( data ).to.be.eql [ { a: 1 } ]
         
+    it 'should allow to set a "complete" listener once', ->
+      emitter._once "complete", () -> complete = arguments
+      
+      expect( Object.keys emitter._events ).to.be.eql [ "data", "complete" ]
+      expect( emitter._events.complete.length ).to.be 1
+      
+    it 'should allow to emit the "complete" event', ->
+      expect( emitter._emit_event( "complete", [ { more: false } ] ) ).to.be emitter
+      expect( data ).to.be.eql [ { a: 1 } ]
+      expect( complete ).to.be.eql [ { more: false } ]
+      
+    it 'should then remove the listener on the "complete" event', ->
+      expect( Object.keys emitter._events ).to.be.eql [ "data", "complete" ]
+      expect( emitter._events.complete.length ).to.be 0
+      expect( emitter._events.data.length ).to.be 1
+      
+    it 'should then allow to emit the "complete" event with calling the complete listener', ->
+      expect( emitter._emit_event( "complete", [ { id: 1 } ] ) ).to.be emitter
+      expect( data ).to.be.eql [ { a: 1 } ]
+      expect( complete ).to.be.eql [ { more: false } ]
+      
   # XS.Event_Emitter()
   
   ###

@@ -281,9 +281,10 @@
       });
     });
     describe('XS.Event_Emitter(): ', function() {
-      var emitter, values;
+      var complete, data, emitter;
       emitter = new XS.Event_Emitter();
-      values = null;
+      data = null;
+      complete = null;
       it('should be an Event_Emitter', function() {
         return expect(emitter).to.be.a(XS.Event_Emitter);
       });
@@ -292,21 +293,66 @@
       });
       it('should allow to set a "data" event listener', function() {
         emitter.on("data", function() {
-          return values = arguments;
+          return data = arguments;
         });
-        expect(values).to.be(null);
         expect(Object.keys(emitter._events)).to.be.eql(["data"]);
         return expect(emitter._events.data.length).to.be(1);
       });
-      return it('should allow to emit a "data" event that sends values to the listener', function() {
+      it('should allow to emit a "data" event that sends values to the listener', function() {
         expect(emitter._emit_event('data', [
           {
             a: 1
           }
         ])).to.be(emitter);
-        return expect(values).to.be.eql([
+        return expect(data).to.be.eql([
           {
             a: 1
+          }
+        ]);
+      });
+      it('should allow to set a "complete" listener once', function() {
+        emitter._once("complete", function() {
+          return complete = arguments;
+        });
+        expect(Object.keys(emitter._events)).to.be.eql(["data", "complete"]);
+        return expect(emitter._events.complete.length).to.be(1);
+      });
+      it('should allow to emit the "complete" event', function() {
+        expect(emitter._emit_event("complete", [
+          {
+            more: false
+          }
+        ])).to.be(emitter);
+        expect(data).to.be.eql([
+          {
+            a: 1
+          }
+        ]);
+        return expect(complete).to.be.eql([
+          {
+            more: false
+          }
+        ]);
+      });
+      it('should then remove the listener on the "complete" event', function() {
+        expect(Object.keys(emitter._events)).to.be.eql(["data", "complete"]);
+        expect(emitter._events.complete.length).to.be(0);
+        return expect(emitter._events.data.length).to.be(1);
+      });
+      return it('should then allow to emit the "complete" event with calling the complete listener', function() {
+        expect(emitter._emit_event("complete", [
+          {
+            id: 1
+          }
+        ])).to.be(emitter);
+        expect(data).to.be.eql([
+          {
+            a: 1
+          }
+        ]);
+        return expect(complete).to.be.eql([
+          {
+            more: false
           }
         ]);
       });
