@@ -3,25 +3,27 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <link rel="stylesheet" href="css/mocha.css" />
+    <link rel="stylesheet" href="/node_modules/mocha/mocha.css" />
     
-    <title>XS Tests</title>
+    <title>XS URL Tests</title>
     
     <script src="../lib/xs-min.js"></script>
+    <script src="javascript/mocha_expect-min.js"></script>
     
+    <script src="xs_tests_utils.js"></script>
+    <script src="xs_url_tests.js"></script>
+    <script>
+      mocha.setup( 'bdd' );
+    </script>
   </head>
   
   <body>
-    <p><a href="#test_1">Test 1</a></p>
-    <p><a href="#test_2">Test 2</a></p>
-    <p><a href="#test_3">Test 3</a></p>
+    <div id="mocha"></div>
+    
     <script>
-      XS.xs
-        .url_events()
-        .events_metadata( { set_flow: 'url_events' } )
-        .trace( 'url events' )
-        .set()
-      ;
+      window.onload = function() {
+        mocha.run()
+      };
     </script>
   </body>
 </html>

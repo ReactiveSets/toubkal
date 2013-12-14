@@ -183,6 +183,7 @@ var coffee_source = xs.set( [
     { name: 'test/xs_load_images_tests.coffee' },
     { name: 'test/xs_control_tests.coffee'     },
     { name: 'test/xs_table_tests.coffee'       },
+    { name: 'test/xs_url_tests.coffee'         }
   ] )
   
   .watch( { base_directory: __dirname + '/..' } )
@@ -196,6 +197,7 @@ var compiled_coffee = xs.set( [
     { name: 'test/xs_load_images_tests.js'     },
     { name: 'test/xs_control_tests.js'         },
     { name: 'test/xs_table_tests.js'           },
+    { name: 'test/xs_url_tests.js'             }
   ] )
   
   .watch( { base_directory: __dirname + '/..' } )
@@ -216,6 +218,7 @@ var source_maps = xs.set( [
     { name: 'test/xs_load_images_tests.map'    },
     { name: 'test/xs_control_tests.map'        },
     { name: 'test/xs_table_tests.map'          },
+    { name: 'test/xs_url_tests.map'            }
   ] )
   .watch( { base_directory: __dirname + '/..' } )
   .alter( function( v ) {
