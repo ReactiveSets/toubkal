@@ -463,7 +463,7 @@ node server.js
 
 ## Releases
 
-### Version 0.3.0 - ETA January 2014
+### Version 0.3.0 - ETA April 2014
 
 #### Goals:
 
@@ -476,7 +476,7 @@ node server.js
 - Navigation pipelets
 - Out-of-band, global dataflows for: exceptions, errors, and debug information
 
-### Version 0.2.0 - ETA December 2013
+### Version 0.2.0 - ETA March 2014
 
 #### Goals:
 
@@ -491,6 +491,7 @@ node server.js
 - Transactions
 - Virtual Hosts w/ optimized routing
 - Touch Events on bootstrap pipelets
+- Filter support for static and dynamic queries
 
 #### New pipelets (available now):
 
