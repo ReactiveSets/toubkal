@@ -34,6 +34,14 @@ extend  = XS.extend
 uuid_v4 = XS.uuid_v4
 
 # ----------------------------------------------------------------------------------------------
+# Check sorted pipelet content
+# ----------------------------
+
+check_set_content = ( done, source, values ) ->
+  source.fetch_all ( values ) -> check done, ->
+    expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql values
+  
+# ----------------------------------------------------------------------------------------------
 # Require tested modules
 # ----------------------
 
@@ -1327,9 +1335,9 @@ describe 'XS test suite:', ->
       expect( set ).to.be.a XS.Set
     
     cities = xs.set [
-      { id: 1, name: "Marrakech", country: "Morocco"  }
-      { id: 2, name: "Mountain View", country: "USA", state: "California" }
-      { id: 3, name: "Paris", country: "France" }
+      { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+      { id: 2, name: "Mountain View", country: "USA"    , state: "California" }
+      { id: 3, name: "Paris"        , country: "France"                       }
     ]
     
     delayed_set = xs
@@ -1380,15 +1388,12 @@ describe 'XS test suite:', ->
     describe 'add():', ->
       cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
       
-      it 'cities.add( object ) should be a Set', ->
-        expect( cities ).to.be.a XS.Set
-      
-      it 'cities.add( object ) should be equal to result', ( done ) ->
+      it 'should contain Berlin after adding it', ( done ) ->
         cities.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
-          { id: 1, name: "Marrakech", country: "Morocco"  }
-          { id: 2, name: "Mountain View", country: "USA", state: "California" }
-          { id: 3, name: "Paris", country: "France" }
-          { id: 4, name: "Berlin", country: "Germany" }
+          { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+          { id: 2, name: "Mountain View", country: "USA"    , state: "California" }
+          { id: 3, name: "Paris"        , country: "France"                       }
+          { id: 4, name: "Berlin"       , country: "Germany"                      }
         ]
     
     describe 'index_of():', ->
@@ -1511,61 +1516,66 @@ describe 'XS test suite:', ->
           ]
       
       describe 'add():', ->
-        it 'cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', ( done ) ->
+        it 'cities_in_usa should show one more city after adding New York to cities', ( done ) ->
           cities.add [ { id: 5, name: "New York", country: "USA", state: "New York" } ]
-
+          
           cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
             { id: 5, name: "New York", country: "USA", state: "New York" }
           ]
         
-        it 'cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', ( done ) ->
-          cities.add [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: 'Housten', country: 'USA', state: 'Texas' } ]
+        it 'cities_in_usa should show only one more city after adding Casablanca and Huston', ( done ) ->
+          cities.add [
+            { id: 6, name: "Casablanca", country: "Morocco"                 }
+            { id: 7, name: 'Huston'    , country: 'USA'    , state: 'Texas' }
+          ]
           
           cities_in_usa.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
             { id: 2, name: "Mountain View", country: "USA", state: "California" }
-            { id: 5, name: "New York", country: "USA", state: "New York" }
-            { id: 7, name: "Housten", country: "USA", state: "Texas" }
+            { id: 5, name: "New York"     , country: "USA", state: "New York"   }
+            { id: 7, name: "Huston"       , country: "USA", state: "Texas"      }
           ]
       
       describe 'update', ->
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', ( done ) ->
-          cities.update [ [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ]
-
-          cities_in_usa.fetch_all ( values ) -> check done, ->
-            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
-              { id: 2, name: "Mountain View", country: "USA", state: "California" }
-              { id: 5, name: "NY", country: "USA", state: "NY" }
-              { id: 7, name: "Housten", country: "USA", state: "Texas" }
-            ]
-        
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', ( done ) ->
-          cities.update [ [ { id: 7, name: "Housten", country: "USA", state: "Texas" }, { id: 7, name: "Venice", country: "Italy" } ] ]
+        it 'cities_in_usa should be updated when updating "New York" to "New York City" in cities', ( done ) ->
+          cities.update [
+            [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "New York City", country: "USA", state: "New York" } ]
+          ]
           
           cities_in_usa.fetch_all ( values ) -> check done, ->
             expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
               { id: 2, name: "Mountain View", country: "USA", state: "California" }
-              { id: 5, name: "NY", country: "USA", state: "NY" }
+              { id: 5, name: "New York City", country: "USA", state: "New York"   }
+              { id: 7, name: "Huston"       , country: "USA", state: "Texas"      }
             ]
         
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', ( done ) ->
+        it 'cities_in_usa should remove Huston after it be updated to Venice in cities', ( done ) ->
+          cities.update [ [ { id: 7, name: "Huston", country: "USA", state: "Texas" }, { id: 7, name: "Venice", country: "Italy" } ] ]
+          
+          cities_in_usa.fetch_all ( values ) -> check done, ->
+            expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
+              { id: 2, name: "Mountain View", country: "USA", state: "California" }
+              { id: 5, name: "New York City", country: "USA", state: "New York"   }
+            ]
+        
+        it 'should add Detroit in cities_in_usa, after Paris is updated to Detroit in cities', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ]
           
           cities_in_usa.fetch_all ( values ) -> check done, ->
             expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
               { id: 2, name: "Mountain View", country: "USA", state: "California" }
-              { id: 5, name: "NY", country: "USA", state: "NY" }
-              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+              { id: 5, name: "New York City", country: "USA", state: "New York"   }
+              { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"   }
             ]
         
-        it 'cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', ( done ) ->
+        it 'should not change cities_in_usa after Paris is updated to Madrid in cities, resulting in Paris added to cities anti-state', ( done ) ->
           cities.update [ [ { id: 3, name: "Paris", country: "France" }, { id: 9, name: "Madrid", country: "Spain" } ] ]
           
           cities_in_usa.fetch_all ( values ) -> check done, ->
             expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
               { id: 2, name: "Mountain View", country: "USA", state: "California" }
-              { id: 5, name: "NY", country: "USA", state: "NY" }
-              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+              { id: 5, name: "New York City", country: "USA", state: "New York"   }
+              { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"   }
             ]
         
       describe 'remove()', ->
@@ -1574,8 +1584,8 @@ describe 'XS test suite:', ->
           
           cities_in_usa.fetch_all ( values ) -> check done, ->
             expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
-              { id: 5, name: "NY", country: "USA", state: "NY" }
-              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+              { id: 5, name: "New York City", country: "USA", state: "New York" }
+              { id: 8, name: "Detroit" , country: "USA", state: "Michigan" }
             ]
         
         it 'cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', ( done ) ->
@@ -1583,12 +1593,161 @@ describe 'XS test suite:', ->
           
           cities_in_usa.fetch_all ( values ) -> check done, ->
             expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
-              { id: 5, name: "NY", country: "USA", state: "NY" }
-              { id: 8, name: "Detroit", country: "USA", state: "Michigan" }
+              { id: 5, name: "New York City", country: "USA", state: "New York"       }
+              { id: 8, name: "Detroit" , country: "USA", state: "Michigan" }
             ]
+    
+    describe 'filter() from static countries query filtering cities from USA and Morocco:', ->
+      countries = [
+        { country: 'USA'     }
+        { country: 'Morocco' }
+      ]
+      
+      it 'should contain no city when no country is provided', ( done ) ->
+        check_set_content done, cities.filter( [] ), []
+      
+      it 'should only contain cities from USA and Morocco', ( done ) ->
+        check_set_content done, cities.filter( countries ), [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 5, name: "New York City", country: "USA", state: "New York"       }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+            { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"       }
+          ]
+      
+      it 'should only contain cities from USA and Morocco even through a set()', ( done ) ->
+        check_set_content done, cities.filter( countries ).set( [] ), [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 5, name: "New York City", country: "USA", state: "New York"       }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+            { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"       }
+          ]
+      
+    describe 'filter() from dynamic countries query:', ->
+      countries = xs.set [
+        { country: 'USA' }
+      ], { key: [ 'country' ] }
+      
+      cities_from_countries = cities.filter( countries ).set( [] )
+      
+      it 'cities_from_countries should be a Pipelet', ->
+        expect( cities_from_countries ).to.be.an XS.Pipelet
+      
+      it 'cities_from_countries should only contain cities in USA', ( done ) ->
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( values ).to.be.eql [
+            { id: 5, name: "New York City", country: "USA", state: "New York"       }
+            { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"       }
+          ]
+      
+      it 'after updating Detroit to Chicago, cities_from_countries should show Chicago', ( done ) ->
+        cities.update [
+          [ { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"       }, { id: 8, name: "Chicago", country: "USA" }]
+        ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( values ).to.be.eql [
+            { id: 5, name: "New York City", country: "USA", state: "New York"       }
+            { id: 8, name: "Chicago"      , country: "USA"                          }
+          ]
+      
+      it 'after updating countries to get countries from Morocco, cities_from_countries should have all and only cities from Morocco', ( done ) ->
+        countries.update [ [ { country: 'USA' }, { country: 'Morocco' } ] ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( values ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+          ]
+          
+      it 'after adding Germany in countries, cities_from_countries should have cities from Morocco and Germany', ( done ) ->
+        countries.add [ { country: 'Germany' } ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 4, name: "Berlin"       , country: "Germany"                      }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+          ]
+      
+      it 'after adding France and USA to countries, cities_from_countries should have cities from Morocco, Germany, and the USA', ( done ) ->
+        countries.add [ { country: 'France' }, { country: 'USA' } ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( countries.a ).to.be.eql [
+            { country: 'Morocco' }, { country: 'Germany' }, { country: 'France' }, { country: 'USA' }
+          ]
+          
+          expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 4, name: "Berlin"       , country: "Germany"                      }
+            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+            { id: 8, name: "Chicago"      , country: "USA"                          }
+          ]
+      
+      it 'after adding Paris to cities, cities_from_countries should have cities from Morocco, Germany, France and the USA', ( done ) ->
+        # Note: we're not using id: 3, because it is in the anti-state
+        cities.add [ { id: 9, name: "Paris", country: "France" } ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( cities.index_of( { id: 9 } ) ).to.not.be.eql -1
+          
+          expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 4, name: "Berlin"       , country: "Germany"                      }
+            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+            { id: 8, name: "Chicago"      , country: "USA"                          }
+            { id: 9, name: "Paris"        , country: "France"                       }
+          ]
+      
+      it 'should add a state to Chicago after updating Chicago s state to Illinois', ( done ) ->
+        cities.update [
+          [ { id: 8, name: "Chicago", country: "USA" }, { id: 8, name: "Chicago", country: "USA", state: "Illinois" } ]
+        ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( cities.index_of( { id: 9 } ) ).to.not.be.eql -1
+          
+          expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 4, name: "Berlin"       , country: "Germany"                      }
+            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+            { id: 8, name: "Chicago"      , country: "USA"    , state: "Illinois"   }
+            { id: 9, name: "Paris"        , country: "France"                       }
+          ]
+        
+      it 'after removing Germany from countries, cities_from_countries should have Berlin removed', ( done ) ->
+        # Note: we're not using id: 3, because it is in the anti-state
+        countries.remove [ { country: "Germany" } ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( countries.index_of( { country: "Germany" } ) ).to.be.eql -1
+          
+          expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+            { id: 8, name: "Chicago"      , country: "USA"    , state: "Illinois"   }
+            { id: 9, name: "Paris"        , country: "France"                       }
+          ]
+      
+      it 'after removing Chicago from cities, cities_from_countries should have it removed as well', ( done ) ->
+        # Note: we're not using id: 3, because it is in the anti-state
+        cities.remove [ { id: 8, name: "Chicago"      , country: "USA"    , state: "Illinois"   } ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( cities.index_of( { id: 8 } ) ).to.be.eql -1
+          
+          expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+            { id: 9, name: "Paris"        , country: "France"                       }
+          ]
       
     describe 'notify():', ->
-      
       it 'add(): employee.notify( transaction ) should be equal to result', ( done ) ->
         employee.notify [
           {

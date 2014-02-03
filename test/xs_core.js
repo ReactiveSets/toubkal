@@ -20,7 +20,7 @@
 
 
 (function() {
-  var Set, XS, check, clone, expect, extend, log, utils, uuid_v4, valid_uuid_v4, xs;
+  var Set, XS, check, check_set_content, clone, expect, extend, log, utils, uuid_v4, valid_uuid_v4, xs;
 
   if (typeof require !== "undefined" && require !== null) {
     utils = require('./xs_tests_utils.js');
@@ -41,6 +41,16 @@
   extend = XS.extend;
 
   uuid_v4 = XS.uuid_v4;
+
+  check_set_content = function(done, source, values) {
+    return source.fetch_all(function(values) {
+      return check(done, function() {
+        return expect(values.sort(function(a, b) {
+          return a.id - b.id;
+        })).to.be.eql(values);
+      });
+    });
+  };
 
   if (typeof require !== "undefined" && require !== null) {
     require('../lib/code.js');
@@ -1772,10 +1782,7 @@
             country: "Germany"
           }
         ]);
-        it('cities.add( object ) should be a Set', function() {
-          return expect(cities).to.be.a(XS.Set);
-        });
-        return it('cities.add( object ) should be equal to result', function(done) {
+        return it('should contain Berlin after adding it', function(done) {
           return cities.fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
@@ -2185,7 +2192,7 @@
           });
         });
         describe('add():', function() {
-          it('cities_in_usa should be equal to result: cities.add( [ { id: 5, name: "New York", country: "USA", state: "New York" } ] )', function(done) {
+          it('cities_in_usa should show one more city after adding New York to cities', function(done) {
             cities.add([
               {
                 id: 5,
@@ -2212,7 +2219,7 @@
               });
             });
           });
-          return it('cities_in_usa should be equal to result: cities.add( [ { id: 6, name: "Casablanca", country: "Morocco" }, { id: 7, name: "Housten", country: "USA", state: "Texas" } ] )', function(done) {
+          return it('cities_in_usa should show only one more city after adding Casablanca and Huston', function(done) {
             cities.add([
               {
                 id: 6,
@@ -2220,7 +2227,7 @@
                 country: "Morocco"
               }, {
                 id: 7,
-                name: 'Housten',
+                name: 'Huston',
                 country: 'USA',
                 state: 'Texas'
               }
@@ -2240,7 +2247,7 @@
                     state: "New York"
                   }, {
                     id: 7,
-                    name: "Housten",
+                    name: "Huston",
                     country: "USA",
                     state: "Texas"
                   }
@@ -2250,7 +2257,7 @@
           });
         });
         describe('update', function() {
-          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 5 }, { id: 5, name: "NY", country: "USA", state: "NY" } ] ] )', function(done) {
+          it('cities_in_usa should be updated when updating "New York" to "New York City" in cities', function(done) {
             cities.update([
               [
                 {
@@ -2260,9 +2267,9 @@
                   state: "New York"
                 }, {
                   id: 5,
-                  name: "NY",
+                  name: "New York City",
                   country: "USA",
-                  state: "NY"
+                  state: "New York"
                 }
               ]
             ]);
@@ -2278,12 +2285,12 @@
                     state: "California"
                   }, {
                     id: 5,
-                    name: "NY",
+                    name: "New York City",
                     country: "USA",
-                    state: "NY"
+                    state: "New York"
                   }, {
                     id: 7,
-                    name: "Housten",
+                    name: "Huston",
                     country: "USA",
                     state: "Texas"
                   }
@@ -2291,12 +2298,12 @@
               });
             });
           });
-          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 7 }, { id: 7, name: "Venice", country: "Italy" } ] ] )', function(done) {
+          it('cities_in_usa should remove Huston after it be updated to Venice in cities', function(done) {
             cities.update([
               [
                 {
                   id: 7,
-                  name: "Housten",
+                  name: "Huston",
                   country: "USA",
                   state: "Texas"
                 }, {
@@ -2318,15 +2325,15 @@
                     state: "California"
                   }, {
                     id: 5,
-                    name: "NY",
+                    name: "New York City",
                     country: "USA",
-                    state: "NY"
+                    state: "New York"
                   }
                 ]);
               });
             });
           });
-          it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 8, name: "Detroit", country: "USA", state: "Michigan" } ] ] )', function(done) {
+          it('should add Detroit in cities_in_usa, after Paris is updated to Detroit in cities', function(done) {
             cities.update([
               [
                 {
@@ -2353,9 +2360,9 @@
                     state: "California"
                   }, {
                     id: 5,
-                    name: "NY",
+                    name: "New York City",
                     country: "USA",
-                    state: "NY"
+                    state: "New York"
                   }, {
                     id: 8,
                     name: "Detroit",
@@ -2366,7 +2373,7 @@
               });
             });
           });
-          return it('cities_in_usa should be equal to result: cities.update( [ [ { id: 3 }, { id: 9, name: "Madrid", country: "Spain" } ] ] )', function(done) {
+          return it('should not change cities_in_usa after Paris is updated to Madrid in cities, resulting in Paris added to cities anti-state', function(done) {
             cities.update([
               [
                 {
@@ -2392,9 +2399,9 @@
                     state: "California"
                   }, {
                     id: 5,
-                    name: "NY",
+                    name: "New York City",
                     country: "USA",
-                    state: "NY"
+                    state: "New York"
                   }, {
                     id: 8,
                     name: "Detroit",
@@ -2423,9 +2430,9 @@
                 })).to.be.eql([
                   {
                     id: 5,
-                    name: "NY",
+                    name: "New York City",
                     country: "USA",
-                    state: "NY"
+                    state: "New York"
                   }, {
                     id: 8,
                     name: "Detroit",
@@ -2451,9 +2458,9 @@
                 })).to.be.eql([
                   {
                     id: 5,
-                    name: "NY",
+                    name: "New York City",
                     country: "USA",
-                    state: "NY"
+                    state: "New York"
                   }, {
                     id: 8,
                     name: "Detroit",
@@ -2462,6 +2469,414 @@
                   }
                 ]);
               });
+            });
+          });
+        });
+      });
+      describe('filter() from static countries query filtering cities from USA and Morocco:', function() {
+        var countries;
+        countries = [
+          {
+            country: 'USA'
+          }, {
+            country: 'Morocco'
+          }
+        ];
+        it('should contain no city when no country is provided', function(done) {
+          return check_set_content(done, cities.filter([]), []);
+        });
+        it('should only contain cities from USA and Morocco', function(done) {
+          return check_set_content(done, cities.filter(countries), [
+            {
+              id: 1,
+              name: "Marrakech",
+              country: "Morocco"
+            }, {
+              id: 5,
+              name: "New York City",
+              country: "USA",
+              state: "New York"
+            }, {
+              id: 6,
+              name: "Casablanca",
+              country: "Morocco"
+            }, {
+              id: 8,
+              name: "Detroit",
+              country: "USA",
+              state: "Michigan"
+            }
+          ]);
+        });
+        return it('should only contain cities from USA and Morocco even through a set()', function(done) {
+          return check_set_content(done, cities.filter(countries).set([]), [
+            {
+              id: 1,
+              name: "Marrakech",
+              country: "Morocco"
+            }, {
+              id: 5,
+              name: "New York City",
+              country: "USA",
+              state: "New York"
+            }, {
+              id: 6,
+              name: "Casablanca",
+              country: "Morocco"
+            }, {
+              id: 8,
+              name: "Detroit",
+              country: "USA",
+              state: "Michigan"
+            }
+          ]);
+        });
+      });
+      describe('filter() from dynamic countries query:', function() {
+        var cities_from_countries, countries;
+        countries = xs.set([
+          {
+            country: 'USA'
+          }
+        ], {
+          key: ['country']
+        });
+        cities_from_countries = cities.filter(countries).set([]);
+        it('cities_from_countries should be a Pipelet', function() {
+          return expect(cities_from_countries).to.be.an(XS.Pipelet);
+        });
+        it('cities_from_countries should only contain cities in USA', function(done) {
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              return expect(values).to.be.eql([
+                {
+                  id: 5,
+                  name: "New York City",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 8,
+                  name: "Detroit",
+                  country: "USA",
+                  state: "Michigan"
+                }
+              ]);
+            });
+          });
+        });
+        it('after updating Detroit to Chicago, cities_from_countries should show Chicago', function(done) {
+          cities.update([
+            [
+              {
+                id: 8,
+                name: "Detroit",
+                country: "USA",
+                state: "Michigan"
+              }, {
+                id: 8,
+                name: "Chicago",
+                country: "USA"
+              }
+            ]
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              return expect(values).to.be.eql([
+                {
+                  id: 5,
+                  name: "New York City",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 8,
+                  name: "Chicago",
+                  country: "USA"
+                }
+              ]);
+            });
+          });
+        });
+        it('after updating countries to get countries from Morocco, cities_from_countries should have all and only cities from Morocco', function(done) {
+          countries.update([
+            [
+              {
+                country: 'USA'
+              }, {
+                country: 'Morocco'
+              }
+            ]
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              return expect(values).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }
+              ]);
+            });
+          });
+        });
+        it('after adding Germany in countries, cities_from_countries should have cities from Morocco and Germany', function(done) {
+          countries.add([
+            {
+              country: 'Germany'
+            }
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              return expect(values.sort(function(a, b) {
+                return a.id - b.id;
+              })).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 4,
+                  name: "Berlin",
+                  country: "Germany"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }
+              ]);
+            });
+          });
+        });
+        it('after adding France and USA to countries, cities_from_countries should have cities from Morocco, Germany, and the USA', function(done) {
+          countries.add([
+            {
+              country: 'France'
+            }, {
+              country: 'USA'
+            }
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              expect(countries.a).to.be.eql([
+                {
+                  country: 'Morocco'
+                }, {
+                  country: 'Germany'
+                }, {
+                  country: 'France'
+                }, {
+                  country: 'USA'
+                }
+              ]);
+              return expect(values.sort(function(a, b) {
+                return a.id - b.id;
+              })).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 4,
+                  name: "Berlin",
+                  country: "Germany"
+                }, {
+                  id: 5,
+                  name: "New York City",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }, {
+                  id: 8,
+                  name: "Chicago",
+                  country: "USA"
+                }
+              ]);
+            });
+          });
+        });
+        it('after adding Paris to cities, cities_from_countries should have cities from Morocco, Germany, France and the USA', function(done) {
+          cities.add([
+            {
+              id: 9,
+              name: "Paris",
+              country: "France"
+            }
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              expect(cities.index_of({
+                id: 9
+              })).to.not.be.eql(-1);
+              return expect(values.sort(function(a, b) {
+                return a.id - b.id;
+              })).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 4,
+                  name: "Berlin",
+                  country: "Germany"
+                }, {
+                  id: 5,
+                  name: "New York City",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }, {
+                  id: 8,
+                  name: "Chicago",
+                  country: "USA"
+                }, {
+                  id: 9,
+                  name: "Paris",
+                  country: "France"
+                }
+              ]);
+            });
+          });
+        });
+        it('should add a state to Chicago after updating Chicago s state to Illinois', function(done) {
+          cities.update([
+            [
+              {
+                id: 8,
+                name: "Chicago",
+                country: "USA"
+              }, {
+                id: 8,
+                name: "Chicago",
+                country: "USA",
+                state: "Illinois"
+              }
+            ]
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              expect(cities.index_of({
+                id: 9
+              })).to.not.be.eql(-1);
+              return expect(values.sort(function(a, b) {
+                return a.id - b.id;
+              })).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 4,
+                  name: "Berlin",
+                  country: "Germany"
+                }, {
+                  id: 5,
+                  name: "New York City",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }, {
+                  id: 8,
+                  name: "Chicago",
+                  country: "USA",
+                  state: "Illinois"
+                }, {
+                  id: 9,
+                  name: "Paris",
+                  country: "France"
+                }
+              ]);
+            });
+          });
+        });
+        it('after removing Germany from countries, cities_from_countries should have Berlin removed', function(done) {
+          countries.remove([
+            {
+              country: "Germany"
+            }
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              expect(countries.index_of({
+                country: "Germany"
+              })).to.be.eql(-1);
+              return expect(values.sort(function(a, b) {
+                return a.id - b.id;
+              })).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 5,
+                  name: "New York City",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }, {
+                  id: 8,
+                  name: "Chicago",
+                  country: "USA",
+                  state: "Illinois"
+                }, {
+                  id: 9,
+                  name: "Paris",
+                  country: "France"
+                }
+              ]);
+            });
+          });
+        });
+        return it('after removing Chicago from cities, cities_from_countries should have it removed as well', function(done) {
+          cities.remove([
+            {
+              id: 8,
+              name: "Chicago",
+              country: "USA",
+              state: "Illinois"
+            }
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              expect(cities.index_of({
+                id: 8
+              })).to.be.eql(-1);
+              return expect(values.sort(function(a, b) {
+                return a.id - b.id;
+              })).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 5,
+                  name: "New York City",
+                  country: "USA",
+                  state: "New York"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }, {
+                  id: 9,
+                  name: "Paris",
+                  country: "France"
+                }
+              ]);
             });
           });
         });
