@@ -1328,6 +1328,39 @@ describe 'XS test suite:', ->
       recipient_3.fetch_all fetched
       recipient_4.fetch_all fetched
       
+  describe 'Pipelets Connections', ->
+    values = [ { id: 1 }, { id: 2 } ]
+    
+    it 'should fetch content through a stateless pipelet', ( done ) ->
+      p = xs.set( values ).pass_through()
+      
+      p.fetch_all ( _values ) -> check done, -> expect( _values ).to.be.eql values
+      
+    it 'should have fetched content into a set through a stateless pipelet', ->
+      s = xs.set( values ).pass_through().set()
+      
+      expect( s.a ).to.be.eql values
+    
+    it 'should fetch content even if stateless pipelet is pluged last into upstream pipelet', ( done ) ->
+      s = xs.set( values )
+      
+      p = xs.pass_through()
+      
+      s.plug( p )
+      
+      p.fetch_all ( _values ) -> check done, -> expect( _values ).to.be.eql values
+      
+    it 'should have fetched content into a set even if stateless pipelet is pluged last into upstream pipelet', ->
+      s = xs.set( values )
+      
+      p = xs.pass_through()
+      
+      s1 = p.set()
+      
+      s.plug( p )
+      
+      expect( s1.a ).to.be.eql values
+      
   describe 'XS.Set():', ->
     set = xs.set();
     
@@ -1369,7 +1402,7 @@ describe 'XS test suite:', ->
     ]
     
     describe 'Delayed set:', ->
-      it 'Delayed set should eventually equal its source values', ( done ) ->
+      it 'Delayed set (100 ms) should eventually equal its source values', ( done ) ->
         delayed_set.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id:1, value: 'delayed' }
         ]

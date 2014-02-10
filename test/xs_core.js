@@ -1638,6 +1638,49 @@
         return recipient_4.fetch_all(fetched);
       });
     });
+    describe('Pipelets Connections', function() {
+      var values;
+      values = [
+        {
+          id: 1
+        }, {
+          id: 2
+        }
+      ];
+      it('should fetch content through a stateless pipelet', function(done) {
+        var p;
+        p = xs.set(values).pass_through();
+        return p.fetch_all(function(_values) {
+          return check(done, function() {
+            return expect(_values).to.be.eql(values);
+          });
+        });
+      });
+      it('should have fetched content into a set through a stateless pipelet', function() {
+        var s;
+        s = xs.set(values).pass_through().set();
+        return expect(s.a).to.be.eql(values);
+      });
+      it('should fetch content even if stateless pipelet is pluged last into upstream pipelet', function(done) {
+        var p, s;
+        s = xs.set(values);
+        p = xs.pass_through();
+        s.plug(p);
+        return p.fetch_all(function(_values) {
+          return check(done, function() {
+            return expect(_values).to.be.eql(values);
+          });
+        });
+      });
+      return it('should have fetched content into a set even if stateless pipelet is pluged last into upstream pipelet', function() {
+        var p, s, s1;
+        s = xs.set(values);
+        p = xs.pass_through();
+        s1 = p.set();
+        s.plug(p);
+        return expect(s1.a).to.be.eql(values);
+      });
+    });
     describe('XS.Set():', function() {
       var cars, cities, delayed_set, employee, set;
       set = xs.set();
@@ -1728,7 +1771,7 @@
         }
       ]);
       describe('Delayed set:', function() {
-        return it('Delayed set should eventually equal its source values', function(done) {
+        return it('Delayed set (100 ms) should eventually equal its source values', function(done) {
           return delayed_set.fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
