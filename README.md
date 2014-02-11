@@ -30,7 +30,7 @@ or better, increase programmers' productivity.
 
 Also, one must realize that the bulk of the vast majorty of today's web applications is about controling
 the motion of data throughout the network. Such data is no-longer limited to strictly public or strictly
-private informtation, requiring complex authorization schemes. This calls for a frameworks that allows
+private informtation, requiring complex authorization schemes. This calls for a framework that allows
 to greatly simplify the management of user authorizations well beyond all-or-nothing authentication.
 
 #### What do you mean by performances?
@@ -217,21 +217,22 @@ server subscribes to its upstream server the subset of data it dispatches to dow
 servers and clients. This allows efficient and low-latency routing thanks in part to the
 high performances of each individual server query tree.
 
-### Data Events, Operations, Stateless Sets and Pipelets
+#### Data Events, Operations, Stateless Sets and Pipelets
 
 Internally, Connected Sets dataflows represent the evolution of data sets over time where
 each event modifies a set. These dataflows are therefore sets change flows.
 
-Each event carries an opperation name such as 'add' or 'remove' and an array of values
+Each event carries an opperation name such as *add* or *remove* and an array of values
 to add to, or remove from, a set.
 
-**Stateless** sets values are not materialized either in memory or other storage.
+**Stateless** pipelets process values which are not materialized either in memory or other storage.
 
 Stateless pipelets process data events independently of all other events and values in the
-set allowing very fast operations and lowest memory footprint.
+set allowing very fast operations and lowest memory footprints.
 
 Stateless pipelets can therefore process events out of order, much like Internet Protocol
-packets can be routed in any order.
+packets can be routed through various paths within the Internet and may arrive at their destinations
+in any order.
 
 #### Stateful Pipelets
 
@@ -245,9 +246,9 @@ consistency, Stateful pipelets may receive data events in any order and are resp
 maintaining an application-consistent state.
 
 Stateful pipelets are implemented thanks to the stateful set() pipelet that is typically used as a base
-class for all other stateful pipelets.
+pipelet for all stateful pipelets.
 
-Also, much like the TCP/IP protocols, stateful pipelets are found at the edges of a Connected Sets
+Also, much like the TCP protocol, stateful pipelets are found at the edges of a Connected Sets
 network of stateless pipelets.
 
 #### Horizontal Distribution
@@ -279,12 +280,24 @@ only available to compiled languages such as C or C++. Unrolling nested loops pr
 performance while in turn allowing JavaScript JIT compilers to generate code that may be executed
 optimally in microprocessors' pipelines.
 
+#### XS Pipelet Programming
+
+At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating
+the typical callback hell of assynchronous request-response programming models.
+
+Unlike the promises model, XS exceptions and errors are carried-out out-of-band through global
+dataflows that can be processed or not to provide error recovery, end-user feedback,
+and logging.
+
+Error dataflows originating on clients can easily be routed to servers to allow proactive
+debugging of errors while in production, and effective service quality monitoring.
+
 ### Service Architecture
 
 With Connected Sets, services are typically composed of three different services:
 
 - A stateful network of persistent database pipelets
-- A stateless network of event dispatchers, acting a marshalled multicasting network for dataflows
+- A stateless network of event dispatchers, acting as a marshalled multicasting network for dataflows
 - A stateful network of client widgets delivering applications to end-users
 
 For small applications with few simultaneous users the first two typically reside in a single server,
@@ -295,17 +308,17 @@ A company could run multiple services through a single network of stateless even
 as web service aggregator.
 
 The different nodes of an XS network communicate using the XS protocol that provides the Subscribe / Push
-service over a reliable transport (such as Sockets, WebSockets, ...) but not necessarily garantying the
+service over a reliable transport (such as Sockets, WebSockets, ...) but not necessarily guarantying the
 order of packets. So XS could also work over a protocol that would only guaranty the delivery of packets.
 
 The XS protocol therefore provides a much higher level alternative to existing web services protocols
 such as SOAP and REST, allowing to build efficiently complex real-time applications with no additional
 code.
 
-### Data Portability, Business Opportunities
+### Realtime Data Portability, Business Opportunities
 
 A network of services sharing the same event dispatcher network enables to effectively separate
-**XS Data Service Providers** from **XS Application Service Providers** increasing business opportunities
+**XS Data Providers** from **XS Application Providers** increasing business opportunities
 arising from the portability of dataflows updated in real-time and as authorized by end-users.
 
 Within an XS network, end-users no longer need to duplicate their personal data endlessly and updates are
@@ -318,32 +331,21 @@ to other people.
 Using only stateless pipelets, this architecture will reach internet-scale very efficiently, delivering a
 Marshalled Subscribe / Push multicasting data exchange for services to share data among many service
 providers, while representing a business opportunity for **XS Network Providers** much like today's CDNs
-but for dynamic real-time content solving caching issues thanks to the immutability of data events.
+but for marshalled dynamic real-time content solving caching issues thanks to the immutability of data
+events.
 
 To participate in this network, service providers only need to publish dataflows and/or subscribe to
 third-party dataflows.
 
 End-users may use these services to backup their own data either on owned servers or using third-party
-XS Data Service Providers.
+XS Data Providers.
 
-End-Users control access to their own data through XS Authorization dataflows providing an additional
-business opportunity for **XS Authorization Management Providers** helping end-users manage authorizatins
+End-Users control access to their own data through XS Authorization dataflows providing additional
+business opportunities for **XS Authorization Management Providers** helping end-users manage authorizations
 for all their data accross all their XS Applications.
 
-Disruptive new business opportunities arrising from XS Open Data Portability will prove much stronger than the current
+Disruptive new business opportunities arrising from **XS Realtime Data Portability** will prove much stronger than the current
 boxed data-within-application model, resulting in more data and more services available to more users and businesses.
-
-### XS Pipelet Programming
-
-At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating
-the typical callback hell of assynchronous request-response programming models.
-
-Unlike the promises model, XS exceptions and errors are carried-out out-of-band through global
-dataflows that can be processed or not to provide error recovery, end-user feedback,
-and logging.
-
-Error dataflows originating on clients can easily be routed to servers to allow proactive
-debugging of errors while in production, and effective service quality monitoring.
 
 ### Ecosystem
 
@@ -378,22 +380,21 @@ The source code for this demonstration site is in [the GitHub repository Connect
 
 This readme provides an introduction to Connected Sets.
 
-The bulk of the documentation is currently embedded in the code of ````lib/pipelet.js```` for
+The bulk of the documentation is currently embedded in the code of ```lib/pipelet.js``` for
 the core as well as individual pipelets' sources.
 
-Eventually we plan on extracting and completing this documentation to provide the following
-manuals:
+We plan on extracting and completing this documentation to provide the following manuals:
 
-- An Introduction to ConnectedSets (featuring a tutorial)
+- A Tutorial
 - ConnectedSets Application Architect Manual
 - ConnectedSets Pipelet Developper's Guide
-- Individual Reference Manuals for each module
+- A Reference Manuals for all available pipelets by module
 
 ### Automated Tests, Continuous Integration
 
 We have curently developped 214 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10, and 0.11. We no longer test version 0.6 since
-Travis had an issue with it in December 2013.
+Travis had an issue with it around January 2014.
 
 Our continuous integration process also requires that before each commit the developper runs
 these tests so travis usually passes all tests. In the event that a test does not pass the top
@@ -403,9 +404,10 @@ We have developped at least 100 other ui tests that are not currently automated 
 integrated Phantomjs or another headless browser.
 
 We also do manual testing on the following web browsers: Chrome (latest), Firefox (latest),
-IE 8, 9, and 10.
+IE 8, 9, and 10 but enventually plan on dropping support for IE8.
 
-We publish to npm regularily, typically when we want to update the demonstration site.
+We publish to npm regularily, typically when we want to update the demonstration site. If you need more
+updates just let us know.
 
 ## Installation
 
@@ -591,6 +593,7 @@ node server.js
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
 - Implement as many ToDos as possible
+- Stabilize API
 
 ### Version 0.4.0 - ETA May 2014
 
