@@ -4,25 +4,39 @@
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 
 ## Introduction
-Connected Sets (**XS**) is a high-performance, scalable, realtime web application framework
+Connected Sets (**XS** in short) is a high-performance, scalable, realtime web application framework
 aiming at massively reducing servers environmental footprint and improving mobile clients battery
 life by making an optimal use of server, network and client resources.
 
 Although XS is currently used to deliver a basic web application, some features described here are
-still work in progress. XS should provide most of the features described bellow by version 0.3 in
-January 2014.
+still work in progress meaning that XS should be considered Alpha at this time. XS should provide
+most of the features described bellow by version 0.4 in May 2014, and the first Beta version would
+be 0.5 expected in June 2014 including reasonably complete documentation extracted from the code
+where it currently stands.
 
 ### Why yet-another JavaScript Web Application Framework?
 
 The short answer is because we are not satisfied with the performances, authorization models,
 and productivity, of existing frameworks.
 
+Internet servers are consuming an increasily significant share of worldwide exlectricity production,
+contributing to climate change and threatening Internet growth as the availability of cheap fosil fuels
+decreases due to population growth and per capita consumption growth.
+
+Furthermore, the power of Internet server is now mostly increasing through the addition of cores, meaning
+that the key to efficient usage of server resources must shift from raw-single-thread performence to
+high concurency and parallelism performance. This in turn requires new programming patterns to keep
+or better, increase programmers' productivity.
+
+Also, one must realize that the bulk of the vast majorty of today's web applications is about controling
+the motion of data throughout the network. Such data is no-longer limited to strictly public or strictly
+private informtation, requiring complex authorization schemes. This calls for a frameworks that allows
+to greatly simplify the management of user authorizations well beyond all-or-nothing authentication.
+
 #### What do you mean by performances?
 
 Our first priority is high-performances, because we believe that performance is the key to better
-user experience, lowest operational costs, and a lower environemental footprint. We believe that
-internet applications growth is limited by energy consumption and consequent environmental
-impacts.
+user experience, lowest operational costs, and a lower environemental footprint.
 
 We are fighting simultaneously against:
 - **CPU cycles** that consume energy to run and cool-down servers, slow-down mobile clients,
@@ -31,7 +45,7 @@ and **drain mobile batteries** faster than anyone desires
 - **Bandwidth** usage that consume energy, and increase latency over lower-bandwidth networks
 
 We also want to keep **good performances at scale**. Most frameworks either do-not-scale or
-scale with much lower performances further increasing the need for cash while increasing
+scale with much lower per-server performances further increasing the need for cash while increasing
 environemental footprints.
 
 The bottom-line is that we want to be in better business faster, with less cash, and a lower
@@ -46,7 +60,7 @@ code generators and other optimizations.
 Writing a complex application is hard-enough, add to this any significantly-complex authorization
 scheme and the whole thing breaks appart, slows-down to a crawl, clutters the code with plenty of
 unspotted security holes throughout every part of the application, and every now and then exposes
-end-user data to unauthorized users.
+end-users' data to unauthorized users.
 
 Most companies try to get away with it by sweeping each leak under the carpet and promissing
 end-users that this will never happen again, or better yet, that this never happened. Internally,
@@ -82,11 +96,15 @@ updates on everything including authorization changes, in 50 lines of code, comm
 
 The only thing you need to know to understand this code is about **Pipelets**:
 - An XS pipelet, aka a "node" in other dataflow libraries, is a JavaScript function that
-processes data events with no side effects on other pipelets
+processes data events on datasets with no side effects on other pipelets
 - it processes events emitted by **upstream** pipelets
-- it emits events for **downstream pipelets**
+- it emits events to **downstream pipelets**
 - it's name describes what it provides or does
-- pipelets are connected together using JavaScript '.' operator or as parameters
+- pipelets are connected together using the JavaScript '.' operator or, as parameters when
+there is more than one upstream or downstream pipelet connected
+
+Each pipelet therefore represents a set connected to other sets which states evolve in realtime
+as data events flow through the network of pipelets.
 
 ```javascript
 var xs = require( 'excess' ); // Loads XS core pipelets, returns xs head pipelet
@@ -140,14 +158,16 @@ function client( source ) { // source refers to the output of the database here
 }
 ```
 
-Our unique **Subscribe / Push** dataflow model allows to solve the **how** so that you don't have
-to deal with it. To make it even better, our unique API to describe **what** you want delivers in
-**plain JavaScript** what no other dataflow library can offer and without requiring a graphical
-UI to glue hard-coded and hard-to-comprehend xml or json "nodes" and "links" together.
+Connected Sets' unique **Subscribe / Push** dataflow model allows to solve the **how** so that you
+don't have to deal with it.
 
-Our dataflow model provides higher level abstractions than any other dataflow library handling
-under the hood both subscribe dataflows and information push dataflows that allows to move in
-realtime the least amount of information possible between clients and servers.
+To make it easier, the API describes **what** you want in **plain JavaScript** without requiring
+a graphical UI to glue hard-coded and hard-to-comprehend xml or json "nodes" and "links" together
+as many other dataflow libraries require.
+
+XS dataflow model provides higher level abstractions handling under the hood both subscribe
+dataflows and information push dataflows that allows to move in realtime the least amount of
+information possible between clients and servers.
 
 ### XS Subscribe / Push Dataflow Model
 
@@ -159,27 +179,27 @@ and how it scales.
 Dataflow libraries usually implement one of two models:
 - push: all data is pushed downstream as it happens, allowing realtime updates
 - pull: data is pulled upstream when needed, allowing lazy programming, pulling only what is
-reauired
+required, when required
 
 For web applications' communications between servers and clients these two models are usually
 not acceptable for these reasons:
 
-- The pull method is not realtime, introducing average latency of have the pulling period.
-Worse it and can consume large amounts of bandwidth if the pulling period is too small.
+- The pull method is not realtime, introducing average latency of the polling period.
+Worse it and can consume large amounts of bandwidth if the polling period is too small.
 It can nonetheless be used efficiently on the client side along with requestAnimationFrame()
 to prevent over-updating the DOM between refreshes.
 - The push method pushes all data regardless of what the downstream many need. This can result
 in the transmission of large amounts of unused data, usually introducing unacceptable latency
 and bandwidth charges.
 
-Connected Sets implements a more sophisticated **Subcribe / Push** model where downstream
+Connected Sets implements a more sophisticated **Subscribe / Push** model where downstream
 pipelets subscribe to the subset of data they are interested in and subsequently receive all
 updates in a push fashion only for that subset. This allows XS to move the least amount of
-data between clients and servers while remaining realtime.
+data between clients and servers while remaining realtime with the lowest possible latency.
 
 XS stateless pipelets also use a lazy model where they will not subscribe to anything from
 upstream unless initial data is fetched by a downstream stateful pipelet. This again
-allows to transmit only what is really used by downstream pipelets.
+allows to transmit only what is really used by the application at any given time.
 
 A subscription is done using a query dataflow that represents a kind of filter on the upstream
 dataflow. Because the query is itself a dataflow, the subcription can change over time.
@@ -197,35 +217,133 @@ server subscribes to its upstream server the subset of data it dispatches to dow
 servers and clients. This allows efficient and low-latency routing thanks in part to the
 high performances of each individual server query tree.
 
-### Datasets Changes Flows
+### Data Events, Operations, Stateless Sets and Pipelets
 
-Internally, Connected Sets dataflows represent the evolution of datasets over time where
-each event modifies a dataset. The flows are therefore datasets change flows.
+Internally, Connected Sets dataflows represent the evolution of data sets over time where
+each event modifies a set. These dataflows are therefore sets change flows.
 
-Each event carries an opperation such as 'add' or 'remove' that adds or removes values
-in the abstracted dataset. It is abstracted in the sense that most of the time, this
-dataset is not materialized either in memory or on disk.
+Each event carries an opperation name such as 'add' or 'remove' and an array of values
+to add to, or remove from, a set.
 
-This higher-level abstraction allows a number of additional optimizations:
+**Stateless** sets values are not materialized either in memory or other storage.
 
-Incremental datasets processing allows to split large datasets into optimal chunks of data
+Stateless pipelets process data events independently of all other events and values in the
+set allowing very fast operations and lowest memory footprint.
+
+Stateless pipelets can therefore process events out of order, much like Internet Protocol
+packets can be routed in any order.
+
+#### Stateful Pipelets
+
+A **Stateful** pipelet maintains the state of a set either in memory, in mass storage,
+or any other API that provides a storage behavior.
+
+User Interface pipelets are stateful as these present the state of a set through the DOM.
+
+Much like the TCP protocol in the Internet which is responsible for end-to-end communications
+consistency, Stateful pipelets may receive data events in any order and are responsible for
+maintaining an application-consistent state.
+
+Stateful pipelets are implemented thanks to the stateful set() pipelet that is typically used as a base
+class for all other stateful pipelets.
+
+Also, much like the TCP/IP protocols, stateful pipelets are found at the edges of a Connected Sets
+network of stateless pipelets.
+
+#### Horizontal Distribution
+
+Allowing out-of-order data events is a key feature of Conneceted Sets which greatly eases
+horizontal distribution of workloads and charding, because no synchronization is needed
+between chards that may be processed in parallel either over a number of threads, processes,
+or servers in a true share-nothing architecture.
+
+#### Incremental Processing
+
+Incremental sets processing allows to split large sets into optimal chunks of data
 rendering data to end-users' interface with low-latency, dramatically improving end-user
-experience. Data changes update dataflows in real-time, on both clients and servers.
+experience. Data events update sets in real-time, on both clients and servers.
 
 Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data analysis
 and reporting over virtually unlimited size datasets.
 
-### Just-In-Time Code Generation
+#### Loops, Just-In-Time Code Generation
+
+XS data events contain arrays of values which are typically processed in loops. In a traditional
+programming environement, one typically writes code that processes values in loops. With Connected Sets,
+architects do not write loops because these are absracted away in the XS dataflow model.
+
+This greatly simplifies programming while removing the likelihood for common programming errors.
 
 Highest performances are provided thanks to Just-In-Time code generators delivering performances
 only available to compiled languages such as C or C++. Unrolling nested loops provide maximum
 performance while in turn allowing JavaScript JIT compilers to generate code that may be executed
 optimally in microprocessors' pipelines.
 
+### Service Architecture
+
+With Connected Sets, services are typically composed of three different services:
+
+- A stateful network of persistent database pipelets
+- A stateless network of event dispatchers, acting a marshalled multicasting network for dataflows
+- A stateful network of client widgets delivering applications to end-users
+
+For small applications with few simultaneous users the first two typically reside in a single server,
+while complex applications with large number of active users will be running on different servers.
+Because pipelets share no state they can easily be distributed.
+
+A company could run multiple services through a single network of stateless event dispatchers, acting
+as web service aggregator.
+
+The different nodes of an XS network communicate using the XS protocol that provides the Subscribe / Push
+service over a reliable transport (such as Sockets, WebSockets, ...) but not necessarily garantying the
+order of packets. So XS could also work over a protocol that would only guaranty the delivery of packets.
+
+The XS protocol therefore provides a much higher level alternative to existing web services protocols
+such as SOAP and REST, allowing to build efficiently complex real-time applications with no additional
+code.
+
+### Data Portability, Business Opportunities
+
+A network of services sharing the same event dispatcher network enables to effectively separate
+**XS Data Service Providers** from **XS Application Service Providers** increasing business opportunities
+arising from the portability of dataflows updated in real-time and as authorized by end-users.
+
+Within an XS network, end-users no longer need to duplicate their personal data endlessly and updates are
+propagated to all applications in realtime putting an end to today's world of out-of-date data between
+services.
+
+People will now expose their data, using a variety of services to view, edit, and publish their data
+to other people.
+
+Using only stateless pipelets, this architecture will reach internet-scale very efficiently, delivering a
+Marshalled Subscribe / Push multicasting data exchange for services to share data among many service
+providers, while representing a business opportunity for **XS Network Providers** much like today's CDNs
+but for dynamic real-time content solving caching issues thanks to the immutability of data events.
+
+To participate in this network, service providers only need to publish dataflows and/or subscribe to
+third-party dataflows.
+
+End-users may use these services to backup their own data either on owned servers or using third-party
+XS Data Service Providers.
+
+End-Users control access to their own data through XS Authorization dataflows providing an additional
+business opportunity for **XS Authorization Management Providers** helping end-users manage authorizatins
+for all their data accross all their XS Applications.
+
+Disruptive new business opportunities arrising from XS Open Data Portability will prove much stronger than the current
+boxed data-within-application model, resulting in more data and more services available to more users and businesses.
+
 ### XS Pipelet Programming
 
 At the lower level, XS **Pipelets** use a JavaScript functional programming model eliminating
 the typical callback hell of assynchronous request-response programming models.
+
+Unlike the promises model, XS exceptions and errors are carried-out out-of-band through global
+dataflows that can be processed or not to provide error recovery, end-user feedback,
+and logging.
+
+Error dataflows originating on clients can easily be routed to servers to allow proactive
+debugging of errors while in production, and effective service quality monitoring.
 
 ### Ecosystem
 
@@ -249,7 +367,7 @@ a full backend-and-frontend framework.
 XS features a chardable document database with joins, aggregates, filters and transactions
 with eventual consistency allowing both normalized and denormalized schemes.
 
-*Persistance and charding will be implemented in version 0.3.
+*Persistance will be implemented in version 0.3 and charding in version 0.4.
 
 ### Demonstration Site
 A [demonstration and beta test site is available here](http://www.castorcad.com/).
@@ -257,7 +375,8 @@ A [demonstration and beta test site is available here](http://www.castorcad.com/
 The source code for this demonstration site is in [the GitHub repository ConnectedSets / demo](https://github.com/ConnectedSets/demo).
 
 ### Documentation
-This readme provides a short introduction to Connected Sets.
+
+This readme provides an introduction to Connected Sets.
 
 The bulk of the documentation is currently embedded in the code of ````lib/pipelet.js```` for
 the core as well as individual pipelets' sources.
@@ -272,8 +391,9 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 182 automated tests for the XS core pipelets that run after every
-commit on Travis CI under node versions 0.6, 0.8, 0.10, and 0.11.
+We have curently developped 214 automated tests for the XS core pipelets that run after every
+commit on Travis CI under node versions 0.8, 0.10, and 0.11. We no longer test version 0.6 since
+Travis had an issue with it in December 2013.
 
 Our continuous integration process also requires that before each commit the developper runs
 these tests so travis usually passes all tests. In the event that a test does not pass the top
@@ -306,9 +426,9 @@ git clone https://github.com/ConnectedSets/ConnectedSets.git
 
 cd ConnectedSets
 ./run_tests.sh
-125 passing (2s)
+214 passing (2s)
 
-less test.out # for tests detailed traces
+less -R test.out # for tests detailed traces
 ```
 
 ## Example of complete client and server application
@@ -461,29 +581,43 @@ xs.file_json_store( 'database.json' ) // * The dataflow store of all database tr
 node server.js
 ```
 
-## Releases
+## Roadmap / Releases
+
+### Version 0.5.0 - ETA June 2014
+
+#### Main Goals:
+
+- This should be the first Beta version
+- Extract documentation from code
+- Build Website, featuring documentation and tutorial
+- Implement as many ToDos as possible
+
+### Version 0.4.0 - ETA May 2014
+
+#### Main Goals:
+
+- Horizontal distribution of web socket dispatcher
+- Finalize module pattern
+- Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, modules
+- Implement SocksJS pipelets
+- Navigation pipelets
 
 ### Version 0.3.0 - ETA April 2014
 
-#### Goals:
+#### Main Goals:
 
 - Persistance
 - Authentication
-- Finalize module pattern
-- Horizontal distribution of web socket dispatcher
-- Implement SocksJS pipelets
-- Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, modules
-- Navigation pipelets
+- Dynamic Authorizations Query Dataflow from user id
 - Out-of-band, global dataflows for: exceptions, errors, and debug information
 
 ### Version 0.2.0 - ETA March 2014
 
-#### Goals:
+#### Main Goals:
 
+- Finalize Subcribe / Push model using optimized Query Tree Router and lazy connection of stateless pipelets
 - Automate UI tests on Travis
 - Develop additional tests, goal is at least 300 automated tests
-- Finalize Subcribe / Push model using optimized Query Tree Router and lazy connection of stateless pipelets
-- Dynamic Authorizations Query Dataflow
 - Watch directory metadata flow
 
 #### Features already developped:
