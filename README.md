@@ -708,7 +708,7 @@ ec2_regions()             | Set of AWS EC2 regions, starts ec2 clients
 
 ## Licence
 
-    Copyright (C) 2013, Connected Sets
+    Copyright (C) 2013, 2014, Connected Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
