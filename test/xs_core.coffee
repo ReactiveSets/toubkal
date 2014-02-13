@@ -864,21 +864,21 @@ describe 'XS test suite:', ->
   describe 'XS.Pipelet(): tests for Query Tree', ->
     tree = new XS.Pipelet()
     
-    recipient_1 = xs.set( { name: 'recipient_1' } )
-    recipient_2 = xs.set( { name: 'recipient_2' } )
-    recipient_3 = xs.set( { name: 'recipient_3' } )
+    subscriber_1 = xs.set( { name: 'subscriber_1' } )
+    subscriber_2 = xs.set( { name: 'subscriber_2' } )
+    subscriber_3 = xs.set( { name: 'subscriber_3' } )
     
     it 'Pipelet() should allow to create a top query tree node', ->
       expect( tree.query_tree_top ).to.be.eql {
-        branches  : {}
-        keys      : []
-        recipients: []
-        recipients_values: []
+        branches   : {}
+        keys       : []
+        subscribers: []
+        subscribers_values: []
       }
     
     it 'Adding a query should generate a query tree', ->
       expect( tree
-        .query_tree_add( [ { flow: 'user' } ], recipient_1 )
+        .query_tree_add( [ { flow: 'user' } ], subscriber_1 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -886,19 +886,19 @@ describe 'XS test suite:', ->
             "user": {
               branches: {}
               keys: []
-              recipients: [ recipient_1 ]
-              recipients_values: []
+              subscribers: [ subscriber_1 ]
+              subscribers_values: []
             }
           }
         }
-        keys      : [ "flow" ]
-        recipients: []
-        recipients_values: []
+        keys       : [ "flow" ]
+        subscribers: []
+        subscribers_values: []
       }
       
-    it 'Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', ->
+    it 'Adding an empty OR-term should add subscriber to the root of the tree - i.e. unfiltered', ->
       expect( tree
-        .query_tree_add( [ {} ], recipient_2 )
+        .query_tree_add( [ {} ], subscriber_2 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -906,14 +906,14 @@ describe 'XS test suite:', ->
             "user": {
               branches: {}
               keys: []
-              recipients: [ recipient_1 ]
-              recipients_values: []
+              subscribers: [ subscriber_1 ]
+              subscribers_values: []
             }
           }
         }
-        keys      : [ "flow" ]
-        recipients: [ recipient_2 ]
-        recipients_values: []
+        keys       : [ "flow" ]
+        subscribers: [ subscriber_2 ]
+        subscribers_values: []
       }
       
     it 'Adding an additional query should expand the query tree', ->
@@ -924,7 +924,7 @@ describe 'XS test suite:', ->
           { flow: 'store', id: 527 }
           { id: 521, flow: 'store' }
           { id: 425 }
-        ], recipient_3 )
+        ], subscriber_3 )
         
         .query_tree_top
       ).to.be.eql {
@@ -933,8 +933,8 @@ describe 'XS test suite:', ->
             "user": {
               branches: {}
               keys: []
-              recipients: [ recipient_1, recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_1, subscriber_3 ]
+              subscribers_values: []
             }
             
             "store": {
@@ -943,21 +943,21 @@ describe 'XS test suite:', ->
                   "527": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
-              recipients: []
-              recipients_values: []
+              subscribers: []
+              subscribers_values: []
             }
           }
           
@@ -965,19 +965,19 @@ describe 'XS test suite:', ->
             "425": {
               branches: {}
               keys: []
-              recipients: [ recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_3 ]
+              subscribers_values: []
             }
           }
         }
-        keys      : [ "flow", "id" ]
-        recipients: [ recipient_2 ]
-        recipients_values: []
+        keys       : [ "flow", "id" ]
+        subscribers: [ subscriber_2 ]
+        subscribers_values: []
       }
       
     it 'Remove a query should shrink the query tree', ->
       expect( tree
-        .query_tree_remove( [ {} ], recipient_2 )
+        .query_tree_remove( [ {} ], subscriber_2 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -985,8 +985,8 @@ describe 'XS test suite:', ->
             "user": {
               branches: {}
               keys: []
-              recipients: [ recipient_1, recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_1, subscriber_3 ]
+              subscribers_values: []
             }
             
             "store": {
@@ -995,21 +995,21 @@ describe 'XS test suite:', ->
                   "527": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
-              recipients: []
-              recipients_values: []
+              subscribers: []
+              subscribers_values: []
             }
           }
           
@@ -1017,19 +1017,19 @@ describe 'XS test suite:', ->
             "425": {
               branches: {}
               keys: []
-              recipients: [ recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_3 ]
+              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
-        recipients: []
-        recipients_values: []
+        subscribers: []
+        subscribers_values: []
       }
       
     it 'Remove another query should shrink the query tree further', ->
       expect( tree
-        .query_tree_remove( [ { flow: 'user' } ], recipient_3 )
+        .query_tree_remove( [ { flow: 'user' } ], subscriber_3 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -1037,8 +1037,8 @@ describe 'XS test suite:', ->
             "user": {
               branches: {}
               keys: []
-              recipients: [ recipient_1 ]
-              recipients_values: []
+              subscribers: [ subscriber_1 ]
+              subscribers_values: []
             }
             
             "store": {
@@ -1047,21 +1047,21 @@ describe 'XS test suite:', ->
                   "527": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
-              recipients: []
-              recipients_values: []
+              subscribers: []
+              subscribers_values: []
             }
           }
           
@@ -1069,19 +1069,19 @@ describe 'XS test suite:', ->
             "425": {
               branches: {}
               keys: []
-              recipients: [ recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_3 ]
+              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
-        recipients: []
-        recipients_values: []
+        subscribers: []
+        subscribers_values: []
       }
       
     it 'Remove another query should shrink the query tree even further', ->
       expect( tree
-        .query_tree_remove( [ { flow: 'user' } ], recipient_1 )
+        .query_tree_remove( [ { flow: 'user' } ], subscriber_1 )
         .query_tree_top
       ).to.be.eql {
         branches: {
@@ -1092,21 +1092,21 @@ describe 'XS test suite:', ->
                   "527": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
-              recipients: []
-              recipients_values: []
+              subscribers: []
+              subscribers_values: []
             }
           }
           
@@ -1114,14 +1114,14 @@ describe 'XS test suite:', ->
             "425": {
               branches: {}
               keys: []
-              recipients: [ recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_3 ]
+              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
-        recipients: []
-        recipients_values: []
+        subscribers: []
+        subscribers_values: []
       }
       
     it 'Add and Remove empty queries should not change anything', ->
@@ -1137,21 +1137,21 @@ describe 'XS test suite:', ->
                   "527": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
-                    recipients: [ recipient_3 ]
-                    recipients_values: []
+                    subscribers: [ subscriber_3 ]
+                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
-              recipients: []
-              recipients_values: []
+              subscribers: []
+              subscribers_values: []
             }
           }
           
@@ -1159,14 +1159,14 @@ describe 'XS test suite:', ->
             "425": {
               branches: {}
               keys: []
-              recipients: [ recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_3 ]
+              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
-        recipients: []
-        recipients_values: []
+        subscribers: []
+        subscribers_values: []
       }
       
     it 'Remove another query should shrink the query tree even further', ->
@@ -1175,7 +1175,7 @@ describe 'XS test suite:', ->
         .query_tree_remove( [
           { flow: 'store', id: 521 }
           { id: 527, flow: 'store' }
-        ], recipient_3 )
+        ], subscriber_3 )
         
         .query_tree_top
       ).to.be.eql {
@@ -1184,42 +1184,42 @@ describe 'XS test suite:', ->
             "425": {
               branches: {}
               keys: []
-              recipients: [ recipient_3 ]
-              recipients_values: []
+              subscribers: [ subscriber_3 ]
+              subscribers_values: []
             }
           }
         }
         keys      : [ "id" ]
-        recipients: []
-        recipients_values: []
+        subscribers: []
+        subscribers_values: []
       }
       
     it 'Remove the last record, should empty the query tree', ->
       expect( tree
-        .query_tree_remove( [ { id: 425 } ], recipient_3 )
+        .query_tree_remove( [ { id: 425 } ], subscriber_3 )
         .query_tree_top
       ).to.be.eql {
         branches  : {}
         keys      : []
-        recipients: []
-        recipients_values: []
+        subscribers: []
+        subscribers_values: []
       }
       
   describe 'Query_Tree routing:', ->
     tree = new XS.Pipelet()
     
-    recipient_1 = xs.set( { name: 'recipient_1' } )
-    recipient_2 = xs.set( { name: 'recipient_2' } )
-    recipient_3 = xs.set( { name: 'recipient_3' } )
-    recipient_4 = xs.set( { name: 'recipient_4' } )
+    subscriber_1 = xs.set( { name: 'subscriber_1' } )
+    subscriber_2 = xs.set( { name: 'subscriber_2' } )
+    subscriber_3 = xs.set( { name: 'subscriber_3' } )
+    subscriber_4 = xs.set( { name: 'subscriber_4' } )
     
-    tree.query_tree_add [ { flow: 'user', id: 123 } ], recipient_1
+    tree.query_tree_add [ { flow: 'user', id: 123 } ], subscriber_1
     
-    tree.query_tree_add [ { flow: 'user', id: 345 } ], recipient_2
+    tree.query_tree_add [ { flow: 'user', id: 345 } ], subscriber_2
     
-    tree.query_tree_add [ {} ], recipient_3
+    tree.query_tree_add [ {} ], subscriber_3
     
-    tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], recipient_4
+    tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], subscriber_4
     
     tree.query_tree_emit 'add', [
       { flow: 'store' }
@@ -1228,20 +1228,20 @@ describe 'XS test suite:', ->
       { flow: 'user', id: 345 }
     ]
     
-    it 'Should allow to emit an add operation filtered by a query to the first recipient', ( done ) ->
-      recipient_1.fetch_all ( values ) -> check done, () ->
+    it 'Should allow to emit an add operation filtered by a query to the first subscriber', ( done ) ->
+      subscriber_1.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'user', id: 123 }
         ]
         
-    it 'Should emit other values to the second recipient', ( done ) ->
-      recipient_2.fetch_all ( values ) -> check done, () ->
+    it 'Should emit other values to the second subscriber', ( done ) ->
+      subscriber_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'user', id: 345 }
         ]
       
-    it 'Should emit all values to the third recipient', ( done ) ->
-      recipient_3.fetch_all ( values ) -> check done, () ->
+    it 'Should emit all values to the third subscriber', ( done ) ->
+      subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'store' }
           { id: 123 }
@@ -1249,8 +1249,8 @@ describe 'XS test suite:', ->
           { flow: 'user', id: 345 }
         ]
 
-    it 'Should not duplicate or reorder values emited to fourth recipient', ( done ) ->
-      recipient_4.fetch_all ( values ) -> check done, () ->
+    it 'Should not duplicate or reorder values emited to fourth subscriber', ( done ) ->
+      subscriber_4.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { id: 123 }
           { flow: 'user', id: 123 }
@@ -1260,50 +1260,50 @@ describe 'XS test suite:', ->
     it "should alter first recepient's set", ( done ) ->
       tree.query_tree_emit 'remove', [ { flow: 'user', id: 123 } ]
       
-      recipient_1.fetch_all ( values ) -> check done, () ->
+      subscriber_1.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
         
-    it "should not alter second recipient's set", ( done ) ->
-      recipient_2.fetch_all ( values ) -> check done, () ->
+    it "should not alter second subscriber's set", ( done ) ->
+      subscriber_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'user', id: 345 }
         ]
     
-    it 'Third recipient set should have two record less after removing one more record', ( done ) ->
+    it 'Third subscriber set should have two record less after removing one more record', ( done ) ->
       tree.query_tree_emit 'remove', [ { id: 123 } ]
       
-      recipient_3.fetch_all ( values ) -> check done, () ->
+      subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'store' }
           { flow: 'user', id: 345 }
         ]
       
-    it 'Second recipient be empy after removing one more record', ( done ) ->
+    it 'Second subscriber be empy after removing one more record', ( done ) ->
       tree.query_tree_emit 'remove', [ { flow: 'user', id: 345 } ]
       
-      recipient_2.fetch_all ( values ) -> check done, () ->
+      subscriber_2.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
       
-    it 'And third recipient should have only one record left', ( done ) ->
-      recipient_3.fetch_all ( values ) -> check done, () ->
+    it 'And third subscriber should have only one record left', ( done ) ->
+      subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'store' }
         ]
       
-    it 'third recipient should be empty after removing last record', ( done ) ->
+    it 'third subscriber should be empty after removing last record', ( done ) ->
       tree.query_tree_emit 'remove', [ { flow: 'store' } ]
       
-      recipient_3.fetch_all ( values ) -> check done, () ->
+      subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
       
-    it 'clear should clear all records from all recipients', ( done ) ->
-      tree.query_tree_add [ { flow: 'user', id: 123 } ], recipient_1
+    it 'clear should clear all records from all subscribers', ( done ) ->
+      tree.query_tree_add [ { flow: 'user', id: 123 } ], subscriber_1
       
-      tree.query_tree_add [ { flow: 'user', id: 345 } ], recipient_2
+      tree.query_tree_add [ { flow: 'user', id: 345 } ], subscriber_2
       
-      tree.query_tree_add [ {} ], recipient_3
+      tree.query_tree_add [ {} ], subscriber_3
       
-      tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], recipient_4
+      tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], subscriber_4
       
       tree.query_tree_emit 'add', [
         { flow: 'store' }
@@ -1323,10 +1323,10 @@ describe 'XS test suite:', ->
         --count || check done, () ->
           expect( all_values ).to.be.eql [ [], [], [], [] ]
 
-      recipient_1.fetch_all fetched
-      recipient_2.fetch_all fetched
-      recipient_3.fetch_all fetched
-      recipient_4.fetch_all fetched
+      subscriber_1.fetch_all fetched
+      subscriber_2.fetch_all fetched
+      subscriber_3.fetch_all fetched
+      subscriber_4.fetch_all fetched
       
   describe 'Pipelets Connections', ->
     values = [ { id: 1 }, { id: 2 } ]

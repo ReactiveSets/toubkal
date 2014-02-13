@@ -1067,23 +1067,23 @@
       });
     });
     describe('XS.Pipelet(): tests for Query Tree', function() {
-      var recipient_1, recipient_2, recipient_3, tree;
+      var subscriber_1, subscriber_2, subscriber_3, tree;
       tree = new XS.Pipelet();
-      recipient_1 = xs.set({
-        name: 'recipient_1'
+      subscriber_1 = xs.set({
+        name: 'subscriber_1'
       });
-      recipient_2 = xs.set({
-        name: 'recipient_2'
+      subscriber_2 = xs.set({
+        name: 'subscriber_2'
       });
-      recipient_3 = xs.set({
-        name: 'recipient_3'
+      subscriber_3 = xs.set({
+        name: 'subscriber_3'
       });
       it('Pipelet() should allow to create a top query tree node', function() {
         return expect(tree.query_tree_top).to.be.eql({
           branches: {},
           keys: [],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
       it('Adding a query should generate a query tree', function() {
@@ -1091,37 +1091,37 @@
           {
             flow: 'user'
           }
-        ], recipient_1).query_tree_top).to.be.eql({
+        ], subscriber_1).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_1],
-                recipients_values: []
+                subscribers: [subscriber_1],
+                subscribers_values: []
               }
             }
           },
           keys: ["flow"],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
-      it('Adding an empty OR-term should add recipient to the root of the tree - i.e. unfiltered', function() {
-        return expect(tree.query_tree_add([{}], recipient_2).query_tree_top).to.be.eql({
+      it('Adding an empty OR-term should add subscriber to the root of the tree - i.e. unfiltered', function() {
+        return expect(tree.query_tree_add([{}], subscriber_2).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_1],
-                recipients_values: []
+                subscribers: [subscriber_1],
+                subscribers_values: []
               }
             }
           },
           keys: ["flow"],
-          recipients: [recipient_2],
-          recipients_values: []
+          subscribers: [subscriber_2],
+          subscribers_values: []
         });
       });
       it('Adding an additional query should expand the query tree', function() {
@@ -1137,14 +1137,14 @@
           }, {
             id: 425
           }
-        ], recipient_3).query_tree_top).to.be.eql({
+        ], subscriber_3).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_1, recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_1, subscriber_3],
+                subscribers_values: []
               },
               "store": {
                 branches: {
@@ -1152,45 +1152,45 @@
                     "527": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     }
                   }
                 },
                 keys: ["id"],
-                recipients: [],
-                recipients_values: []
+                subscribers: [],
+                subscribers_values: []
               }
             },
             "id": {
               "425": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_3],
+                subscribers_values: []
               }
             }
           },
           keys: ["flow", "id"],
-          recipients: [recipient_2],
-          recipients_values: []
+          subscribers: [subscriber_2],
+          subscribers_values: []
         });
       });
       it('Remove a query should shrink the query tree', function() {
-        return expect(tree.query_tree_remove([{}], recipient_2).query_tree_top).to.be.eql({
+        return expect(tree.query_tree_remove([{}], subscriber_2).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_1, recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_1, subscriber_3],
+                subscribers_values: []
               },
               "store": {
                 branches: {
@@ -1198,34 +1198,34 @@
                     "527": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     }
                   }
                 },
                 keys: ["id"],
-                recipients: [],
-                recipients_values: []
+                subscribers: [],
+                subscribers_values: []
               }
             },
             "id": {
               "425": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_3],
+                subscribers_values: []
               }
             }
           },
           keys: ["flow", "id"],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
       it('Remove another query should shrink the query tree further', function() {
@@ -1233,14 +1233,14 @@
           {
             flow: 'user'
           }
-        ], recipient_3).query_tree_top).to.be.eql({
+        ], subscriber_3).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_1],
-                recipients_values: []
+                subscribers: [subscriber_1],
+                subscribers_values: []
               },
               "store": {
                 branches: {
@@ -1248,34 +1248,34 @@
                     "527": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     }
                   }
                 },
                 keys: ["id"],
-                recipients: [],
-                recipients_values: []
+                subscribers: [],
+                subscribers_values: []
               }
             },
             "id": {
               "425": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_3],
+                subscribers_values: []
               }
             }
           },
           keys: ["flow", "id"],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
@@ -1283,7 +1283,7 @@
           {
             flow: 'user'
           }
-        ], recipient_1).query_tree_top).to.be.eql({
+        ], subscriber_1).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "store": {
@@ -1292,34 +1292,34 @@
                     "527": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     }
                   }
                 },
                 keys: ["id"],
-                recipients: [],
-                recipients_values: []
+                subscribers: [],
+                subscribers_values: []
               }
             },
             "id": {
               "425": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_3],
+                subscribers_values: []
               }
             }
           },
           keys: ["flow", "id"],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
       it('Add and Remove empty queries should not change anything', function() {
@@ -1332,34 +1332,34 @@
                     "527": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     },
                     "521": {
                       branches: {},
                       keys: [],
-                      recipients: [recipient_3],
-                      recipients_values: []
+                      subscribers: [subscriber_3],
+                      subscribers_values: []
                     }
                   }
                 },
                 keys: ["id"],
-                recipients: [],
-                recipients_values: []
+                subscribers: [],
+                subscribers_values: []
               }
             },
             "id": {
               "425": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_3],
+                subscribers_values: []
               }
             }
           },
           keys: ["flow", "id"],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
@@ -1371,20 +1371,20 @@
             id: 527,
             flow: 'store'
           }
-        ], recipient_3).query_tree_top).to.be.eql({
+        ], subscriber_3).query_tree_top).to.be.eql({
           branches: {
             "id": {
               "425": {
                 branches: {},
                 keys: [],
-                recipients: [recipient_3],
-                recipients_values: []
+                subscribers: [subscriber_3],
+                subscribers_values: []
               }
             }
           },
           keys: ["id"],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
       return it('Remove the last record, should empty the query tree', function() {
@@ -1392,49 +1392,49 @@
           {
             id: 425
           }
-        ], recipient_3).query_tree_top).to.be.eql({
+        ], subscriber_3).query_tree_top).to.be.eql({
           branches: {},
           keys: [],
-          recipients: [],
-          recipients_values: []
+          subscribers: [],
+          subscribers_values: []
         });
       });
     });
     describe('Query_Tree routing:', function() {
-      var recipient_1, recipient_2, recipient_3, recipient_4, tree;
+      var subscriber_1, subscriber_2, subscriber_3, subscriber_4, tree;
       tree = new XS.Pipelet();
-      recipient_1 = xs.set({
-        name: 'recipient_1'
+      subscriber_1 = xs.set({
+        name: 'subscriber_1'
       });
-      recipient_2 = xs.set({
-        name: 'recipient_2'
+      subscriber_2 = xs.set({
+        name: 'subscriber_2'
       });
-      recipient_3 = xs.set({
-        name: 'recipient_3'
+      subscriber_3 = xs.set({
+        name: 'subscriber_3'
       });
-      recipient_4 = xs.set({
-        name: 'recipient_4'
+      subscriber_4 = xs.set({
+        name: 'subscriber_4'
       });
       tree.query_tree_add([
         {
           flow: 'user',
           id: 123
         }
-      ], recipient_1);
+      ], subscriber_1);
       tree.query_tree_add([
         {
           flow: 'user',
           id: 345
         }
-      ], recipient_2);
-      tree.query_tree_add([{}], recipient_3);
+      ], subscriber_2);
+      tree.query_tree_add([{}], subscriber_3);
       tree.query_tree_add([
         {
           id: 123
         }, {
           flow: 'user'
         }
-      ], recipient_4);
+      ], subscriber_4);
       tree.query_tree_emit('add', [
         {
           flow: 'store'
@@ -1448,8 +1448,8 @@
           id: 345
         }
       ]);
-      it('Should allow to emit an add operation filtered by a query to the first recipient', function(done) {
-        return recipient_1.fetch_all(function(values) {
+      it('Should allow to emit an add operation filtered by a query to the first subscriber', function(done) {
+        return subscriber_1.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -1460,8 +1460,8 @@
           });
         });
       });
-      it('Should emit other values to the second recipient', function(done) {
-        return recipient_2.fetch_all(function(values) {
+      it('Should emit other values to the second subscriber', function(done) {
+        return subscriber_2.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -1472,8 +1472,8 @@
           });
         });
       });
-      it('Should emit all values to the third recipient', function(done) {
-        return recipient_3.fetch_all(function(values) {
+      it('Should emit all values to the third subscriber', function(done) {
+        return subscriber_3.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -1491,8 +1491,8 @@
           });
         });
       });
-      it('Should not duplicate or reorder values emited to fourth recipient', function(done) {
-        return recipient_4.fetch_all(function(values) {
+      it('Should not duplicate or reorder values emited to fourth subscriber', function(done) {
+        return subscriber_4.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -1515,14 +1515,14 @@
             id: 123
           }
         ]);
-        return recipient_1.fetch_all(function(values) {
+        return subscriber_1.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([]);
           });
         });
       });
-      it("should not alter second recipient's set", function(done) {
-        return recipient_2.fetch_all(function(values) {
+      it("should not alter second subscriber's set", function(done) {
+        return subscriber_2.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -1533,13 +1533,13 @@
           });
         });
       });
-      it('Third recipient set should have two record less after removing one more record', function(done) {
+      it('Third subscriber set should have two record less after removing one more record', function(done) {
         tree.query_tree_emit('remove', [
           {
             id: 123
           }
         ]);
-        return recipient_3.fetch_all(function(values) {
+        return subscriber_3.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -1552,21 +1552,21 @@
           });
         });
       });
-      it('Second recipient be empy after removing one more record', function(done) {
+      it('Second subscriber be empy after removing one more record', function(done) {
         tree.query_tree_emit('remove', [
           {
             flow: 'user',
             id: 345
           }
         ]);
-        return recipient_2.fetch_all(function(values) {
+        return subscriber_2.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([]);
           });
         });
       });
-      it('And third recipient should have only one record left', function(done) {
-        return recipient_3.fetch_all(function(values) {
+      it('And third subscriber should have only one record left', function(done) {
+        return subscriber_3.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -1576,40 +1576,40 @@
           });
         });
       });
-      it('third recipient should be empty after removing last record', function(done) {
+      it('third subscriber should be empty after removing last record', function(done) {
         tree.query_tree_emit('remove', [
           {
             flow: 'store'
           }
         ]);
-        return recipient_3.fetch_all(function(values) {
+        return subscriber_3.fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([]);
           });
         });
       });
-      return it('clear should clear all records from all recipients', function(done) {
+      return it('clear should clear all records from all subscribers', function(done) {
         var all_values, count, fetched;
         tree.query_tree_add([
           {
             flow: 'user',
             id: 123
           }
-        ], recipient_1);
+        ], subscriber_1);
         tree.query_tree_add([
           {
             flow: 'user',
             id: 345
           }
-        ], recipient_2);
-        tree.query_tree_add([{}], recipient_3);
+        ], subscriber_2);
+        tree.query_tree_add([{}], subscriber_3);
         tree.query_tree_add([
           {
             id: 123
           }, {
             flow: 'user'
           }
-        ], recipient_4);
+        ], subscriber_4);
         tree.query_tree_emit('add', [
           {
             flow: 'store'
@@ -1632,10 +1632,10 @@
             return expect(all_values).to.be.eql([[], [], [], []]);
           });
         };
-        recipient_1.fetch_all(fetched);
-        recipient_2.fetch_all(fetched);
-        recipient_3.fetch_all(fetched);
-        return recipient_4.fetch_all(fetched);
+        subscriber_1.fetch_all(fetched);
+        subscriber_2.fetch_all(fetched);
+        subscriber_3.fetch_all(fetched);
+        return subscriber_4.fetch_all(fetched);
       });
     });
     describe('Pipelets Connections', function() {
