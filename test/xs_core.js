@@ -1037,7 +1037,7 @@
         ]).generate();
         return expect(typeof q.filter).to.be.eql('function');
       });
-      return it('filter() should filter an Array of Objects', function() {
+      it('filter() should filter an Array of Objects', function() {
         return expect(q.filter([
           {
             flow: 'store',
@@ -1062,6 +1062,62 @@
           }, {
             flow: 'user',
             id: 231
+          }
+        ]);
+      });
+      it('should generate a filter for a query with no or-terms', function() {
+        q = new Query([]).generate();
+        return expect(typeof q.filter).to.be.eql('function');
+      });
+      it('should filter everything, this is the nul-filter', function() {
+        return expect(q.filter([
+          {
+            flow: 'store',
+            id: 826
+          }, {
+            flow: 'store',
+            id: 295
+          }, {
+            flow: 'user',
+            id: 231
+          }, {
+            flow: 'user',
+            id: 235
+          }
+        ])).to.be.eql([]);
+      });
+      it('should generate a filter for a query with one or-terms having no and terms', function() {
+        q = new Query([{}]).generate();
+        return expect(typeof q.filter).to.be.eql('function');
+      });
+      return it('should filter nothing, this is a pass-through filter', function() {
+        return expect(q.filter([
+          {
+            flow: 'store',
+            id: 826
+          }, {
+            flow: 'store',
+            id: 295
+          }, {
+            flow: 'user',
+            id: 231
+          }, {
+            flow: 'user',
+            id: 235
+          }
+        ])).to.be.eql([
+          {
+            flow: 'store',
+            id: 826
+          }, {
+            flow: 'store',
+            id: 295
+          }, {
+            flow: 'user',
+            id: 231
+          }, {
+            flow: 'user',
+            id: 235
           }
         ]);
       });
