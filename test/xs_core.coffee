@@ -850,7 +850,6 @@ describe 'XS test suite:', ->
       expect( typeof ( q.filter ) ).to.be.eql 'function'
       
     it 'filter() should filter an Array of Objects', ->
-      
       expect( q.filter [
         { flow: 'store', id: 826 }
         { flow: 'store', id: 295 }
@@ -861,7 +860,38 @@ describe 'XS test suite:', ->
         { flow: 'store', id: 295 }
         { flow: 'user', id: 231 }
       ]
-  
+    
+    it 'should generate a filter for a query with no or-terms', ->
+      q = new Query( [] ).generate()
+      
+      expect( typeof ( q.filter ) ).to.be.eql 'function'
+    
+    it 'should filter everything, this is the nul-filter', ->
+      expect( q.filter [
+        { flow: 'store', id: 826 }
+        { flow: 'store', id: 295 }
+        { flow: 'user', id: 231 }
+        { flow: 'user', id: 235 }
+      ] ).to.be.eql []
+    
+    it 'should generate a filter for a query with one or-terms having no and terms', ->
+      q = new Query( [ {} ] ).generate()
+      
+      expect( typeof ( q.filter ) ).to.be.eql 'function'
+    
+    it 'should filter nothing, this is a pass-through filter', ->
+      expect( q.filter [
+        { flow: 'store', id: 826 }
+        { flow: 'store', id: 295 }
+        { flow: 'user', id: 231 }
+        { flow: 'user', id: 235 }
+      ] ).to.be.eql [
+        { flow: 'store', id: 826 }
+        { flow: 'store', id: 295 }
+        { flow: 'user', id: 231 }
+        { flow: 'user', id: 235 }
+      ]
+    
   describe 'XS.Pipelet(): tests for Query Tree', ->
     tree = new XS.Pipelet()
     
