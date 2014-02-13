@@ -43,9 +43,9 @@
   uuid_v4 = XS.uuid_v4;
 
   check_set_content = function(done, source, values) {
-    return source.fetch_all(function(values) {
+    return source.fetch_all(function(_values) {
       return check(done, function() {
-        return expect(values.sort(function(a, b) {
+        return expect(_values.sort(function(a, b) {
           return a.id - b.id;
         })).to.be.eql(values);
       });
@@ -2526,7 +2526,7 @@
           }
         ];
         it('should contain no city when no country is provided', function(done) {
-          return check_set_content(done, cities.filter([]), []);
+          return check_set_content(done, cities.filter([]).trace('filter_no_country'), []);
         });
         it('should only contain cities from USA and Morocco', function(done) {
           return check_set_content(done, cities.filter(countries), [

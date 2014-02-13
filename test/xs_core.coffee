@@ -38,8 +38,9 @@ uuid_v4 = XS.uuid_v4
 # ----------------------------
 
 check_set_content = ( done, source, values ) ->
-  source.fetch_all ( values ) -> check done, ->
-    expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql values
+  source.fetch_all ( _values ) ->
+    check done, () ->
+      expect( _values.sort ( a, b ) -> a.id - b.id ).to.be.eql values
   
 # ----------------------------------------------------------------------------------------------
 # Require tested modules
@@ -1637,7 +1638,7 @@ describe 'XS test suite:', ->
       ]
       
       it 'should contain no city when no country is provided', ( done ) ->
-        check_set_content done, cities.filter( [] ), []
+        check_set_content done, cities.filter( [] ).trace( 'filter_no_country' ), []
       
       it 'should only contain cities from USA and Morocco', ( done ) ->
         check_set_content done, cities.filter( countries ), [
