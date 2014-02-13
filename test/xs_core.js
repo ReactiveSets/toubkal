@@ -2528,6 +2528,37 @@
         it('should contain no city when no country is provided', function(done) {
           return check_set_content(done, cities.filter([]).trace('filter_no_country'), []);
         });
+        it('should contain all cities when an empty or-term is provided', function(done) {
+          return check_set_content(done, cities.filter([{}]).trace('filter_no_country'), [
+            {
+              id: 1,
+              name: "Marrakech",
+              country: "Morocco"
+            }, {
+              id: 4,
+              name: "Berlin",
+              country: "Germany"
+            }, {
+              id: 5,
+              name: "New York City",
+              country: "USA",
+              state: "New York"
+            }, {
+              id: 6,
+              name: "Casablanca",
+              country: "Morocco"
+            }, {
+              id: 8,
+              name: "Detroit",
+              country: "USA",
+              state: "Michigan"
+            }, {
+              id: 9,
+              name: "Madrid",
+              country: "Spain"
+            }
+          ]);
+        });
         it('should only contain cities from USA and Morocco', function(done) {
           return check_set_content(done, cities.filter(countries), [
             {
