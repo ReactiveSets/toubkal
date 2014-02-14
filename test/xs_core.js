@@ -2664,6 +2664,203 @@
           ]);
         });
       });
+      describe('flow() static queries', function() {
+        var comments, groups, multiflow, posts, users;
+        multiflow = xs.set([
+          {
+            flow: "user",
+            id: 1
+          }, {
+            flow: "user",
+            id: 2
+          }, {
+            flow: "user",
+            id: 3
+          }, {
+            flow: "group",
+            id: 1
+          }, {
+            flow: "group",
+            id: 2
+          }, {
+            flow: "group",
+            id: 3
+          }, {
+            flow: "group",
+            id: 4
+          }, {
+            flow: "post",
+            id: 1
+          }, {
+            flow: "post",
+            id: 2
+          }, {
+            flow: "post",
+            id: 3
+          }, {
+            flow: "post",
+            id: 4
+          }, {
+            flow: "post",
+            id: 5
+          }, {
+            flow: "comment",
+            id: 1
+          }, {
+            flow: "comment",
+            id: 2
+          }, {
+            flow: "comment",
+            id: 3
+          }, {
+            flow: "comment",
+            id: 4
+          }
+        ], {
+          key: ['flow', 'id']
+        });
+        users = multiflow.flow("user");
+        groups = multiflow.flow("group");
+        posts = multiflow.flow("post").set([]);
+        comments = multiflow.flow("comment").set([]);
+        it('should filter a multiflow by "users"', function(done) {
+          return check_set_content(done, users, [
+            {
+              flow: "user",
+              id: 1
+            }, {
+              flow: "user",
+              id: 2
+            }, {
+              flow: "user",
+              id: 3
+            }
+          ]);
+        });
+        it('should filter a multiflow by "groups"', function(done) {
+          return check_set_content(done, groups, [
+            {
+              flow: "group",
+              id: 1
+            }, {
+              flow: "group",
+              id: 2
+            }, {
+              flow: "group",
+              id: 3
+            }, {
+              flow: "group",
+              id: 4
+            }
+          ]);
+        });
+        it('should filter a multiflow by "posts"', function(done) {
+          return check_set_content(done, posts, [
+            {
+              flow: "post",
+              id: 1
+            }, {
+              flow: "post",
+              id: 2
+            }, {
+              flow: "post",
+              id: 3
+            }, {
+              flow: "post",
+              id: 4
+            }, {
+              flow: "post",
+              id: 5
+            }
+          ]);
+        });
+        it('should filter a multiflow by "comments"', function(done) {
+          return check_set_content(done, comments, [
+            {
+              flow: "comment",
+              id: 1
+            }, {
+              flow: "comment",
+              id: 2
+            }, {
+              flow: "comment",
+              id: 3
+            }, {
+              flow: "comment",
+              id: 4
+            }
+          ]);
+        });
+        it('should allow to add users', function(done) {
+          multiflow.add([
+            {
+              flow: "user",
+              id: 4
+            }, {
+              flow: "user",
+              id: 5
+            }
+          ]);
+          return check_set_content(done, users, [
+            {
+              flow: "user",
+              id: 1
+            }, {
+              flow: "user",
+              id: 2
+            }, {
+              flow: "user",
+              id: 3
+            }, {
+              flow: "user",
+              id: 4
+            }, {
+              flow: "user",
+              id: 5
+            }
+          ]);
+        });
+        it('should allow to remove comments', function(done) {
+          multiflow.remove([
+            {
+              flow: "comment",
+              id: 2
+            }, {
+              flow: "comment",
+              id: 3
+            }
+          ]);
+          return check_set_content(done, comments, [
+            {
+              flow: "comment",
+              id: 1
+            }, {
+              flow: "comment",
+              id: 4
+            }
+          ]);
+        });
+        return it('should not have modified posts', function(done) {
+          return check_set_content(done, posts, [
+            {
+              flow: "post",
+              id: 1
+            }, {
+              flow: "post",
+              id: 2
+            }, {
+              flow: "post",
+              id: 3
+            }, {
+              flow: "post",
+              id: 4
+            }, {
+              flow: "post",
+              id: 5
+            }
+          ]);
+        });
+      });
       describe('filter() from dynamic countries query:', function() {
         var cities_from_countries, countries;
         countries = xs.set([

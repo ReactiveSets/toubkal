@@ -286,8 +286,7 @@ At the lower level, XS **Pipelets** use a JavaScript functional programming mode
 the typical callback hell of assynchronous request-response programming models.
 
 Unlike the promises model, XS exceptions and errors are carried-out out-of-band through global
-dataflows that can be processed or not to provide error recovery, end-user feedback,
-and logging.
+dataflows that can be processed, for error recovery, end-user feedback, and logging.
 
 Error dataflows originating on clients can easily be routed to servers to allow proactive
 debugging of errors while in production, and effective service quality monitoring.
@@ -392,7 +391,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 219 automated tests for the XS core pipelets that run after every
+We have curently developped 226 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10, and 0.11. We no longer test version 0.6 since
 Travis had an issue with it around January 2014.
 
@@ -428,7 +427,7 @@ git clone https://github.com/ConnectedSets/ConnectedSets.git
 
 cd ConnectedSets
 ./run_tests.sh
-219 passing (2s)
+226 passing (2s)
 
 less -R test.out # for tests detailed traces
 ```

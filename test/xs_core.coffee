@@ -1695,6 +1695,97 @@ describe 'XS test suite:', ->
             { id: 6, name: "Casablanca"   , country: "Morocco"                      }
             { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"       }
           ]
+    
+    describe 'flow() static queries', ->
+      multiflow = xs.set [
+        { flow: "user", id: 1 }
+        { flow: "user", id: 2 }
+        { flow: "user", id: 3 }
+        { flow: "group", id: 1 }
+        { flow: "group", id: 2 }
+        { flow: "group", id: 3 }
+        { flow: "group", id: 4 }
+        { flow: "post", id: 1 }
+        { flow: "post", id: 2 }
+        { flow: "post", id: 3 }
+        { flow: "post", id: 4 }
+        { flow: "post", id: 5 }
+        { flow: "comment", id: 1 }
+        { flow: "comment", id: 2 }
+        { flow: "comment", id: 3 }
+        { flow: "comment", id: 4 }
+      ], { key: [ 'flow', 'id' ] }
+      
+      users    = multiflow.flow "user"
+      groups   = multiflow.flow "group"
+      posts    = multiflow.flow( "post" ).set []
+      comments = multiflow.flow( "comment" ).set []
+      
+      it 'should filter a multiflow by "users"', ( done ) ->
+        check_set_content done, users, [
+          { flow: "user", id: 1 }
+          { flow: "user", id: 2 }
+          { flow: "user", id: 3 }
+        ]
+      
+      it 'should filter a multiflow by "groups"', ( done ) ->
+        check_set_content done, groups, [
+          { flow: "group", id: 1 }
+          { flow: "group", id: 2 }
+          { flow: "group", id: 3 }
+          { flow: "group", id: 4 }
+        ]
+        
+      it 'should filter a multiflow by "posts"', ( done ) ->
+        check_set_content done, posts, [
+          { flow: "post", id: 1 }
+          { flow: "post", id: 2 }
+          { flow: "post", id: 3 }
+          { flow: "post", id: 4 }
+          { flow: "post", id: 5 }
+        ]
+      
+      it 'should filter a multiflow by "comments"', ( done ) ->
+        check_set_content done, comments, [
+          { flow: "comment", id: 1 }
+          { flow: "comment", id: 2 }
+          { flow: "comment", id: 3 }
+          { flow: "comment", id: 4 }
+        ]
+        
+      it 'should allow to add users', ( done ) ->
+        multiflow.add [
+          { flow: "user", id: 4 }
+          { flow: "user", id: 5 }
+        ]
+        
+        check_set_content done, users, [
+          { flow: "user", id: 1 }
+          { flow: "user", id: 2 }
+          { flow: "user", id: 3 }
+          { flow: "user", id: 4 }
+          { flow: "user", id: 5 }
+        ]
+        
+      it 'should allow to remove comments', ( done ) ->
+        multiflow.remove [
+          { flow: "comment", id: 2 }
+          { flow: "comment", id: 3 }
+        ]
+        
+        check_set_content done, comments, [
+          { flow: "comment", id: 1 }
+          { flow: "comment", id: 4 }
+        ]
+      
+      it 'should not have modified posts', ( done ) ->
+        check_set_content done, posts, [
+          { flow: "post", id: 1 }
+          { flow: "post", id: 2 }
+          { flow: "post", id: 3 }
+          { flow: "post", id: 4 }
+          { flow: "post", id: 5 }
+        ]
       
     describe 'filter() from dynamic countries query:', ->
       countries = xs.set [
