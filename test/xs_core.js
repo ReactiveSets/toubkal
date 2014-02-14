@@ -20,7 +20,7 @@
 
 
 (function() {
-  var Set, XS, check, check_set_content, clone, expect, extend, log, utils, uuid_v4, valid_uuid_v4, xs;
+  var Pipelet, Set, XS, check, check_set_content, clone, expect, extend, log, utils, uuid_v4, valid_uuid_v4, xs;
 
   if (typeof require !== "undefined" && require !== null) {
     utils = require('./xs_tests_utils.js');
@@ -60,6 +60,8 @@
     require('../lib/join.js');
     require('../lib/json.js');
   }
+
+  Pipelet = XS.Pipelet;
 
   Set = XS.Set;
 
@@ -5466,7 +5468,7 @@
         });
       });
     });
-    describe('xs.aggregate() and XS.Compose():', function() {
+    describe('xs.aggregate() and Pipelet.Compose():', function() {
       var aggregate_from, books_sales, books_sales_by_author, books_sales_by_year, by_author, by_year, sales, tolkien_books, tolkien_sales_by_year;
       books_sales = xs.set([
         {
@@ -5586,7 +5588,7 @@
       aggregate_from = function(source, from, measures, dimensions, options) {
         return source.filter(from, options).aggregate(measures, dimensions, options).order(dimensions).ordered();
       };
-      XS.Compose('aggregate_from', aggregate_from);
+      Pipelet.Compose('aggregate_from', aggregate_from);
       tolkien_books = function(book, options) {
         return book.author === 'J. R. R. Tolkien';
       };

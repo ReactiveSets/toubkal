@@ -54,8 +54,8 @@ if require?
   require '../lib/join.js'
   require '../lib/json.js'
 
-Set = XS.Set
-
+Pipelet = XS.Pipelet
+Set     = XS.Set
 
 # ----------------------------------------------------------------------------------------------
 # Some constants
@@ -2492,7 +2492,7 @@ describe 'XS test suite:', ->
               { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
             ]
 
-  describe 'xs.aggregate() and XS.Compose():', ->
+  describe 'xs.aggregate() and Pipelet.Compose():', ->
     books_sales = xs.set [
       { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year: 1859 }
       { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year: 1955 }
@@ -2526,7 +2526,7 @@ describe 'XS test suite:', ->
         .order( dimensions )
         .ordered()
     
-    XS.Compose 'aggregate_from', aggregate_from
+    Pipelet.Compose 'aggregate_from', aggregate_from
     
     tolkien_books = ( book, options ) ->
       return book.author is 'J. R. R. Tolkien'
