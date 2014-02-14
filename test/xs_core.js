@@ -1082,6 +1082,159 @@
           }
         ]);
       });
+      it('Query..and_not() should allow to "and-not" two empty queries', function() {
+        return expect(new Query([]).and_not([]).query).to.be.eql([]);
+      });
+      it('Query..and_not() should remain empty after "and-not" query to empty query', function() {
+        return expect(new Query([
+          {
+            flow: 'group'
+          }
+        ]).and_not([
+          {
+            flow: 'group'
+          }
+        ]).query).to.be.eql([]);
+      });
+      it('Query..and_not() should raise an exception after "and-not" from empty query', function() {
+        return expect(function() {
+          return new Query([]).and_not([
+            {
+              flow: 'group'
+            }
+          ]).query;
+        }).to.throwException();
+      });
+      it('Query..and_not() should raise an exception after "and-not" with not-found query', function() {
+        return expect(function() {
+          return new Query([
+            {
+              flow: 'group',
+              id: 1
+            }
+          ]).and_not([
+            {
+              flow: 'group'
+            }
+          ]).query;
+        }).to.throwException();
+      });
+      it('Query..and_not() should raise an exception after "and-not" with not-found query', function() {
+        return expect(function() {
+          return new Query([
+            {
+              flow: 'group'
+            }
+          ]).and_not([
+            {
+              flow: 'group',
+              id: 1
+            }
+          ]).query;
+        }).to.throwException();
+      });
+      it('Query..and_not() should remove two queries after "and-not"', function() {
+        return expect(new Query([
+          {
+            flow: 'user',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 2
+          }, {
+            flow: 'user',
+            id: 3
+          }, {
+            flow: 'user',
+            id: 4
+          }, {
+            flow: 'group',
+            id: 1
+          }, {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'group',
+            id: 3
+          }
+        ]).and_not([
+          {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'user',
+            id: 3
+          }
+        ]).query).to.be.eql([
+          {
+            flow: 'user',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 2
+          }, {
+            flow: 'user',
+            id: 4
+          }, {
+            flow: 'group',
+            id: 1
+          }, {
+            flow: 'group',
+            id: 3
+          }
+        ]);
+      });
+      it('Query..and_not() should remove expressions after "and-not" even if removed out of order', function() {
+        return expect(new Query([
+          {
+            flow: 'user',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 2
+          }, {
+            flow: 'user',
+            id: 3
+          }, {
+            flow: 'user',
+            id: 4
+          }, {
+            flow: 'group',
+            id: 1
+          }, {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'group',
+            id: 3
+          }
+        ]).and_not([
+          {
+            flow: 'user',
+            id: 2
+          }, {
+            flow: 'group',
+            id: 3
+          }, {
+            flow: 'user',
+            id: 4
+          }, {
+            flow: 'group',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 3
+          }
+        ]).query).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+      });
       it('generate() should generate a filter() function', function() {
         q = new Query([
           {
