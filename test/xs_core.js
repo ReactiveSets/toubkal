@@ -906,10 +906,24 @@
       var Query, q;
       Query = XS.Query;
       q = null;
+      it('Query..or() should allow to "or" two empty queries', function() {
+        return expect(new Query([]).or([]).query).to.be.eql([]);
+      });
+      it('Query..or() should add query to empty query', function() {
+        return expect(new Query([]).or([
+          {
+            flow: 'group'
+          }
+        ]).query).to.be.eql([
+          {
+            flow: 'group'
+          }
+        ]);
+      });
       it('Query..or() should OR two queries', function() {
         return expect(new Query([
           {
-            flow: 'stores'
+            flow: 'group'
           }
         ]).or([
           {
@@ -917,7 +931,7 @@
           }
         ]).query).to.be.eql([
           {
-            flow: 'stores'
+            flow: 'group'
           }, {
             flow: 'user'
           }
@@ -926,23 +940,63 @@
       it('Query..or() should OR two queries and result in optimized query', function() {
         return expect(new Query([
           {
-            flow: 'store',
+            flow: 'group',
             id: 1465
           }
         ]).or([
           {
-            flow: 'store'
+            flow: 'group'
           }
         ]).query).to.be.eql([
           {
-            flow: 'store'
+            flow: 'group'
+          }
+        ]);
+      });
+      it('Query..or() should not duplicate existing expressions', function() {
+        return expect(new Query([
+          {
+            flow: 'group'
+          }
+        ]).or([
+          {
+            flow: 'group'
+          }
+        ]).query).to.be.eql([
+          {
+            flow: 'group'
+          }
+        ]);
+      });
+      it('Query..and() should allow to "and" two empty queries', function() {
+        return expect(new Query([]).and([]).query).to.be.eql([]);
+      });
+      it('Query..and() should remain empty after "and" query to empty query', function() {
+        return expect(new Query([]).and([
+          {
+            flow: 'group'
+          }
+        ]).query).to.be.eql([]);
+      });
+      it('Query..and() should not change query after "and" query with same query', function() {
+        return expect(new Query([
+          {
+            flow: 'group'
+          }
+        ]).and([
+          {
+            flow: 'group'
+          }
+        ]).query).to.be.eql([
+          {
+            flow: 'group'
           }
         ]);
       });
       it('Query..and() should AND two queries', function() {
         return expect(new Query([
           {
-            flow: 'store'
+            flow: 'group'
           }
         ]).and([
           {
@@ -950,7 +1004,7 @@
           }
         ]).query).to.be.eql([
           {
-            flow: 'store',
+            flow: 'group',
             id: 26
           }
         ]);
@@ -958,10 +1012,10 @@
       it('Query..and() with one false sub term should AND two queries', function() {
         return expect(new Query([
           {
-            flow: 'store',
+            flow: 'group',
             id: 26
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 27
           }
         ]).and([
@@ -970,7 +1024,7 @@
           }
         ]).query).to.be.eql([
           {
-            flow: 'store',
+            flow: 'group',
             id: 26
           }
         ]);
@@ -978,7 +1032,7 @@
       it('Query..and() with only one false sub term should AND two queries to result in an empty query', function() {
         return expect(new Query([
           {
-            flow: 'store',
+            flow: 'group',
             id: 27
           }
         ]).and([
@@ -990,7 +1044,7 @@
       it('Query..and() with two AND propositions should AND two queries and produce two propositions', function() {
         return expect(new Query([
           {
-            flow: 'store'
+            flow: 'group'
           }
         ]).and([
           {
@@ -1000,10 +1054,10 @@
           }
         ]).query).to.be.eql([
           {
-            flow: 'store',
+            flow: 'group',
             id: 26
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 27
           }
         ]);
@@ -1011,11 +1065,11 @@
       it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
         return expect(new Query([
           {
-            flow: 'store'
+            flow: 'group'
           }
         ]).and([
           {
-            flow: 'store',
+            flow: 'group',
             id: 27
           }, {
             flow: 'user',
@@ -1023,7 +1077,7 @@
           }
         ]).query).to.be.eql([
           {
-            flow: 'store',
+            flow: 'group',
             id: 27
           }
         ]);
@@ -1031,7 +1085,7 @@
       it('generate() should generate a filter() function', function() {
         q = new Query([
           {
-            flow: 'store'
+            flow: 'group'
           }, {
             flow: 'user',
             id: 231
@@ -1042,10 +1096,10 @@
       it('filter() should filter an Array of Objects', function() {
         return expect(q.filter([
           {
-            flow: 'store',
+            flow: 'group',
             id: 826
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 295
           }, {
             flow: 'user',
@@ -1056,10 +1110,10 @@
           }
         ])).to.be.eql([
           {
-            flow: 'store',
+            flow: 'group',
             id: 826
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 295
           }, {
             flow: 'user',
@@ -1074,10 +1128,10 @@
       it('should filter everything, this is the nul-filter', function() {
         return expect(q.filter([
           {
-            flow: 'store',
+            flow: 'group',
             id: 826
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 295
           }, {
             flow: 'user',
@@ -1095,10 +1149,10 @@
       return it('should filter nothing, this is a pass-through filter', function() {
         return expect(q.filter([
           {
-            flow: 'store',
+            flow: 'group',
             id: 826
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 295
           }, {
             flow: 'user',
@@ -1109,10 +1163,10 @@
           }
         ])).to.be.eql([
           {
-            flow: 'store',
+            flow: 'group',
             id: 826
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 295
           }, {
             flow: 'user',
@@ -1187,11 +1241,11 @@
           {
             flow: 'user'
           }, {
-            flow: 'store',
+            flow: 'group',
             id: 527
           }, {
             id: 521,
-            flow: 'store'
+            flow: 'group'
           }, {
             id: 425
           }
@@ -1204,7 +1258,7 @@
                 subscribers: [subscriber_1, subscriber_3],
                 subscribers_values: []
               },
-              "store": {
+              "group": {
                 branches: {
                   "id": {
                     "527": {
@@ -1250,7 +1304,7 @@
                 subscribers: [subscriber_1, subscriber_3],
                 subscribers_values: []
               },
-              "store": {
+              "group": {
                 branches: {
                   "id": {
                     "527": {
@@ -1300,7 +1354,7 @@
                 subscribers: [subscriber_1],
                 subscribers_values: []
               },
-              "store": {
+              "group": {
                 branches: {
                   "id": {
                     "527": {
@@ -1344,7 +1398,7 @@
         ], subscriber_1).query_tree_top).to.be.eql({
           branches: {
             "flow": {
-              "store": {
+              "group": {
                 branches: {
                   "id": {
                     "527": {
@@ -1384,7 +1438,7 @@
         return expect(tree.query_tree_add([]).query_tree_remove([]).query_tree_top).to.be.eql({
           branches: {
             "flow": {
-              "store": {
+              "group": {
                 branches: {
                   "id": {
                     "527": {
@@ -1423,11 +1477,11 @@
       it('Remove another query should shrink the query tree even further', function() {
         return expect(tree.query_tree_remove([
           {
-            flow: 'store',
+            flow: 'group',
             id: 521
           }, {
             id: 527,
-            flow: 'store'
+            flow: 'group'
           }
         ], subscriber_3).query_tree_top).to.be.eql({
           branches: {
@@ -1495,7 +1549,7 @@
       ], subscriber_4);
       tree.query_tree_emit('add', [
         {
-          flow: 'store'
+          flow: 'group'
         }, {
           id: 123
         }, {
@@ -1535,7 +1589,7 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                flow: 'store'
+                flow: 'group'
               }, {
                 id: 123
               }, {
@@ -1601,7 +1655,7 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                flow: 'store'
+                flow: 'group'
               }, {
                 flow: 'user',
                 id: 345
@@ -1628,7 +1682,7 @@
           return check(done, function() {
             return expect(values).to.be.eql([
               {
-                flow: 'store'
+                flow: 'group'
               }
             ]);
           });
@@ -1637,7 +1691,7 @@
       it('third subscriber should be empty after removing last record', function(done) {
         tree.query_tree_emit('remove', [
           {
-            flow: 'store'
+            flow: 'group'
           }
         ]);
         return subscriber_3.fetch_all(function(values) {
@@ -1670,7 +1724,7 @@
         ], subscriber_4);
         tree.query_tree_emit('add', [
           {
-            flow: 'store'
+            flow: 'group'
           }, {
             id: 123
           }, {

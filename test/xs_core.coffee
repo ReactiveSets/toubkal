@@ -816,48 +816,76 @@ describe 'XS test suite:', ->
     
     q = null
     
+    it 'Query..or() should allow to "or" two empty queries', ->
+      expect( new Query( [] ).or( [] ).query )
+        .to.be.eql []
+    
+    it 'Query..or() should add query to empty query', ->
+      expect( new Query( [] ).or( [ { flow: 'group' } ] ).query )
+        .to.be.eql [ { flow: 'group' } ]
+    
     it 'Query..or() should OR two queries', ->
-      expect( new Query( [ { flow: 'stores' } ] ).or( [ { flow: 'user' } ] ).query )
-        .to.be.eql [ { flow: 'stores' }, { flow: 'user' } ]
+      expect( new Query( [ { flow: 'group' } ] ).or( [ { flow: 'user' } ] ).query )
+        .to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
     
     it 'Query..or() should OR two queries and result in optimized query', ->
-      expect( new Query( [ { flow: 'store', id: 1465 } ] ).or( [ { flow: 'store' } ] ).query )
-        .to.be.eql [ { flow: 'store' } ]
+      expect( new Query( [ { flow: 'group', id: 1465 } ] ).or( [ { flow: 'group' } ] ).query )
+        .to.be.eql [ { flow: 'group' } ]
+    
+    it 'Query..or() should not duplicate existing expressions', ->
+      expect( new Query( [ { flow: 'group' } ] ).or( [ { flow: 'group' } ] ).query )
+        .to.be.eql [ { flow: 'group' } ]
+    
+    
+    
+    it 'Query..and() should allow to "and" two empty queries', ->
+      expect( new Query( [] ).and( [] ).query )
+        .to.be.eql []
+    
+    it 'Query..and() should remain empty after "and" query to empty query', ->
+      expect( new Query( [] ).and( [ { flow: 'group' } ] ).query )
+        .to.be.eql []
+    
+    it 'Query..and() should not change query after "and" query with same query', ->
+      expect( new Query( [ { flow: 'group' } ] ).and( [ { flow: 'group' } ] ).query )
+        .to.be.eql [ { flow: 'group' } ]
     
     it 'Query..and() should AND two queries', ->
-      expect( new Query( [ { flow: 'store' } ] ).and( [ { id: 26 } ] ).query )
-        .to.be.eql [ { flow: 'store', id: 26 } ]
+      expect( new Query( [ { flow: 'group' } ] ).and( [ { id: 26 } ] ).query )
+        .to.be.eql [ { flow: 'group', id: 26 } ]
     
     it 'Query..and() with one false sub term should AND two queries', ->
-      expect( new Query( [ { flow: 'store', id: 26 }, { flow: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
-        .to.be.eql [ { flow: 'store', id: 26 } ]
+      expect( new Query( [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ] ).and( [ { id: 26 } ] ).query )
+        .to.be.eql [ { flow: 'group', id: 26 } ]
     
     it 'Query..and() with only one false sub term should AND two queries to result in an empty query', ->
-      expect( new Query( [ { flow: 'store', id: 27 } ] ).and( [ { id: 26 } ] ).query )
+      expect( new Query( [ { flow: 'group', id: 27 } ] ).and( [ { id: 26 } ] ).query )
         .to.be.eql []
     
     it 'Query..and() with two AND propositions should AND two queries and produce two propositions', ->
-      expect( new Query( [ { flow: 'store' } ] ).and( [ { id: 26 }, { id: 27 } ] ).query )
-        .to.be.eql [ { flow: 'store', id: 26 }, { flow: 'store', id: 27 } ]
+      expect( new Query( [ { flow: 'group' } ] ).and( [ { id: 26 }, { id: 27 } ] ).query )
+        .to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
     
     it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
-      expect( new Query( [ { flow: 'store' } ] ).and( [ { flow: 'store', id: 27 }, { flow: 'user', id: 234 } ] ).query )
-        .to.be.eql [ { flow: 'store', id: 27 } ]
+      expect( new Query( [ { flow: 'group' } ] ).and( [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ] ).query )
+        .to.be.eql [ { flow: 'group', id: 27 } ]
+    
+    
     
     it 'generate() should generate a filter() function', ->
-      q = new Query( [ { flow: 'store' }, { flow: 'user', id: 231 } ] ).generate()
+      q = new Query( [ { flow: 'group' }, { flow: 'user', id: 231 } ] ).generate()
       
       expect( typeof ( q.filter ) ).to.be.eql 'function'
       
     it 'filter() should filter an Array of Objects', ->
       expect( q.filter [
-        { flow: 'store', id: 826 }
-        { flow: 'store', id: 295 }
+        { flow: 'group', id: 826 }
+        { flow: 'group', id: 295 }
         { flow: 'user', id: 231 }
         { flow: 'user', id: 235 }
       ] ).to.be.eql [
-        { flow: 'store', id: 826 }
-        { flow: 'store', id: 295 }
+        { flow: 'group', id: 826 }
+        { flow: 'group', id: 295 }
         { flow: 'user', id: 231 }
       ]
     
@@ -868,8 +896,8 @@ describe 'XS test suite:', ->
     
     it 'should filter everything, this is the nul-filter', ->
       expect( q.filter [
-        { flow: 'store', id: 826 }
-        { flow: 'store', id: 295 }
+        { flow: 'group', id: 826 }
+        { flow: 'group', id: 295 }
         { flow: 'user', id: 231 }
         { flow: 'user', id: 235 }
       ] ).to.be.eql []
@@ -881,13 +909,13 @@ describe 'XS test suite:', ->
     
     it 'should filter nothing, this is a pass-through filter', ->
       expect( q.filter [
-        { flow: 'store', id: 826 }
-        { flow: 'store', id: 295 }
+        { flow: 'group', id: 826 }
+        { flow: 'group', id: 295 }
         { flow: 'user', id: 231 }
         { flow: 'user', id: 235 }
       ] ).to.be.eql [
-        { flow: 'store', id: 826 }
-        { flow: 'store', id: 295 }
+        { flow: 'group', id: 826 }
+        { flow: 'group', id: 295 }
         { flow: 'user', id: 231 }
         { flow: 'user', id: 235 }
       ]
@@ -952,8 +980,8 @@ describe 'XS test suite:', ->
         
         .query_tree_add( [
           { flow: 'user' }
-          { flow: 'store', id: 527 }
-          { id: 521, flow: 'store' }
+          { flow: 'group', id: 527 }
+          { id: 521, flow: 'group' }
           { id: 425 }
         ], subscriber_3 )
         
@@ -968,7 +996,7 @@ describe 'XS test suite:', ->
               subscribers_values: []
             }
             
-            "store": {
+            "group": {
               branches: {
                 "id": {
                   "527": {
@@ -1020,7 +1048,7 @@ describe 'XS test suite:', ->
               subscribers_values: []
             }
             
-            "store": {
+            "group": {
               branches: {
                 "id": {
                   "527": {
@@ -1072,7 +1100,7 @@ describe 'XS test suite:', ->
               subscribers_values: []
             }
             
-            "store": {
+            "group": {
               branches: {
                 "id": {
                   "527": {
@@ -1117,7 +1145,7 @@ describe 'XS test suite:', ->
       ).to.be.eql {
         branches: {
           "flow": {
-            "store": {
+            "group": {
               branches: {
                 "id": {
                   "527": {
@@ -1162,7 +1190,7 @@ describe 'XS test suite:', ->
       ).to.be.eql {
         branches: {
           "flow": {
-            "store": {
+            "group": {
               branches: {
                 "id": {
                   "527": {
@@ -1204,8 +1232,8 @@ describe 'XS test suite:', ->
       expect( tree
         
         .query_tree_remove( [
-          { flow: 'store', id: 521 }
-          { id: 527, flow: 'store' }
+          { flow: 'group', id: 521 }
+          { id: 527, flow: 'group' }
         ], subscriber_3 )
         
         .query_tree_top
@@ -1253,7 +1281,7 @@ describe 'XS test suite:', ->
     tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], subscriber_4
     
     tree.query_tree_emit 'add', [
-      { flow: 'store' }
+      { flow: 'group' }
       { id: 123 }
       { flow: 'user', id: 123 }
       { flow: 'user', id: 345 }
@@ -1274,7 +1302,7 @@ describe 'XS test suite:', ->
     it 'Should emit all values to the third subscriber', ( done ) ->
       subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { flow: 'store' }
+          { flow: 'group' }
           { id: 123 }
           { flow: 'user', id: 123 }
           { flow: 'user', id: 345 }
@@ -1305,7 +1333,7 @@ describe 'XS test suite:', ->
       
       subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { flow: 'store' }
+          { flow: 'group' }
           { flow: 'user', id: 345 }
         ]
       
@@ -1318,11 +1346,11 @@ describe 'XS test suite:', ->
     it 'And third subscriber should have only one record left', ( done ) ->
       subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
-          { flow: 'store' }
+          { flow: 'group' }
         ]
       
     it 'third subscriber should be empty after removing last record', ( done ) ->
-      tree.query_tree_emit 'remove', [ { flow: 'store' } ]
+      tree.query_tree_emit 'remove', [ { flow: 'group' } ]
       
       subscriber_3.fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -1337,7 +1365,7 @@ describe 'XS test suite:', ->
       tree.query_tree_add [ { id: 123 }, { flow: 'user' } ], subscriber_4
       
       tree.query_tree_emit 'add', [
-        { flow: 'store' }
+        { flow: 'group' }
         { id: 123 }
         { flow: 'user', id: 123 }
         { flow: 'user', id: 345 }
@@ -1884,7 +1912,6 @@ describe 'XS test suite:', ->
           ]
         
       it 'after removing Germany from countries, cities_from_countries should have Berlin removed', ( done ) ->
-        # Note: we're not using id: 3, because it is in the anti-state
         countries.remove [ { country: "Germany" } ]
         
         cities_from_countries.fetch_all ( values ) -> check done, ->
