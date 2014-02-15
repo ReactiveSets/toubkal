@@ -906,11 +906,20 @@
       var Query, q;
       Query = XS.Query;
       q = null;
+      it('new Query( [] ) should create an empty query', function() {
+        q = new Query([]);
+        expect(q.query).to.be.eql([]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([]);
+      });
       it('Query..or() should allow to "or" two empty queries', function() {
-        return expect(new Query([]).or([]).query).to.be.eql([]);
+        q = new Query([]);
+        expect(q.or([]).query).to.be.eql([]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([]);
       });
       it('Query..or() should add query to empty query', function() {
-        return expect(new Query([]).or([
+        expect(q.or([
           {
             flow: 'group'
           }
@@ -919,13 +928,15 @@
             flow: 'group'
           }
         ]);
-      });
-      it('Query..or() should OR two queries', function() {
-        return expect(new Query([
+        expect(q.adds).to.be.eql([
           {
             flow: 'group'
           }
-        ]).or([
+        ]);
+        return expect(q.removes).to.be.eql([]);
+      });
+      it('Query..or() should OR two queries', function() {
+        expect(q.or([
           {
             flow: 'user'
           }
@@ -936,50 +947,197 @@
             flow: 'user'
           }
         ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        return expect(q.removes).to.be.eql([]);
       });
       it('Query..or() should OR two queries and result in optimized query', function() {
-        return expect(new Query([
+        expect(q.or([
           {
             flow: 'group',
             id: 1465
           }
-        ]).or([
+        ]).query).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        return expect(q.removes).to.be.eql([]);
+      });
+      it('Query..or() should not duplicate existing expressions', function() {
+        expect(q.or([
           {
             flow: 'group'
           }
         ]).query).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        return expect(q.removes).to.be.eql([]);
+      });
+      it('Query.or() should remove an expression if a new less restrictive is or-ed', function() {
+        q.or([
+          {
+            flow: 'post',
+            id: 1
+          }, {
+            flow: 'post'
+          }
+        ]);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }, {
+            flow: 'post'
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }, {
+            flow: 'post',
+            id: 1
+          }, {
+            flow: 'post'
+          }
+        ]);
+        return expect(q.removes).to.be.eql([
+          {
+            flow: 'post',
+            id: 1
+          }
+        ]);
+      });
+      it('new Query( query ) should self optimize and not alter parameter query', function() {
+        var query;
+        query = [
+          {
+            flow: 'group'
+          }, {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }, {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ];
+        q = new Query(query);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        expect(query).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }, {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'user'
+          }
+        ]);
+        return expect(q.removes).to.be.eql([]);
+      });
+      it('Query..or() should optimize more than one left expression per less restrictive right expression', function() {
+        q = new Query([
+          {
+            flow: 'group',
+            id: 26
+          }, {
+            flow: 'group',
+            id: 27
+          }
+        ]).or([
           {
             flow: 'group'
           }
         ]);
-      });
-      it('Query..or() should not duplicate existing expressions', function() {
-        return expect(new Query([
+        expect(q.query).to.be.eql([
           {
             flow: 'group'
           }
-        ]).or([
+        ]);
+        expect(q.adds).to.be.eql([
           {
+            flow: 'group',
+            id: 26
+          }, {
+            flow: 'group',
+            id: 27
+          }, {
             flow: 'group'
           }
-        ]).query).to.be.eql([
+        ]);
+        return expect(q.removes).to.be.eql([
           {
-            flow: 'group'
+            flow: 'group',
+            id: 26
+          }, {
+            flow: 'group',
+            id: 27
           }
         ]);
       });
       it('Query..and() should allow to "and" two empty queries', function() {
-        return expect(new Query([]).and([]).query).to.be.eql([]);
+        q = new Query([]);
+        expect(q.and([]).query).to.be.eql([]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([]);
       });
       it('Query..and() should remain empty after "and" query to empty query', function() {
-        return expect(new Query([]).and([
+        expect(q.and([
           {
             flow: 'group'
           }
         ]).query).to.be.eql([]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([]);
       });
       it('Query..and() should not change query after "and" query with same query', function() {
-        return expect(new Query([
+        expect(q.or([
           {
             flow: 'group'
           }
@@ -992,13 +1150,15 @@
             flow: 'group'
           }
         ]);
-      });
-      it('Query..and() should AND two queries', function() {
-        return expect(new Query([
+        expect(q.adds).to.be.eql([
           {
             flow: 'group'
           }
-        ]).and([
+        ]);
+        return expect(q.removes).to.be.eql([]);
+      });
+      it('Query..and() should AND two queries', function() {
+        expect(q.and([
           {
             id: 26
           }
@@ -1006,43 +1166,86 @@
           {
             flow: 'group',
             id: 26
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'group',
+            id: 26
+          }
+        ]);
+        return expect(q.removes).to.be.eql([
+          {
+            flow: 'group'
           }
         ]);
       });
       it('Query..and() with one false sub term should AND two queries', function() {
-        return expect(new Query([
+        q.or([
           {
+            flow: 'group',
+            id: 27
+          }
+        ]).and([
+          {
+            id: 26
+          }
+        ]);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group',
+            id: 26
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
             flow: 'group',
             id: 26
           }, {
             flow: 'group',
             id: 27
           }
-        ]).and([
+        ]);
+        return expect(q.removes).to.be.eql([
           {
+            flow: 'group'
+          }, {
+            flow: 'group',
+            id: 27
+          }
+        ]);
+      });
+      it('Query..clear_operations() should empty adds and removes', function() {
+        q.clear_operations();
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group',
             id: 26
           }
-        ]).query).to.be.eql([
+        ]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([]);
+      });
+      it('Query..and() with only one false sub term should AND two queries to result in an empty query', function() {
+        expect(q.and([
+          {
+            id: 27
+          }
+        ]).query).to.be.eql([]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([
           {
             flow: 'group',
             id: 26
           }
         ]);
       });
-      it('Query..and() with only one false sub term should AND two queries to result in an empty query', function() {
-        return expect(new Query([
-          {
-            flow: 'group',
-            id: 27
-          }
-        ]).and([
-          {
-            id: 26
-          }
-        ]).query).to.be.eql([]);
-      });
       it('Query..and() with two AND propositions should AND two queries and produce two propositions', function() {
-        return expect(new Query([
+        q.or([
           {
             flow: 'group'
           }
@@ -1052,7 +1255,8 @@
           }, {
             id: 27
           }
-        ]).query).to.be.eql([
+        ]);
+        expect(q.query).to.be.eql([
           {
             flow: 'group',
             id: 26
@@ -1061,9 +1265,29 @@
             id: 27
           }
         ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'group',
+            id: 26
+          }, {
+            flow: 'group',
+            id: 27
+          }
+        ]);
+        return expect(q.removes).to.be.eql([
+          {
+            flow: 'group',
+            id: 26
+          }, {
+            flow: 'group'
+          }
+        ]);
       });
       it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
-        return expect(new Query([
+        q.clear_operations();
+        q.or([
           {
             flow: 'group'
           }
@@ -1075,18 +1299,41 @@
             flow: 'user',
             id: 234
           }
-        ]).query).to.be.eql([
+        ]);
+        expect(q.query).to.be.eql([
           {
             flow: 'group',
             id: 27
           }
         ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }, {
+            flow: 'group',
+            id: 27
+          }
+        ]);
+        return expect(q.removes).to.be.eql([
+          {
+            flow: 'group',
+            id: 26
+          }, {
+            flow: 'group',
+            id: 27
+          }, {
+            flow: 'group'
+          }
+        ]);
       });
       it('Query..and_not() should allow to "and-not" two empty queries', function() {
-        return expect(new Query([]).and_not([]).query).to.be.eql([]);
+        q = new Query([]);
+        expect(q.and_not([]).query).to.be.eql([]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([]);
       });
       it('Query..and_not() should remain empty after "and-not" query to empty query', function() {
-        return expect(new Query([
+        expect(q.or([
           {
             flow: 'group'
           }
@@ -1095,6 +1342,16 @@
             flow: 'group'
           }
         ]).query).to.be.eql([]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }
+        ]);
+        return expect(q.removes).to.be.eql([
+          {
+            flow: 'group'
+          }
+        ]);
       });
       it('Query..and_not() should raise an exception after "and-not" from empty query', function() {
         return expect(function() {

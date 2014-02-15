@@ -816,69 +816,138 @@ describe 'XS test suite:', ->
     
     q = null
     
+    it 'new Query( [] ) should create an empty query', ->
+      q = new Query( [] );
+      
+      expect( q.query   ).to.be.eql []
+      expect( q.adds    ).to.be.eql []
+      expect( q.removes ).to.be.eql []
+    
+    
+    
     it 'Query..or() should allow to "or" two empty queries', ->
-      expect( new Query( [] ).or( [] ).query )
-        .to.be.eql []
+      q = new Query( [] )
+      
+      expect( q.or( [] ).query ).to.be.eql []
+      expect( q.adds ).to.be.eql []
+      expect( q.removes ).to.be.eql []
     
     it 'Query..or() should add query to empty query', ->
-      expect( new Query( [] ).or( [ { flow: 'group' } ] ).query )
-        .to.be.eql [ { flow: 'group' } ]
-    
+      expect( q.or( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' } ]
+      expect( q.adds ).to.be.eql [ { flow: 'group' } ]
+      expect( q.removes ).to.be.eql []
+      
     it 'Query..or() should OR two queries', ->
-      expect( new Query( [ { flow: 'group' } ] ).or( [ { flow: 'user' } ] ).query )
-        .to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-    
+      expect( q.or( [ { flow: 'user' } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( q.removes ).to.be.eql []
+      
     it 'Query..or() should OR two queries and result in optimized query', ->
-      expect( new Query( [ { flow: 'group', id: 1465 } ] ).or( [ { flow: 'group' } ] ).query )
-        .to.be.eql [ { flow: 'group' } ]
+      expect( q.or( [ { flow: 'group', id: 1465 } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( q.removes ).to.be.eql []
     
     it 'Query..or() should not duplicate existing expressions', ->
-      expect( new Query( [ { flow: 'group' } ] ).or( [ { flow: 'group' } ] ).query )
-        .to.be.eql [ { flow: 'group' } ]
+      expect( q.or( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( q.removes ).to.be.eql []
+    
+    it 'Query.or() should remove an expression if a new less restrictive is or-ed', ->
+      q.or( [ { flow: 'post', id: 1 }, { flow: 'post' } ] )
+      
+      expect( q.query ).to.be.eql [ { flow: 'group' }, { flow: 'user' }, { flow: 'post' } ]
+      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' }, { flow: 'post', id: 1 }, { flow: 'post' } ]
+      expect( q.removes ).to.be.eql [ { flow: 'post', id: 1 } ]
+    
+    it 'new Query( query ) should self optimize and not alter parameter query', ->
+      query = [ { flow: 'group' }, { flow: 'group' }, { flow: 'user' }, { flow: 'group' }, { flow: 'user' } ]
+      
+      q = new Query( query )
+      
+      expect( q.query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( query ).to.be.eql [ { flow: 'group' }, { flow: 'group' }, { flow: 'user' }, { flow: 'group' }, { flow: 'user' } ]
+      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+      expect( q.removes ).to.be.eql []
+    
+    it 'Query..or() should optimize more than one left expression per less restrictive right expression', ->
+      q = new Query( [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ] ).or [ flow: 'group' ]
+      
+      expect( q.query   ).to.be.eql [ { flow: 'group' } ]
+      expect( q.adds    ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
+      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
     
     
     
     it 'Query..and() should allow to "and" two empty queries', ->
-      expect( new Query( [] ).and( [] ).query )
-        .to.be.eql []
+      q = new Query []
+      
+      expect( q.and( [] ).query ).to.be.eql []
+      expect( q.adds    ).to.be.eql []
+      expect( q.removes ).to.be.eql []
     
     it 'Query..and() should remain empty after "and" query to empty query', ->
-      expect( new Query( [] ).and( [ { flow: 'group' } ] ).query )
-        .to.be.eql []
+      expect( q.and( [ { flow: 'group' } ] ).query ).to.be.eql []
+      expect( q.adds    ).to.be.eql []
+      expect( q.removes ).to.be.eql []
     
     it 'Query..and() should not change query after "and" query with same query', ->
-      expect( new Query( [ { flow: 'group' } ] ).and( [ { flow: 'group' } ] ).query )
-        .to.be.eql [ { flow: 'group' } ]
+      expect( q.or( [ { flow: 'group' } ] ).and( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' } ]
+      expect( q.adds    ).to.be.eql [ { flow: 'group' } ]
+      expect( q.removes ).to.be.eql []
     
     it 'Query..and() should AND two queries', ->
-      expect( new Query( [ { flow: 'group' } ] ).and( [ { id: 26 } ] ).query )
-        .to.be.eql [ { flow: 'group', id: 26 } ]
+      expect( q.and( [ { id: 26 } ] ).query ).to.be.eql [ { flow: 'group', id: 26 } ]
+      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 } ]
+      expect( q.removes ).to.be.eql [ { flow: 'group' } ]
     
     it 'Query..and() with one false sub term should AND two queries', ->
-      expect( new Query( [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ] ).and( [ { id: 26 } ] ).query )
-        .to.be.eql [ { flow: 'group', id: 26 } ]
+      q.or( [ { flow: 'group', id: 27 } ] ).and( [ { id: 26 } ] )
+      
+      expect( q.query ).to.be.eql [ { flow: 'group', id: 26 } ]
+      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+      expect( q.removes ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
+      
+    it 'Query..clear_operations() should empty adds and removes', ->
+      q.clear_operations()
+      
+      expect( q.query ).to.be.eql [ { flow: 'group', id: 26 } ]
+      expect( q.adds    ).to.be.eql []
+      expect( q.removes ).to.be.eql []
     
     it 'Query..and() with only one false sub term should AND two queries to result in an empty query', ->
-      expect( new Query( [ { flow: 'group', id: 27 } ] ).and( [ { id: 26 } ] ).query )
-        .to.be.eql []
+      expect( q.and( [ { id: 27 } ] ).query ).to.be.eql []
+      expect( q.adds    ).to.be.eql []
+      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 } ]
     
     it 'Query..and() with two AND propositions should AND two queries and produce two propositions', ->
-      expect( new Query( [ { flow: 'group' } ] ).and( [ { id: 26 }, { id: 27 } ] ).query )
-        .to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+      q.or( [ { flow: 'group' } ] ).and [ { id: 26 }, { id: 27 } ]
+      
+      expect( q.query ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group' } ]
     
     it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
-      expect( new Query( [ { flow: 'group' } ] ).and( [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ] ).query )
-        .to.be.eql [ { flow: 'group', id: 27 } ]
+      q.clear_operations()
+      
+      q.or( [ { flow: 'group' } ] ).and [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
+      
+      expect( q.query ).to.be.eql [ { flow: 'group', id: 27 } ]
+      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
+      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
     
-
-
+    
+    
     it 'Query..and_not() should allow to "and-not" two empty queries', ->
-      expect( new Query( [] ).and_not( [] ).query )
-        .to.be.eql []
+      q = new Query( [] )
+      
+      expect( q.and_not( [] ).query ).to.be.eql []
+      expect( q.adds    ).to.be.eql []
+      expect( q.removes ).to.be.eql []
     
     it 'Query..and_not() should remain empty after "and-not" query to empty query', ->
-      expect( new Query( [ { flow: 'group' } ] ).and_not( [ { flow: 'group' } ] ).query )
-        .to.be.eql []
+      expect( q.or( [ { flow: 'group' } ] ).and_not( [ { flow: 'group' } ] ).query ).to.be.eql []
+      expect( q.adds    ).to.be.eql [ { flow: 'group' } ]
+      expect( q.removes ).to.be.eql [ { flow: 'group' } ]
     
     it 'Query..and_not() should raise an exception after "and-not" from empty query', ->
       expect( () -> new Query( [] ).and_not( [ { flow: 'group' } ] ).query )

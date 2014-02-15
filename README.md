@@ -391,7 +391,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 239 automated tests for the XS core pipelets that run after every
+We have curently developped 244 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10, and 0.11. We no longer test version 0.6 since
 Travis had an issue with it around January 2014.
 
@@ -427,7 +427,7 @@ git clone https://github.com/ConnectedSets/ConnectedSets.git
 
 cd ConnectedSets
 ./run_tests.sh
-239 passing (2s)
+244 passing (2s)
 
 less -R test.out # for tests detailed traces
 ```
