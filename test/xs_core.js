@@ -912,14 +912,14 @@
         expect(q.adds).to.be.eql([]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..or() should allow to "or" two empty queries', function() {
+      it('Query..add() should allow to "or" two empty queries', function() {
         q = new Query([]);
-        expect(q.or([]).query).to.be.eql([]);
+        expect(q.add([]).query).to.be.eql([]);
         expect(q.adds).to.be.eql([]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..or() should add query to empty query', function() {
-        expect(q.or([
+      it('Query..add() should add query to empty query', function() {
+        expect(q.add([
           {
             flow: 'group'
           }
@@ -935,8 +935,8 @@
         ]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..or() should OR two queries', function() {
-        expect(q.or([
+      it('Query..add() should OR two queries', function() {
+        expect(q.add([
           {
             flow: 'user'
           }
@@ -956,8 +956,8 @@
         ]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..or() should OR two queries and result in optimized query', function() {
-        expect(q.or([
+      it('Query..add() should OR two queries and result in optimized query', function() {
+        expect(q.add([
           {
             flow: 'group',
             id: 1465
@@ -978,8 +978,8 @@
         ]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..or() should not duplicate existing expressions', function() {
-        expect(q.or([
+      it('Query..add() should not duplicate existing expressions', function() {
+        expect(q.add([
           {
             flow: 'group'
           }
@@ -999,8 +999,8 @@
         ]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query.or() should remove an expression if a new less restrictive is or-ed', function() {
-        q.or([
+      it('Query.add() should remove an expression if a new less restrictive is or-ed', function() {
+        q.add([
           {
             flow: 'post',
             id: 1
@@ -1081,7 +1081,7 @@
         ]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..or() should optimize more than one left expression per less restrictive right expression', function() {
+      it('Query..add() should optimize more than one left expression per less restrictive right expression', function() {
         q = new Query([
           {
             flow: 'group',
@@ -1090,7 +1090,7 @@
             flow: 'group',
             id: 27
           }
-        ]).or([
+        ]).add([
           {
             flow: 'group'
           }
@@ -1137,7 +1137,7 @@
         return expect(q.removes).to.be.eql([]);
       });
       it('Query..and() should not change query after "and" query with same query', function() {
-        expect(q.or([
+        expect(q.add([
           {
             flow: 'group'
           }
@@ -1183,7 +1183,7 @@
         ]);
       });
       it('Query..and() with one false sub term should AND two queries', function() {
-        q.or([
+        q.add([
           {
             flow: 'group',
             id: 27
@@ -1245,7 +1245,7 @@
         ]);
       });
       it('Query..and() with two AND propositions should AND two queries and produce two propositions', function() {
-        q.or([
+        q.add([
           {
             flow: 'group'
           }
@@ -1287,7 +1287,7 @@
       });
       it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
         q.clear_operations();
-        q.or([
+        q.add([
           {
             flow: 'group'
           }
@@ -1326,18 +1326,18 @@
           }
         ]);
       });
-      it('Query..and_not() should allow to "and-not" two empty queries', function() {
+      it('Query..remove() should allow to "and-not" two empty queries', function() {
         q = new Query([]);
-        expect(q.and_not([]).query).to.be.eql([]);
+        expect(q.remove([]).query).to.be.eql([]);
         expect(q.adds).to.be.eql([]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..and_not() should remain empty after "and-not" query to empty query', function() {
-        expect(q.or([
+      it('Query..remove() should remain empty after "and-not" query to empty query', function() {
+        expect(q.add([
           {
             flow: 'group'
           }
-        ]).and_not([
+        ]).remove([
           {
             flow: 'group'
           }
@@ -1353,36 +1353,36 @@
           }
         ]);
       });
-      it('Query..and_not() should raise an exception after "and-not" from empty query', function() {
+      it('Query..remove() should raise an exception after "and-not" from empty query', function() {
         return expect(function() {
-          return new Query([]).and_not([
+          return new Query([]).remove([
             {
               flow: 'group'
             }
           ]).query;
         }).to.throwException();
       });
-      it('Query..and_not() should raise an exception after "and-not" with not-found query', function() {
+      it('Query..remove() should raise an exception after "and-not" with not-found query', function() {
         return expect(function() {
           return new Query([
             {
               flow: 'group',
               id: 1
             }
-          ]).and_not([
+          ]).remove([
             {
               flow: 'group'
             }
           ]).query;
         }).to.throwException();
       });
-      it('Query..and_not() should raise an exception after "and-not" with not-found query', function() {
+      it('Query..remove() should raise an exception after "and-not" with not-found query', function() {
         return expect(function() {
           return new Query([
             {
               flow: 'group'
             }
-          ]).and_not([
+          ]).remove([
             {
               flow: 'group',
               id: 1
@@ -1390,7 +1390,7 @@
           ]).query;
         }).to.throwException();
       });
-      it('Query..and_not() should remove two queries after "and-not"', function() {
+      it('Query..remove() should remove two queries after "and-not"', function() {
         return expect(new Query([
           {
             flow: 'user',
@@ -1414,7 +1414,7 @@
             flow: 'group',
             id: 3
           }
-        ]).and_not([
+        ]).remove([
           {
             flow: 'group',
             id: 2
@@ -1441,7 +1441,7 @@
           }
         ]);
       });
-      it('Query..and_not() should remove expressions after "and-not" even if removed out of order', function() {
+      it('Query..remove() should remove expressions after "and-not" even if removed out of order', function() {
         return expect(new Query([
           {
             flow: 'user',
@@ -1465,7 +1465,7 @@
             flow: 'group',
             id: 3
           }
-        ]).and_not([
+        ]).remove([
           {
             flow: 'user',
             id: 2
