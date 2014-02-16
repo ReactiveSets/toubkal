@@ -1326,13 +1326,13 @@
           }
         ]);
       });
-      it('Query..remove() should allow to "and-not" two empty queries', function() {
+      it('Query..remove() should allow to "remove" two empty queries', function() {
         q = new Query([]);
         expect(q.remove([]).query).to.be.eql([]);
         expect(q.adds).to.be.eql([]);
         return expect(q.removes).to.be.eql([]);
       });
-      it('Query..remove() should remain empty after "and-not" query to empty query', function() {
+      it('Query..remove() should remain empty after "remove" query to empty query', function() {
         expect(q.add([
           {
             flow: 'group'
@@ -1353,7 +1353,7 @@
           }
         ]);
       });
-      it('Query..remove() should raise an exception after "and-not" from empty query', function() {
+      it('Query..remove() should raise an exception after "remove" from empty query', function() {
         return expect(function() {
           return new Query([]).remove([
             {
@@ -1362,7 +1362,7 @@
           ]).query;
         }).to.throwException();
       });
-      it('Query..remove() should raise an exception after "and-not" with not-found query', function() {
+      it('Query..remove() should raise an exception after "remove" with not-found query', function() {
         return expect(function() {
           return new Query([
             {
@@ -1376,7 +1376,7 @@
           ]).query;
         }).to.throwException();
       });
-      it('Query..remove() should raise an exception after "and-not" with not-found query', function() {
+      it('Query..remove() should raise an exception after "remove" with not-found query', function() {
         return expect(function() {
           return new Query([
             {
@@ -1390,8 +1390,8 @@
           ]).query;
         }).to.throwException();
       });
-      it('Query..remove() should remove two queries after "and-not"', function() {
-        return expect(new Query([
+      it('Query..remove() should remove two queries after "remove"', function() {
+        q = new Query([
           {
             flow: 'user',
             id: 1
@@ -1422,7 +1422,8 @@
             flow: 'user',
             id: 3
           }
-        ]).query).to.be.eql([
+        ]);
+        expect(q.query).to.be.eql([
           {
             flow: 'user',
             id: 1
@@ -1440,9 +1441,42 @@
             id: 3
           }
         ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'user',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 2
+          }, {
+            flow: 'user',
+            id: 3
+          }, {
+            flow: 'user',
+            id: 4
+          }, {
+            flow: 'group',
+            id: 1
+          }, {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'group',
+            id: 3
+          }
+        ]);
+        return expect(q.removes).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'user',
+            id: 3
+          }
+        ]);
       });
-      it('Query..remove() should remove expressions after "and-not" even if removed out of order', function() {
-        return expect(new Query([
+      it('Query..remove() should remove expressions after "remove" even if removed out of order', function() {
+        q = new Query([
           {
             flow: 'user',
             id: 1
@@ -1485,10 +1519,56 @@
             flow: 'user',
             id: 3
           }
-        ]).query).to.be.eql([
+        ]);
+        expect(q.query).to.be.eql([
           {
             flow: 'group',
             id: 2
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'user',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 2
+          }, {
+            flow: 'user',
+            id: 3
+          }, {
+            flow: 'user',
+            id: 4
+          }, {
+            flow: 'group',
+            id: 1
+          }, {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'group',
+            id: 3
+          }
+        ]);
+        return expect(q.removes).to.be.eql([
+          {
+            flow: 'user',
+            id: 2
+          }, {
+            flow: 'group',
+            id: 3
+          }, {
+            flow: 'user',
+            id: 4
+          }, {
+            flow: 'group',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 1
+          }, {
+            flow: 'user',
+            id: 3
           }
         ]);
       });

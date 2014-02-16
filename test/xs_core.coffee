@@ -870,7 +870,7 @@ describe 'XS test suite:', ->
       expect( q.removes ).to.be.eql []
     
     it 'Query..add() should optimize more than one left expression per less restrictive right expression', ->
-      q = new Query( [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ] ).or [ flow: 'group' ]
+      q = new Query( [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ] ).add [ flow: 'group' ]
       
       expect( q.query   ).to.be.eql [ { flow: 'group' } ]
       expect( q.adds    ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
@@ -991,7 +991,7 @@ describe 'XS test suite:', ->
           { flow: 'group', id: 2 }
           { flow: 'group', id: 3 }
         ]
-      expect( q.removed ).to.be.eql [
+      expect( q.removes ).to.be.eql [
           { flow: 'group', id: 2 }
           { flow: 'user', id: 3 }
         ]
