@@ -1609,6 +1609,89 @@
         ]);
         return expect(q.optimized).to.be.eql([]);
       });
+      it('should recover expression previously optimized-out by add() when removing the less restrictive operation', function() {
+        q = new Query([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        expect(q.removes).to.be.eql([]);
+        expect(q.optimized).to.be.eql([]);
+        q.add([
+          {
+            flow: 'group'
+          }
+        ]);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group'
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'group'
+          }
+        ]);
+        expect(q.removes).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        expect(q.optimized).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        q.remove([
+          {
+            flow: 'group'
+          }
+        ]);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'group'
+          }, {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        expect(q.removes).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }, {
+            flow: 'group'
+          }
+        ]);
+        return expect(q.optimized).to.be.eql([]);
+      });
       it('generate() should generate a filter() function', function() {
         q = new Query([
           {

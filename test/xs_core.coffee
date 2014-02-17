@@ -1037,6 +1037,7 @@ describe 'XS test suite:', ->
     
     it 'should not remove an expression which was previously optimized-out by add()', ->
       q.clear_operations()
+      
       q.add    [ { flow: 'group' } ]
       
       expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
@@ -1047,9 +1048,34 @@ describe 'XS test suite:', ->
       expect( q.adds      ).to.be.eql [ { flow: 'group' } ]
       expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
       expect( q.optimized ).to.be.eql []
+    
+    it 'should recover expression previously optimized-out by add() when removing the less restrictive operation', ->
+      q = new Query [ { flow: 'group', id: 2 } ]
       
+      expect( q.query     ).to.be.eql [ { flow: 'group', id: 2 } ]
+      expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 } ]
+      expect( q.removes   ).to.be.eql []
+      expect( q.optimized ).to.be.eql []
       
+      # add less restrictive expression than { flow: 'group', id: 2 }
+      q.add [ { flow: 'group' } ] 
       
+      expect( q.query     ).to.be.eql [ { flow: 'group' } ]
+      expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' } ]
+      expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
+      expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
+      
+      # remove less restrictive operation
+      q.remove [ { flow: 'group' } ]
+      
+      # expects more restrictive expression { flow: 'group', id: 2 } to be recovered
+      expect( q.query     ).to.be.eql [ { flow: 'group', id: 2 } ]
+      expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' }, { flow: 'group', id: 2 } ]
+      expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' } ]
+      expect( q.optimized ).to.be.eql []
+    
+    
+    
     it 'generate() should generate a filter() function', ->
       q = new Query( [ { flow: 'group' }, { flow: 'user', id: 231 } ] ).generate()
       
