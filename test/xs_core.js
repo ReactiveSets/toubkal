@@ -1572,6 +1572,43 @@
           }
         ]);
       });
+      it('should not remove an expression which was previously optimized-out by add()', function() {
+        q.clear_operations();
+        q.add([
+          {
+            flow: 'group'
+          }
+        ]);
+        expect(q.optimized).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        q.remove([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'group'
+          }
+        ]);
+        expect(q.adds).to.be.eql([
+          {
+            flow: 'group'
+          }
+        ]);
+        expect(q.removes).to.be.eql([
+          {
+            flow: 'group',
+            id: 2
+          }
+        ]);
+        return expect(q.optimized).to.be.eql([]);
+      });
       it('generate() should generate a filter() function', function() {
         q = new Query([
           {

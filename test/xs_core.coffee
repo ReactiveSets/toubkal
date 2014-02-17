@@ -1035,8 +1035,21 @@ describe 'XS test suite:', ->
           { flow: 'user', id: 3 }
         ]
     
-    
-    
+    it 'should not remove an expression which was previously optimized-out by add()', ->
+      q.clear_operations()
+      q.add    [ { flow: 'group' } ]
+      
+      expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
+      
+      q.remove [ { flow: 'group', id: 2 } ]
+      
+      expect( q.query     ).to.be.eql [ { flow: 'group' } ]
+      expect( q.adds      ).to.be.eql [ { flow: 'group' } ]
+      expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
+      expect( q.optimized ).to.be.eql []
+      
+      
+      
     it 'generate() should generate a filter() function', ->
       q = new Query( [ { flow: 'group' }, { flow: 'user', id: 231 } ] ).generate()
       
