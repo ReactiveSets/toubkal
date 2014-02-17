@@ -912,6 +912,12 @@
         expect(q.adds).to.be.eql([]);
         return expect(q.removes).to.be.eql([]);
       });
+      it('new Query() should create an empty query', function() {
+        q = new Query();
+        expect(q.query).to.be.eql([]);
+        expect(q.adds).to.be.eql([]);
+        return expect(q.removes).to.be.eql([]);
+      });
       it('Query..add() should allow to "or" two empty queries', function() {
         q = new Query([]);
         expect(q.add([]).query).to.be.eql([]);

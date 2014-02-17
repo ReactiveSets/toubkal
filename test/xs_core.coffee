@@ -817,7 +817,14 @@ describe 'XS test suite:', ->
     q = null
     
     it 'new Query( [] ) should create an empty query', ->
-      q = new Query( [] );
+      q = new Query [];
+      
+      expect( q.query   ).to.be.eql []
+      expect( q.adds    ).to.be.eql []
+      expect( q.removes ).to.be.eql []
+      
+    it 'new Query() should create an empty query', ->
+      q = new Query();
       
       expect( q.query   ).to.be.eql []
       expect( q.adds    ).to.be.eql []
