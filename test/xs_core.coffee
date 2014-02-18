@@ -814,7 +814,7 @@ describe 'XS test suite:', ->
   describe 'XS.Query():', ->
     Query = XS.Query
     
-    q = null
+    q = q1 = null
     
     it 'new Query( [] ) should create an empty query', ->
       q = new Query [];
@@ -877,11 +877,16 @@ describe 'XS test suite:', ->
       expect( q.removes ).to.be.eql []
     
     it 'Query..add() should optimize more than one left expression per less restrictive right expression', ->
-      q = new Query( [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ] ).add [ flow: 'group' ]
+      q1 = [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+      
+      q = new Query( q1 ).add [ flow: 'group' ]
       
       expect( q.query   ).to.be.eql [ { flow: 'group' } ]
       expect( q.adds    ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
       expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+    
+    it 'should not have alterned Query() parameter query', ->
+      expect( q1 ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
     
     
     
@@ -927,21 +932,29 @@ describe 'XS test suite:', ->
       expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 } ]
     
     it 'Query..and() with two AND propositions should AND two queries and produce two propositions', ->
-      q.add( [ { flow: 'group' } ] ).and [ { id: 26 }, { id: 27 } ]
+      q1 = [ { id: 26 }, { id: 27 } ]
+      q.add( [ { flow: 'group' } ] ).and q1
       
       expect( q.query ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
       expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
       expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group' } ]
     
+    it 'should not have alterned and() parameter query', ->
+      expect( q1 ).to.be.eql [ { id: 26 }, { id: 27 } ]
+      
     it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
       q.clear_operations()
       
-      q.add( [ { flow: 'group' } ] ).and [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
+      q1 = [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
+      q.add( [ { flow: 'group' } ] ).and q1
       
       expect( q.query ).to.be.eql [ { flow: 'group', id: 27 } ]
       expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
       expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
     
+    it 'should not have alterned and() parameter query', ->
+      expect( q1 ).to.be.eql [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
+      
     
     
     it 'Query..remove() should allow to "remove" two empty queries', ->
@@ -1004,6 +1017,15 @@ describe 'XS test suite:', ->
         ]
       
     it 'Query..remove() should remove expressions after "remove" even if removed out of order', ->
+      q1 = [
+        { flow: 'user', id: 2 }
+        { flow: 'group', id: 3 }
+        { flow: 'user', id: 4 }
+        { flow: 'group', id: 1 }
+        { flow: 'user', id: 1 }
+        { flow: 'user', id: 3 }
+      ]
+      
       q = new Query( [
           { flow: 'user', id: 1 }
           { flow: 'user', id: 2 }
@@ -1012,14 +1034,7 @@ describe 'XS test suite:', ->
           { flow: 'group', id: 1 }
           { flow: 'group', id: 2 }
           { flow: 'group', id: 3 }
-        ] ).remove [
-          { flow: 'user', id: 2 }
-          { flow: 'group', id: 3 }
-          { flow: 'user', id: 4 }
-          { flow: 'group', id: 1 }
-          { flow: 'user', id: 1 }
-          { flow: 'user', id: 3 }
-        ]
+        ] ).remove q1
         
       expect( q.query ).to.be.eql [
           { flow: 'group', id: 2 }
@@ -1042,6 +1057,16 @@ describe 'XS test suite:', ->
           { flow: 'user', id: 3 }
         ]
     
+    it 'should not have alterned remove() parameter query', ->
+      expect( q1 ).to.be.eql [
+          { flow: 'user', id: 2 }
+          { flow: 'group', id: 3 }
+          { flow: 'user', id: 4 }
+          { flow: 'group', id: 1 }
+          { flow: 'user', id: 1 }
+          { flow: 'user', id: 3 }
+        ]
+      
     it 'should not remove an expression which was previously optimized-out by add()', ->
       q.clear_operations()
       
@@ -1049,12 +1074,17 @@ describe 'XS test suite:', ->
       
       expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
       
-      q.remove [ { flow: 'group', id: 2 } ]
+      q1 = [ { flow: 'group', id: 2 } ]
+      
+      q.remove q1
       
       expect( q.query     ).to.be.eql [ { flow: 'group' } ]
       expect( q.adds      ).to.be.eql [ { flow: 'group' } ]
       expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
       expect( q.optimized ).to.be.eql []
+    
+    it 'should not have alterned remove() parameter query', ->
+      expect( q1 ).to.be.eql [ { flow: 'group', id: 2 } ]
     
     it 'should recover expression previously optimized-out by add() when removing the less restrictive operation', ->
       q = new Query [ { flow: 'group', id: 2 } ]
@@ -1073,6 +1103,8 @@ describe 'XS test suite:', ->
       expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
       
       # remove less restrictive operation
+      q1 = [ { flow: 'group' } ]
+      
       q.remove [ { flow: 'group' } ]
       
       # expects more restrictive expression { flow: 'group', id: 2 } to be recovered
@@ -1080,6 +1112,9 @@ describe 'XS test suite:', ->
       expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' }, { flow: 'group', id: 2 } ]
       expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' } ]
       expect( q.optimized ).to.be.eql []
+      
+    it 'should not have alterned remove() parameter query', ->
+      expect( q1 ).to.be.eql [ { flow: 'group' } ]
     
     
     
