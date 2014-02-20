@@ -2625,14 +2625,14 @@
         });
       });
       describe('add():', function() {
-        cities.add([
-          {
-            id: 4,
-            name: "Berlin",
-            country: "Germany"
-          }
-        ]);
         return it('should contain Berlin after adding it', function(done) {
+          cities.add([
+            {
+              id: 4,
+              name: "Berlin",
+              country: "Germany"
+            }
+          ]);
           return cities.fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
@@ -3619,7 +3619,7 @@
         ], {
           key: ['country']
         });
-        cities_from_countries = cities.filter(countries).set([]);
+        cities_from_countries = cities.filter(countries).trace('cities from countries').set([]);
         it('cities_from_countries should be a Pipelet', function() {
           return expect(cities_from_countries).to.be.an(XS.Pipelet);
         });

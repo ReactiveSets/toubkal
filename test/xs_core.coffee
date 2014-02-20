@@ -1724,9 +1724,9 @@ describe 'XS test suite:', ->
         ]
     
     describe 'add():', ->
-      cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
-      
       it 'should contain Berlin after adding it', ( done ) ->
+        cities.add [ { id: 4, name: "Berlin", country: "Germany" } ]
+        
         cities.fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
           { id: 1, name: "Marrakech"    , country: "Morocco"                      }
           { id: 2, name: "Mountain View", country: "USA"    , state: "California" }
@@ -2066,7 +2066,7 @@ describe 'XS test suite:', ->
         { country: 'USA' }
       ], { key: [ 'country' ] }
       
-      cities_from_countries = cities.filter( countries ).set( [] )
+      cities_from_countries = cities.filter( countries ).trace( 'cities from countries' ).set( [] )
       
       it 'cities_from_countries should be a Pipelet', ->
         expect( cities_from_countries ).to.be.an XS.Pipelet
