@@ -2097,7 +2097,16 @@ describe 'XS test suite:', ->
             { id: 1, name: "Marrakech"    , country: "Morocco"                      }
             { id: 6, name: "Casablanca"   , country: "Morocco"                      }
           ]
-          
+      
+      it 'after adding San Francisco to cities, cities_from_countries should not change', ( done ) ->
+        cities.add [ { id: 11, name: 'San Francisco', country: "USA" } ]
+        
+        cities_from_countries.fetch_all ( values ) -> check done, ->
+          expect( values ).to.be.eql [
+            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
+            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
+          ]
+      
       it 'after adding Germany in countries, cities_from_countries should have cities from Morocco and Germany', ( done ) ->
         countries.add [ { country: 'Germany' } ]
         
@@ -2117,11 +2126,12 @@ describe 'XS test suite:', ->
           ]
           
           expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
-            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
-            { id: 4, name: "Berlin"       , country: "Germany"                      }
-            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
-            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
-            { id: 8, name: "Chicago"      , country: "USA"                          }
+            { id:  1, name: "Marrakech"    , country: "Morocco"                      }
+            { id:  4, name: "Berlin"       , country: "Germany"                      }
+            { id:  5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id:  6, name: "Casablanca"   , country: "Morocco"                      }
+            { id:  8, name: "Chicago"      , country: "USA"                          }
+            { id: 11, name: 'San Francisco', country: "USA"                          }
           ]
       
       it 'after adding Paris to cities, cities_from_countries should have cities from Morocco, Germany, France and the USA', ( done ) ->
@@ -2132,12 +2142,13 @@ describe 'XS test suite:', ->
           expect( cities.index_of( { id: 9 } ) ).to.not.be.eql -1
           
           expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
-            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
-            { id: 4, name: "Berlin"       , country: "Germany"                      }
-            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
-            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
-            { id: 8, name: "Chicago"      , country: "USA"                          }
-            { id: 9, name: "Paris"        , country: "France"                       }
+            { id:  1, name: "Marrakech"    , country: "Morocco"                      }
+            { id:  4, name: "Berlin"       , country: "Germany"                      }
+            { id:  5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id:  6, name: "Casablanca"   , country: "Morocco"                      }
+            { id:  8, name: "Chicago"      , country: "USA"                          }
+            { id:  9, name: "Paris"        , country: "France"                       }
+            { id: 11, name: 'San Francisco', country: "USA"                          }
           ]
       
       it 'should add a state to Chicago after updating Chicago s state to Illinois', ( done ) ->
@@ -2149,12 +2160,13 @@ describe 'XS test suite:', ->
           expect( cities.index_of( { id: 9 } ) ).to.not.be.eql -1
           
           expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
-            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
-            { id: 4, name: "Berlin"       , country: "Germany"                      }
-            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
-            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
-            { id: 8, name: "Chicago"      , country: "USA"    , state: "Illinois"   }
-            { id: 9, name: "Paris"        , country: "France"                       }
+            { id:  1, name: "Marrakech"    , country: "Morocco"                      }
+            { id:  4, name: "Berlin"       , country: "Germany"                      }
+            { id:  5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id:  6, name: "Casablanca"   , country: "Morocco"                      }
+            { id:  8, name: "Chicago"      , country: "USA"    , state: "Illinois"   }
+            { id:  9, name: "Paris"        , country: "France"                       }
+            { id: 11, name: 'San Francisco', country: "USA"                          }
           ]
         
       it 'after removing Germany from countries, cities_from_countries should have Berlin removed', ( done ) ->
@@ -2164,11 +2176,12 @@ describe 'XS test suite:', ->
           expect( countries.index_of( { country: "Germany" } ) ).to.be.eql -1
           
           expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
-            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
-            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
-            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
-            { id: 8, name: "Chicago"      , country: "USA"    , state: "Illinois"   }
-            { id: 9, name: "Paris"        , country: "France"                       }
+            { id:  1, name: "Marrakech"    , country: "Morocco"                      }
+            { id:  5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id:  6, name: "Casablanca"   , country: "Morocco"                      }
+            { id:  8, name: "Chicago"      , country: "USA"    , state: "Illinois"   }
+            { id:  9, name: "Paris"        , country: "France"                       }
+            { id: 11, name: 'San Francisco', country: "USA"                          }
           ]
       
       it 'after removing Chicago from cities, cities_from_countries should have it removed as well', ( done ) ->
@@ -2179,10 +2192,11 @@ describe 'XS test suite:', ->
           expect( cities.index_of( { id: 8 } ) ).to.be.eql -1
           
           expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
-            { id: 1, name: "Marrakech"    , country: "Morocco"                      }
-            { id: 5, name: "New York City", country: "USA"    , state: "New York"   }
-            { id: 6, name: "Casablanca"   , country: "Morocco"                      }
-            { id: 9, name: "Paris"        , country: "France"                       }
+            { id:  1, name: "Marrakech"    , country: "Morocco"                      }
+            { id:  5, name: "New York City", country: "USA"    , state: "New York"   }
+            { id:  6, name: "Casablanca"   , country: "Morocco"                      }
+            { id:  9, name: "Paris"        , country: "France"                       }
+            { id: 11, name: 'San Francisco', country: "USA"                          }
           ]
       
     describe 'notify():', ->

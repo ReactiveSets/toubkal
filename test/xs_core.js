@@ -3700,6 +3700,30 @@
             });
           });
         });
+        it('after adding San Francisco to cities, cities_from_countries should not change', function(done) {
+          cities.add([
+            {
+              id: 11,
+              name: 'San Francisco',
+              country: "USA"
+            }
+          ]);
+          return cities_from_countries.fetch_all(function(values) {
+            return check(done, function() {
+              return expect(values).to.be.eql([
+                {
+                  id: 1,
+                  name: "Marrakech",
+                  country: "Morocco"
+                }, {
+                  id: 6,
+                  name: "Casablanca",
+                  country: "Morocco"
+                }
+              ]);
+            });
+          });
+        });
         it('after adding Germany in countries, cities_from_countries should have cities from Morocco and Germany', function(done) {
           countries.add([
             {
@@ -3773,6 +3797,10 @@
                   id: 8,
                   name: "Chicago",
                   country: "USA"
+                }, {
+                  id: 11,
+                  name: 'San Francisco',
+                  country: "USA"
                 }
               ]);
             });
@@ -3819,6 +3847,10 @@
                   id: 9,
                   name: "Paris",
                   country: "France"
+                }, {
+                  id: 11,
+                  name: 'San Francisco',
+                  country: "USA"
                 }
               ]);
             });
@@ -3873,6 +3905,10 @@
                   id: 9,
                   name: "Paris",
                   country: "France"
+                }, {
+                  id: 11,
+                  name: 'San Francisco',
+                  country: "USA"
                 }
               ]);
             });
@@ -3914,6 +3950,10 @@
                   id: 9,
                   name: "Paris",
                   country: "France"
+                }, {
+                  id: 11,
+                  name: 'San Francisco',
+                  country: "USA"
                 }
               ]);
             });
@@ -3953,6 +3993,10 @@
                   id: 9,
                   name: "Paris",
                   country: "France"
+                }, {
+                  id: 11,
+                  name: 'San Francisco',
+                  country: "USA"
                 }
               ]);
             });
