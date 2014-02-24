@@ -27,7 +27,8 @@ var xs      = require( '../lib/pipelet.js' )
   , extend  = XS.extend
 ;
 
-require( '../lib/server/http.js' )
+require( '../lib/filter.js' );
+require( '../lib/server/http.js' );
 require( '../lib/server/socket_io_clients.js' );
 require( '../lib/server/file.js' );
 
@@ -243,11 +244,13 @@ var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
   , source_1 = xs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
 ;
 
+// ToDo: add authorizations test
+
 xs.union( [
     source_set.set_flow( 'source' ),
     source_1.set_flow( 'source_1' )
   ] )
-
+  
   .trace( 'to socket.io clients' )
   
   .dispatch( clients, function( source, options ) {
@@ -259,6 +262,8 @@ xs.union( [
     
     return { input: input, output: output };
   }, { no_encapsulate: true, input_output: true } )
+  .trace( 'from dispatch' )
+  .flow( 'client_set' )
   .set()
 ;
 

@@ -23,11 +23,15 @@
           { id: 3 }
         ] )
         
+        .set_flow( 'client_set' )
+        
         .trace( 'to socket io server' )
         
         .socket_io_server()
         
         .trace( 'from socket io server' )
+        
+        .flow( 'source' )
         
         .set()
       ;
