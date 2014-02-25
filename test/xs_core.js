@@ -7011,7 +7011,9 @@
           id: 12,
           name: "Agatha Christie"
         }
-      ]);
+      ], {
+        name: 'authors'
+      });
       books = xs.set([
         {
           id: 1,
@@ -7074,7 +7076,9 @@
           title: "Charlie and the Chocolate Factory",
           author_id: 14
         }
-      ]);
+      ], {
+        name: 'books'
+      });
       books_with_authors = books.join(authors, [['author_id', 'id']], function(book, author) {
         if (author) {
           return extend({}, book, {
@@ -7084,7 +7088,8 @@
           return book;
         }
       }, {
-        left: true
+        left: true,
+        name: 'books_with_authors'
       }).set();
       books_sales = xs.set([
         {
@@ -7152,7 +7157,8 @@
           sales: 13
         }
       ], {
-        key: ['year', 'book_id']
+        key: ['year', 'book_id'],
+        name: 'books_sales'
       });
       it('should join books and authors', function(done) {
         return books_with_authors.fetch_all(function(values) {

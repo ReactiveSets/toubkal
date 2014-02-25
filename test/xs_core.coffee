@@ -3043,7 +3043,7 @@ describe 'XS test suite:', ->
       { id: 12, name: "Agatha Christie"         }
       # { id: 13, name: "Ellen G. White"          }
       # { id: 14, name: "Roald Dahl"              }
-    ]
+    ], { name: 'authors' }
     
     books = xs.set [
       { id:  1, title: "A Tale of Two Cities"                    , author_id:  1 }
@@ -3062,7 +3062,7 @@ describe 'XS test suite:', ->
       { id: 14, title: "And Then There Were None"                , author_id: 12 }
       # { id: 15, title: "Steps to Christ"                         , author_id: 13 }
       { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
-    ]
+    ], { name: 'books' }
     
     books_with_authors = books.join(
       authors
@@ -3072,9 +3072,9 @@ describe 'XS test suite:', ->
       ( book, author ) ->
         return if author then extend {}, book, { author_name: author.name } else book
       
-      { left: true }
+      { left: true, name: 'books_with_authors' }
     ).set()
-
+    
     books_sales = xs.set [
       { book_id:  1, sales:       200, year: 1859 }
       { book_id:  2, sales:       150, year: 1955 }
@@ -3092,7 +3092,7 @@ describe 'XS test suite:', ->
       { book_id: 14, sales:       100, year: undefined }
       { book_id: 15, sales:        60, year: null }
       { book_id: 16, sales:        13             }
-    ], { key: ['year', 'book_id'] }
+    ], { key: ['year', 'book_id'], name: 'books_sales' }
     
     it 'should join books and authors', ( done ) ->
       books_with_authors.fetch_all ( values ) -> check done, ->
