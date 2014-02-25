@@ -245,6 +245,15 @@ var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
 ;
 
 // ToDo: add authorizations test
+function client( source, options ) {
+  de&&ug( 'creating socket_io client id: ' + this.id );
+  
+  var input  = source.plug( this.socket )
+    , output = input.trace( 'from socket.io clients' )
+  ;
+  
+  return { input: input, output: output };
+} // client()
 
 var client_filter = xs.set( [ { flow: 'client_set', id: 1 }, { flow: 'client_set', id: 3 } ] );
 
@@ -255,17 +264,12 @@ xs.union( [
   
   .trace( 'to socket.io clients' )
   
-  .dispatch( clients, function( source, options ) {
-    de&&ug( 'creating socket_io client id: ' + this.id );
-    
-    var input  = source.plug( this.socket )
-      , output = input.trace( 'from socket.io clients' )
-    ;
-    
-    return { input: input, output: output };
-  }, { no_encapsulate: true, input_output: true } )
+  .dispatch( clients, client, { no_encapsulate: true, input_output: true } )
+  
   .trace( 'from dispatch' )
+  
   .filter( client_filter )
+  
   .set()
 ;
 
