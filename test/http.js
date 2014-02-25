@@ -246,6 +246,8 @@ var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
 
 // ToDo: add authorizations test
 
+var client_filter = xs.set( [ { flow: 'client_set', id: 1 }, { flow: 'client_set', id: 3 } ] );
+
 xs.union( [
     source_set.set_flow( 'source' ),
     source_1.set_flow( 'source_1' )
@@ -263,10 +265,14 @@ xs.union( [
     return { input: input, output: output };
   }, { no_encapsulate: true, input_output: true } )
   .trace( 'from dispatch' )
-  .flow( 'client_set' )
+  .filter( client_filter )
   .set()
 ;
 
 setInterval( function() {
   source_set.add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
-} , 10000 )
+} , 10000 );
+
+setTimeout( function() {
+  client_filter.add( [ { flow: 'client_set', id: 2 } ] );
+}, 15000 );
