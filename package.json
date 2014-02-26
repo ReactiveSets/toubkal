@@ -33,10 +33,11 @@
   },
   
   "devDependencies": {
-    "coffee-script"  : "~1.6.0",
-    "mocha"          : "latest",
-    "expect.js"      : "0.2.0",
-    "mocha-phantomjs": "2.0.1"
+    "coffee-script"         : "~1.6.0",
+    "mocha"                 : "latest",
+    "expect.js"             : "0.2.0",
+    "mocha-phantomjs"       : "2.0.1",
+    "mocha-unfunk-reporter" : "0.4.0"
   },
   
   "scripts": {
