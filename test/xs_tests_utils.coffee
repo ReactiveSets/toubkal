@@ -58,9 +58,12 @@ check = this.check = ( done, test ) ->
 xs = this.xs = this.xs || require( '../lib/pipelet.js' )
 
 XS = xs.XS
+log = XS.log
+
+log.newline_before = true;
 
 this.log = ( message ) ->
-  XS.log( 'xs tests, ' + message )
+  log( 'xs tests, ' + message )
 
 # ----------------------------------------------------------------------------------------------
 # Test utils test suite

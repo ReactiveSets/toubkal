@@ -20,7 +20,7 @@
 
 
 (function() {
-  var XS, check, clone, expect, xs;
+  var XS, check, clone, expect, log, xs;
 
   if (typeof mocha !== 'undefined') {
     mocha.setup('bdd');
@@ -57,8 +57,12 @@
 
   XS = xs.XS;
 
+  log = XS.log;
+
+  log.newline_before = true;
+
   this.log = function(message) {
-    return XS.log('xs tests, ' + message);
+    return log('xs tests, ' + message);
   };
 
   describe('Test utilities', function() {
