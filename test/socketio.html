@@ -21,9 +21,11 @@
           { id: 1 },
           { id: 2 },
           { id: 3 }
-        ] )
+        ], { name: 'client-set-source' } )
         
         .set_flow( 'client_set' )
+        
+        //.set( [], { name: 'client-set' } )
         
         .trace( 'to socket io server' )
         
