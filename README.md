@@ -428,7 +428,7 @@ git clone https://github.com/ConnectedSets/ConnectedSets.git
 
 cd ConnectedSets
 ./run_tests.sh
-254 passing (2s)
+-> passed 254 of 254 tests (2182ms)
 
 less -R test.out # for tests detailed traces
 ```
