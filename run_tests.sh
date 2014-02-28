@@ -9,4 +9,4 @@
 #
 # Tests results are then available in test.out
 
-npm test > test.out && ( tail test.out | grep passing ) || printf "\nfailed\n"
+npm test > test.out && ( tail -n 2 test.out | egrep 'passed ([0-9]*).*of \1[^0-9].*tests' ) || printf "\nfailed\n"
