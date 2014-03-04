@@ -1166,6 +1166,47 @@ describe 'XS test suite:', ->
         { flow: 'user', id: 235 }
       ]
     
+    
+    it 'differences() should returns adds and removes', ->
+      q = new Query [
+        { flow: 'stores', id: 1 }
+        { flow: 'stores', id: 2 }
+        { flow: 'stores', id: 3 }
+      ]
+      
+      q1 = [
+        { flow: 'stores', id: 3 }
+        { flow: 'stores', id: 4 }
+        { flow: 'stores', id: 5 }
+      ]
+      
+      differences = q.differences q1
+      
+      expect( q1 ).to.be.eql [
+        { flow: 'stores', id: 3 }
+        { flow: 'stores', id: 4 }
+        { flow: 'stores', id: 5 }
+      ]
+      
+      expect( q.query ).to.be.eql [
+        { flow: 'stores', id: 1 }
+        { flow: 'stores', id: 2 }
+        { flow: 'stores', id: 3 }
+      ]
+      
+      expect( differences ).to.be.eql [
+        [
+          { flow: 'stores', id: 4 }
+          { flow: 'stores', id: 5 }
+        ]
+        
+        [
+          { flow: 'stores', id: 1 }
+          { flow: 'stores', id: 2 }
+        ]
+      ]
+    
+    
   describe 'XS.Pipelet(): tests for Query Tree', ->
     tree = new XS.Pipelet()
     

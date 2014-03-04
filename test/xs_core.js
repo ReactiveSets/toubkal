@@ -1841,7 +1841,7 @@
         q = new Query([{}]).generate();
         return expect(typeof q.filter).to.be.eql('function');
       });
-      return it('should filter nothing, this is a pass-through filter', function() {
+      it('should filter nothing, this is a pass-through filter', function() {
         return expect(q.filter([
           {
             flow: 'group',
@@ -1870,6 +1870,77 @@
             flow: 'user',
             id: 235
           }
+        ]);
+      });
+      return it('differences() should returns adds and removes', function() {
+        var differences;
+        q = new Query([
+          {
+            flow: 'stores',
+            id: 1
+          }, {
+            flow: 'stores',
+            id: 2
+          }, {
+            flow: 'stores',
+            id: 3
+          }
+        ]);
+        q1 = [
+          {
+            flow: 'stores',
+            id: 3
+          }, {
+            flow: 'stores',
+            id: 4
+          }, {
+            flow: 'stores',
+            id: 5
+          }
+        ];
+        differences = q.differences(q1);
+        expect(q1).to.be.eql([
+          {
+            flow: 'stores',
+            id: 3
+          }, {
+            flow: 'stores',
+            id: 4
+          }, {
+            flow: 'stores',
+            id: 5
+          }
+        ]);
+        expect(q.query).to.be.eql([
+          {
+            flow: 'stores',
+            id: 1
+          }, {
+            flow: 'stores',
+            id: 2
+          }, {
+            flow: 'stores',
+            id: 3
+          }
+        ]);
+        return expect(differences).to.be.eql([
+          [
+            {
+              flow: 'stores',
+              id: 4
+            }, {
+              flow: 'stores',
+              id: 5
+            }
+          ], [
+            {
+              flow: 'stores',
+              id: 1
+            }, {
+              flow: 'stores',
+              id: 2
+            }
+          ]
         ]);
       });
     });
