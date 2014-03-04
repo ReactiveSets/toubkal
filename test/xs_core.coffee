@@ -1196,13 +1196,13 @@ describe 'XS test suite:', ->
       
       expect( differences ).to.be.eql [
         [
-          { flow: 'stores', id: 4 }
-          { flow: 'stores', id: 5 }
+          { flow: 'stores', id: 1 }
+          { flow: 'stores', id: 2 }
         ]
         
         [
-          { flow: 'stores', id: 1 }
-          { flow: 'stores', id: 2 }
+          { flow: 'stores', id: 4 }
+          { flow: 'stores', id: 5 }
         ]
       ]
     
