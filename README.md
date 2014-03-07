@@ -618,13 +618,14 @@ node server.js
 
 #### Main Goals:
 
-- Finalize Subcribe / Push model using optimized Query Tree Router and lazy connection of stateless pipelets
+- Finalize Subscribe / Push model using optimized Query Tree Router and lazy connection of stateless pipelets
 - Automate UI tests on Travis
 - Develop additional tests, goal is at least 300 automated tests
 - Watch directory metadata flow
 
 #### Features already developped:
 
+- Controllets which control upstream query trees using downstream queries
 - Transactions
 - Virtual Hosts w/ optimized routing
 - Touch Events on bootstrap pipelets

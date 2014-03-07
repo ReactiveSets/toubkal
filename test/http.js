@@ -120,6 +120,27 @@ var xs_min = xs
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
+var xs_core_min = xs
+  .union( [ xs_dependencies, xs.set( [
+    { name: 'lib/xs.js'                    },
+    { name: 'lib/code.js'                  },
+    { name: 'lib/pipelet.js'               },
+    { name: 'lib/filter.js'                },
+    { name: 'lib/order.js'                 },
+    { name: 'lib/aggregate.js'             },
+    { name: 'lib/join.js'                  }
+  ] ) ] )
+  .auto_increment( { name: 'xs core' } )
+  .watch()
+  .order( [ { id: 'id' } ] )
+  .uglify( 'lib/xs_core-min.js', { warnings: false } )
+;
+  
+var pipelet_min = xs.set( [ { id: 1, name: 'lib/pipelet.js' } ] )
+  .watch()
+  .uglify( 'lib/pipelet-min.js', { warnings: false } )
+;
+
 var mocha_css = xs
   .set( [ { name: 'mocha/mocha.css' } ] )
   .require_resolve()
@@ -155,6 +176,8 @@ var tests = xs
     { name: 'test/table_controls.html'         },
     { name: 'test/ui.html'                     },
     { name: 'test/url.html'                    },
+    { name: 'test/pipelet.html'                },
+    { name: 'test/xs_core.html'                },
     
     // JavaScript for tests
     { name : 'test/javascript/jquery-1.10.2.min.js' },
@@ -233,7 +256,7 @@ var source_maps = xs.set( [
 ;
 
 // Serve assets to http servers
-xs.union( [ xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
+xs.union( [ pipelet_min, xs_core_min, xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 
