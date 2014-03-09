@@ -43,7 +43,7 @@
     var parsed_urls;
     parsed_urls = urls_set.url_parse().trace('Parsed URL: ');
     it('parsed_urls should be empty', function(done) {
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.empty;
         });
@@ -55,7 +55,7 @@
           link: 'http://www.hostname.com:8080/foo/bar/#albums?id=87d3ed53v1i9'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.empty;
         });
@@ -67,7 +67,7 @@
           url: 'www.hostname.com'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -85,7 +85,7 @@
           url: 'http://www.hostname.com'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -109,7 +109,7 @@
           url: 'http://hostname.com:8080'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -140,7 +140,7 @@
           url: 'http://www.hostname.com:8080/foo/bar/index.html'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -179,7 +179,7 @@
           url: 'http://www.hostname.com:8080/foo/bar/#albums'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -227,7 +227,7 @@
           url: 'http://www.hostname.com:8080/foo/bar/#?page=sales&year=2012&month=12'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -284,7 +284,7 @@
           url: 'http://www.hostname.com:8080/foo/bar/#albums?id=983gd8f8-j76r-4d89-y27o-87d3ed53v1i9&display=15&order_id=date&order_type=desc'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -350,7 +350,7 @@
           url: 'http://www.hostname.com:8080/#albums'
         }
       ]);
-      return parsed_urls.fetch_all(function(values) {
+      return parsed_urls._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {
@@ -427,7 +427,7 @@
       parse_query_string: true
     }).trace('Parsed URL: ');
     return it('parsed url should have a query string attribute', function(done) {
-      return parsed_urls_with_quersy_string.fetch_all(function(values) {
+      return parsed_urls_with_quersy_string._fetch_all(function(values) {
         return check(done, function() {
           return expect(values).to.be.eql([
             {

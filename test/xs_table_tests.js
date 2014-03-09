@@ -151,11 +151,11 @@
     it('columns should be equal to object.columns', function() {
       var object;
       object = from_HTML_to_object(node);
-      return expect(columns.fetch_all()).to.be.eql(object.columns);
+      return expect(columns._fetch_all()).to.be.eql(object.columns);
     });
-    it('after add 2 objects: columns.add( objects ) should be equal to object.columns', function() {
+    it('after add 2 objects: columns._add( objects ) should be equal to object.columns', function() {
       var object;
-      columns.add([
+      columns._add([
         {
           id: "year",
           label: "Year",
@@ -166,22 +166,22 @@
         }
       ]);
       object = from_HTML_to_object(node);
-      return expect(columns.fetch_all()).to.be.eql(object.columns);
+      return expect(columns._fetch_all()).to.be.eql(object.columns);
     });
-    it('after columns.remove( object ), columns should be equal to object.columns', function() {
+    it('after columns._remove( object ), columns should be equal to object.columns', function() {
       var object;
-      columns.remove([
+      columns._remove([
         {
           id: "id",
           label: "ID"
         }
       ]);
       object = from_HTML_to_object(node);
-      return expect(columns.fetch_all()).to.be.eql(object.columns);
+      return expect(columns._fetch_all()).to.be.eql(object.columns);
     });
-    return it('after columns.update( object ), columns should be equal to object.columns', function() {
+    return it('after columns._update( object ), columns should be equal to object.columns', function() {
       var object;
-      columns.update([
+      columns._update([
         [
           {
             id: "language",
@@ -193,7 +193,7 @@
         ]
       ]);
       object = from_HTML_to_object(node);
-      return expect(columns.fetch_all()).to.be.eql(object.columns);
+      return expect(columns._fetch_all()).to.be.eql(object.columns);
     });
   });
 
@@ -224,9 +224,9 @@
         }
       ]);
     });
-    it('after books.add( objects ): books should be equal to object.data', function() {
+    it('after books._add( objects ): books should be equal to object.data', function() {
       var object;
-      books.add([
+      books._add([
         {
           id: 5,
           title: "Angels and Demons",
@@ -381,9 +381,9 @@
         }
       ]);
     });
-    it('after books.update( objects ): books should be equal to object.data', function() {
+    it('after books._update( objects ): books should be equal to object.data', function() {
       var object;
-      books.update([
+      books._update([
         [
           {
             id: 2,
@@ -484,9 +484,9 @@
         }
       ]);
     });
-    return it('after books.remove( objects ): books should be equal to object.data', function() {
+    return it('after books._remove( objects ): books should be equal to object.data', function() {
       var object;
-      books.remove([
+      books._remove([
         {
           id: 1,
           title: "A Tale of Two Cities",

@@ -47,19 +47,19 @@ describe 'url_pase(): no options', ->
     .trace( 'Parsed URL: ' )
   
   it 'parsed_urls should be empty', ( done )->
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.empty
   
   it 'after urls_set.add( { link: \'http://www.hostname.com:8080/foo/bar/#albums?id=87d3ed53v1i9\' } ), parsed_urls should be empty', ( done )->
     urls_set.add [ { link: 'http://www.hostname.com:8080/foo/bar/#albums?id=87d3ed53v1i9' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.empty
   
   it 'after urls_set.add( www.hostname.com ), parsed url should have a host and hostname atributes', ( done ) ->
     urls_set.add [ { url: 'www.hostname.com' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [ {
         href    : 'www.hostname.com'
         host    : 'www.hostname.com'
@@ -69,7 +69,7 @@ describe 'url_pase(): no options', ->
   it 'after urls_set.add( http://www.hostname.com ), parsed url should have additionally a protocol and slashes atributes', ( done ) ->
     urls_set.add [ { url: 'http://www.hostname.com' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'
@@ -88,7 +88,7 @@ describe 'url_pase(): no options', ->
   it 'after urls_set.add( http://hostname.com:8080 ), parsed url should have additionally a port attribute ( the host should have the port number)', ( done ) ->
     urls_set.add [ { url: 'http://hostname.com:8080' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'
@@ -115,7 +115,7 @@ describe 'url_pase(): no options', ->
   it 'after urls_set.add( http://www.hostname.com:8080/foo/bar/index.html ), parsed url should have additionally a pathname atribute', ( done ) ->
     urls_set.add [ { url: 'http://www.hostname.com:8080/foo/bar/index.html' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'
@@ -151,7 +151,7 @@ describe 'url_pase(): no options', ->
   it 'after urls_set.add( http://www.hostname.com:8080/foo/bar/#albums ), parsed url should have additionally a hash atribute', ( done ) ->
     urls_set.add [ { url: 'http://www.hostname.com:8080/foo/bar/#albums' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'
@@ -197,7 +197,7 @@ describe 'url_pase(): no options', ->
   it 'after urls_set.add( http://www.hostname.com:8080/foo/bar/#?page=sales&year=2012&month=12 ), parsed url should have an empty hash atribute, and no query string', ( done ) ->
     urls_set.add [ { url: 'http://www.hostname.com:8080/foo/bar/#?page=sales&year=2012&month=12' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'
@@ -253,7 +253,7 @@ describe 'url_pase(): no options', ->
   it 'after urls_set.add( http://www.hostname.com:8080/foo/bar/#albums?id=983gd8f8-j76r-4d89-y27o-87d3ed53v1i9&display=15&order_id=date&order_type=desc ), parsed url should have a hash atribute, and no query string', ( done ) ->
     urls_set.add [ { url: 'http://www.hostname.com:8080/foo/bar/#albums?id=983gd8f8-j76r-4d89-y27o-87d3ed53v1i9&display=15&order_id=date&order_type=desc' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'
@@ -319,7 +319,7 @@ describe 'url_pase(): no options', ->
   it 'after urls_set.add( http://www.hostname.com:8080/#albums ), parsed url should have a hash atribute, no pathname and no query string', ( done ) ->
     urls_set.add [ { url: 'http://www.hostname.com:8080/#albums' } ]
     
-    parsed_urls.fetch_all ( values ) -> check done, ->
+    parsed_urls._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'
@@ -398,7 +398,7 @@ describe 'url_pase( parse_query_string: true ):', ->
     .trace( 'Parsed URL: ' )
   
   it 'parsed url should have a query string attribute', ( done ) ->
-    parsed_urls_with_quersy_string.fetch_all ( values ) -> check done, ->
+    parsed_urls_with_quersy_string._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [
         {
           href    : 'www.hostname.com'

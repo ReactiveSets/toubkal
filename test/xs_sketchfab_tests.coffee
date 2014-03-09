@@ -52,19 +52,19 @@ sketchfab_models = model_ids.sketchfab_get_models()
 
 describe 'sketchfab_get_models()', ->
   it 'sketchfab_models should be empty', ->
-    sketchfab_models.fetch_all ( values ) ->
+    sketchfab_models._fetch_all ( values ) ->
       expect( values ).to.be.empty()
   
-  it 'after model_ids.add( 2 objects ), sketchfab_models should contain 1 object ( first model id doesn\'t exist )', ( done ) ->
+  it 'after model_ids._add( 2 objects ), sketchfab_models should contain 1 object ( first model id doesn\'t exist )', ( done ) ->
     this.timeout 3000
     
-    model_ids.add [
+    model_ids._add [
       { id: '709bc6e7334840hebd96r6s4b9f329a7' }
       { id: '24f7d8d1b135462ab662d11b9df37704' }
     ]
     
-    sketchfab_models.on( 'complete', ->
-      sketchfab_models.fetch_all ( values ) -> check done, ->
+    sketchfab_models._on( 'complete', ->
+      sketchfab_models._fetch_all ( values ) -> check done, ->
         expect( values.length ).to.be 1
         expect( values ).to.be.eql [
           {
@@ -86,17 +86,17 @@ describe 'sketchfab_get_models()', ->
         ]
     , this, true )
   
-  it 'after model_ids.add( 3 objects ), sketchfab_models should contain 3 objects ( missing attribute "ID" in the second object )', ( done ) ->
+  it 'after model_ids._add( 3 objects ), sketchfab_models should contain 3 objects ( missing attribute "ID" in the second object )', ( done ) ->
     this.timeout 3000
     
-    model_ids.add [
+    model_ids._add [
       { id      : 'e90cfb483eef4be98823efb70187567e' }
       { model_id: 'c9b91c4cb26f4e9cb22fcfefa2665283' }
       { id      : '2226002e030c4517bc0136f325b9fa15' }
     ]
     
-    sketchfab_models.on( 'complete', ->
-      sketchfab_models.fetch_all ( values ) -> check done, ->
+    sketchfab_models._on( 'complete', ->
+      sketchfab_models._fetch_all ( values ) -> check done, ->
         expect( values.length ).to.be 3
         expect( values ).to.be.eql [
           {
@@ -150,14 +150,14 @@ describe 'sketchfab_get_models()', ->
         ]
     , this, true )
   
-  it 'after model_ids.remove( 3 object ), sketchfab_models should contain 2 objects', ->
-    model_ids.remove [
+  it 'after model_ids._remove( 3 object ), sketchfab_models should contain 2 objects', ->
+    model_ids._remove [
       { id      : 36                                 }
       { id      : 'e90cfb483eef4be98823efb70187567e' }
       { model_id: '2226002e030c4517bc0136f325b9fa15' }
     ]
     
-    sketchfab_models.fetch_all ( values ) ->
+    sketchfab_models._fetch_all ( values ) ->
       expect( values.length ).to.be 2
       expect( values ).to.be.eql [
         {
@@ -194,13 +194,13 @@ describe 'sketchfab_get_models()', ->
         }
       ]
   
-  it 'after model_ids.update( 1 object ), sketchfab_models should be equal to result', ( done ) ->
+  it 'after model_ids._update( 1 object ), sketchfab_models should be equal to result', ( done ) ->
     this.timeout 3000
     
-    model_ids.update [ [ { id: '24f7d8d1b135462ab662d11b9df37704' }, { id: '0ddc7728083e4f79bd87c96a54860a81' } ] ]
+    model_ids._update [ [ { id: '24f7d8d1b135462ab662d11b9df37704' }, { id: '0ddc7728083e4f79bd87c96a54860a81' } ] ]
     
-    sketchfab_models.on( 'complete', ->
-      sketchfab_models.fetch_all ( values ) -> check done, ->
+    sketchfab_models._on( 'complete', ->
+      sketchfab_models._fetch_all ( values ) -> check done, ->
         expect( values.length ).to.be 2
         expect( values ).to.be.eql [
           {

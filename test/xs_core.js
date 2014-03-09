@@ -43,7 +43,7 @@
   uuid_v4 = XS.uuid_v4;
 
   check_set_content = function(done, source, values) {
-    return source.fetch_all(function(_values) {
+    return source._fetch_all(function(_values) {
       return check(done, function() {
         return expect(_values.sort(function(a, b) {
           return a.id - b.id;
@@ -304,7 +304,7 @@
         return expect(emitter._emit_event('data', {})).to.be(emitter);
       });
       it('should allow to set a "data" event listener', function() {
-        emitter.on("data", function() {
+        emitter._on("data", function() {
           return data = arguments;
         });
         expect(Object.keys(emitter._events)).to.be.eql(["data"]);
@@ -633,8 +633,8 @@
             transaction_id: tid
           });
         });
-        it('should decrease count to 1 and set added_length to 2 after t.emit_add( [{}{}] )', function() {
-          return expect(t.emit_add([{}, {}]).toJSON()).to.be.eql({
+        it('should decrease count to 1 and set added_length to 2 after t.__emit_add( [{}{}] )', function() {
+          return expect(t.__emit_add([{}, {}]).toJSON()).to.be.eql({
             name: '',
             tid: tid,
             count: 1,
@@ -645,8 +645,8 @@
             removed_length: 0
           });
         });
-        it('should decrease count to zero and set removed_length to 1 after t.emit_remove( [{}] )', function() {
-          return expect(t.emit_remove([{}]).toJSON()).to.be.eql({
+        it('should decrease count to zero and set removed_length to 1 after t.__emit_remove( [{}] )', function() {
+          return expect(t.__emit_remove([{}]).toJSON()).to.be.eql({
             name: '',
             tid: tid,
             count: 0,
@@ -713,7 +713,7 @@
           _get_name: function() {
             return 'Pipelet';
           },
-          emit: function(operation, values, options) {
+          __emit: function(operation, values, options) {
             this._operations.push(arguments);
             return this;
           }
@@ -758,8 +758,8 @@
             removed_length: 0
           });
         });
-        it('should decrease count after t.emit_add( [] )', function() {
-          t.emit_add([]);
+        it('should decrease count after t.__emit_add( [] )', function() {
+          t.__emit_add([]);
           return expect(t.toJSON()).to.be.eql({
             name: 'Pipelet',
             tid: tid,
@@ -771,8 +771,8 @@
             removed_length: 0
           });
         });
-        it('should decrease count and increse added_length after t.emit_add( [ { id: 1 } ] )', function() {
-          t.emit_add([
+        it('should decrease count and increse added_length after t.__emit_add( [ { id: 1 } ] )', function() {
+          t.__emit_add([
             {
               id: 1
             }
@@ -788,8 +788,8 @@
             removed_length: 0
           });
         });
-        it('should decrease count and need close after t.emit_add( [ { id: 2 } ], true )', function() {
-          t.emit_add([
+        it('should decrease count and need close after t.__emit_add( [ { id: 2 } ], true )', function() {
+          t.__emit_add([
             {
               id: 2
             }
@@ -816,9 +816,9 @@
             ]
           ]);
         });
-        it('should raise an exception on extra t.emit_add( [ { id: 1 } ], true )', function() {
+        it('should raise an exception on extra t.__emit_add( [ { id: 1 } ], true )', function() {
           expect(function() {
-            return t.emit_add([
+            return t.__emit_add([
               {
                 id: 3
               }
@@ -881,8 +881,8 @@
             removed_length: 0
           });
         });
-        return it('should increase removed_length to 2 after t.emit_remove( [ { id:1 }, { id: 2 } ] )', function() {
-          t.emit_remove([
+        return it('should increase removed_length to 2 after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', function() {
+          t.__emit_remove([
             {
               id: 1
             }, {
@@ -1965,7 +1965,7 @@
         });
       });
       it('Adding a query should generate a query tree', function() {
-        return expect(tree.query_tree_add([
+        return expect(tree.__query_tree_add([
           {
             flow: 'user'
           }
@@ -1986,7 +1986,7 @@
         });
       });
       it('Adding an empty OR-term should add subscriber to the root of the tree - i.e. unfiltered', function() {
-        return expect(tree.query_tree_add([{}], subscriber_2).query_tree_top).to.be.eql({
+        return expect(tree.__query_tree_add([{}], subscriber_2).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
@@ -2003,7 +2003,7 @@
         });
       });
       it('Adding an additional query should expand the query tree', function() {
-        return expect(tree.query_tree_add([
+        return expect(tree.__query_tree_add([
           {
             flow: 'user'
           }, {
@@ -2061,7 +2061,7 @@
         });
       });
       it('Remove a query should shrink the query tree', function() {
-        return expect(tree.query_tree_remove([{}], subscriber_2).query_tree_top).to.be.eql({
+        return expect(tree.__query_tree_remove([{}], subscriber_2).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "user": {
@@ -2107,7 +2107,7 @@
         });
       });
       it('Remove another query should shrink the query tree further', function() {
-        return expect(tree.query_tree_remove([
+        return expect(tree.__query_tree_remove([
           {
             flow: 'user'
           }
@@ -2157,7 +2157,7 @@
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
-        return expect(tree.query_tree_remove([
+        return expect(tree.__query_tree_remove([
           {
             flow: 'user'
           }
@@ -2201,7 +2201,7 @@
         });
       });
       it('Add and Remove empty queries should not change anything', function() {
-        return expect(tree.query_tree_add([]).query_tree_remove([]).query_tree_top).to.be.eql({
+        return expect(tree.__query_tree_add([]).__query_tree_remove([]).query_tree_top).to.be.eql({
           branches: {
             "flow": {
               "group": {
@@ -2241,7 +2241,7 @@
         });
       });
       it('Remove another query should shrink the query tree even further', function() {
-        return expect(tree.query_tree_remove([
+        return expect(tree.__query_tree_remove([
           {
             flow: 'group',
             id: 521
@@ -2266,7 +2266,7 @@
         });
       });
       return it('Remove the last record, should empty the query tree', function() {
-        return expect(tree.query_tree_remove([
+        return expect(tree.__query_tree_remove([
           {
             id: 425
           }
@@ -2293,27 +2293,27 @@
       subscriber_4 = xs.set({
         name: 'subscriber_4'
       });
-      tree.query_tree_add([
+      tree.__query_tree_add([
         {
           flow: 'user',
           id: 123
         }
       ], subscriber_1);
-      tree.query_tree_add([
+      tree.__query_tree_add([
         {
           flow: 'user',
           id: 345
         }
       ], subscriber_2);
-      tree.query_tree_add([{}], subscriber_3);
-      tree.query_tree_add([
+      tree.__query_tree_add([{}], subscriber_3);
+      tree.__query_tree_add([
         {
           id: 123
         }, {
           flow: 'user'
         }
       ], subscriber_4);
-      tree.query_tree_emit('add', [
+      tree.__query_tree_emit('add', [
         {
           flow: 'group'
         }, {
@@ -2327,7 +2327,7 @@
         }
       ]);
       it('Should allow to emit an add operation filtered by a query to the first subscriber', function(done) {
-        return subscriber_1.fetch_all(function(values) {
+        return subscriber_1._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -2339,7 +2339,7 @@
         });
       });
       it('Should emit other values to the second subscriber', function(done) {
-        return subscriber_2.fetch_all(function(values) {
+        return subscriber_2._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -2351,7 +2351,7 @@
         });
       });
       it('Should emit all values to the third subscriber', function(done) {
-        return subscriber_3.fetch_all(function(values) {
+        return subscriber_3._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -2370,7 +2370,7 @@
         });
       });
       it('Should not duplicate or reorder values emited to fourth subscriber', function(done) {
-        return subscriber_4.fetch_all(function(values) {
+        return subscriber_4._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -2387,20 +2387,20 @@
         });
       });
       it("should alter first recepient's set", function(done) {
-        tree.query_tree_emit('remove', [
+        tree.__query_tree_emit('remove', [
           {
             flow: 'user',
             id: 123
           }
         ]);
-        return subscriber_1.fetch_all(function(values) {
+        return subscriber_1._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([]);
           });
         });
       });
       it("should not alter second subscriber's set", function(done) {
-        return subscriber_2.fetch_all(function(values) {
+        return subscriber_2._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -2412,12 +2412,12 @@
         });
       });
       it('Third subscriber set should have two record less after removing one more record', function(done) {
-        tree.query_tree_emit('remove', [
+        tree.__query_tree_emit('remove', [
           {
             id: 123
           }
         ]);
-        return subscriber_3.fetch_all(function(values) {
+        return subscriber_3._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -2431,20 +2431,20 @@
         });
       });
       it('Second subscriber be empy after removing one more record', function(done) {
-        tree.query_tree_emit('remove', [
+        tree.__query_tree_emit('remove', [
           {
             flow: 'user',
             id: 345
           }
         ]);
-        return subscriber_2.fetch_all(function(values) {
+        return subscriber_2._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([]);
           });
         });
       });
       it('And third subscriber should have only one record left', function(done) {
-        return subscriber_3.fetch_all(function(values) {
+        return subscriber_3._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([
               {
@@ -2455,40 +2455,40 @@
         });
       });
       it('third subscriber should be empty after removing last record', function(done) {
-        tree.query_tree_emit('remove', [
+        tree.__query_tree_emit('remove', [
           {
             flow: 'group'
           }
         ]);
-        return subscriber_3.fetch_all(function(values) {
+        return subscriber_3._fetch_all(function(values) {
           return check(done, function() {
             return expect(values).to.be.eql([]);
           });
         });
       });
-      return it('clear should clear all records from all subscribers', function(done) {
+      return it('_clear should clear all records from all subscribers', function(done) {
         var all_values, count, fetched;
-        tree.query_tree_add([
+        tree.__query_tree_add([
           {
             flow: 'user',
             id: 123
           }
         ], subscriber_1);
-        tree.query_tree_add([
+        tree.__query_tree_add([
           {
             flow: 'user',
             id: 345
           }
         ], subscriber_2);
-        tree.query_tree_add([{}], subscriber_3);
-        tree.query_tree_add([
+        tree.__query_tree_add([{}], subscriber_3);
+        tree.__query_tree_add([
           {
             id: 123
           }, {
             flow: 'user'
           }
         ], subscriber_4);
-        tree.query_tree_emit('add', [
+        tree.__query_tree_emit('add', [
           {
             flow: 'group'
           }, {
@@ -2501,7 +2501,7 @@
             id: 345
           }
         ]);
-        tree.query_tree_emit('clear');
+        tree.__query_tree_emit('clear');
         count = 4;
         all_values = [];
         fetched = function(values) {
@@ -2510,10 +2510,10 @@
             return expect(all_values).to.be.eql([[], [], [], []]);
           });
         };
-        subscriber_1.fetch_all(fetched);
-        subscriber_2.fetch_all(fetched);
-        subscriber_3.fetch_all(fetched);
-        return subscriber_4.fetch_all(fetched);
+        subscriber_1._fetch_all(fetched);
+        subscriber_2._fetch_all(fetched);
+        subscriber_3._fetch_all(fetched);
+        return subscriber_4._fetch_all(fetched);
       });
     });
     describe('Pipelets Connections', function() {
@@ -2525,10 +2525,10 @@
           id: 2
         }
       ];
-      it('should fetch content through a stateless pipelet', function(done) {
+      it('should _fetch content through a stateless pipelet', function(done) {
         var p;
         p = xs.set(values).pass_through();
-        return p.fetch_all(function(_values) {
+        return p._fetch_all(function(_values) {
           return check(done, function() {
             return expect(_values).to.be.eql(values);
           });
@@ -2539,12 +2539,12 @@
         s = xs.set(values).pass_through().set();
         return expect(s.a).to.be.eql(values);
       });
-      it('should fetch content even if stateless pipelet is pluged last into upstream pipelet', function(done) {
+      it('should _fetch content even if stateless pipelet is pluged last into upstream pipelet', function(done) {
         var p, s;
         s = xs.set(values);
         p = xs.pass_through();
-        s.plug(p);
-        return p.fetch_all(function(_values) {
+        s._add_destination(p);
+        return p._fetch_all(function(_values) {
           return check(done, function() {
             return expect(_values).to.be.eql(values);
           });
@@ -2555,7 +2555,7 @@
         s = xs.set(values);
         p = xs.pass_through();
         s1 = p.set();
-        s.plug(p);
+        s._add_destination(p);
         return expect(s1.a).to.be.eql(values);
       });
     });
@@ -2650,7 +2650,7 @@
       ]);
       describe('Delayed set:', function() {
         return it('Delayed set (100 ms) should eventually equal its source values', function(done) {
-          return delayed_set.fetch_all(function(values) {
+          return delayed_set._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2662,16 +2662,16 @@
           });
         });
       });
-      describe('fetch_all():', function() {
-        it('set.fetch_all() should be empty', function(done) {
-          return set.fetch_all(function(values) {
+      describe('_fetch_all():', function() {
+        it('set._fetch_all() should be empty', function(done) {
+          return set._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([]);
             });
           });
         });
-        return it('cars.fetch_all() should be equal to result', function(done) {
-          return cars.fetch_all(function(values) {
+        return it('cars._fetch_all() should be equal to result', function(done) {
+          return cars._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2697,14 +2697,14 @@
       });
       describe('add():', function() {
         return it('should contain Berlin after adding it', function(done) {
-          cities.add([
+          cities._add([
             {
               id: 4,
               name: "Berlin",
               country: "Germany"
             }
           ]);
-          return cities.fetch_all(function(values) {
+          return cities._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2755,16 +2755,16 @@
         });
       });
       describe('remove():', function() {
-        it('set.remove( [ { id: 1 } ] ).add( [ { id: 2 } ] ) should have id 2', function(done) {
-          return set.remove([
+        it('set._remove( [ { id: 1 } ] )._add( [ { id: 2 } ] ) should have id 2', function(done) {
+          return set._remove([
             {
               id: 1
             }
-          ]).add([
+          ])._add([
             {
               id: 2
             }
-          ]).fetch_all(function(values) {
+          ])._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2782,11 +2782,11 @@
           ]);
         });
         it('adding back this element should not change the set', function(done) {
-          return set.add([
+          return set._add([
             {
               id: 1
             }
-          ]).fetch_all(function(values) {
+          ])._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2800,23 +2800,23 @@
           return expect(set.b).to.be.eql([]);
         });
         it('removing id 2 should left set empty again', function(done) {
-          return set.remove([
+          return set._remove([
             {
               id: 2
             }
-          ]).fetch_all(function(values) {
+          ])._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([]);
             });
           });
         });
-        it('employee.remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', function(done) {
-          employee.remove([
+        it('employee._remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', function(done) {
+          employee._remove([
             {
               id: 15
             }
           ]);
-          return employee.fetch_all(function(values) {
+          return employee._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2860,13 +2860,13 @@
             });
           });
         });
-        it('employee.remove( [ { id: 1 } ] ) should be equal to result: first record', function(done) {
-          employee.remove([
+        it('employee._remove( [ { id: 1 } ] ) should be equal to result: first record', function(done) {
+          employee._remove([
             {
               id: 1
             }
           ]);
-          return employee.fetch_all(function(values) {
+          return employee._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2904,13 +2904,13 @@
             });
           });
         });
-        it('employee.remove( [ { id: 5 } ] ) should be equal to result: record in the middle', function(done) {
-          employee.remove([
+        it('employee._remove( [ { id: 5 } ] ) should be equal to result: record in the middle', function(done) {
+          employee._remove([
             {
               id: 5
             }
           ]);
-          return employee.fetch_all(function(values) {
+          return employee._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -2942,12 +2942,12 @@
             });
           });
         });
-        return it('employee.remove( [ { id: 6 } ] ) should be equal to result: last record', function(done) {
-          return employee.remove([
+        return it('employee._remove( [ { id: 6 } ] ) should be equal to result: last record', function(done) {
+          return employee._remove([
             {
               id: 6
             }
-          ]).fetch_all(function(values) {
+          ])._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id > b.id;
@@ -2976,9 +2976,9 @@
           });
         });
       });
-      describe('update():', function() {
-        it('set.update( [ [ { id: 1 }, { id: 1, v: "test" } ] ] ) should be equal to set: empty set', function(done) {
-          return set.update([
+      describe('_update():', function() {
+        it('set._update( [ [ { id: 1 }, { id: 1, v: "test" } ] ] ) should be equal to set: empty set', function(done) {
+          return set._update([
             [
               {
                 id: 1
@@ -2987,20 +2987,20 @@
                 v: 'test'
               }
             ]
-          ]).fetch_all(function(values) {
+          ])._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([]);
             });
           });
         });
-        it('employee with add, update and remove inverted should end with update done', function(done) {
-          return employee.remove([
+        it('employee with add, _update and remove inverted should end with update done', function(done) {
+          return employee._remove([
             {
               id: 15,
               name: "Khalifa P Nassik",
               salary: "$2500"
             }
-          ]).update([
+          ])._update([
             [
               {
                 id: 15,
@@ -3012,13 +3012,13 @@
                 salary: "$2500"
               }
             ]
-          ]).add([
+          ])._add([
             {
               id: 15,
               name: "Khalifa P Nassik",
               salary: "$1500"
             }
-          ]).fetch_all(function(values) {
+          ])._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id > b.id;
@@ -3046,8 +3046,8 @@
             });
           });
         });
-        return it('employee.update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', function(done) {
-          employee.update([
+        return it('employee._update( [ [ { id: 3 }, { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" ] ] } ) should be equal to result', function(done) {
+          employee._update([
             [
               {
                 id: 3
@@ -3060,7 +3060,7 @@
               }
             ]
           ]);
-          return employee.fetch_all(function(values) {
+          return employee._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id > b.id;
@@ -3099,7 +3099,7 @@
           return expect(cities_in_usa).to.be.an(XS.Pipelet);
         });
         it('cities_in_usa should only contain cities in USA', function(done) {
-          return cities_in_usa.fetch_all(function(values) {
+          return cities_in_usa._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -3114,7 +3114,7 @@
         });
         describe('add():', function() {
           it('cities_in_usa should show one more city after adding New York to cities', function(done) {
-            cities.add([
+            cities._add([
               {
                 id: 5,
                 name: "New York",
@@ -3122,7 +3122,7 @@
                 state: "New York"
               }
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values).to.be.eql([
                   {
@@ -3141,7 +3141,7 @@
             });
           });
           return it('cities_in_usa should show only one more city after adding Casablanca and Huston', function(done) {
-            cities.add([
+            cities._add([
               {
                 id: 6,
                 name: "Casablanca",
@@ -3153,7 +3153,7 @@
                 state: 'Texas'
               }
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values).to.be.eql([
                   {
@@ -3177,9 +3177,9 @@
             });
           });
         });
-        describe('update', function() {
+        describe('_update', function() {
           it('cities_in_usa should be updated when updating "New York" to "New York City" in cities', function(done) {
-            cities.update([
+            cities._update([
               [
                 {
                   id: 5,
@@ -3194,7 +3194,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values.sort(function(a, b) {
                   return a.id > b.id;
@@ -3220,7 +3220,7 @@
             });
           });
           it('cities_in_usa should remove Huston after it be updated to Venice in cities', function(done) {
-            cities.update([
+            cities._update([
               [
                 {
                   id: 7,
@@ -3234,7 +3234,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values.sort(function(a, b) {
                   return a.id > b.id;
@@ -3255,7 +3255,7 @@
             });
           });
           it('should add Detroit in cities_in_usa, after Paris is updated to Detroit in cities', function(done) {
-            cities.update([
+            cities._update([
               [
                 {
                   id: 3,
@@ -3269,7 +3269,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values.sort(function(a, b) {
                   return a.id > b.id;
@@ -3295,7 +3295,7 @@
             });
           });
           return it('should not change cities_in_usa after Paris is updated to Madrid in cities, resulting in Paris added to cities anti-state', function(done) {
-            cities.update([
+            cities._update([
               [
                 {
                   id: 3,
@@ -3308,7 +3308,7 @@
                 }
               ]
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values.sort(function(a, b) {
                   return a.id > b.id;
@@ -3335,8 +3335,8 @@
           });
         });
         return describe('remove()', function() {
-          it('cities_in_usa should be equal to result: cities.remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', function(done) {
-            cities.remove([
+          it('cities_in_usa should be equal to result: cities._remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', function(done) {
+            cities._remove([
               {
                 id: 2,
                 name: "Mountain View",
@@ -3344,7 +3344,7 @@
                 state: "California"
               }
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values.sort(function(a, b) {
                   return a.id > b.id;
@@ -3364,15 +3364,15 @@
               });
             });
           });
-          return it('cities_in_usa should be equal to result: cities.remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', function(done) {
-            cities.remove([
+          return it('cities_in_usa should be equal to result: cities._remove( [ { id: 7, name: "Venice", country: "Italy" } ] )', function(done) {
+            cities._remove([
               {
                 id: 7,
                 name: "Venice",
                 country: "Italy"
               }
             ]);
-            return cities_in_usa.fetch_all(function(values) {
+            return cities_in_usa._fetch_all(function(values) {
               return check(done, function() {
                 return expect(values.sort(function(a, b) {
                   return a.id > b.id;
@@ -3612,7 +3612,7 @@
           ]);
         });
         it('should allow to add users', function(done) {
-          multiflow.add([
+          multiflow._add([
             {
               flow: "user",
               id: 4
@@ -3641,7 +3641,7 @@
           ]);
         });
         it('should allow to remove comments', function(done) {
-          multiflow.remove([
+          multiflow._remove([
             {
               flow: "comment",
               id: 2
@@ -3695,7 +3695,7 @@
           return expect(cities_from_countries).to.be.an(XS.Pipelet);
         });
         it('cities_from_countries should only contain cities in USA', function(done) {
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -3714,7 +3714,7 @@
           });
         });
         it('after updating Detroit to Chicago, cities_from_countries should show Chicago', function(done) {
-          cities.update([
+          cities._update([
             [
               {
                 id: 8,
@@ -3728,7 +3728,7 @@
               }
             ]
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -3746,7 +3746,7 @@
           });
         });
         it('after updating countries to get countries from Morocco, cities_from_countries should have all and only cities from Morocco', function(done) {
-          countries.update([
+          countries._update([
             [
               {
                 country: 'USA'
@@ -3755,7 +3755,7 @@
               }
             ]
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -3772,14 +3772,14 @@
           });
         });
         it('after adding San Francisco to cities, cities_from_countries should not change', function(done) {
-          cities.add([
+          cities._add([
             {
               id: 11,
               name: 'San Francisco',
               country: "USA"
             }
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               return expect(values).to.be.eql([
                 {
@@ -3796,12 +3796,12 @@
           });
         });
         it('after adding Germany in countries, cities_from_countries should have cities from Morocco and Germany', function(done) {
-          countries.add([
+          countries._add([
             {
               country: 'Germany'
             }
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id - b.id;
@@ -3824,14 +3824,14 @@
           });
         });
         it('after adding France and USA to countries, cities_from_countries should have cities from Morocco, Germany, and the USA', function(done) {
-          countries.add([
+          countries._add([
             {
               country: 'France'
             }, {
               country: 'USA'
             }
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               expect(countries.a).to.be.eql([
                 {
@@ -3878,14 +3878,14 @@
           });
         });
         it('after adding Paris to cities, cities_from_countries should have cities from Morocco, Germany, France and the USA', function(done) {
-          cities.add([
+          cities._add([
             {
               id: 9,
               name: "Paris",
               country: "France"
             }
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               expect(cities.index_of({
                 id: 9
@@ -3928,7 +3928,7 @@
           });
         });
         it('should add a state to Chicago after updating Chicago s state to Illinois', function(done) {
-          cities.update([
+          cities._update([
             [
               {
                 id: 8,
@@ -3942,7 +3942,7 @@
               }
             ]
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               expect(cities.index_of({
                 id: 9
@@ -3986,12 +3986,12 @@
           });
         });
         it('after removing Germany from countries, cities_from_countries should have Berlin removed', function(done) {
-          countries.remove([
+          countries._remove([
             {
               country: "Germany"
             }
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               expect(countries.index_of({
                 country: "Germany"
@@ -4031,7 +4031,7 @@
           });
         });
         return it('after removing Chicago from cities, cities_from_countries should have it removed as well', function(done) {
-          cities.remove([
+          cities._remove([
             {
               id: 8,
               name: "Chicago",
@@ -4039,7 +4039,7 @@
               state: "Illinois"
             }
           ]);
-          return cities_from_countries.fetch_all(function(values) {
+          return cities_from_countries._fetch_all(function(values) {
             return check(done, function() {
               expect(cities.index_of({
                 id: 8
@@ -4074,9 +4074,9 @@
           });
         });
       });
-      describe('notify():', function() {
-        it('add(): employee.notify( transaction ) should be equal to result', function(done) {
-          employee.notify([
+      describe('_notify():', function() {
+        it('add(): employee._notify( transaction ) should be equal to result', function(done) {
+          employee._notify([
             {
               action: "add",
               objects: [
@@ -4096,7 +4096,7 @@
               ]
             }
           ]);
-          return employee.fetch_all(function(values) {
+          return employee._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id > b.id;
@@ -4136,8 +4136,8 @@
             });
           });
         });
-        it('remove(): employee.notify( transaction ) should be equal to result', function(done) {
-          employee.notify([
+        it('remove(): employee._notify( transaction ) should be equal to result', function(done) {
+          employee._notify([
             {
               action: "remove",
               objects: [
@@ -4147,7 +4147,7 @@
               ]
             }
           ]);
-          return employee.fetch_all(function(values) {
+          return employee._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id > b.id;
@@ -4181,8 +4181,8 @@
             });
           });
         });
-        it('update(): employee.notify( transaction ) should be equal to result', function(done) {
-          employee.notify([
+        it('_update(): employee._notify( transaction ) should be equal to result', function(done) {
+          employee._notify([
             {
               action: "update",
               objects: [
@@ -4218,7 +4218,7 @@
               ]
             }
           ]);
-          return employee.fetch_all(function(values) {
+          return employee._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id > b.id;
@@ -4257,7 +4257,7 @@
           cities_in_morocco = cities.filter(function(city) {
             return city.country === "Morocco";
           });
-          cities.notify([
+          cities._notify([
             {
               action: "add",
               objects: [
@@ -4337,7 +4337,7 @@
               ]
             }
           ]);
-          return cities_in_morocco.fetch_all(function(values) {
+          return cities_in_morocco._fetch_all(function(values) {
             return check(done, function() {
               return expect(values.sort(function(a, b) {
                 return a.id > b.id;
@@ -4446,7 +4446,7 @@
           insert_before: true
         }).ordered().ordered();
         it('books_ordered_by_year should be ordered by ascending year', function(done) {
-          return books_ordered_by_year.fetch_all(function(books) {
+          return books_ordered_by_year._fetch_all(function(books) {
             return check(done, function() {
               return expect(books).to.be.eql([
                 {
@@ -4480,7 +4480,7 @@
           });
         });
         it('books_ordered_by_descending_year should be ordered by descending year', function(done) {
-          return books_ordered_by_descending_year.fetch_all(function(books) {
+          return books_ordered_by_descending_year._fetch_all(function(books) {
             log('books_ordered_by_descending_year delayed fetched');
             return check(done, function() {
               return expect(books).to.be.eql([
@@ -4515,7 +4515,7 @@
           });
         });
         it('books_ordered_by_ascending_author should be ordered by ascending auhtor: organizer is a function', function(done) {
-          return books_ordered_by_ascending_author.fetch_all(function(books) {
+          return books_ordered_by_ascending_author._fetch_all(function(books) {
             return check(done, function() {
               return expect(books).to.be.eql([
                 {
@@ -4549,7 +4549,7 @@
           });
         });
         it('books_ordered_by_descending_author should be ordered by descending auhtor: organizer is a function', function(done) {
-          return books_ordered_by_descending_author.fetch_all(function(books) {
+          return books_ordered_by_descending_author._fetch_all(function(books) {
             return check(done, function() {
               return expect(books).to.be.eql([
                 {
@@ -4583,8 +4583,8 @@
           });
         });
         describe('add()', function() {
-          it('after books.add( book 6 ), books_ordered_by_year should be ordered by ascending year', function(done) {
-            books.add([
+          it('after books._add( book 6 ), books_ordered_by_year should be ordered by ascending year', function(done) {
+            books._add([
               {
                 id: 6,
                 title: "The Girl with the Dragon Tattoo",
@@ -4592,7 +4592,7 @@
                 year: 2005
               }
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -4630,8 +4630,8 @@
               });
             });
           });
-          it('after books.add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
-            return books_ordered_by_descending_year.fetch_all(function(books) {
+          it('after books._add( book 6 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
+            return books_ordered_by_descending_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -4669,8 +4669,8 @@
               });
             });
           });
-          it('after books.add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
-            return books_ordered_by_ascending_author.fetch_all(function(books) {
+          it('after books._add( book 6 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
+            return books_ordered_by_ascending_author._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -4708,8 +4708,8 @@
               });
             });
           });
-          it('after books.add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
-            return books_ordered_by_descending_author.fetch_all(function(books) {
+          it('after books._add( book 6 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
+            return books_ordered_by_descending_author._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -4747,8 +4747,8 @@
               });
             });
           });
-          it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_year should be ordered by ascending year', function(done) {
-            books.add([
+          it('after books._add( books 7, 8, 9, 10 ), books_ordered_by_year should be ordered by ascending year', function(done) {
+            books._add([
               {
                 id: 7,
                 title: "The McGuffey Readers",
@@ -4771,7 +4771,7 @@
                 year: 1999
               }
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -4829,8 +4829,8 @@
               });
             });
           });
-          it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
-            return books_ordered_by_descending_year.fetch_all(function(books) {
+          it('after books._add( books 7, 8, 9, 10 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
+            return books_ordered_by_descending_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -4888,8 +4888,8 @@
               });
             });
           });
-          it('after books.add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
-            return books_ordered_by_ascending_author.fetch_all(function(books) {
+          it('after books._add( books 7, 8, 9, 10 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
+            return books_ordered_by_ascending_author._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -4947,8 +4947,8 @@
               });
             });
           });
-          it('after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_year should be ordered by ascending year', function(done) {
-            books.add([
+          it('after books._add( books 11, 12, 13 ), whose years are already used; books_ordered_by_year should be ordered by ascending year', function(done) {
+            books._add([
               {
                 id: 11,
                 title: "The Dukan Diet",
@@ -4966,7 +4966,7 @@
                 year: 1955
               }
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5039,8 +5039,8 @@
               });
             });
           });
-          it('after books.add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', function(done) {
-            return books_ordered_by_descending_year.fetch_all(function(books) {
+          it('after books._add( books 11, 12, 13 ), whose years are already used; books_ordered_by_descending_year should be ordered by descending year', function(done) {
+            return books_ordered_by_descending_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5113,8 +5113,8 @@
               });
             });
           });
-          it('after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', function(done) {
-            books.add([
+          it('after books._add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_year should be ordered by ascending year', function(done) {
+            books._add([
               {
                 id: 14,
                 title: "And Then There Were None",
@@ -5131,7 +5131,7 @@
                 author: "Roald Dahl"
               }
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5218,8 +5218,8 @@
               });
             });
           });
-          it('after books.add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function(done) {
-            return books_ordered_by_descending_year.fetch_all(function(books) {
+          it('after books._add( books 14, 15, 16 ), the years are undefined or null; books_ordered_by_descending_year should be ordered by descending year', function(done) {
+            return books_ordered_by_descending_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5306,8 +5306,8 @@
               });
             });
           });
-          it('update organizer, books_ordered_by_year should be ordered by ascending by title', function(done) {
-            organizer.update([
+          it('_update organizer, books_ordered_by_year should be ordered by ascending by title', function(done) {
+            organizer._update([
               [
                 {
                   id: "year"
@@ -5316,7 +5316,7 @@
                 }
               ]
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5404,7 +5404,7 @@
             });
           });
           it('add a second field to organizer, books_ordered_by_year should be ordered by ascending year and title', function(done) {
-            organizer.notify([
+            organizer._notify([
               {
                 action: "update",
                 objects: [
@@ -5425,7 +5425,7 @@
                 ]
               }
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5513,7 +5513,7 @@
             });
           });
           it('books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
-            return books_ordered_by_ascending_author.fetch_all(function(books) {
+            return books_ordered_by_ascending_author._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5601,7 +5601,7 @@
             });
           });
           it('books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
-            return books_ordered_by_descending_author.fetch_all(function(books) {
+            return books_ordered_by_descending_author._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5695,7 +5695,7 @@
                 id: "id"
               }
             ]).ordered().ordered();
-            return books_ordered_by_ascending_id.fetch_all(function(books) {
+            return books_ordered_by_ascending_id._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5790,7 +5790,7 @@
                 descending: true
               }
             ]).ordered().ordered();
-            return books_ordered_by_ascending_id.fetch_all(function(books) {
+            return books_ordered_by_ascending_id._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5878,9 +5878,9 @@
             });
           });
         });
-        describe('update():', function() {
-          it('after books.update( object 2 ), books_ordered_by_year should be ordered by ascending year', function(done) {
-            books.update([
+        describe('_update():', function() {
+          it('after books._update( object 2 ), books_ordered_by_year should be ordered by ascending year', function(done) {
+            books._update([
               [
                 {
                   id: 2,
@@ -5895,7 +5895,7 @@
                 }
               ]
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -5982,8 +5982,8 @@
               });
             });
           });
-          it('after books.update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
-            return books_ordered_by_descending_year.fetch_all(function(books) {
+          it('after books._update( object 2 ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
+            return books_ordered_by_descending_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -6070,8 +6070,8 @@
               });
             });
           });
-          it('after books.notify( 4 updates transaction ), books_ordered_by_year should be ordered by ascending year', function(done) {
-            books.notify([
+          it('after books._notify( 4 updates transaction ), books_ordered_by_year should be ordered by ascending year', function(done) {
+            books._notify([
               {
                 action: "update",
                 objects: [
@@ -6186,7 +6186,7 @@
                 ]
               }
             ]);
-            return books_ordered_by_year.fetch_all(function(books) {
+            return books_ordered_by_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -6274,8 +6274,8 @@
               });
             });
           });
-          return it('after books.notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
-            return books_ordered_by_descending_year.fetch_all(function(books) {
+          return it('after books._notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', function(done) {
+            return books_ordered_by_descending_year._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -6365,8 +6365,8 @@
           });
         });
         return describe('remove( books 12, 13, 3, 15 ):', function() {
-          it('after books.remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
-            books.remove([
+          it('after books._remove( objects 12, 13, 15 ), books_ordered_by_ascending_author should be ordered by ascending auhtor', function(done) {
+            books._remove([
               {
                 id: 12,
                 title: "Breaking Dawn",
@@ -6389,7 +6389,7 @@
                 year: void 0
               }
             ]);
-            return books_ordered_by_ascending_author.fetch_all(function(books) {
+            return books_ordered_by_ascending_author._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -6457,8 +6457,8 @@
               });
             });
           });
-          return it('after books.remove( objects 12, 13, 3, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
-            return books_ordered_by_descending_author.fetch_all(function(books) {
+          return it('after books._remove( objects 12, 13, 3, 15 ), books_ordered_by_descending_author should be ordered by descending auhtor', function(done) {
+            return books_ordered_by_descending_author._fetch_all(function(books) {
               return check(done, function() {
                 return expect(books).to.be.eql([
                   {
@@ -6655,7 +6655,7 @@
       };
       tolkien_sales_by_year = books_sales.aggregate_from(tolkien_books, sales, by_year);
       it('should group and order books_sales_by_author by author', function(done) {
-        return books_sales_by_author.fetch_all(function(sales) {
+        return books_sales_by_author._fetch_all(function(sales) {
           return check(done, function() {
             return expect(sales).to.be.eql([
               {
@@ -6720,7 +6720,7 @@
         });
       });
       it('should group and order books_sales_by_year by year', function(done) {
-        return books_sales_by_year.fetch_all(function(sales) {
+        return books_sales_by_year._fetch_all(function(sales) {
           return check(done, function() {
             return expect(sales).to.be.eql([
               {
@@ -6769,7 +6769,7 @@
         });
       });
       it('should group and order tolkien_sales_by_year by year', function(done) {
-        return tolkien_sales_by_year.fetch_all(function(sales) {
+        return tolkien_sales_by_year._fetch_all(function(sales) {
           return check(done, function() {
             return expect(sales).to.be.eql([
               {
@@ -6787,7 +6787,7 @@
       });
       describe('add sales for "Dan Brown" in 2004', function() {
         it('should increase books_sales_by_author for "Dan Brown"', function(done) {
-          books_sales.add([
+          books_sales._add([
             {
               id: 17,
               title: "The Da Vinci Code",
@@ -6796,7 +6796,7 @@
               year: 2004
             }
           ]);
-          return books_sales_by_author.fetch_all(function(sales) {
+          return books_sales_by_author._fetch_all(function(sales) {
             return check(done, function() {
               return expect(sales).to.be.eql([
                 {
@@ -6861,7 +6861,7 @@
           });
         });
         return it('should add books_sales_by_year for 2004', function(done) {
-          return books_sales_by_year.fetch_all(function(sales) {
+          return books_sales_by_year._fetch_all(function(sales) {
             return check(done, function() {
               return expect(sales).to.be.eql([
                 {
@@ -6916,7 +6916,7 @@
       });
       return describe("remove Stephenie Meyer's sales in 2008 and Pierre Dukan's sales in 2000", function() {
         it('should remove Stephenie Meyer and Pierre Dukan sales from books_sales_by_author', function(done) {
-          books_sales.remove([
+          books_sales._remove([
             {
               id: 11,
               title: "The Dukan Diet",
@@ -6931,7 +6931,7 @@
               year: 2008
             }
           ]);
-          return books_sales_by_author.fetch_all(function(sales) {
+          return books_sales_by_author._fetch_all(function(sales) {
             return check(done, function() {
               return expect(sales).to.be.eql([
                 {
@@ -6988,7 +6988,7 @@
           });
         });
         return it('should remove 10 from sales in 2000 from books_sales_by_year', function(done) {
-          return books_sales_by_year.fetch_all(function(sales) {
+          return books_sales_by_year._fetch_all(function(sales) {
             return check(done, function() {
               return expect(sales).to.be.eql([
                 {
@@ -7232,7 +7232,7 @@
         name: 'books_sales'
       });
       it('should join books and authors', function(done) {
-        return books_with_authors.fetch_all(function(values) {
+        return books_with_authors._fetch_all(function(values) {
           return check(done, function() {
             var found, result, v, _i, _len;
             found = true;
@@ -7328,7 +7328,7 @@
         });
       });
       return it('should add a joined author', function(done) {
-        authors.add([
+        authors._add([
           {
             id: 13,
             name: "Ellen G. White"
@@ -7337,14 +7337,14 @@
             name: "Roald Dahl"
           }
         ]);
-        books.add([
+        books._add([
           {
             id: 15,
             title: "Steps to Christ",
             author_id: 13
           }
         ]);
-        return books_with_authors.fetch_all(function(values) {
+        return books_with_authors._fetch_all(function(values) {
           return check(done, function() {
             var found, result, v, _i, _len;
             found = true;
@@ -7485,7 +7485,7 @@
     books_stringified = book_operations.json_stringify();
     books_parsed = books_stringified.json_parse();
     it('json_stringify() should stringify content attributes', function(done) {
-      return books_stringified.fetch_all(function(books) {
+      return books_stringified._fetch_all(function(books) {
         return check(done, function() {
           return expect(books).to.be.eql([
             {
@@ -7503,7 +7503,7 @@
       });
     });
     return it('json_parse() should parse stringified content', function(done) {
-      return books_parsed.fetch_all(function(_books) {
+      return books_parsed._fetch_all(function(_books) {
         return check(done, function() {
           return expect(_books).to.be.eql(books);
         });

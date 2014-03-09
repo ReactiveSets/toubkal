@@ -56,13 +56,13 @@ describe 'Load Images test suite:', ->
     expect( node ).to.be.ok()
     expect( node.nodeName ).to.be 'DIV'
   
-  it 'expect images.fetch_all() to be empty', ->
-    expect( images.fetch_all() ).to.be.empty()
+  it 'expect images._fetch_all() to be empty', ->
+    expect( images._fetch_all() ).to.be.empty()
   
-  it 'after images_source.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+  it 'after images_source._add( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 15000
     
-    images_source.add [
+    images_source._add [
       { title: 'Villa Marrakech 1' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/011.jpg' }
       { title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg' }
       { title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/03.jpg' }
@@ -74,8 +74,8 @@ describe 'Load Images test suite:', ->
     
     expect( images._loading_count ).to.be 2
     
-    images.on( 'complete', ->
-      images.fetch_all ( values ) -> check done, ->
+    images._on( 'complete', ->
+      images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
@@ -102,7 +102,7 @@ describe 'Load Images test suite:', ->
      expect( node.childNodes[ 6 ] ).to.not.be.ok()
 
   it 'should set the attribute loaded to 1 for these 6 images', ( done ) ->
-     images.fetch_all ( values ) -> check done, ->
+     images._fetch_all ( values ) -> check done, ->
        for value in values
          image = images._get_image_from_uri value.uri
          
@@ -110,20 +110,20 @@ describe 'Load Images test suite:', ->
          expect( image.src                   ).to.be value.uri
          expect( image.getAttribute 'loaded' ).to.be '1'
 
-  it 'after images_source.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+  it 'after images_source._add( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 5000
 
     images._loading_max = 1
 
-    images_source.add [
+    images_source._add [
       { title: 'Villa Marrakech 8', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' }
       { title: 'Villa Marrakech 9', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
     ]
     
     expect( images._loading_count ).to.be 1
 
-    images.on( 'complete', ->
-      images.fetch_all ( values ) -> check done, ->
+    images._on( 'complete', ->
+      images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
@@ -151,7 +151,7 @@ describe 'Load Images test suite:', ->
      expect( node.childNodes[ 8 ] ).to.not.be.ok()
 
   it 'should set the attribute loaded_count to 1 for these 6 images', ( done ) ->
-     images.fetch_all ( values ) -> check done, ->
+     images._fetch_all ( values ) -> check done, ->
        for value in values
          image = images._get_image_from_uri value.uri
          
@@ -159,13 +159,13 @@ describe 'Load Images test suite:', ->
          expect( image.src                   ).to.be value.uri
          expect( image.getAttribute 'loaded' ).to.be '1'
 
-  it 'after images_source.remove( objects ), expect images.fetch_all() to be equal to result', ->
-    images_source.remove [
+  it 'after images_source._remove( objects ), expect images._fetch_all() to be equal to result', ->
+    images_source._remove [
       { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/06.jpg' }
       { id: 8 , title: 'Villa Marrakech 8' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg' }
     ]
     
-    values = images.fetch_all().sort ( a, b ) -> a.id > b.id
+    values = images._fetch_all().sort ( a, b ) -> a.id > b.id
     
     expect( values ).to.be.eql [
       { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/02.jpg' }
@@ -185,11 +185,11 @@ describe 'Load Images test suite:', ->
      expect( node.childNodes[ 5 ].nodeName ).to.be( 'IMG' )
      expect( node.childNodes[ 6 ] ).to.not.be.ok()
 
-  it 'after images_source.update( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+  it 'after images_source._update( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 5000
     
-    images.on( 'complete', ->
-      images.fetch_all ( values ) -> check done, ->
+    images._on( 'complete', ->
+      images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
@@ -203,18 +203,18 @@ describe 'Load Images test suite:', ->
       
     , this, true )
     
-    images_source.update [
+    images_source._update [
       [
         { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/09.jpg' }
         { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg' }
       ]
     ]
     
-  it 'after images_source.add( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+  it 'after images_source._add( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 5000
     
-    images.on( 'complete', ->
-      images.fetch_all ( values ) -> check done, ->
+    images._on( 'complete', ->
+      images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
@@ -230,16 +230,16 @@ describe 'Load Images test suite:', ->
 
     , this, true )
     
-    images_source.add [
+    images_source._add [
       { title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg' }
       { title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/12.jpg' }
     ]
   
-  it 'after images_source.update( objects ), expect images.fetch_all() to be equal to result', ( done ) ->
+  it 'after images_source._update( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 5000
     
-    images.on( 'complete', ->
-      images.fetch_all ( values ) -> check done, () ->
+    images._on( 'complete', ->
+      images._fetch_all ( values ) -> check done, () ->
         values.sort ( a, b ) -> a.id > b.id
  
         expect( values ).to.be.eql [
@@ -255,7 +255,7 @@ describe 'Load Images test suite:', ->
         
     , this, true )
     
-    images_source.update [
+    images_source._update [
       [
         { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/10.jpg' }
         { id: 9 , title: 'Villa Marrakech 13', uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/13.jpg' }

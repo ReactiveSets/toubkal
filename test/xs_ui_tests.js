@@ -127,8 +127,8 @@
         }
         return _results;
       });
-      it('after columns.add( objects ), expect table to have 5 columns', function() {
-        columns.add([
+      it('after columns._add( objects ), expect table to have 5 columns', function() {
+        columns._add([
           {
             id: "year",
             label: "Year",
@@ -156,8 +156,8 @@
         }
         return _results;
       });
-      it('after columns.remove( object ), expect table to have 4 columns', function() {
-        columns.remove([
+      it('after columns._remove( object ), expect table to have 4 columns', function() {
+        columns._remove([
           {
             id: "id",
             label: "ID"
@@ -170,8 +170,8 @@
         content = 'List of the best-selling books (source: wikipedia)' + 'AuthorLanguageTitleYear' + 'Charles DickensEnglishA Tale of Two Cities1859' + 'Roald DahlEnglishCharlie and the Chocolate Factory' + 'Dan BrownEnglishThe Da Vinci Code2003' + 'J. R. R. TolkienEnglishThe Lord of the Rings1955';
         return expect(table_node.textContent).to.be(content);
       });
-      it('after columns.update( object ), expect table to have 4 columns', function() {
-        columns.update([
+      it('after columns._update( object ), expect table to have 4 columns', function() {
+        columns._update([
           [
             {
               id: "language",
@@ -189,8 +189,8 @@
         content = 'List of the best-selling books (source: wikipedia)' + 'AuthorSales by millions of copiesTitleYear' + 'Charles Dickens200A Tale of Two Cities1859' + 'Roald Dahl13Charlie and the Chocolate Factory' + 'Dan Brown80The Da Vinci Code2003' + 'J. R. R. Tolkien150The Lord of the Rings1955';
         return expect(table_node.textContent).to.be(content);
       });
-      it('after books.add( objects ), expect table to have 15 rows', function() {
-        books.add([
+      it('after books._add( objects ), expect table to have 15 rows', function() {
+        books._add([
           {
             id: 5,
             title: "Angels and Demons",
@@ -277,8 +277,8 @@
         content = 'List of the best-selling books (source: wikipedia)' + 'AuthorSales by millions of copiesTitleYear' + 'Charles Dickens200A Tale of Two Cities1859' + 'Agatha Christie100And Then There Were None' + 'Dan Brown39Angels and Demons2000Stephenie MeyerBreaking Dawn2008' + 'Roald Dahl13Charlie and the Chocolate Factory' + 'J.K. RowlingHarry Potter and the Prisoner of Azkaban1999' + 'Vladimir Nabokov50Lolita1955' + 'Ellen G. White60Steps to Christ' + 'Dan Brown80The Da Vinci Code2003' + 'Pierre Dukan10The Dukan Diet2000' + 'Stieg Larsson30The Girl with the Dragon Tattoo2005' + 'J. R. R. Tolkien100The Hobbit1937' + 'Suzanne Collins23The Hunger Games2008' + 'J. R. R. Tolkien150The Lord of the Rings1955' + 'William Holmes McGuffey125The McGuffey Readers1853';
         return expect(table_node.textContent).to.be(content);
       });
-      it('after books.remove( objects ), expect table to have 12 rows', function() {
-        books.remove([
+      it('after books._remove( objects ), expect table to have 12 rows', function() {
+        books._remove([
           {
             id: 1,
             title: "A Tale of Two Cities",
@@ -303,8 +303,8 @@
         content = 'List of the best-selling books (source: wikipedia)' + 'AuthorSales by millions of copiesTitleYear' + 'Agatha Christie100And Then There Were None' + 'Dan Brown39Angels and Demons2000Stephenie MeyerBreaking Dawn2008' + 'Roald Dahl13Charlie and the Chocolate Factory' + 'J.K. RowlingHarry Potter and the Prisoner of Azkaban1999' + 'Ellen G. White60Steps to Christ' + 'Dan Brown80The Da Vinci Code2003' + 'Pierre Dukan10The Dukan Diet2000' + 'Stieg Larsson30The Girl with the Dragon Tattoo2005' + 'J. R. R. Tolkien100The Hobbit1937' + 'Suzanne Collins23The Hunger Games2008' + 'J. R. R. Tolkien150The Lord of the Rings1955';
         return expect(table_node.textContent).to.be(content);
       });
-      it('after books.update( objects ), expect table to have 12 rows', function() {
-        books.update([
+      it('after books._update( objects ), expect table to have 12 rows', function() {
+        books._update([
           [
             {
               id: 2,
@@ -369,8 +369,8 @@
         it('expect checkbox be disabled', function() {
           return expect(input.disabled).to.be(true);
         });
-        it('after chart.add( object ), expect checkbox label to be equal to "Chart"', function() {
-          chart.add([
+        it('after chart._add( object ), expect checkbox label to be equal to "Chart"', function() {
+          chart._add([
             {
               id: true,
               label: "Chart"
@@ -384,8 +384,8 @@
         it('expect checkbox be disabled', function() {
           return expect(input.disabled).to.be(true);
         });
-        it('after chart.add( object ), expect checkbox label to be equal to "Chart"', function() {
-          chart.add([
+        it('after chart._add( object ), expect checkbox label to be equal to "Chart"', function() {
+          chart._add([
             {
               id: false,
               label: "No-Chart"
@@ -399,8 +399,8 @@
         it('expect checkbox be active', function() {
           return expect(input.disabled).to.be(false);
         });
-        it('after chart.remove( object ), expect checkbox label to be equal to "No-Chart"', function() {
-          chart.remove([
+        it('after chart._remove( object ), expect checkbox label to be equal to "No-Chart"', function() {
+          chart._remove([
             {
               id: true,
               label: "Chart"
@@ -414,8 +414,8 @@
         it('expect checkbox be disabled', function() {
           return expect(input.disabled).to.be(true);
         });
-        it('after chart.remove( object ), expect checkbox label to be equal to be empty', function() {
-          chart.remove([
+        it('after chart._remove( object ), expect checkbox label to be equal to be empty', function() {
+          chart._remove([
             {
               id: false,
               label: "No-Chart"
@@ -429,8 +429,8 @@
         it('expect checkbox be disabled', function() {
           return expect(input.disabled).to.be(true);
         });
-        it('after chart.add( objects ), expect checkbox label to be equal to "No-Chart"', function() {
-          chart.add([
+        it('after chart._add( objects ), expect checkbox label to be equal to "No-Chart"', function() {
+          chart._add([
             {
               id: true,
               label: "Chart"
@@ -448,8 +448,8 @@
         it('expect checkbox be active', function() {
           return expect(input.disabled).to.be(false);
         });
-        it('after chart.update( objects ), expect checkbox label to be equal to "Chart"', function() {
-          chart.update([
+        it('after chart._update( objects ), expect checkbox label to be equal to "Chart"', function() {
+          chart._update([
             [
               {
                 id: true,
@@ -518,8 +518,8 @@
           expect(checkbox_list[4].checked).to.be(true);
           return expect(checkbox_list[5].checked).to.be(true);
         });
-        it('after hobbies.remove( objects ), expect checkbox group container to have 4 checkboxes', function() {
-          hobbies.remove([
+        it('after hobbies._remove( objects ), expect checkbox group container to have 4 checkboxes', function() {
+          hobbies._remove([
             {
               id: 3,
               label: "Playing Computer Games"
@@ -538,8 +538,8 @@
           expect(checkbox_list[2].checked).to.be(true);
           return expect(checkbox_list[3].checked).to.be(true);
         });
-        it('after hobbies.add( objects ), expect checkbox group container to have 6 checkboxes', function() {
-          hobbies.add([
+        it('after hobbies._add( objects ), expect checkbox group container to have 6 checkboxes', function() {
+          hobbies._add([
             {
               id: 7,
               label: "Pottery",
@@ -559,8 +559,8 @@
           expect(checkbox_list[4].checked).to.be(true);
           return expect(checkbox_list[5].checked).to.be(true);
         });
-        it('after hobbies.update( objects ), expect checkbox group container to have 6 checkboxes', function() {
-          hobbies.update([
+        it('after hobbies._update( objects ), expect checkbox group container to have 6 checkboxes', function() {
+          hobbies._update([
             [
               {
                 id: 3,
@@ -636,8 +636,8 @@
         it('expect selected radio to be: "Islam"', function() {
           return expect(radio_list[2].checked).to.be(true);
         });
-        it('after religions.remove( objects ), expect radio container to have 4 radio', function() {
-          religions.remove([
+        it('after religions._remove( objects ), expect radio container to have 4 radio', function() {
+          religions._remove([
             {
               id: 6,
               label: "Satanism"
@@ -661,8 +661,8 @@
           }
           return _results;
         });
-        it('after religions.add( objects ), expect radio container to have 5 radio', function() {
-          religions.add([
+        it('after religions._add( objects ), expect radio container to have 5 radio', function() {
+          religions._add([
             {
               id: 5,
               label: "Hinduism",
@@ -677,8 +677,8 @@
         it('expect checked radio to be: "Hinduism"', function() {
           return expect(radio_list[2].checked).to.be(true);
         });
-        it('after religions.update( objects ), expect radio container to have 6 radio', function() {
-          religions.update([
+        it('after religions._update( objects ), expect radio container to have 6 radio', function() {
+          religions._update([
             [
               {
                 id: 8,
@@ -752,8 +752,8 @@
         it('expect selected value to be: "France"', function() {
           return expect(select.selectedIndex).to.be(0);
         });
-        it('after countries.remove( object ), expect drop down control to have 6 options', function() {
-          countries.remove([
+        it('after countries._remove( object ), expect drop down control to have 6 options', function() {
+          countries._remove([
             {
               id: 3,
               label: "France"
@@ -767,8 +767,8 @@
         it('expect selected value to be: "Japan"', function() {
           return expect(select.selectedIndex).to.be(0);
         });
-        it('after countries.add( object ), expect drop down control to have 7 options', function() {
-          countries.add([
+        it('after countries._add( object ), expect drop down control to have 7 options', function() {
+          countries._add([
             {
               id: 7,
               label: "China"
@@ -782,8 +782,8 @@
         it('expect expect selected value to be: "Japan"', function() {
           return expect(select.selectedIndex).to.be(1);
         });
-        it('after countries.update( objects ), expect drop down control to have 7 options', function() {
-          countries.update([
+        it('after countries._update( objects ), expect drop down control to have 7 options', function() {
+          countries._update([
             [
               {
                 id: 6,

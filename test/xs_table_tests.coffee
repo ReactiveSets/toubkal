@@ -89,28 +89,28 @@ describe 'Columns_Set():', ->
   it 'columns should be equal to object.columns', ->
     object = from_HTML_to_object node
     
-    expect( columns.fetch_all() ).to.be.eql object.columns
+    expect( columns._fetch_all() ).to.be.eql object.columns
   
-  it 'after add 2 objects: columns.add( objects ) should be equal to object.columns', ->
-    columns.add [ { id: "year" , label: "Year", align: "center" }, { id: "language", label: "Language" } ]
+  it 'after add 2 objects: columns._add( objects ) should be equal to object.columns', ->
+    columns._add [ { id: "year" , label: "Year", align: "center" }, { id: "language", label: "Language" } ]
     
     object = from_HTML_to_object node
     
-    expect( columns.fetch_all() ).to.be.eql object.columns
+    expect( columns._fetch_all() ).to.be.eql object.columns
   
-  it 'after columns.remove( object ), columns should be equal to object.columns', ->
-    columns.remove [ { id: "id", label: "ID" } ]
+  it 'after columns._remove( object ), columns should be equal to object.columns', ->
+    columns._remove [ { id: "id", label: "ID" } ]
     
     object = from_HTML_to_object node
     
-    expect( columns.fetch_all() ).to.be.eql object.columns
+    expect( columns._fetch_all() ).to.be.eql object.columns
   
-  it 'after columns.update( object ), columns should be equal to object.columns', ->
-    columns.update [ [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ] ]
+  it 'after columns._update( object ), columns should be equal to object.columns', ->
+    columns._update [ [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ] ]
     
     object = from_HTML_to_object node
 
-    expect( columns.fetch_all() ).to.be.eql object.columns
+    expect( columns._fetch_all() ).to.be.eql object.columns
 
 describe 'Table():', ->
   it 'books should be equal to object.data', ->
@@ -123,8 +123,8 @@ describe 'Table():', ->
       { title: "The Lord of the Rings"            , author: "J. R. R. Tolkien", year: 1955, sales:       150 }
     ]
   
-  it 'after books.add( objects ): books should be equal to object.data', ->
-    books.add [
+  it 'after books._add( objects ): books should be equal to object.data', ->
+    books._add [
       { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , sales:        39, year: 2000, language: "English" }
       { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , sales:        30, year: 2005, language: "Swedish" }
       { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", sales:       125, year: 1853, language: "English" }
@@ -158,8 +158,8 @@ describe 'Table():', ->
       { title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", year: 1853, sales:  125 }
     ]
   
-  it 'after books.update( objects ): books should be equal to object.data', ->
-    books.update [
+  it 'after books._update( objects ): books should be equal to object.data', ->
+    books._update [
       [
         { id:  2, title: "The Lord of the Rings"             , author: "J. R. R. Tolkien"         , year: 1955 }
         { id:  2, title: "The Fellowship of the Ring: LOTR 1", author: "John Ronald Reuel Tolkien", year: 1955 }
@@ -190,8 +190,8 @@ describe 'Table():', ->
       { author: "William Holmes McGuffey"  , sales: 125, title: "The McGuffey Readers"                    , year: 1853 }
     ]
   
-  it 'after books.remove( objects ): books should be equal to object.data', ->
-    books.remove [
+  it 'after books._remove( objects ): books should be equal to object.data', ->
+    books._remove [
       { id:  1, title: "A Tale of Two Cities", author: "Charles Dickens"        , year: 1859 }
       { id: 13, title: "Lolita"              , author: "Vladimir Nabokov"       , year: 1955 }
       { id:  7, title: "The McGuffey Readers", author: "William Holmes McGuffey", year: 1853 }

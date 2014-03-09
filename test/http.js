@@ -271,7 +271,7 @@ var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
 function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
-  var input  = source.plug( this.socket )
+  var input  = source._add_destination( this.socket )
     , output = input.trace( 'from socket.io clients' )
   ;
   
@@ -297,9 +297,9 @@ xs.union( [
 ;
 
 setInterval( function() {
-  source_set.add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
+  source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 );
 
 setTimeout( function() {
-  client_filter.add( [ { flow: 'client_set', id: 2 } ] );
+  client_filter._add( [ { flow: 'client_set', id: 2 } ] );
 }, 15000 );

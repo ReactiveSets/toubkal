@@ -133,7 +133,7 @@ var authorizations = database.flow( 'authorizations' ); // Dataflow of all users
 
 database
   .dispatch( clients, client )  // Serve 64k simultaneous user connexions over one core
-  .plug( database )             // plug() links to output of the dispatcher the database pipelet
+  ._add_destination( database ) // Directs output of the dispatcher to the database pipelet
 ;
 
 // Individual client composition
@@ -152,7 +152,9 @@ function client( source ) { // source refers to the output of the database here
   
   return source
     .query( get_query )  // delivers only what this user is authorized to get
-    .plug( this.socket ) // Send and Receive data to/from web browser
+    
+    ._add_destination( this.socket ) // Send and Receive data to/from web browser
+    
     .filter( set_query ) // discards unauthorized write attempts
   ;
 }
@@ -571,7 +573,7 @@ xs.file_json_store( 'database.json' ) // * The dataflow store of all database tr
 
   .dispatch( clients, function( source, options ) { // Serve realtime content to all socket.io clients
     return source
-      .plug( this.socket ) // Insert socket dataflow to exchage data with this client
+      ._add_destination( this.socket ) // Insert socket dataflow to exchage data with this client
     ;
   } )
 ;

@@ -74,69 +74,69 @@
 
   describe('Checkbox():', function() {
     it('checkbox should be empty', function() {
-      return expect(checkbox.fetch_all()).to.be.empty;
+      return expect(checkbox._fetch_all()).to.be.empty;
     });
-    it('after checkbox_source.add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', function() {
-      checkbox_source.add([
+    it('after checkbox_source._add( object ), checkbox_source should be equal to [ { id: true, label: "Label True" } ]', function() {
+      checkbox_source._add([
         {
           id: true,
           label: "Label True"
         }
       ]);
-      return expect(checkbox_source.fetch_all()).to.be.eql([
-        {
-          id: true,
-          label: "Label True"
-        }
-      ]);
-    });
-    it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
-      return expect(checkbox.fetch_all()).to.be.eql([
+      return expect(checkbox_source._fetch_all()).to.be.eql([
         {
           id: true,
           label: "Label True"
         }
       ]);
     });
-    it('after checkbox_source.add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
-      checkbox_source.add([
+    it('after checkbox_source._add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
+      return expect(checkbox._fetch_all()).to.be.eql([
+        {
+          id: true,
+          label: "Label True"
+        }
+      ]);
+    });
+    it('after checkbox_source._add( object ), checkbox should be equal to [ { id: true, label: "Label True" } ]', function() {
+      checkbox_source._add([
         {
           id: false,
           label: "Label False"
         }
       ]);
-      return expect(checkbox.fetch_all()).to.be.eql([
+      return expect(checkbox._fetch_all()).to.be.eql([
         {
           id: true,
           label: "Label True"
         }
       ]);
     });
-    it('after checkbox_source.remove( object ), checkbox should be equal to [ { id: false, label: "Label False" } ]', function() {
-      checkbox_source.remove([
+    it('after checkbox_source._remove( object ), checkbox should be equal to [ { id: false, label: "Label False" } ]', function() {
+      checkbox_source._remove([
         {
           id: true,
           label: "Label True"
         }
       ]);
-      return expect(checkbox.fetch_all()).to.be.eql([
+      return expect(checkbox._fetch_all()).to.be.eql([
         {
           id: false,
           label: "Label False"
         }
       ]);
     });
-    it('after checkbox_source.remove( object ), checkbox should be empty', function() {
-      checkbox_source.remove([
+    it('after checkbox_source._remove( object ), checkbox should be empty', function() {
+      checkbox_source._remove([
         {
           id: false,
           label: "Label False"
         }
       ]);
-      return expect(checkbox.fetch_all()).to.be.empty;
+      return expect(checkbox._fetch_all()).to.be.empty;
     });
-    it('after checkbox_source.add( objects ), checkbox should be equal to [ { id: false, label: "Label False", selected: true } ]', function() {
-      checkbox_source.add([
+    it('after checkbox_source._add( objects ), checkbox should be equal to [ { id: false, label: "Label False", selected: true } ]', function() {
+      checkbox_source._add([
         {
           id: true,
           label: "Label True"
@@ -146,7 +146,7 @@
           selected: true
         }
       ]);
-      return expect(checkbox.fetch_all()).to.be.eql([
+      return expect(checkbox._fetch_all()).to.be.eql([
         {
           id: false,
           label: "Label False",
@@ -154,8 +154,8 @@
         }
       ]);
     });
-    return it('after checkbox_source.update( objects ) checkbox should be equal to [ { id: true, label: "Charts", selected: true } ]', function() {
-      checkbox_source.update([
+    return it('after checkbox_source._update( objects ) checkbox should be equal to [ { id: true, label: "Charts", selected: true } ]', function() {
+      checkbox_source._update([
         [
           {
             id: true,
@@ -176,7 +176,7 @@
           }
         ]
       ]);
-      return expect(checkbox.fetch_all()).to.be.eql([
+      return expect(checkbox._fetch_all()).to.be.eql([
         {
           id: true,
           label: "Charts",
@@ -188,10 +188,10 @@
 
   describe('Checkbox_Group():', function() {
     it('checkbox_group should be empty', function() {
-      return expect(checkbox_group.fetch_all()).to.be.empty;
+      return expect(checkbox_group._fetch_all()).to.be.empty;
     });
-    it('after checkbox_group_source.add( objects ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.add([
+    it('after checkbox_group_source._add( objects ), checkbox_group should be equal to result', function() {
+      checkbox_group_source._add([
         {
           id: 1,
           label: "Photography",
@@ -215,7 +215,7 @@
           selected: true
         }
       ]);
-      return expect(checkbox_group.fetch_all()).to.be.eql([
+      return expect(checkbox_group._fetch_all()).to.be.eql([
         {
           id: 1,
           label: "Photography",
@@ -231,8 +231,8 @@
         }
       ]);
     });
-    it('after checkbox_group_source.remove( objects ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.remove([
+    it('after checkbox_group_source._remove( objects ), checkbox_group should be equal to result', function() {
+      checkbox_group_source._remove([
         {
           id: 3,
           label: "Playing Computer Games"
@@ -242,7 +242,7 @@
           selected: true
         }
       ]);
-      return expect(checkbox_group.fetch_all()).to.be.eql([
+      return expect(checkbox_group._fetch_all()).to.be.eql([
         {
           id: 1,
           label: "Photography",
@@ -254,8 +254,8 @@
         }
       ]);
     });
-    it('after checkbox_group_source.add( object ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.add([
+    it('after checkbox_group_source._add( object ), checkbox_group should be equal to result', function() {
+      checkbox_group_source._add([
         {
           id: 7,
           label: "Pottery",
@@ -265,7 +265,7 @@
           label: "Gardening"
         }
       ]);
-      return expect(checkbox_group.fetch_all()).to.be.eql([
+      return expect(checkbox_group._fetch_all()).to.be.eql([
         {
           id: 1,
           label: "Photography",
@@ -281,8 +281,8 @@
         }
       ]);
     });
-    return it('after checkbox_group_source.update( objects ), checkbox_group should be equal to result', function() {
-      checkbox_group_source.update([
+    return it('after checkbox_group_source._update( objects ), checkbox_group should be equal to result', function() {
+      checkbox_group_source._update([
         [
           {
             id: 3,
@@ -312,7 +312,7 @@
           }
         ]
       ]);
-      return expect(checkbox_group.fetch_all()).to.be.eql([
+      return expect(checkbox_group._fetch_all()).to.be.eql([
         {
           id: 8,
           label: "Gardening and Plants",
@@ -332,10 +332,10 @@
 
   describe('Radio():', function() {
     it('radio should be empty', function() {
-      return expect(radio.fetch_all()).to.be.empty;
+      return expect(radio._fetch_all()).to.be.empty;
     });
-    it('after radio_source.add( objects ), radio should be equal to [ { id: 1, label: "Islam", selected: true } ]', function() {
-      radio_source.add([
+    it('after radio_source._add( objects ), radio should be equal to [ { id: 1, label: "Islam", selected: true } ]', function() {
+      radio_source._add([
         {
           id: 1,
           label: "Islam",
@@ -357,7 +357,7 @@
           label: "Rastafari"
         }
       ]);
-      return expect(radio.fetch_all()).to.be.eql([
+      return expect(radio._fetch_all()).to.be.eql([
         {
           id: 1,
           label: "Islam",
@@ -365,8 +365,8 @@
         }
       ]);
     });
-    it('after radio_source.remove( objects ), radio should be empty', function() {
-      radio_source.remove([
+    it('after radio_source._remove( objects ), radio should be empty', function() {
+      radio_source._remove([
         {
           id: 6,
           label: "Satanism"
@@ -376,17 +376,17 @@
           selected: true
         }
       ]);
-      return expect(radio.fetch_all()).to.be.empty;
+      return expect(radio._fetch_all()).to.be.empty;
     });
-    it('after radio_source.add( object ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', function() {
-      radio_source.add([
+    it('after radio_source._add( object ), radio should be equal to [ { id: 5, label: "Hinduism", selected: true } ]', function() {
+      radio_source._add([
         {
           id: 5,
           label: "Hinduism",
           selected: true
         }
       ]);
-      return expect(radio.fetch_all()).to.be.eql([
+      return expect(radio._fetch_all()).to.be.eql([
         {
           id: 5,
           label: "Hinduism",
@@ -394,8 +394,8 @@
         }
       ]);
     });
-    return it('after radio_source.update( objects ), radio should be equal to [ { id: 4, label: "Rastafari", selected: true } ]', function() {
-      radio_source.update([
+    return it('after radio_source._update( objects ), radio should be equal to [ { id: 4, label: "Rastafari", selected: true } ]', function() {
+      radio_source._update([
         [
           {
             id: 8,
@@ -423,7 +423,7 @@
           }
         ]
       ]);
-      return expect(radio.fetch_all()).to.be.eql([
+      return expect(radio._fetch_all()).to.be.eql([
         {
           id: 4,
           label: "Rastafari",
@@ -435,10 +435,10 @@
 
   describe('Drop_Down():', function() {
     it('drop_down should be empty', function() {
-      return expect(drop_down.fetch_all()).to.be.empty;
+      return expect(drop_down._fetch_all()).to.be.empty;
     });
-    it('after drop_down_source.add( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
-      drop_down_source.add([
+    it('after drop_down_source._add( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
+      drop_down_source._add([
         {
           id: 1,
           label: "USA"
@@ -462,15 +462,15 @@
           label: "Madagascar"
         }
       ]);
-      return expect(drop_down.fetch_all()).to.be.eql([
+      return expect(drop_down._fetch_all()).to.be.eql([
         {
           id: 3,
           label: "France"
         }
       ]);
     });
-    it('after drop_down_source.remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
-      drop_down_source.remove([
+    it('after drop_down_source._remove( objects ), drop_down should be equal to [ { id: 3, label: "France" } ]', function() {
+      drop_down_source._remove([
         {
           id: 2,
           label: "Morocco"
@@ -479,43 +479,43 @@
           label: "Spain"
         }
       ]);
-      return expect(drop_down.fetch_all()).to.be.eql([
+      return expect(drop_down._fetch_all()).to.be.eql([
         {
           id: 3,
           label: "France"
         }
       ]);
     });
-    it('after drop_down_source.remove( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', function() {
-      drop_down_source.remove([
+    it('after drop_down_source._remove( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]: remove selected object', function() {
+      drop_down_source._remove([
         {
           id: 3,
           label: "France"
         }
       ]);
-      return expect(drop_down.fetch_all()).to.be.eql([
+      return expect(drop_down._fetch_all()).to.be.eql([
         {
           id: 4,
           label: "Japan"
         }
       ]);
     });
-    it('after drop_down_source.add( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]', function() {
-      drop_down_source.add([
+    it('after drop_down_source._add( object ), drop_down should be equal to [ { id: 4, label: "Japan" } ]', function() {
+      drop_down_source._add([
         {
           id: 7,
           label: "China"
         }
       ]);
-      return expect(drop_down.fetch_all()).to.be.eql([
+      return expect(drop_down._fetch_all()).to.be.eql([
         {
           id: 4,
           label: "Japan"
         }
       ]);
     });
-    return it('after drop_down_source.update( objects ), drop_down should be equal to [ { id: 8, label: "Madagascar" } ]', function() {
-      drop_down_source.update([
+    return it('after drop_down_source._update( objects ), drop_down should be equal to [ { id: 8, label: "Madagascar" } ]', function() {
+      drop_down_source._update([
         [
           {
             id: 6,
@@ -543,7 +543,7 @@
           }
         ]
       ]);
-      return expect(drop_down.fetch_all()).to.be.eql([
+      return expect(drop_down._fetch_all()).to.be.eql([
         {
           id: 8,
           label: "Madagascar",

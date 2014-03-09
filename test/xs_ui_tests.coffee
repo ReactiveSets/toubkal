@@ -89,8 +89,8 @@ describe 'UI Tests', ->
         
         expect( cell_align ).to.be 'right'
     
-    it 'after columns.add( objects ), expect table to have 5 columns', ->
-      columns.add [
+    it 'after columns._add( objects ), expect table to have 5 columns', ->
+      columns._add [
         { id: "year"    , label: "Year"    , align: "center" }
         { id: "language", label: "Language"                  }
       ]
@@ -115,8 +115,8 @@ describe 'UI Tests', ->
         
         expect( cell_align ).to.be 'center'
     
-    it 'after columns.remove( object ), expect table to have 4 columns', ->
-      columns.remove [ { id: "id", label: "ID" } ]
+    it 'after columns._remove( object ), expect table to have 4 columns', ->
+      columns._remove [ { id: "id", label: "ID" } ]
       
       expect( table_head.childNodes[ 0 ].childNodes.length ).to.be 4
     
@@ -130,8 +130,8 @@ describe 'UI Tests', ->
       
       expect( table_node.textContent ).to.be content
     
-    it 'after columns.update( object ), expect table to have 4 columns', ->
-      columns.update [ [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ] ]
+    it 'after columns._update( object ), expect table to have 4 columns', ->
+      columns._update [ [ { id: "language", label: "Language" }, { id: "sales", label: "Sales by millions of copies" } ] ]
       
       expect( table_head.childNodes[ 0 ].childNodes.length ).to.be 4
     
@@ -145,8 +145,8 @@ describe 'UI Tests', ->
       
       expect( table_node.textContent ).to.be content
     
-    it 'after books.add( objects ), expect table to have 15 rows', ->
-      books.add [
+    it 'after books._add( objects ), expect table to have 15 rows', ->
+      books._add [
         { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , sales:        39, year: 2000, language: "English" }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , sales:        30, year: 2005, language: "Swedish" }
         { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", sales:       125, year: 1853, language: "English" }
@@ -182,8 +182,8 @@ describe 'UI Tests', ->
       
       expect( table_node.textContent ).to.be content
     
-    it 'after books.remove( objects ), expect table to have 12 rows', ->
-      books.remove [
+    it 'after books._remove( objects ), expect table to have 12 rows', ->
+      books._remove [
         { id:  1, title: "A Tale of Two Cities", author: "Charles Dickens"        , year: 1859 }
         { id: 13, title: "Lolita"              , author: "Vladimir Nabokov"       , year: 1955 }
         { id:  7, title: "The McGuffey Readers", author: "William Holmes McGuffey", year: 1853 }
@@ -208,8 +208,8 @@ describe 'UI Tests', ->
       
       expect( table_node.textContent ).to.be content
     
-    it 'after books.update( objects ), expect table to have 12 rows', ->
-      books.update [
+    it 'after books._update( objects ), expect table to have 12 rows', ->
+      books._update [
         [
           { id:  2, title: "The Lord of the Rings"             , author: "J. R. R. Tolkien"         , year: 1955 }
           { id:  2, title: "The Fellowship of the Ring: LOTR 1", author: "John Ronald Reuel Tolkien", year: 1955 }
@@ -267,8 +267,8 @@ describe 'UI Tests', ->
       it 'expect checkbox be disabled', ->
         expect( input.disabled ).to.be true
       
-      it 'after chart.add( object ), expect checkbox label to be equal to "Chart"', ->
-        chart.add [ { id: true, label: "Chart" } ]
+      it 'after chart._add( object ), expect checkbox label to be equal to "Chart"', ->
+        chart._add [ { id: true, label: "Chart" } ]
         
         expect( label.textContent ).to.be 'Chart'
       
@@ -278,8 +278,8 @@ describe 'UI Tests', ->
       it 'expect checkbox be disabled', ->
         expect( input.disabled ).to.be true
       
-      it 'after chart.add( object ), expect checkbox label to be equal to "Chart"', ->
-        chart.add [ { id: false, label: "No-Chart" } ]
+      it 'after chart._add( object ), expect checkbox label to be equal to "Chart"', ->
+        chart._add [ { id: false, label: "No-Chart" } ]
         
         expect( label.textContent ).to.be 'Chart'
       
@@ -289,8 +289,8 @@ describe 'UI Tests', ->
       it 'expect checkbox be active', ->
         expect( input.disabled ).to.be false
       
-      it 'after chart.remove( object ), expect checkbox label to be equal to "No-Chart"', ->
-        chart.remove [ { id: true, label: "Chart" } ]
+      it 'after chart._remove( object ), expect checkbox label to be equal to "No-Chart"', ->
+        chart._remove [ { id: true, label: "Chart" } ]
         
         expect( label.textContent ).to.be 'No-Chart'
       
@@ -300,8 +300,8 @@ describe 'UI Tests', ->
       it 'expect checkbox be disabled', ->
         expect( input.disabled ).to.be true
       
-      it 'after chart.remove( object ), expect checkbox label to be equal to be empty', ->
-        chart.remove [ { id: false, label: "No-Chart" } ]
+      it 'after chart._remove( object ), expect checkbox label to be equal to be empty', ->
+        chart._remove [ { id: false, label: "No-Chart" } ]
         
         expect( label.textContent ).to.be.empty()
       
@@ -311,8 +311,8 @@ describe 'UI Tests', ->
       it 'expect checkbox be disabled', ->
         expect( input.disabled ).to.be true
       
-      it 'after chart.add( objects ), expect checkbox label to be equal to "No-Chart"', ->
-        chart.add [ { id: true, label: "Chart" }, { id: false, label: "No-Chart", selected: true } ]
+      it 'after chart._add( objects ), expect checkbox label to be equal to "No-Chart"', ->
+        chart._add [ { id: true, label: "Chart" }, { id: false, label: "No-Chart", selected: true } ]
         
         expect( label.textContent ).to.be 'No-Chart'
       
@@ -322,8 +322,8 @@ describe 'UI Tests', ->
       it 'expect checkbox be active', ->
         expect( input.disabled ).to.be false
       
-      it 'after chart.update( objects ), expect checkbox label to be equal to "Chart"', ->
-        chart.update [
+      it 'after chart._update( objects ), expect checkbox label to be equal to "Chart"', ->
+        chart._update [
           [ { id: true , label: "Chart"                    }, { id: true , label: "Chart"   , selected: true } ]
           [ { id: false, label: "No-Chart", selected: true }, { id: false, label: "No-Chart"                 } ]
         ]
@@ -362,8 +362,8 @@ describe 'UI Tests', ->
         expect( checkbox_list[ 4 ].checked ).to.be true
         expect( checkbox_list[ 5 ].checked ).to.be true
       
-      it 'after hobbies.remove( objects ), expect checkbox group container to have 4 checkboxes', ->
-        hobbies.remove [
+      it 'after hobbies._remove( objects ), expect checkbox group container to have 4 checkboxes', ->
+        hobbies._remove [
           { id: 3, label: "Playing Computer Games"                 }
           { id: 4, label: "Traveling"             , selected: true }
         ]
@@ -377,8 +377,8 @@ describe 'UI Tests', ->
         expect( checkbox_list[ 2 ].checked ).to.be true
         expect( checkbox_list[ 3 ].checked ).to.be true
       
-      it 'after hobbies.add( objects ), expect checkbox group container to have 6 checkboxes', ->
-        hobbies.add [
+      it 'after hobbies._add( objects ), expect checkbox group container to have 6 checkboxes', ->
+        hobbies._add [
           { id: 7, label: "Pottery"  , selected: true }
           { id: 8, label: "Gardening"                 }
         ]
@@ -393,8 +393,8 @@ describe 'UI Tests', ->
         expect( checkbox_list[ 4 ].checked ).to.be true
         expect( checkbox_list[ 5 ].checked ).to.be true
       
-      it 'after hobbies.update( objects ), expect checkbox group container to have 6 checkboxes', ->
-        hobbies.update [
+      it 'after hobbies._update( objects ), expect checkbox group container to have 6 checkboxes', ->
+        hobbies._update [
           [ { id: 3, label: "Playing Computer Games"  }, { id: 3, label: "Playing Video Games"                   } ]
           [ { id: 7, label: "Pottery", selected: true }, { id: 7, label: "Pottery"             , selected: false } ]
           [ { id: 8, label: "Gardening"               }, { id: 8, label: "Gardening and Plants", selected: true  } ]
@@ -434,8 +434,8 @@ describe 'UI Tests', ->
       it 'expect selected radio to be: "Islam"', ->
         expect( radio_list[ 2 ].checked ).to.be true
       
-      it 'after religions.remove( objects ), expect radio container to have 4 radio', ->
-        religions.remove [
+      it 'after religions._remove( objects ), expect radio container to have 4 radio', ->
+        religions._remove [
           { id: 6, label: "Satanism" }
           { id: 1, label: "Islam", selected: true }
         ]
@@ -449,8 +449,8 @@ describe 'UI Tests', ->
         for r in radio_list
           expect( r.checked ).to.be false
       
-      it 'after religions.add( objects ), expect radio container to have 5 radio', ->
-        religions.add [ { id: 5, label: "Hinduism", selected: true } ]
+      it 'after religions._add( objects ), expect radio container to have 5 radio', ->
+        religions._add [ { id: 5, label: "Hinduism", selected: true } ]
         
         expect( radio_list.length ).to.be 5
       
@@ -460,8 +460,8 @@ describe 'UI Tests', ->
       it 'expect checked radio to be: "Hinduism"', ->
         expect( radio_list[ 2 ].checked ).to.be true
       
-      it 'after religions.update( objects ), expect radio container to have 6 radio', ->
-        religions.update [
+      it 'after religions._update( objects ), expect radio container to have 6 radio', ->
+        religions._update [
           [ { id: 8, label: "Rastafari" }, { id: 4, label: "Rastafari", selected: true } ]
           [ { id: 5, label: "Hinduism"  }, { id: 5, label: "Buddhism" } ]
           [ { id: 7, label: "Atheism"   }, { id: 7, label: "Islam"    } ]
@@ -500,8 +500,8 @@ describe 'UI Tests', ->
       it 'expect selected value to be: "France"', ->
         expect( select.selectedIndex ).to.be 0
       
-      it 'after countries.remove( object ), expect drop down control to have 6 options', ->
-        countries.remove [ { id: 3, label: "France" } ]
+      it 'after countries._remove( object ), expect drop down control to have 6 options', ->
+        countries._remove [ { id: 3, label: "France" } ]
         
         expect( select.length ).to.be 6
       
@@ -511,8 +511,8 @@ describe 'UI Tests', ->
       it 'expect selected value to be: "Japan"', ->
         expect( select.selectedIndex ).to.be 0
       
-      it 'after countries.add( object ), expect drop down control to have 7 options', ->
-        countries.add [ { id: 7, label: "China" } ]
+      it 'after countries._add( object ), expect drop down control to have 7 options', ->
+        countries._add [ { id: 7, label: "China" } ]
         
         expect( select.length ).to.be 7
       
@@ -522,8 +522,8 @@ describe 'UI Tests', ->
       it 'expect expect selected value to be: "Japan"', ->
         expect( select.selectedIndex ).to.be 1
       
-      it 'after countries.update( objects ), expect drop down control to have 7 options', ->
-        countries.update [
+      it 'after countries._update( objects ), expect drop down control to have 7 options', ->
+        countries._update [
           [ { id: 6, label: "Portugal"   }, { id: 5, label: "Germany" } ]
           [ { id: 8, label: "Madagascar" }, { id: 8, label: "Madagascar", selected: true } ]
           [ { id: 4, label: "Japan"      }, { id: 4, label: "Italy" } ]

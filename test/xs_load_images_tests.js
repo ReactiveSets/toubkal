@@ -64,12 +64,12 @@
       expect(node).to.be.ok();
       return expect(node.nodeName).to.be('DIV');
     });
-    it('expect images.fetch_all() to be empty', function() {
-      return expect(images.fetch_all()).to.be.empty();
+    it('expect images._fetch_all() to be empty', function() {
+      return expect(images._fetch_all()).to.be.empty();
     });
-    it('after images_source.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
+    it('after images_source._add( objects ), expect images._fetch_all() to be equal to result', function(done) {
       this.timeout(15000);
-      images_source.add([
+      images_source._add([
         {
           title: 'Villa Marrakech 1',
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/011.jpg'
@@ -94,8 +94,8 @@
         }
       ]);
       expect(images._loading_count).to.be(2);
-      return images.on('complete', function() {
-        return images.fetch_all(function(values) {
+      return images._on('complete', function() {
+        return images._fetch_all(function(values) {
           return check(done, function() {
             values.sort(function(a, b) {
               return a.id > b.id;
@@ -144,7 +144,7 @@
       return expect(node.childNodes[6]).to.not.be.ok();
     });
     it('should set the attribute loaded to 1 for these 6 images', function(done) {
-      return images.fetch_all(function(values) {
+      return images._fetch_all(function(values) {
         return check(done, function() {
           var image, value, _i, _len, _results;
           _results = [];
@@ -159,10 +159,10 @@
         });
       });
     });
-    it('after images_source.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
+    it('after images_source._add( objects ), expect images._fetch_all() to be equal to result', function(done) {
       this.timeout(5000);
       images._loading_max = 1;
-      images_source.add([
+      images_source._add([
         {
           title: 'Villa Marrakech 8',
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
@@ -172,8 +172,8 @@
         }
       ]);
       expect(images._loading_count).to.be(1);
-      return images.on('complete', function() {
-        return images.fetch_all(function(values) {
+      return images._on('complete', function() {
+        return images._fetch_all(function(values) {
           return check(done, function() {
             values.sort(function(a, b) {
               return a.id > b.id;
@@ -229,7 +229,7 @@
       return expect(node.childNodes[8]).to.not.be.ok();
     });
     it('should set the attribute loaded_count to 1 for these 6 images', function(done) {
-      return images.fetch_all(function(values) {
+      return images._fetch_all(function(values) {
         return check(done, function() {
           var image, value, _i, _len, _results;
           _results = [];
@@ -244,9 +244,9 @@
         });
       });
     });
-    it('after images_source.remove( objects ), expect images.fetch_all() to be equal to result', function() {
+    it('after images_source._remove( objects ), expect images._fetch_all() to be equal to result', function() {
       var values;
-      images_source.remove([
+      images_source._remove([
         {
           id: 6,
           title: 'Villa Marrakech 6',
@@ -257,7 +257,7 @@
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/08.jpg'
         }
       ]);
-      values = images.fetch_all().sort(function(a, b) {
+      values = images._fetch_all().sort(function(a, b) {
         return a.id > b.id;
       });
       return expect(values).to.be.eql([
@@ -297,10 +297,10 @@
       expect(node.childNodes[5].nodeName).to.be('IMG');
       return expect(node.childNodes[6]).to.not.be.ok();
     });
-    it('after images_source.update( objects ), expect images.fetch_all() to be equal to result', function(done) {
+    it('after images_source._update( objects ), expect images._fetch_all() to be equal to result', function(done) {
       this.timeout(5000);
-      images.on('complete', function() {
-        return images.fetch_all(function(values) {
+      images._on('complete', function() {
+        return images._fetch_all(function(values) {
           return check(done, function() {
             values.sort(function(a, b) {
               return a.id > b.id;
@@ -335,7 +335,7 @@
           });
         });
       }, this, true);
-      return images_source.update([
+      return images_source._update([
         [
           {
             id: 9,
@@ -349,10 +349,10 @@
         ]
       ]);
     });
-    it('after images_source.add( objects ), expect images.fetch_all() to be equal to result', function(done) {
+    it('after images_source._add( objects ), expect images._fetch_all() to be equal to result', function(done) {
       this.timeout(5000);
-      images.on('complete', function() {
-        return images.fetch_all(function(values) {
+      images._on('complete', function() {
+        return images._fetch_all(function(values) {
           return check(done, function() {
             values.sort(function(a, b) {
               return a.id > b.id;
@@ -395,7 +395,7 @@
           });
         });
       }, this, true);
-      return images_source.add([
+      return images_source._add([
         {
           title: 'Villa Marrakech 11',
           uri: 'https://raw.github.com/ConnectedSets/castorcad/master/images/11.jpg'
@@ -405,10 +405,10 @@
         }
       ]);
     });
-    return it('after images_source.update( objects ), expect images.fetch_all() to be equal to result', function(done) {
+    return it('after images_source._update( objects ), expect images._fetch_all() to be equal to result', function(done) {
       this.timeout(5000);
-      images.on('complete', function() {
-        return images.fetch_all(function(values) {
+      images._on('complete', function() {
+        return images._fetch_all(function(values) {
           return check(done, function() {
             values.sort(function(a, b) {
               return a.id > b.id;
@@ -451,7 +451,7 @@
           });
         });
       }, this, true);
-      return images_source.update([
+      return images_source._update([
         [
           {
             id: 9,

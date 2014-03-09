@@ -90,7 +90,7 @@ var ubuntu_amis = xs
   ], { no_null: true, no_undefined: true } )
   
   .trace( 'ubuntu amis' )
-  .on( 'complete', function() { exit() } )
+  ._on( 'complete', function() { exit() } )
 ;
 
 var AMI_regions = ubuntu_amis
@@ -122,8 +122,8 @@ var zones = regions
   
   .trace( 'Availability Zones' )
   
-  .on( 'complete', function() {
-    this.fetch_all( function( zones ) {
+  ._on( 'complete', function() {
+    this._fetch_all( function( zones ) {
       console.log( 'Received all us Availability Zones: '
         + zones.map( function( z ) { return z.ZoneName } ).join( ', ' )
       )
@@ -150,11 +150,11 @@ var spot_prices_stats = zones
   .ec2_describe_spot_price_history( d, [ 'm1.small' ], { products : [ 'Linux/UNIX' ], name: 'spot_price_history' } )
 //  .ec2_describe_spot_price_history( d, [ 'cc1.4xlarge' ], { products : [ 'Linux/UNIX' ], name: 'spot_price_history' } )
   
-  .on( 'complete', function() { de&&ug( 'complete after ec2_describe_spot_price_history()' ) } )
+  ._on( 'complete', function() { de&&ug( 'complete after ec2_describe_spot_price_history()' ) } )
   
   .trace( 'Spot Price History', { counts_only: true } )
   
-  // .on( 'complete', function() { de&&ug( 'complete after trace()' ) } )
+  // ._on( 'complete', function() { de&&ug( 'complete after trace()' ) } )
   
   .order( [
     { id: 'AvailabilityZone'  , type: 'String' },
@@ -163,13 +163,13 @@ var spot_prices_stats = zones
     { id: 'Timestamp'         , type: 'Date'   }
   ], { no_null: true, no_undefined: true } )
   
-  // .on( 'complete', function() { de&&ug( 'complete after order()' ) } )
+  // ._on( 'complete', function() { de&&ug( 'complete after order()' ) } )
   
   // .trace( 'Spot Price History Ordered', { counts_only: true } )
   
   .delay( 1000 ) // for testing purposes only
   
-  // .on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
+  // ._on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
   
   .alter( function( price, i ) {
     if ( i
@@ -190,7 +190,7 @@ var spot_prices_stats = zones
     return previous = price;
   } )
   
-  // .on( 'complete', function() { de&&ug( 'complete after alter()' ) } )
+  // ._on( 'complete', function() { de&&ug( 'complete after alter()' ) } )
   
   //.trace( 'Spot Prices' )
   
@@ -205,7 +205,7 @@ var spot_prices_stats = zones
     { id: 'InstanceType'       }
   ] )
   
-  .on( 'complete', function() { de&&ug( 'complete after aggregate()' ) } )
+  ._on( 'complete', function() { de&&ug( 'complete after aggregate()' ) } )
   
   .alter( function( cost ) {
     cost = extend( {}, cost );
@@ -222,10 +222,10 @@ var spot_prices_stats = zones
   
   .trace( 'Average Cost per Hour by AvailabilityZone and InstanceType' )
   
-  .on( 'complete', function() {
+  ._on( 'complete', function() {
     de&&ug( 'complete after all is done' )
     
-    this.fetch_all( function( prices ) {
+    this._fetch_all( function( prices ) {
       //de&&ug( 'spot_prices_stats: ' + log.s( prices, void 0, '  ' ) );
     } )
   } )
