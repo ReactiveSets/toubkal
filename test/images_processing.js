@@ -135,8 +135,6 @@ images
   
   // Start socket.io server, and dispatch client connections to provide contact_form_fields and get filled contact forms
   .dispatch( servers.socket_io_clients(), function( source, options ) {
-    return source
-      ._add_destination( this.socket )
-    ;
+    return this.socket._add_source( source );
   } )
 ;
