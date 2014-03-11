@@ -256,8 +256,21 @@ var source_maps = xs.set( [
 ;
 
 // Serve assets to http servers
-xs.union( [ pipelet_min, xs_core_min, xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
-  .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
+
+// The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
+// of self-unions of pipelets. The prefered form is remains using an explicit Union.
+
+// xs.union( [ pipelet_min, xs_core_min, xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
+xs.serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
+  ._insert_source_union()
+  ._add_source( pipelet_min     )
+  ._add_source( xs_core_min     )
+  ._add_source( xs_min          )
+  ._add_source( mocha_expect    )
+  ._add_source( tests           )
+  ._add_source( compiled_coffee )
+  ._add_source( source_maps     )
+  ._add_source( coffee_source   )
 ;
 
 // Socket.io Server tests
@@ -271,7 +284,7 @@ var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
 function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
-  var input  = source._add_destination( this.socket )
+  var input  = this.socket._add_source( source )
     , output = input.trace( 'from socket.io clients' )
   ;
   

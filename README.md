@@ -141,21 +141,24 @@ function client( source ) { // source refers to the output of the database here
   var user_id = this.user_id; // id of authenticated user
   
   var get_query = authorizations
-    .query( [ { user_id: user_id, get: true } ] )     // Get authorizations for this user
+    .filter( [ { user_id: user_id, get: true } ] )    // Get authorizations for this user
     .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
   ;
   
   var set_query = authorizations               
-    .query( [ { user_id: user_id, set: true } ] )     // Set authorizations for this user
+    .filter( [ { user_id: user_id, set: true } ] )    // Set authorizations for this user
     .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
   ;
   
-  return source
-    .query( get_query )  // delivers only what this user is authorized to get
+  source
+    .filter( get_query )  // delivers only what this user is authorized to get
     
     ._add_destination( this.socket ) // Send and Receive data to/from web browser
-    
-    .filter( set_query ) // discards unauthorized write attempts
+  ;
+  
+  return this.socket
+  
+    .filter( set_query ) // only collects from client unauthorized writes
   ;
 }
 ```
@@ -629,6 +632,7 @@ node server.js
 
 - Controllets which control upstream query trees using downstream queries
 - Transactions
+- Improve Pipelet API and naming conventions
 - Virtual Hosts w/ optimized routing
 - Touch Events on bootstrap pipelets
 - Filter support for static and dynamic queries
