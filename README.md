@@ -92,7 +92,7 @@ achieve that without throwing millions of dollars at the problem, and/or not str
 bottlenecks and hard-to-work-around architecture limitations.
 
 The following provides an example of a non-trivial, high-performance, data server with realtime
-updates on everything including authorization changes, in 50 lines of code, comments included.
+updates on everything including authorization changes, in 52 lines of code, comments included.
 
 The only thing you need to know to understand this code is about **Pipelets**:
 - An XS pipelet, aka a "node" in other dataflow libraries, is a JavaScript function that
@@ -150,13 +150,15 @@ function client( source ) { // source refers to the output of the database here
     .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
   ;
   
-  source
-    .filter( get_query )  // delivers only what this user is authorized to get
+  var socket = this.socket;     // Socket to exchange data with web browser
+  
+  source                        // Dataflows from the database through dispatch()
+    .filter( get_query )        // delivers only what this user is authorized to get
     
-    ._add_destination( this.socket ) // Send and Receive data to/from web browser
+    ._add_destination( socket ) // Send data to web browser
   ;
   
-  return this.socket
+  return socket          // Receive data from web browser
   
     .filter( set_query ) // only collects from client unauthorized writes
   ;
