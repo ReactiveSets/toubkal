@@ -1237,8 +1237,8 @@
           }
         ]);
       });
-      it('Query..clear_operations() should empty adds and removes', function() {
-        q.clear_operations();
+      it('Query..discard_operations() should empty adds and removes', function() {
+        q.discard_operations();
         expect(q.query).to.be.eql([
           {
             flow: 'group',
@@ -1314,7 +1314,7 @@
         ]);
       });
       it('Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', function() {
-        q.clear_operations();
+        q.discard_operations();
         q1 = [
           {
             flow: 'group',
@@ -1637,7 +1637,7 @@
         ]);
       });
       it('should not remove an expression which was previously optimized-out by add()', function() {
-        q.clear_operations();
+        q.discard_operations();
         q.add([
           {
             flow: 'group'
@@ -3407,7 +3407,7 @@
           return check_set_content(done, cities.filter([]).trace('filter_no_country'), []);
         });
         it('should contain all cities when an empty or-term is provided', function(done) {
-          return check_set_content(done, cities.filter([{}]).trace('filter_no_country'), [
+          return check_set_content(done, cities.filter([{}]).trace('filter_no_country').set(), [
             {
               id: 1,
               name: "Marrakech",
@@ -3438,7 +3438,7 @@
           ]);
         });
         it('should only contain cities from USA and Morocco', function(done) {
-          return check_set_content(done, cities.filter(countries), [
+          return check_set_content(done, cities.filter(countries).set(), [
             {
               id: 1,
               name: "Marrakech",
@@ -3461,7 +3461,7 @@
           ]);
         });
         return it('should only contain cities from USA and Morocco even through a set()', function(done) {
-          return check_set_content(done, cities.filter(countries).set([]), [
+          return check_set_content(done, cities.filter(countries).set(), [
             {
               id: 1,
               name: "Marrakech",
@@ -3539,10 +3539,10 @@
         ], {
           key: ['flow', 'id']
         });
-        users = multiflow.flow("user");
-        groups = multiflow.flow("group");
-        posts = multiflow.flow("post").set([]);
-        comments = multiflow.flow("comment").set([]);
+        users = multiflow.flow("user").set();
+        groups = multiflow.flow("group").set();
+        posts = multiflow.flow("post").set();
+        comments = multiflow.flow("comment").set();
         it('should filter a multiflow by "users"', function(done) {
           return check_set_content(done, users, [
             {

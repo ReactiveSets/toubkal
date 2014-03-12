@@ -919,8 +919,8 @@ describe 'XS test suite:', ->
       expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
       expect( q.removes ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
       
-    it 'Query..clear_operations() should empty adds and removes', ->
-      q.clear_operations()
+    it 'Query..discard_operations() should empty adds and removes', ->
+      q.discard_operations()
       
       expect( q.query ).to.be.eql [ { flow: 'group', id: 26 } ]
       expect( q.adds    ).to.be.eql []
@@ -943,7 +943,7 @@ describe 'XS test suite:', ->
       expect( q1 ).to.be.eql [ { id: 26 }, { id: 27 } ]
       
     it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
-      q.clear_operations()
+      q.discard_operations()
       
       q1 = [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
       q.add( [ { flow: 'group' } ] ).and q1
@@ -1068,7 +1068,7 @@ describe 'XS test suite:', ->
         ]
       
     it 'should not remove an expression which was previously optimized-out by add()', ->
-      q.clear_operations()
+      q.discard_operations()
       
       q.add    [ { flow: 'group' } ]
       
@@ -1986,7 +1986,7 @@ describe 'XS test suite:', ->
         check_set_content done, cities.filter( [] ).trace( 'filter_no_country' ), []
       
       it 'should contain all cities when an empty or-term is provided', ( done ) ->
-        check_set_content done, cities.filter( [ {} ] ).trace( 'filter_no_country' ), [
+        check_set_content done, cities.filter( [ {} ] ).trace( 'filter_no_country' ).set(), [
             { id: 1, name: "Marrakech"    , country: "Morocco"                      }
             { id: 4, name: "Berlin"       , country: "Germany"                      }
             { id: 5, name: "New York City", country: "USA", state: "New York"       }
@@ -1996,7 +1996,7 @@ describe 'XS test suite:', ->
           ]
       
       it 'should only contain cities from USA and Morocco', ( done ) ->
-        check_set_content done, cities.filter( countries ), [
+        check_set_content done, cities.filter( countries ).set(), [
             { id: 1, name: "Marrakech"    , country: "Morocco"                      }
             { id: 5, name: "New York City", country: "USA", state: "New York"       }
             { id: 6, name: "Casablanca"   , country: "Morocco"                      }
@@ -2004,7 +2004,7 @@ describe 'XS test suite:', ->
           ]
       
       it 'should only contain cities from USA and Morocco even through a set()', ( done ) ->
-        check_set_content done, cities.filter( countries ).set( [] ), [
+        check_set_content done, cities.filter( countries ).set(), [
             { id: 1, name: "Marrakech"    , country: "Morocco"                      }
             { id: 5, name: "New York City", country: "USA", state: "New York"       }
             { id: 6, name: "Casablanca"   , country: "Morocco"                      }
@@ -2031,10 +2031,10 @@ describe 'XS test suite:', ->
         { flow: "comment", id: 4 }
       ], { key: [ 'flow', 'id' ] }
       
-      users    = multiflow.flow "user"
-      groups   = multiflow.flow "group"
-      posts    = multiflow.flow( "post" ).set []
-      comments = multiflow.flow( "comment" ).set []
+      users    = multiflow.flow( "user"    ).set()
+      groups   = multiflow.flow( "group"   ).set()
+      posts    = multiflow.flow( "post"    ).set()
+      comments = multiflow.flow( "comment" ).set()
       
       it 'should filter a multiflow by "users"', ( done ) ->
         check_set_content done, users, [
