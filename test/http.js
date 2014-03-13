@@ -178,6 +178,7 @@ var tests = xs
     { name: 'test/url.html'                    },
     { name: 'test/pipelet.html'                },
     { name: 'test/xs_core.html'                },
+    { name: 'test/webrtc.html'                 },
     
     // JavaScript for tests
     { name : 'test/javascript/jquery-1.10.2.min.js' },

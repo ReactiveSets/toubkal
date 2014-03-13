@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" href="css/mocha.css" />
+    
+    <title>Playing with WebRTC</title>
+    
+    <script src="../lib/xs-min.js"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    
+  </head>
+  
+  <body>
+    <div id=""></div>
+    <table>
+      <tr>
+        <th>
+          Local
+        </th>
+        <th>
+          Remote
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <video id="local"  autoplay></video>
+        </th>
+        <th>
+          <video id="remote" autoplay></video>
+        </th>
+      </tr>
+    </table>
+    
+    <script>
+      var xs = XS.xs
+        , log = XS.log
+        , de = true
+        , ug = function( m ) { XS.log( 'webrtc, ' + m ) }
+        , get_user_media = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+        , constraints = { audio: false, video: { mandatory: { maxWidth: 320, maxHeight: 240 } } }
+        , local_video = document.querySelector( "#local" )
+        , remote_video = document.querySelector( "#remote" )
+      ;
+      
+      function on_stream( stream ) {
+        de&&ug( 'get_user_media()#on_stream(), stream: ' + log.pretty( stream ) );
+        
+        var _stream = stream;
+        
+        if ( window.URL ) { // Chrome
+          _stream = window.URL.createObjectURL( stream );
+          
+          de&&ug( 'get_user_media()#on_stream(), stream from window.URL.createObjectURL(): ' + log.pretty( _stream ) );
+        }
+        
+        local_video.src = _stream;
+        
+        local_video.play();
+        
+        de&&ug( 'get_user_media()#on_stream(), after video play' );
+        
+        if ( navigator.webkitGetUserMedia ) {
+          // Chrome: get more info on tracks
+          de&&ug( "video tracks: " + log.s( stream.getVideoTracks() ) );
+          de&&ug( "audio tracks: " + log.s( stream.getAudioTracks() ) );          
+        }
+        
+        var RTCPeerConnection, RTCSessionDescription, RTCIceCandidate;
+        
+        if ( navigator.webkitGetUserMedia ) {
+          // Chrome
+          RTCPeerConnection = webkitRTCPeerConnection;
+          
+          de&&ug( 'Chrome RTCPeerConnection: ' + typeof RTCPeerConnection );
+        } else if ( navigator.mozGetUserMedia ) {
+          // Firefox
+          RTCPeerConnection = mozRTCPeerConnection;
+          RTCSessionDescription = mozRTCSessionDescription;
+          RTCIceCandidate = mozRTCIceCandidate;
+          
+          de&&ug( 'Firefox RTCPeerConnection: ' + typeof RTCPeerConnection );
+        }
+        
+        var configuration = null; //[ { "url": "stun:stun.services.mozilla.com" } ];
+        
+        var local_peer_connection = new RTCPeerConnection( configuration );
+        
+        de&&ug( 'local_peer_connection: ' + log.s( local_peer_connection ) );
+        
+        local_peer_connection.onicecandidate = function on_local_ice_candidate( description ) {
+          de&&ug( 'local description' + log.s( description ) );
+        };
+        
+        var remote_peer_connection = new RTCPeerConnection( configuration );
+        
+        de&&ug( 'remote_peer_connection: ' + log.s( remote_peer_connection ) );
+        
+        remote_peer_connection.onicecandidate = function on_remote_ice_candidate( description ) {
+          de&&ug( 'remote description' + log.s( description ) );
+        };
+      }
+      
+      function on_error( error ) {
+        de&&ug( 'get_user_media()#on_error(), error: ' + log.s( error ) );
+        
+        alert( 'To reset permission denied you need to go to chrome://settings/content # Media, Manage Exceptions' )
+      }
+      
+      de&&ug( 'get_user_media(), constraints: ' + log.s( constraints ) );
+      
+      get_user_media && get_user_media.call( navigator, constraints, on_stream, on_error ); 
+      
+      // xs.socket_io_server();
+    </script>
+  </body>
+</html>
