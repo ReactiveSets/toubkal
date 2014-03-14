@@ -26,10 +26,10 @@
       </tr>
       <tr>
         <th>
-          <video id="local"  autoplay></video>
+          <video id="caller"  autoplay></video>
         </th>
         <th>
-          <video id="remote" autoplay></video>
+          <video id="callee" autoplay></video>
         </th>
       </tr>
     </table>
@@ -40,68 +40,181 @@
         , de = true
         , ug = function( m ) { XS.log( 'webrtc, ' + m ) }
         , get_user_media = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
-        , constraints = { audio: false, video: { mandatory: { maxWidth: 320, maxHeight: 240 } } }
-        , local_video = document.querySelector( "#local" )
-        , remote_video = document.querySelector( "#remote" )
+        , URL = window.URL
+        , constraints  = { audio: false, video: { mandatory: { maxWidth: 320, maxHeight: 240 } } }
+        , caller_video  = document.querySelector( "#caller" )
+        , callee_video = document.querySelector( "#callee" )
+        , RTCPeerConnection, RTCSessionDescription, RTCIceCandidate
+        , caller_peer_connection
+        //, callee_peer_connection
       ;
       
-      function on_stream( stream ) {
-        de&&ug( 'get_user_media()#on_stream(), stream: ' + log.pretty( stream ) );
+      if ( navigator.webkitGetUserMedia ) {
+        // Chrome
+        RTCPeerConnection = webkitRTCPeerConnection;
         
-        var _stream = stream;
+        de&&ug( 'Chrome RTCPeerConnection: ' + typeof RTCPeerConnection );
+      } else if ( navigator.mozGetUserMedia ) {
+        // Firefox
+        RTCPeerConnection = mozRTCPeerConnection;
+        RTCSessionDescription = mozRTCSessionDescription;
+        RTCIceCandidate = mozRTCIceCandidate;
         
-        if ( window.URL ) { // Chrome
-          _stream = window.URL.createObjectURL( stream );
-          
-          de&&ug( 'get_user_media()#on_stream(), stream from window.URL.createObjectURL(): ' + log.pretty( _stream ) );
-        }
-        
-        local_video.src = _stream;
-        
-        local_video.play();
-        
-        de&&ug( 'get_user_media()#on_stream(), after video play' );
-        
-        if ( navigator.webkitGetUserMedia ) {
-          // Chrome: get more info on tracks
-          de&&ug( "video tracks: " + log.s( stream.getVideoTracks() ) );
-          de&&ug( "audio tracks: " + log.s( stream.getAudioTracks() ) );          
-        }
-        
-        var RTCPeerConnection, RTCSessionDescription, RTCIceCandidate;
-        
-        if ( navigator.webkitGetUserMedia ) {
-          // Chrome
-          RTCPeerConnection = webkitRTCPeerConnection;
-          
-          de&&ug( 'Chrome RTCPeerConnection: ' + typeof RTCPeerConnection );
-        } else if ( navigator.mozGetUserMedia ) {
-          // Firefox
-          RTCPeerConnection = mozRTCPeerConnection;
-          RTCSessionDescription = mozRTCSessionDescription;
-          RTCIceCandidate = mozRTCIceCandidate;
-          
-          de&&ug( 'Firefox RTCPeerConnection: ' + typeof RTCPeerConnection );
-        }
-        
-        var configuration = null; //[ { "url": "stun:stun.services.mozilla.com" } ];
-        
-        var local_peer_connection = new RTCPeerConnection( configuration );
-        
-        de&&ug( 'local_peer_connection: ' + log.s( local_peer_connection ) );
-        
-        local_peer_connection.onicecandidate = function on_local_ice_candidate( description ) {
-          de&&ug( 'local description' + log.s( description ) );
-        };
-        
-        var remote_peer_connection = new RTCPeerConnection( configuration );
-        
-        de&&ug( 'remote_peer_connection: ' + log.s( remote_peer_connection ) );
-        
-        remote_peer_connection.onicecandidate = function on_remote_ice_candidate( description ) {
-          de&&ug( 'remote description' + log.s( description ) );
-        };
+        de&&ug( 'Firefox RTCPeerConnection: ' + typeof RTCPeerConnection );
       }
+      de&&ug( 'RTCSessionDescription: ' + typeof RTCSessionDescription );
+      de&&ug( 'RTCIceCandidate: ' + typeof RTCIceCandidate );
+      
+      if ( ! RTCPeerConnection ) throw new Error( 'Browser does not support WebRTC' );
+      
+      de&&ug( 'get_user_media(), constraints: ' + log.s( constraints ) );
+      
+      get_user_media && get_user_media.call( navigator, constraints, on_stream, on_error ); 
+      
+      function source_from_stream( stream ) {
+        if ( URL ) {
+          // Chrome
+          stream = URL.createObjectURL( stream );
+          
+          de&&ug( 'source_from_stream(), URL.createObjectURL( stream ): ' + log.pretty( stream ) );
+        }
+        
+        return stream;
+      }
+      
+      function on_stream( stream ) {
+        de&&ug( 'on_stream(), stream: ' + log.pretty( stream ) );
+        
+        caller_video.src = source_from_stream( stream );
+        
+        //caller_video.play();
+        
+        de&&ug( 'on_stream(), playing caller video' );
+        
+        // Additional info, only available in Chrome for now
+        de && stream.getVideoTracks && ug( "video tracks: " + log.s( stream.getVideoTracks() ) );
+        de && stream.getAudioTracks && ug( "audio tracks: " + log.s( stream.getAudioTracks() ) );          
+        
+        var configuration; //[ { "url": "stun:stun.services.mozilla.com" } ];
+        
+        caller_peer_connection = new RTCPeerConnection( configuration );
+        
+        de&&ug( 'caller_peer_connection: ' + log.s( caller_peer_connection ) );
+        
+        caller_peer_connection.onicecandidate = function( event ) {
+          var candidate = event.candidate;
+          
+          if ( candidate ) {
+            // Send caller ice candidate to callee
+            
+            add.call( callee_peer_connection, [
+              { flow: 'webrtc', from: 'caller', to: 'callee', name: 'ice_candidate', event: candidate }
+            ] );
+          } else {
+            de&&ug( 'no more callee candidates, event keys: ' + log.s( Object.keys( event ) ) );
+          }
+        };
+        
+        caller_peer_connection.onaddstream = function( event ) {
+          de&&ug( 'On caller stream received event: ' + log.s( event.stream ) );
+          
+          // This stream is comming from camera directly
+          caller_video.src = source_from_stream( event.stream );
+          caller_video.style.opacity = 1;
+        };
+        
+        var callee_peer_connection = new RTCPeerConnection( configuration );
+        
+        de&&ug( 'callee_peer_connection: ' + log.s( callee_peer_connection ) );
+        
+        callee_peer_connection.onicecandidate = function( event ) {
+          var candidate = event.candidate;
+          
+          // Send callee candidates to caller
+          if ( candidate ) {
+            add.call( caller_peer_connection, [
+              { flow: 'webrtc', from: 'callee', to: 'caller', name: 'ice_candidate', event: candidate }
+            ] );
+          } else {
+            de&&ug( 'no more caller candidates, event keys: ' + log.s( Object.keys( event ) ) );
+          }
+        };
+        
+        callee_peer_connection.onaddstream = function( event ) {
+          de&&ug( 'On callee stream received event: ' + log.s( event.stream ) );
+          
+          callee_video.src = source_from_stream( event.stream );
+        };
+        
+        // Add the stream to the caller peer
+        caller_peer_connection.addStream( stream );
+        caller_peer_connection.createOffer( offer_ready, make_error( 'caller_peer_connection.createOffer' ) );
+        
+        function offer_ready( description ) {
+          de&&ug( 'offer_ready(), description sdp: ' + description.sdp );
+          
+          caller_peer_connection.setLocalDescription( description );
+          
+          // Send description to callee
+          add.call( callee_peer_connection, [
+            { flow: 'webrtc', from: 'callee', to: 'caller', name: 'offer', event: description }
+          ] );
+        }
+      }
+      
+      // add() webrtc signaling events processing
+      // this: caller or callee peer connection object
+      function add( values ) {
+        for ( var i = -1, v; v = values[ ++i ]; ) {
+          var name = v.name, from = v.from, to = v.to, description, candidate, that = this;
+          
+          de&&ug( 'add(), received event ' + name + ' for ' + to + ' from ' + from );
+          
+          switch( name ) {
+            case 'offer':
+              // Call is supposed to be accepted here
+              // Acceptance could be performed by an upstream pipelet
+              // Calls can be filtered by authorizations based on attributes 'from' and 'to'
+              description = v.event;
+              
+              de&&ug( 'offer description sdp:\n' + description.sdp );
+              
+              this.setRemoteDescription( description );
+              
+              // answer the call
+              this.createAnswer( answer_ready, make_error( 'callee_peer_connection.createAnswer' ) );
+              
+              function answer_ready( description ) {
+                that.setLocalDescription( description );
+                
+                // Send description back to caller
+                add.call( caller_peer_connection, [
+                  { flow: 'webrtc', from: to, to: from, name: 'answer', event: description }
+                ] );
+              }
+            break;
+            
+            case 'answer':
+              description = v.event;
+              
+              de&&ug( 'answer description sdp:\n' + description.sdp );
+              
+              this.setRemoteDescription( description );
+            break;
+            
+            case 'ice_candidate':
+              candidate = v.event;
+              
+              de&&ug( 'ice candidate: ' + log.s( candidate ) );
+              
+              this.addIceCandidate( new RTCIceCandidate( candidate ) );
+            break;
+            
+            default:
+              // unknow event
+          }
+        }
+      } // add()
       
       function on_error( error ) {
         de&&ug( 'get_user_media()#on_error(), error: ' + log.s( error ) );
@@ -109,9 +222,9 @@
         alert( 'To reset permission denied you need to go to chrome://settings/content # Media, Manage Exceptions' )
       }
       
-      de&&ug( 'get_user_media(), constraints: ' + log.s( constraints ) );
-      
-      get_user_media && get_user_media.call( navigator, constraints, on_stream, on_error ); 
+      function make_error( f ) {
+        return function( error ) { de&&ug( f + '() error: ' + log.s( error ) ) }
+      }
       
       // xs.socket_io_server();
     </script>
