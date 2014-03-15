@@ -10,7 +10,6 @@
     <script src="../lib/xs-min.js"></script>
     
     <script src="/socket.io/socket.io.js"></script>
-    
   </head>
   
   <body>
@@ -42,11 +41,12 @@
         , get_user_media = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
         , URL = window.URL
         , constraints  = { audio: false, video: { mandatory: { maxWidth: 320, maxHeight: 240 } } }
-        , caller_video  = document.querySelector( "#caller" )
+        , caller_video = document.querySelector( "#caller" )
         , callee_video = document.querySelector( "#callee" )
         , RTCPeerConnection, RTCSessionDescription, RTCIceCandidate
         , caller_peer_connection
-        //, callee_peer_connection
+        , callee_peer_connection
+        , configuration // = [ { "url": "stun:stun.services.mozilla.com" } ]
       ;
       
       if ( navigator.webkitGetUserMedia ) {
@@ -69,6 +69,7 @@
       
       de&&ug( 'get_user_media(), constraints: ' + log.s( constraints ) );
       
+      // User media is a first pipelet
       get_user_media && get_user_media.call( navigator, constraints, on_stream, on_error ); 
       
       function source_from_stream( stream ) {
@@ -82,9 +83,11 @@
         return stream;
       }
       
+      // This should be an audio / video capture pipelet
       function on_stream( stream ) {
         de&&ug( 'on_stream(), stream: ' + log.pretty( stream ) );
         
+        // ToDo: move to downstream video pipelet
         caller_video.src = source_from_stream( stream );
         
         //caller_video.play();
@@ -95,13 +98,17 @@
         de && stream.getVideoTracks && ug( "video tracks: " + log.s( stream.getVideoTracks() ) );
         de && stream.getAudioTracks && ug( "audio tracks: " + log.s( stream.getAudioTracks() ) );          
         
-        var configuration; //[ { "url": "stun:stun.services.mozilla.com" } ];
-        
-        caller_peer_connection = new RTCPeerConnection( configuration );
+        // Call is handled by downstream pipelet
+        // But the caller may not always be this party which may in some cases be the callee
+        call( stream );
+      }
+      
+      function call( stream ) {
+        var peer = caller_peer_connection = new RTCPeerConnection( configuration );
         
         de&&ug( 'caller_peer_connection: ' + log.s( caller_peer_connection ) );
         
-        caller_peer_connection.onicecandidate = function( event ) {
+        peer.onicecandidate = function( event ) {
           var candidate = event.candidate;
           
           if ( candidate ) {
@@ -115,45 +122,23 @@
           }
         };
         
-        caller_peer_connection.onaddstream = function( event ) {
+        peer.onaddstream = function( event ) {
           de&&ug( 'On caller stream received event: ' + log.s( event.stream ) );
           
+          // ToDo: move to a downstream pipelet
           // This stream is comming from camera directly
           caller_video.src = source_from_stream( event.stream );
           caller_video.style.opacity = 1;
         };
         
-        var callee_peer_connection = new RTCPeerConnection( configuration );
-        
-        de&&ug( 'callee_peer_connection: ' + log.s( callee_peer_connection ) );
-        
-        callee_peer_connection.onicecandidate = function( event ) {
-          var candidate = event.candidate;
-          
-          // Send callee candidates to caller
-          if ( candidate ) {
-            add.call( caller_peer_connection, [
-              { flow: 'webrtc', from: 'callee', to: 'caller', name: 'ice_candidate', event: candidate }
-            ] );
-          } else {
-            de&&ug( 'no more caller candidates, event keys: ' + log.s( Object.keys( event ) ) );
-          }
-        };
-        
-        callee_peer_connection.onaddstream = function( event ) {
-          de&&ug( 'On callee stream received event: ' + log.s( event.stream ) );
-          
-          callee_video.src = source_from_stream( event.stream );
-        };
-        
         // Add the stream to the caller peer
-        caller_peer_connection.addStream( stream );
-        caller_peer_connection.createOffer( offer_ready, make_error( 'caller_peer_connection.createOffer' ) );
+        peer.addStream( stream );
+        peer.createOffer( offer_ready, make_error( 'caller_peer_connection.createOffer' ) );
         
         function offer_ready( description ) {
           de&&ug( 'offer_ready(), description sdp: ' + description.sdp );
           
-          caller_peer_connection.setLocalDescription( description );
+          peer.setLocalDescription( description );
           
           // Send description to callee
           add.call( callee_peer_connection, [
@@ -161,6 +146,8 @@
           ] );
         }
       }
+      
+      var calls = [];
       
       // add() webrtc signaling events processing
       // this: caller or callee peer connection object
@@ -172,20 +159,45 @@
           
           switch( name ) {
             case 'offer':
-              // Call is supposed to be accepted here
-              // Acceptance could be performed by an upstream pipelet
-              // Calls can be filtered by authorizations based on attributes 'from' and 'to'
+              // configuration is an option of this pipelet or may come from a control pipelet
+              callee_peer_connection = peer = new RTCPeerConnection( configuration );
+              
+              de&&ug( 'callee_peer_connection: ' + log.s( callee_peer_connection ) );
+              
+              peer.onicecandidate = function( event ) {
+                var candidate = event.candidate;
+                
+                // Send callee candidates to caller
+                if ( candidate ) {
+                  add.call( caller_peer_connection, [
+                    { flow: 'webrtc', from: to, to: from, name: 'ice_candidate', event: candidate }
+                  ] );
+                } else {
+                  de&&ug( 'no more caller candidates, event keys: ' + log.s( Object.keys( event ) ) );
+                }
+              };
+              
+              peer.onaddstream = function( event ) {
+                de&&ug( 'On callee stream received event: ' + log.s( event.stream ) );
+                
+                // ToDo: move to a downstream pipelet
+                callee_video.src = source_from_stream( event.stream );
+              };
+              
+              // Calls may be filtered by authorizations based on attributes 'from' and 'to'
               description = v.event;
               
               de&&ug( 'offer description sdp:\n' + description.sdp );
               
-              this.setRemoteDescription( description );
+              peer.setRemoteDescription( description );
               
-              // answer the call
-              this.createAnswer( answer_ready, make_error( 'callee_peer_connection.createAnswer' ) );
+              // Answer the call.
+              // Acceptance could be performed by an upstream pipelet or by spliting this
+              // pipelet in two.
+              peer.createAnswer( answer_ready, make_error( 'callee_peer_connection.createAnswer' ) );
               
               function answer_ready( description ) {
-                that.setLocalDescription( description );
+                peer.setLocalDescription( description );
                 
                 // Send description back to caller
                 add.call( caller_peer_connection, [
