@@ -47,6 +47,7 @@
         , caller_peer_connection
         , callee_peer_connection
         , configuration // = [ { "url": "stun:stun.services.mozilla.com" } ]
+        , send_channel
       ;
       
       if ( navigator.webkitGetUserMedia ) {
@@ -104,7 +105,8 @@
       }
       
       function call( stream ) {
-        var peer = caller_peer_connection = new RTCPeerConnection( configuration );
+        var peer = caller_peer_connection
+          = new RTCPeerConnection( configuration, { optional: [ { RtpDataChannels: true } ] } );
         
         de&&ug( 'caller_peer_connection: ' + log.s( caller_peer_connection ) );
         
@@ -130,6 +132,18 @@
           caller_video.src = source_from_stream( event.stream );
           caller_video.style.opacity = 1;
         };
+        
+        peer.ondatachanel = function( event ) {
+          var channel = event.channel;
+          
+          de&&ug( 'caller data channel: ' + log.pretty( channel ) );
+          
+          channel.onmessage = function( event ) {
+            de&&ug( 'caller received data: ' + event.data );
+          }
+        };
+        
+        send_channel = peer.createDataChannel( 'xs_channel', { reliable: false } );
         
         // Add the stream to the caller peer
         peer.addStream( stream );
@@ -160,7 +174,8 @@
           switch( name ) {
             case 'offer':
               // configuration is an option of this pipelet or may come from a control pipelet
-              callee_peer_connection = peer = new RTCPeerConnection( configuration );
+              callee_peer_connection = peer
+                = new RTCPeerConnection( configuration, { optional: [ { RtpDataChannels: true } ] } );
               
               de&&ug( 'callee_peer_connection: ' + log.s( callee_peer_connection ) );
               
@@ -182,6 +197,16 @@
                 
                 // ToDo: move to a downstream pipelet
                 callee_video.src = source_from_stream( event.stream );
+              };
+              
+              peer.ondatachanel = function( event ) {
+                var channel = event.channel;
+                
+                de&&ug( 'callee data channel: ' + log.pretty( channel ) );
+                
+                channel.onmessage = function( event ) {
+                  de&&ug( 'callee received data: ' + event.data );
+                }
               };
               
               // Calls may be filtered by authorizations based on attributes 'from' and 'to'
@@ -212,6 +237,8 @@
               de&&ug( 'answer description sdp:\n' + description.sdp );
               
               this.setRemoteDescription( description );
+              
+              setTimeout( function() { de&&ug( 'sending data' ); send_channel.send( 'sent data' ) }, 2000 );
             break;
             
             case 'ice_candidate':
