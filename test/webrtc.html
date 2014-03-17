@@ -47,7 +47,7 @@
         , caller_peer_connection
         , callee_peer_connection
         , configuration // = [ { "url": "stun:stun.services.mozilla.com" } ]
-        , send_channel
+        , caller_channel
       ;
       
       if ( navigator.webkitGetUserMedia ) {
@@ -133,17 +133,11 @@
           caller_video.style.opacity = 1;
         };
         
-        peer.ondatachanel = function( event ) {
-          var channel = event.channel;
-          
-          de&&ug( 'caller data channel: ' + log.pretty( channel ) );
-          
-          channel.onmessage = function( event ) {
-            de&&ug( 'caller received data: ' + event.data );
-          }
-        };
+        caller_channel = peer.createDataChannel( 'xs_channel', { reliable: false } );
         
-        send_channel = peer.createDataChannel( 'xs_channel', { reliable: false } );
+        caller_channel.onmessage = function( event ) {
+          de&&ug( 'channel ' + caller_channel.label + ', caller received data: ' + event.data );
+        }
         
         // Add the stream to the caller peer
         peer.addStream( stream );
@@ -199,15 +193,19 @@
                 callee_video.src = source_from_stream( event.stream );
               };
               
-              peer.ondatachanel = function( event ) {
-                var channel = event.channel;
+              peer.ondatachannel = function( event ) {
+                var channel = event.channel, label = channel.label;
                 
                 de&&ug( 'callee data channel: ' + log.pretty( channel ) );
                 
                 channel.onmessage = function( event ) {
-                  de&&ug( 'callee received data: ' + event.data );
+                  de&&ug( 'channel ' + label + ', callee received data: ' + event.data );
+                  
+                  channel.send( 'echo, ' + event.data );
                 }
               };
+              
+              // var callee_channel = peer.createDataChannel( 'callee_channel', { reliable: false } );
               
               // Calls may be filtered by authorizations based on attributes 'from' and 'to'
               description = v.event;
@@ -238,7 +236,7 @@
               
               this.setRemoteDescription( description );
               
-              setTimeout( function() { de&&ug( 'sending data' ); send_channel.send( 'sent data' ) }, 2000 );
+              setTimeout( function() { de&&ug( 'sending data' ); caller_channel.send( 'sent data' ) }, 100 );
             break;
             
             case 'ice_candidate':
