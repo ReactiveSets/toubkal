@@ -35,6 +35,8 @@
     
     <script>
       var xs = XS.xs
+        , Pipelet = XS.Pipelet
+        , Set = XS.Set
         , log = XS.log
         , de = true
         , ug = function( m ) { XS.log( 'webrtc, ' + m ) }
@@ -49,6 +51,41 @@
         , configuration // = [ { "url": "stun:stun.services.mozilla.com" } ]
         , caller_channel
       ;
+      
+      function HTML5_Video( options ) {
+        Set.call( this, options );
+        
+        return this;
+      }
+      
+      Set.Build( 'html5_video', HTML5_Video, function( Super ) { return {
+        _add_value: function( t, v ) {
+          var id = v.id
+            , stream = source_from_stream( v.stream )
+            , video = document.querySelector( '#' + id )
+          ;
+          
+          de&&ug( this._get_name( '_add_value' ) + 'id: ' + id );
+          
+          video.src = stream;
+          
+          return Super._add_value.call( this, t, v );
+        },
+        
+        _remove_value: function( values, options ) {
+          var id = v.id
+            , video = document.querySelector( '#' + id )
+          ;
+          
+          de&&ug( this._get_name( '_remove_value' ) + 'id: ' + id );
+          
+          video.src = null;
+          
+          return Super._remove_value.call( this, t, v );
+        }
+      }; } );
+      
+      var video = xs.html5_video();
       
       if ( navigator.webkitGetUserMedia ) {
         // Chrome
@@ -89,7 +126,7 @@
         de&&ug( 'on_stream(), stream: ' + log.pretty( stream ) );
         
         // ToDo: move to downstream video pipelet
-        caller_video.src = source_from_stream( stream );
+        video._add( [ { id: 'caller', stream: stream } ] );
         
         //caller_video.play();
         
@@ -189,8 +226,8 @@
               peer.onaddstream = function( event ) {
                 de&&ug( 'On callee stream received event: ' + log.s( event.stream ) );
                 
-                // ToDo: move to a downstream pipelet
-                callee_video.src = source_from_stream( event.stream );
+                // ToDo: use _emit_add()
+                video._add( [ { id: 'callee', stream: event.stream } ] );
               };
               
               peer.ondatachannel = function( event ) {
