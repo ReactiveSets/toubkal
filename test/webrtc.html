@@ -23,13 +23,7 @@
           Remote
         </th>
       </tr>
-      <tr>
-        <th>
-          <video id="caller"  autoplay></video>
-        </th>
-        <th>
-          <video id="callee" autoplay></video>
-        </th>
+      <tr id='videos'>
       </tr>
     </table>
     
@@ -52,8 +46,19 @@
         , caller_channel
       ;
       
-      function HTML5_Video( options ) {
-        Set.call( this, options );
+      function HTML5_Video( container, options ) {
+        options = Set.call( this, [], options )._options;
+        
+        de&&ug( 'html5_video(), container: ' + container + ', options: ' + log.s( this._options) );
+        
+        container = this._container = document.querySelector( container );
+        
+        if ( ! options.element ) {
+          options.element = {
+            TR: 'td',
+            UL: 'li'
+          }[ container.tagName ] || 'div';
+        }
         
         return this;
       }
@@ -62,30 +67,46 @@
         _add_value: function( t, v ) {
           var id = v.id
             , stream = source_from_stream( v.stream )
-            , video = document.querySelector( '#' + id )
+            , $video = document.querySelector( '#' + id )
           ;
+          
+          if ( ! $video ) {
+            var e = this._options.element;
+            
+            var $e = document.createElement( e );
+            
+            $e.innerHTML = '<video id="' + id + '"  autoplay></video>';
+            
+            this._container.appendChild( $e );
+            
+            $video = document.querySelector( '#' + id );
+          }
           
           de&&ug( this._get_name( '_add_value' ) + 'id: ' + id );
           
-          video.src = stream;
+          $video.src = stream;
           
           return Super._add_value.call( this, t, v );
         },
         
-        _remove_value: function( values, options ) {
+        _remove_value: function( t, v ) {
           var id = v.id
-            , video = document.querySelector( '#' + id )
+            , $video = document.querySelector( '#' + id )
           ;
           
           de&&ug( this._get_name( '_remove_value' ) + 'id: ' + id );
           
           video.src = null;
           
+          $video = $video.parentNode;
+          
+          $video.parentNode.removeChild( $video );
+          
           return Super._remove_value.call( this, t, v );
         }
       }; } );
       
-      var video = xs.html5_video();
+      var video = xs.html5_video( '#videos' );
       
       if ( navigator.webkitGetUserMedia ) {
         // Chrome
