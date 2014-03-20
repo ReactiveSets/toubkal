@@ -106,7 +106,96 @@
         }
       }; } );
       
-      var video = xs.html5_video( '#videos' );
+      var user_media_singleton;
+      
+      function User_Media( options ) {
+        if ( user_media_singleton ) return user_media_singleton;
+        
+        user_media_singleton = this;
+        
+        // ToDo: set key
+        options = Set.call( this, [], options )._options;
+        
+        var get_user_media
+          = this._get_user_media 
+          = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+        ;
+        
+        if ( ! get_user_media ) {
+          this._error( 'User_Media', 'get_user_media() not supported in this browser' );
+          // ToDo: this error will be a dataflow that can be captured to send an error message to
+          // end-users
+        }
+        
+        if ( ! options.constraints ) {
+          options.constraints = { audio: false, video: { mandatory: { maxWidth: 320, maxHeight: 240 } }
+          };
+        }
+        
+        return this;
+      } // User_Media()
+      
+      Set.Build( 'user_media', User_Media, function( Super ) { return {
+        _error: function( f, m ) {
+          this.log( m = this._get_name( f ) + 'Error: ' + m );
+          
+          throw new Error( m );
+        },
+        
+        _add_value: function( t, v ) {
+          var that = this
+            , name = de && this._get_name( '_add_value' )
+            , constraints = this._options.constraints
+          ;
+          
+          if ( this.a.length ) this._error( '_add_value', 'already set' );
+          
+          de&&ug( this._get_name( '_add_value' ) + 'constraints: ' + log.s( constraints ) );
+          
+          this._get_user_media.call( navigator, constraints, on_stream, on_error );
+          
+          return this;
+          
+          function on_stream( stream ) {
+            de&&ug( name + 'stream: ' + log.pretty( stream ) );
+            
+            // Additional info, only available in Chrome for now
+            if ( de ) {
+              stream.getVideoTracks && ug( name + 'video tracks: ' + log.s( stream.getVideoTracks() ) );
+              stream.getAudioTracks && ug( name + 'audio tracks: ' + log.s( stream.getAudioTracks() ) );          
+            }
+            
+            Super._add_value.call( that, t, { stream: stream } );
+          }
+          
+          function on_error( error ) {
+            de&&ug( name + 'get_user_media()#on_error(), error: ' + log.s( error ) );
+            
+            // ToDo: check error value for permission denied
+            // ToDo: explanation to unlock should be driven by downstream pipelet
+            that._error( '_add_value', 'To reset permission denied you need to go to chrome://settings/content # Media, Manage Exceptions' )
+          }
+        }, // _add_value()
+        
+        _remove_value : function( t, v ) {
+          if ( ! this.a.length ) this._error( '_remove_value', 'not set' );
+          
+          // ToDo: stop user media
+          Super._remove_value.call( this, t, {} );
+          
+          return this;
+        } // _remove_value()
+      } } );
+      
+      var user_media = xs
+        .set( [ {} ] ) // start user_media
+        .user_media( { constraints: constraints } )
+        .alter( { id: '_1' } ) // provide an id for html5 video element
+      ;
+      
+      user_media.html5_video( '#videos' );
+      
+      // ToDo: make signalling pipelet
       
       if ( navigator.webkitGetUserMedia ) {
         // Chrome
@@ -129,7 +218,7 @@
       de&&ug( 'get_user_media(), constraints: ' + log.s( constraints ) );
       
       // User media is a first pipelet
-      get_user_media && get_user_media.call( navigator, constraints, on_stream, on_error ); 
+      false && get_user_media && get_user_media.call( navigator, constraints, on_stream, on_error ); 
       
       function source_from_stream( stream ) {
         if ( URL ) {
@@ -142,7 +231,6 @@
         return stream;
       }
       
-      // This should be an audio / video capture pipelet
       function on_stream( stream ) {
         de&&ug( 'on_stream(), stream: ' + log.pretty( stream ) );
         
@@ -310,12 +398,6 @@
           }
         }
       } // add()
-      
-      function on_error( error ) {
-        de&&ug( 'get_user_media()#on_error(), error: ' + log.s( error ) );
-        
-        alert( 'To reset permission denied you need to go to chrome://settings/content # Media, Manage Exceptions' )
-      }
       
       function make_error( f ) {
         return function( error ) { de&&ug( f + '() error: ' + log.s( error ) ) }
