@@ -15,96 +15,170 @@
   <body>
     <div id=""></div>
     <table>
-      <tr>
-        <th>
-          Local
-        </th>
-        <th>
-          Remote
-        </th>
-      </tr>
-      <tr id='videos'>
-      </tr>
+      <thead>
+        <tr>
+          <th>Local</th>
+          <th>Remote</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id='videos'></tr>
+      </tbody>
     </table>
     
     <script>
-      var xs = XS.xs
-        , Pipelet = XS.Pipelet
-        , Set = XS.Set
-        , log = XS.log
+      var xs       = XS.xs
+        , extend   = XS.extend
+        , extend_2 = XS.extend_2
+        , Pipelet  = XS.Pipelet
+        , Set      = XS.Set
+        , log      = XS.log
+        , _
+        
         , de = true
-        , ug = function( m ) { XS.log( 'webrtc, ' + m ) }
-        , get_user_media = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
-        , URL = window.URL
+        , ug = function( m ) { log( 'webrtc, ' + m ) }
+        
         , constraints  = { audio: false, video: { mandatory: { maxWidth: 320, maxHeight: 240 } } }
         , caller_video = document.querySelector( "#caller" )
         , callee_video = document.querySelector( "#callee" )
+        
         , RTCPeerConnection, RTCSessionDescription, RTCIceCandidate
+        
         , caller_peer_connection
         , callee_peer_connection
+        
         , configuration // = [ { "url": "stun:stun.services.mozilla.com" } ]
+        
         , caller_channel
       ;
       
-      function HTML5_Video( container, options ) {
+      function DOM( container, options ) {
         options = Set.call( this, [], options )._options;
         
-        de&&ug( 'html5_video(), container: ' + container + ', options: ' + log.s( this._options) );
+        de&&ug( 'dom(), container: ' + container + ', options: ' + log.s( options) );
         
         container = this._container = document.querySelector( container );
         
-        if ( ! options.element ) {
-          options.element = {
-            TR: 'td',
-            UL: 'li'
+        if ( ! options.tag ) {
+          var tag = {
+            TR: 'td', // will turn into 'th' if parent node is thead
+            
+            UL: 'li',
+            OL: 'li',
+            
+            SELECT: 'options',
+            OPTGROUP: 'options',
+            DATALIST: 'options',
+            
+            FORM: 'input',
+            
+            TABLE: 'tr',
+            THEAD: 'tr',
+            TBODY: 'tr',
+            TFOOT: 'tr',
+            COLGROUP: 'col',
+            
+            NAV: 'a',
+            
+            MENU: 'button',
+            
+            MAP: 'area'
           }[ container.tagName ] || 'div';
+          
+          if ( tag == 'td' && container.parentNode.tagName == 'THEAD' ) tag = 'th';
+          
+          options.tag = tag;
         }
         
         return this;
-      }
+      } // DOM()
       
-      Set.Build( 'html5_video', HTML5_Video, function( Super ) { return {
+      Set.Build( 'dom', DOM, function( Super ) { return {
         _add_value: function( t, v ) {
           var id = v.id
-            , stream = source_from_stream( v.stream )
-            , $video = document.querySelector( '#' + id )
+            , $e = document.getElementById( id )
+            , content = v.content
           ;
-          
-          if ( ! $video ) {
-            var e = this._options.element;
-            
-            var $e = document.createElement( e );
-            
-            $e.innerHTML = '<video id="' + id + '"  autoplay></video>';
-            
-            this._container.appendChild( $e );
-            
-            $video = document.querySelector( '#' + id );
-          }
           
           de&&ug( this._get_name( '_add_value' ) + 'id: ' + id );
           
-          $video.src = stream;
+          if ( $e ) {
+            add_content( $e, content );
+          } else {
+            var $e = document.createElement( v.tag || this._options.tag );
+            
+            $e.setAttribute( 'id', id );
+            
+            add_content( $e, content );
+            
+            this._container.appendChild( $e );
+          }
           
           return Super._add_value.call( this, t, v );
+          
+          function add_content( $e, content ) {
+            if ( typeof content == 'string' ) {
+              $e.innerHTML = content;
+            } else {
+              $e.appendChild( content );
+            }
+          }
         },
         
         _remove_value: function( t, v ) {
           var id = v.id
-            , $video = document.querySelector( '#' + id )
+            , $e = document.getElementById( id )
           ;
           
           de&&ug( this._get_name( '_remove_value' ) + 'id: ' + id );
           
-          video.src = null;
-          
-          $video = $video.parentNode;
-          
-          $video.parentNode.removeChild( $video );
+          $e.parentNode.removeChild( $e );
           
           return Super._remove_value.call( this, t, v );
         }
       }; } );
+      
+      function HTML5_Video( container, options ) {
+        return DOM.call( this, container, options );
+      } // HTML5_Video()
+      
+      DOM.Build( 'html5_video', HTML5_Video, function( Super ) {
+        var URL = window.URL;
+        
+        function value( v ) {
+          return extend_2( { content: '<video autoplay></video>' }, v );
+        }
+        
+        function source_from_stream( stream ) {
+          if ( URL ) {
+            // Chrome
+            stream = URL.createObjectURL( stream );
+            
+            de&&ug( 'source_from_stream(), URL.createObjectURL( stream ): ' + log.pretty( stream ) );
+          }
+          
+          return stream;
+        }
+        
+        return {
+          _add_value: function( t, v ) {
+            Super._add_value.call( this, t, value( v ) );
+            
+            document
+              .getElementById( v.id )
+              .firstChild
+              .src
+              = source_from_stream( v.stream )
+            ;
+            
+            return this;
+          },
+          
+          _remove_value: function( t, v ) {
+            return Super._remove_value.call( this, t, value( v ) );
+          }
+        };
+      } );
       
       var user_media_singleton;
       
@@ -137,7 +211,7 @@
       
       Set.Build( 'user_media', User_Media, function( Super ) { return {
         _error: function( f, m ) {
-          this.log( m = this._get_name( f ) + 'Error: ' + m );
+          log( m = this._get_name( f ) + 'Error: ' + m );
           
           throw new Error( m );
         },
@@ -165,7 +239,7 @@
               stream.getAudioTracks && ug( name + 'audio tracks: ' + log.s( stream.getAudioTracks() ) );          
             }
             
-            Super._add_value.call( that, t, { stream: stream } );
+            Super._add_value.call( that, t, extend_2( { stream: stream }, v ) );
           }
           
           function on_error( error ) {
@@ -178,22 +252,50 @@
         }, // _add_value()
         
         _remove_value : function( t, v ) {
-          if ( ! this.a.length ) this._error( '_remove_value', 'not set' );
+          var a = this.a
+            , _
+            , stream = a.length ? a[ 0 ] ._stream : _
+          ;
           
-          // ToDo: stop user media
-          Super._remove_value.call( this, t, {} );
+          Super._remove_value.call( this, t, extend( { stream: stream }, v ) );
+          
+          if ( stream && a.length == 0 ) {
+            // value w/ stream has been removed
+            // ToDo: stop user media
+          }
           
           return this;
         } // _remove_value()
-      } } );
+      } } ); // User_Media instance methods
+      
+      function RTC_Peers( options ) {
+        return Set.call( this, [], options );
+      }
+      
+      Set.Build( 'rtc_peers', RTC_Peers, function( Super ) {
+        return {
+          _add_value: function() {
+          }
+        };
+      } );
       
       var user_media = xs
-        .set( [ {} ] ) // start user_media
+        .set( [ { id: 'caller' } ] ) // start user_media and define id for html5 video
         .user_media( { constraints: constraints } )
-        .alter( { id: '_1' } ) // provide an id for html5 video element
       ;
       
-      user_media.html5_video( '#videos' );
+      // user_media.html5_video().dom( '#videos' );
+      
+      var peers = user_media
+        .alter( { id: 'callee', to: 'callee', from: 'caller' } )
+        .trace( 'rtc_peers' )
+        .rtc_peers()
+      ;
+      
+      xs.union( [ user_media/* , peers*/ ] )
+        .html5_video( '#videos' )
+        //.dom( '#videos' )
+      ;
       
       // ToDo: make signalling pipelet
       
@@ -214,41 +316,6 @@
       de&&ug( 'RTCIceCandidate: ' + typeof RTCIceCandidate );
       
       if ( ! RTCPeerConnection ) throw new Error( 'Browser does not support WebRTC' );
-      
-      de&&ug( 'get_user_media(), constraints: ' + log.s( constraints ) );
-      
-      // User media is a first pipelet
-      false && get_user_media && get_user_media.call( navigator, constraints, on_stream, on_error ); 
-      
-      function source_from_stream( stream ) {
-        if ( URL ) {
-          // Chrome
-          stream = URL.createObjectURL( stream );
-          
-          de&&ug( 'source_from_stream(), URL.createObjectURL( stream ): ' + log.pretty( stream ) );
-        }
-        
-        return stream;
-      }
-      
-      function on_stream( stream ) {
-        de&&ug( 'on_stream(), stream: ' + log.pretty( stream ) );
-        
-        // ToDo: move to downstream video pipelet
-        video._add( [ { id: 'caller', stream: stream } ] );
-        
-        //caller_video.play();
-        
-        de&&ug( 'on_stream(), playing caller video' );
-        
-        // Additional info, only available in Chrome for now
-        de && stream.getVideoTracks && ug( "video tracks: " + log.s( stream.getVideoTracks() ) );
-        de && stream.getAudioTracks && ug( "audio tracks: " + log.s( stream.getAudioTracks() ) );          
-        
-        // Call is handled by downstream pipelet
-        // But the caller may not always be this party which may in some cases be the callee
-        call( stream );
-      }
       
       function call( stream ) {
         var peer = caller_peer_connection
