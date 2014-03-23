@@ -1677,16 +1677,19 @@ describe 'XS test suite:', ->
   describe 'Pipelets Connections', ->
     values = [ { id: 1 }, { id: 2 } ]
     
+    ###
     it 'should _fetch content through a stateless pipelet', ( done ) ->
       p = xs.set( values ).pass_through()
       
       p._fetch_all ( _values ) -> check done, -> expect( _values ).to.be.eql values
-      
+    ###
+    
     it 'should have fetched content into a set through a stateless pipelet', ->
       s = xs.set( values ).pass_through().set()
       
       expect( s.a ).to.be.eql values
     
+    ###
     it 'should _fetch content even if stateless pipelet is pluged last into upstream pipelet', ( done ) ->
       s = xs.set( values )
       
@@ -1695,6 +1698,7 @@ describe 'XS test suite:', ->
       s._add_destination( p )
       
       p._fetch_all ( _values ) -> check done, -> expect( _values ).to.be.eql values
+    ###
       
     it 'should have fetched content into a set even if stateless pipelet is pluged last into upstream pipelet', ->
       s = xs.set( values )
@@ -1720,12 +1724,13 @@ describe 'XS test suite:', ->
     ]
     
     delayed_set = xs
-     .set( [ { id:1, value: 'delayed' } ] )
-     .delay( 100 )
-     .trace( 'Delayed Set' )
-     .filter( () -> true )
+      .set( [ { id:1, value: 'delayed' } ] )
+      .delay( 100 )
+      .trace( 'Delayed Set' )
+      .filter( () -> true )
+      .set()
     
-    delayed_set = delayed_set.filter( () -> true )
+    #delayed_set = delayed_set.filter( () -> true ).set()
     
     cars = xs
       .set( [
@@ -1883,7 +1888,7 @@ describe 'XS test suite:', ->
       is_in_usa = ( city, c, cities ) ->
         return city.country is 'USA'
       
-      cities_in_usa = cities.filter is_in_usa
+      cities_in_usa = cities.filter( is_in_usa ).set()
       
       it 'cities_in_usa should be a Pipelet', ->
         expect( cities_in_usa ).to.be.an XS.Pipelet
@@ -1983,7 +1988,7 @@ describe 'XS test suite:', ->
       ]
       
       it 'should contain no city when no country is provided', ( done ) ->
-        check_set_content done, cities.filter( [] ).trace( 'filter_no_country' ), []
+        check_set_content done, cities.filter( [] ).trace( 'filter_no_country' ).set(), []
       
       it 'should contain all cities when an empty or-term is provided', ( done ) ->
         check_set_content done, cities.filter( [ {} ] ).trace( 'filter_no_country' ).set(), [
@@ -2297,7 +2302,7 @@ describe 'XS test suite:', ->
           ]
       
       it 'filter(): cities.filter( is_in_morocco ) should be equal to result', ( done ) ->
-        cities_in_morocco = cities.filter ( city ) -> return city.country is "Morocco"
+        cities_in_morocco = cities.filter( ( city ) -> return city.country is "Morocco" ).set()
         
         cities._notify [
           {
@@ -3220,7 +3225,7 @@ describe 'json.js', ->
   
   books_stringified = book_operations.json_stringify()
   
-  books_parsed = books_stringified.json_parse()
+  books_parsed = books_stringified.json_parse().set()
   
   it 'json_stringify() should stringify content attributes', ( done ) ->
     books_stringified._fetch_all ( books ) ->
