@@ -268,37 +268,6 @@
         } // _remove_value()
       } } ); // User_Media instance methods
       
-      function RTC_Peers( options ) {
-        return Set.call( this, [], options );
-      }
-      
-      Set.Build( 'rtc_peers', RTC_Peers, function( Super ) {
-        return {
-          _add_value: function() {
-          }
-        };
-      } );
-      
-      var user_media = xs
-        .set( [ { id: 'caller' } ] ) // start user_media and define id for html5 video
-        .user_media( { constraints: constraints } )
-      ;
-      
-      // user_media.html5_video().dom( '#videos' );
-      
-      var peers = user_media
-        .alter( { id: 'callee', to: 'callee', from: 'caller' } )
-        .trace( 'rtc_peers' )
-        .rtc_peers()
-      ;
-      
-      xs.union( [ user_media/* , peers*/ ] )
-        .html5_video( '#videos' )
-        //.dom( '#videos' )
-      ;
-      
-      // ToDo: make signalling pipelet
-      
       if ( navigator.webkitGetUserMedia ) {
         // Chrome
         RTCPeerConnection = webkitRTCPeerConnection;
@@ -317,160 +286,193 @@
       
       if ( ! RTCPeerConnection ) throw new Error( 'Browser does not support WebRTC' );
       
-      function call( stream ) {
-        var peer = caller_peer_connection
-          = new RTCPeerConnection( configuration, { optional: [ { RtpDataChannels: true } ] } );
-        
-        de&&ug( 'caller_peer_connection: ' + log.s( caller_peer_connection ) );
-        
-        peer.onicecandidate = function( event ) {
-          var candidate = event.candidate;
-          
-          if ( candidate ) {
-            // Send caller ice candidate to callee
-            
-            add.call( callee_peer_connection, [
-              { flow: 'webrtc', from: 'caller', to: 'callee', name: 'ice_candidate', event: candidate }
-            ] );
-          } else {
-            de&&ug( 'no more callee candidates, event keys: ' + log.s( Object.keys( event ) ) );
-          }
-        };
-        
-        peer.onaddstream = function( event ) {
-          de&&ug( 'On caller stream received event: ' + log.s( event.stream ) );
-          
-          // ToDo: move to a downstream pipelet
-          // This stream is comming from camera directly
-          caller_video.src = source_from_stream( event.stream );
-          caller_video.style.opacity = 1;
-        };
-        
-        caller_channel = peer.createDataChannel( 'xs_channel', { reliable: false } );
-        
-        caller_channel.onmessage = function( event ) {
-          de&&ug( 'channel ' + caller_channel.label + ', caller received data: ' + event.data );
-        }
-        
-        // Add the stream to the caller peer
-        peer.addStream( stream );
-        peer.createOffer( offer_ready, make_error( 'caller_peer_connection.createOffer' ) );
-        
-        function offer_ready( description ) {
-          de&&ug( 'offer_ready(), description sdp: ' + description.sdp );
-          
-          peer.setLocalDescription( description );
-          
-          // Send description to callee
-          add.call( callee_peer_connection, [
-            { flow: 'webrtc', from: 'callee', to: 'caller', name: 'offer', event: description }
-          ] );
-        }
+      function RTC_Calls( options ) {
+        return Set.call( this, [], options );
       }
       
-      var calls = [];
-      
-      // add() webrtc signaling events processing
-      // this: caller or callee peer connection object
-      function add( values ) {
-        for ( var i = -1, v; v = values[ ++i ]; ) {
-          var name = v.name, from = v.from, to = v.to, description, candidate, that = this;
-          
-          de&&ug( 'add(), received event ' + name + ' for ' + to + ' from ' + from );
-          
-          switch( name ) {
-            case 'offer':
-              // configuration is an option of this pipelet or may come from a control pipelet
-              callee_peer_connection = peer
-                = new RTCPeerConnection( configuration, { optional: [ { RtpDataChannels: true } ] } );
-              
-              de&&ug( 'callee_peer_connection: ' + log.s( callee_peer_connection ) );
-              
-              peer.onicecandidate = function( event ) {
-                var candidate = event.candidate;
+      Set.Build( 'rtc_calls', RTC_Calls, function( Super ) {
+        // this: caller or callee peer connection object
+        function add( values ) {
+          for ( var i = -1, v; v = values[ ++i ]; ) {
+            var name = v.name, from = v.from, to = v.to, description, candidate, that = this;
+            
+            de&&ug( 'add(), received event ' + name + ' for ' + to + ' from ' + from );
+            
+            switch( name ) {
+              case 'offer':
+                // configuration is an option of this pipelet or may come from a control pipelet
+                callee_peer_connection = peer
+                  = new RTCPeerConnection( configuration, { optional: [ { RtpDataChannels: true } ] } );
                 
-                // Send callee candidates to caller
-                if ( candidate ) {
-                  add.call( caller_peer_connection, [
-                    { flow: 'webrtc', from: to, to: from, name: 'ice_candidate', event: candidate }
-                  ] );
-                } else {
-                  de&&ug( 'no more caller candidates, event keys: ' + log.s( Object.keys( event ) ) );
-                }
-              };
-              
-              peer.onaddstream = function( event ) {
-                de&&ug( 'On callee stream received event: ' + log.s( event.stream ) );
+                de&&ug( 'callee_peer_connection: ' + log.s( callee_peer_connection ) );
                 
-                // ToDo: use _emit_add()
-                video._add( [ { id: 'callee', stream: event.stream } ] );
-              };
-              
-              peer.ondatachannel = function( event ) {
-                var channel = event.channel, label = channel.label;
-                
-                de&&ug( 'callee data channel: ' + log.pretty( channel ) );
-                
-                channel.onmessage = function( event ) {
-                  de&&ug( 'channel ' + label + ', callee received data: ' + event.data );
+                peer.onicecandidate = function( event ) {
+                  var candidate = event.candidate;
                   
-                  channel.send( 'echo, ' + event.data );
-                }
-              };
-              
-              // var callee_channel = peer.createDataChannel( 'callee_channel', { reliable: false } );
-              
-              // Calls may be filtered by authorizations based on attributes 'from' and 'to'
-              description = v.event;
-              
-              de&&ug( 'offer description sdp:\n' + description.sdp );
-              
-              peer.setRemoteDescription( description );
-              
-              // Answer the call.
-              // Acceptance could be performed by an upstream pipelet or by spliting this
-              // pipelet in two.
-              peer.createAnswer( answer_ready, make_error( 'callee_peer_connection.createAnswer' ) );
-              
-              function answer_ready( description ) {
-                peer.setLocalDescription( description );
+                  // Send callee candidates to caller
+                  if ( candidate ) {
+                    add.call( caller_peer_connection, [
+                      { flow: 'webrtc', from: to, to: from, name: 'ice_candidate', event: candidate }
+                    ] );
+                  } else {
+                    de&&ug( 'no more caller candidates, event keys: ' + log.s( Object.keys( event ) ) );
+                  }
+                };
                 
-                // Send description back to caller
-                add.call( caller_peer_connection, [
-                  { flow: 'webrtc', from: to, to: from, name: 'answer', event: description }
-                ] );
-              }
-            break;
-            
-            case 'answer':
-              description = v.event;
+                peer.onaddstream = function( event ) {
+                  de&&ug( 'On callee stream received event: ' + log.s( event.stream ) );
+                  
+                  // ToDo: use _emit_add()
+                  videos._add( [ { id: 'callee', stream: event.stream } ] );
+                };
+                
+                peer.ondatachannel = function( event ) {
+                  var channel = event.channel, label = channel.label;
+                  
+                  de&&ug( 'callee data channel: ' + log.pretty( channel ) );
+                  
+                  channel.onmessage = function( event ) {
+                    de&&ug( 'channel ' + label + ', callee received data: ' + event.data );
+                    
+                    channel.send( 'echo, ' + event.data );
+                  }
+                };
+                
+                // var callee_channel = peer.createDataChannel( 'callee_channel', { reliable: false } );
+                
+                // Calls may be filtered by authorizations based on attributes 'from' and 'to'
+                description = v.event;
+                
+                de&&ug( 'offer description sdp:\n' + description.sdp );
+                
+                peer.setRemoteDescription( description );
+                
+                // Answer the call.
+                // Acceptance could be performed by an upstream pipelet or by spliting this
+                // pipelet in two.
+                peer.createAnswer( answer_ready, make_error( 'callee_peer_connection.createAnswer' ) );
+                
+                function answer_ready( description ) {
+                  peer.setLocalDescription( description );
+                  
+                  // Send description back to caller
+                  add.call( caller_peer_connection, [
+                    { flow: 'webrtc', from: to, to: from, name: 'answer', event: description }
+                  ] );
+                }
+              break;
               
-              de&&ug( 'answer description sdp:\n' + description.sdp );
+              case 'answer':
+                description = v.event;
+                
+                de&&ug( 'answer description sdp:\n' + description.sdp );
+                
+                this.setRemoteDescription( description );
+                
+                setTimeout( function() { de&&ug( 'sending data' ); caller_channel.send( 'sent data' ) }, 100 );
+              break;
               
-              this.setRemoteDescription( description );
+              case 'ice_candidate':
+                candidate = v.event;
+                
+                de&&ug( 'ice candidate: ' + log.s( candidate ) );
+                
+                this.addIceCandidate( new RTCIceCandidate( candidate ) );
+              break;
               
-              setTimeout( function() { de&&ug( 'sending data' ); caller_channel.send( 'sent data' ) }, 100 );
-            break;
-            
-            case 'ice_candidate':
-              candidate = v.event;
-              
-              de&&ug( 'ice candidate: ' + log.s( candidate ) );
-              
-              this.addIceCandidate( new RTCIceCandidate( candidate ) );
-            break;
-            
-            default:
-              // unknow event
+              default:
+                // unknow event
+            }
           }
+        } // add()
+        
+        function make_error( f ) {
+          return function( error ) { de&&ug( f + '() error: ' + log.s( error ) ) }
         }
-      } // add()
+        
+        return {
+          _add_value: function( t, v ) {
+            // outgoing call
+            
+            var peer
+              = caller_peer_connection
+              = new RTCPeerConnection( configuration, { optional: [ { RtpDataChannels: true } ] } )
+            ;
+            
+            de&&ug( 'caller_peer_connection: ' + log.s( caller_peer_connection ) );
+            
+            peer.onicecandidate = function( event ) {
+              var candidate = event.candidate;
+              
+              if ( candidate ) {
+                // Send caller ice candidate to callee
+                
+                add.call( callee_peer_connection, [
+                  { flow: 'webrtc', from: 'caller', to: 'callee', name: 'ice_candidate', event: candidate }
+                ] );
+              } else {
+                de&&ug( 'no more callee candidates, event keys: ' + log.s( Object.keys( event ) ) );
+              }
+            };
+            
+            peer.onaddstream = function( event ) {
+              de&&ug( 'On caller stream received event: ' + log.s( event.stream ) );
+              
+              // ToDo: move to a downstream pipelet
+              // This stream is comming from camera directly
+              // caller_video.src = source_from_stream( event.stream );
+              // caller_video.style.opacity = 1;
+            };
+            
+            caller_channel = peer.createDataChannel( 'xs_channel', { reliable: false } );
+            
+            caller_channel.onmessage = function( event ) {
+              de&&ug( 'channel ' + caller_channel.label + ', caller received data: ' + event.data );
+            }
+            
+            // Add the stream to the caller peer
+            peer.addStream( v.stream );
+            peer.createOffer( offer_ready, make_error( 'caller_peer_connection.createOffer' ) );
+            
+            function offer_ready( description ) {
+              de&&ug( 'offer_ready(), description sdp: ' + description.sdp );
+              
+              peer.setLocalDescription( description );
+              
+              // Send description to callee
+              add.call( callee_peer_connection, [
+                { flow: 'webrtc', from: 'callee', to: 'caller', name: 'offer', event: description }
+              ] );
+            }
+          }
+        };
+      } );
       
-      function make_error( f ) {
-        return function( error ) { de&&ug( f + '() error: ' + log.s( error ) ) }
-      }
+      var user_media = xs
+        .set( [ { id: 'caller' } ] ) // start user_media and define id for html5 video
+        .user_media( { constraints: constraints } )
+      ;
       
-      // xs.socket_io_server();
+      // user_media.html5_video().dom( '#videos' );
+      
+      var peers = user_media
+        .alter( { id: _, to: 'callee', from: 'caller' } )
+        .trace( 'rtc_calls' )
+        .rtc_calls()
+      ;
+      
+      var videos = xs.union( [ user_media/* , peers*/ ] )
+        .html5_video( '#videos' )
+        //.dom( '#videos' )
+      ;
+      
+      //xs.socket_io_server()
+        //.filter( [ { flow: 'webrtc' } ]
+        // .rtc_signalling( videos )
+        // .socket_io_server()
+      ;
+      
+      
     </script>
   </body>
 </html>
