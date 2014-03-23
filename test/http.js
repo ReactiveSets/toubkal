@@ -128,14 +128,42 @@ var xs_core_min = xs
     { name: 'lib/filter.js'                },
     { name: 'lib/order.js'                 },
     { name: 'lib/aggregate.js'             },
-    { name: 'lib/join.js'                  }
+    { name: 'lib/join.js'                  },
+    { name: 'lib/last.js'             }
   ] ) ] )
   .auto_increment( { name: 'xs core' } )
   .watch()
   .order( [ { id: 'id' } ] )
   .uglify( 'lib/xs_core-min.js', { warnings: false } )
 ;
+
+var xs_ui_min = xs
+  .set( [
+    { name: 'lib/selector.js'                },
+    { name: 'lib/uri.js'                     },
+    { name: 'lib/events.js'                  },
+    
+    { name: 'lib/client/animation_frames.js' },
+    { name: 'lib/load_images.js'             },
+    
+    { name: 'lib/bootstrap_photo_album.js'   },
+    { name: 'lib/bootstrap_carousel.js'      },
+    
+    { name: 'lib/client/url.js'              },
+    { name: 'lib/table.js'                   },
+    { name: 'lib/control.js'                 },
+    { name: 'lib/form.js'                    }
+  ] )
   
+  .auto_increment( { name: 'xs ui' } )
+  
+  .watch()
+  
+  .order( [ { id: 'id' } ] )
+  
+  .uglify( 'lib/xs_ui-min.js', { warnings: false } )
+;
+
 var pipelet_min = xs.set( [ { id: 1, name: 'lib/pipelet.js' } ] )
   .watch()
   .uglify( 'lib/pipelet-min.js', { warnings: false } )
@@ -148,8 +176,8 @@ var mocha_css = xs
 ;
 
 var mocha_expect = xs.set( [
-    { name: 'mocha/mocha.js'      },
-    { name: 'expect.js/expect.js' }
+    { name: 'mocha/mocha.js' },
+    { name: 'expect.js'      }
   ] )
   .require_resolve()
   .auto_increment() // will auto-increment the id attribute starting at 1
@@ -159,71 +187,72 @@ var mocha_expect = xs.set( [
   .union( [ mocha_css ] )
 ;
 
+var test_directory = xs
+  .set( [ { path: 'test' } ] )
+  
+  .watch_directories()
+  
+  .filter( [ { type: 'file' } ] )
+;
+
+// HTML test pages
+var html_tests = test_directory  
+  .filter( function( _ ) {
+    return _.path.match( /html$/ );
+  } )
+;
+
+// CSS and images for tests
+var css_tests = xs
+  .set( [ { path: 'test/css' }, { path: 'test/css/images' } ] )
+  
+  .watch_directories()
+  
+  .filter( [ { type: 'file' } ] )
+;
+
 var tests = xs
-  .set( [
-    // HTML test pages
-    { name: 'test/index.html'                  },
-    { name: 'test/index-min.html'              },
-    
-    { name: 'test/bootstrap_photo_album.html'  },
-    { name: 'test/carousel.html'               },
-    { name: 'test/control.html'                },
-    { name: 'test/form.html'                   },
-    { name: 'test/load_images.html'            },
-    { name: 'test/load_images-min.html'        },
-    { name: 'test/socketio.html'               },
-    { name: 'test/table.html'                  },
-    { name: 'test/table_controls.html'         },
-    { name: 'test/ui.html'                     },
-    { name: 'test/url.html'                    },
-    { name: 'test/pipelet.html'                },
-    { name: 'test/xs_core.html'                },
-    { name: 'test/webrtc.html'                 },
-    
+  /*.set( [
     // JavaScript for tests
-    { name : 'test/javascript/jquery-1.10.2.min.js' },
+    // { name : 'test/javascript/jquery-1.10.2.min.js' },
     
     // Bootstrap
-    { name: 'test/bootstrap/css/bootstrap.css' },
-    { name: 'test/bootstrap/js/bootstrap.js'   },
+    // { name: 'test/bootstrap/css/bootstrap.css' },
+    // { name: 'test/bootstrap/js/bootstrap.js'   },
+  ] )*/
+  
+  .union( [ html_tests, css_tests ] )
+  
+  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
+    _.name = _.path.substr( 2 );
     
-    // CSS for tests
-    { name: 'test/css/mocha.css'               },
-    { name: 'test/css/table.css'               },
-    { name: 'test/css/xs_tests.css'            },
-    
-    // Images for tests
-    { name: 'test/css/images/ok.png'           },
-    { name: 'test/css/images/error.png'        },
-  ] )
+    delete _.path;
+  } )
   
   .watch( { base_directory: __dirname + '/..' } )
 ;
 
-var coffee_source = xs.set( [
-    { name: 'test/xs_tests_utils.coffee'       },
-    { name: 'test/xs_core.coffee'              },
-    { name: 'test/xs_ui_tests.coffee'          },
-    { name: 'test/xs_form_tests.coffee'        },
-    { name: 'test/xs_load_images_tests.coffee' },
-    { name: 'test/xs_control_tests.coffee'     },
-    { name: 'test/xs_table_tests.coffee'       },
-    { name: 'test/xs_url_tests.coffee'         }
-  ] )
+
+var coffee_files = test_directory  
+  .filter( function( _ ) {
+    return _.path.match( /coffee$/ );
+  } )
   
+  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
+    _.name = _.path.substr( 2 );
+    
+    delete _.path;
+  } )
+;
+
+var coffee_source = coffee_files
   .watch( { base_directory: __dirname + '/..' } )
 ;
 
-var compiled_coffee = xs.set( [
-    { name: 'test/xs_tests_utils.js'           },
-    { name: 'test/xs_core.js'                  },
-    { name: 'test/xs_ui_tests.js'              },
-    { name: 'test/xs_form_tests.js'            },
-    { name: 'test/xs_load_images_tests.js'     },
-    { name: 'test/xs_control_tests.js'         },
-    { name: 'test/xs_table_tests.js'           },
-    { name: 'test/xs_url_tests.js'             }
-  ] )
+var compiled_coffee = coffee_files
+  .alter( function( _ ) {
+    _.name = _.name.replace( /coffee$/, 'js' )
+  } )
   
   .watch( { base_directory: __dirname + '/..' } )
   
@@ -235,19 +264,21 @@ var compiled_coffee = xs.set( [
   } )
 ;
 
-var source_maps = xs.set( [
-    { name: 'test/xs_tests_utils.map'          },
-    { name: 'test/xs_core.map'                 },
-    { name: 'test/xs_ui_tests.map'             },
-    { name: 'test/xs_form_tests.map'           },
-    { name: 'test/xs_load_images_tests.map'    },
-    { name: 'test/xs_control_tests.map'        },
-    { name: 'test/xs_table_tests.map'          },
-    { name: 'test/xs_url_tests.map'            }
-  ] )
+var source_maps = test_directory
+  .filter( function( _ ) {
+    return _.path.match( /map$/ );
+  } )
+  
+  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
+    _.name = _.path.substr( 2 );
+    
+    delete _.path;
+  } )
+  
   .watch( { base_directory: __dirname + '/..' } )
+  
   .alter( function( v ) {
-    // Fix Coffee-script source map 
+    // Fix Coffee-script source map
     v.content = v.content
       .replace( /"sourceRoot": ".."/, '"sourceRoot": ""' )
       .replace( /test\\\\/, '' )
@@ -262,10 +293,11 @@ var source_maps = xs.set( [
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
 
 // xs.union( [ pipelet_min, xs_core_min, xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
-xs.serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
+xs.serve( servers, { hostname: [ 'localhost', '127.0.0.1', '192.168.0.36' ] } )
   ._insert_source_union()
   ._add_source( pipelet_min     )
   ._add_source( xs_core_min     )
+  ._add_source( xs_ui_min       )
   ._add_source( xs_min          )
   ._add_source( mocha_expect    )
   ._add_source( tests           )

@@ -1,5 +1,5 @@
 ###
-    xs_tests_utils.coffee
+    xs_url_tests.coffee
 
     Copyright (C) 2013, 2014, Connected Sets
 
@@ -19,48 +19,36 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# Setup mocha BDD, load expect
-# ----------------------------
+# xs test utils
+# ----------------------------------------------------------------------------------------------
 
-mocha.setup 'bdd' if typeof mocha isnt 'undefined'
+Browser = require( 'zombie' )
+utils   = require( './xs_tests_utils.js' )
 
-expect = this.expect = if require? then ( require 'expect.js' ) else this.expect
+browser = new Browser( { debug: true } )
+expect  = this.expect || utils.expect
+check   = this.check  || utils.check
+xs      = this.xs     || utils.xs
+that    = this
 
 # ----------------------------------------------------------------------------------------------
-# deep clone of object
-# --------------------
-
-clone = this.clone = ( o ) ->
-  return o if typeof o isnt 'object' or o is null
-
-  r = if o instanceof Array then [] else {}
-
-  r[ p ] = clone o[ p ] for p of o when o.hasOwnProperty p
-
-  return r
-
+# xs URL unit test suite
 # ----------------------------------------------------------------------------------------------
-# Asynchrnous tests exception catcher
-# -----------------------------------
 
-check = this.check = ( done, test ) ->
-  try
-    test()
+describe 'URL Test', ->
+  before ( done ) ->
+    browser.visit 'http://localhost:8080/test/xs_ui.html', done
+  
+  it '', ( done ) ->
+    url = browser.window.url_with_no_options
     
-    done()
-  catch e
-    done e
-
-# ----------------------------------------------------------------------------------------------
-# xs
-# --
-
-xs = this.xs = this.xs || require( '../lib/pipelet.js' )
-
-XS = xs.XS
-log = XS.log
-
-log.newline_before = true;
-
-this.log = ( message ) ->
-  log( 'xs tests, ' + message )
+    url._fetch_all ( values ) -> check done, ->
+      expect( values ).to.be.eql [ {
+        href    : 'http://localhost:8080/test/xs_ui.html'
+        slashes : true
+        protocol: 'http:'
+        host    : 'localhost:8080'
+        hostname: 'localhost'
+        port    : '8080'
+        pathname: '/test/xs_ui.html'
+      } ]
