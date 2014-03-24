@@ -399,8 +399,9 @@ We plan on extracting and completing this documentation to provide the following
 ### Automated Tests, Continuous Integration
 
 We have curently developped 255 automated tests for the XS core pipelets that run after every
-commit on Travis CI under node versions 0.8, 0.10, and 0.11. We no longer test version 0.6 since
-Travis had an issue with it around January 2014.
+commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
+Travis had an issue with it around January 2014. Version 0.11 is not officially supported
+because ui tests using zombie cannot pass at this time.
 
 Our continuous integration process also requires that before each commit the developper runs
 these tests so travis usually passes all tests. In the event that a test does not pass the top
@@ -633,24 +634,24 @@ node server.js
 
 #### Main Goals:
 
-- Automate UI tests on Travis
 - Develop additional tests, goal is at least 300 automated tests
-- Watch directories pipelet
 
 #### Features already developped:
 
 - Finalize Subscribe / Push model using optimized Query Tree Router and lazy connection of stateless pipelets
-- Controllets which control upstream query trees using downstream queries
+- Filter support for static and dynamic queries
 - Transactions
+- Automate UI tests on Travis
+- Controllets which control upstream query trees using downstream queries
 - Improve Pipelet API and naming conventions
 - Virtual Hosts w/ optimized routing
 - Touch Events on bootstrap pipelets
-- Filter support for static and dynamic queries
 
 #### New pipelets (available now):
 
 Pipelet                   | Short Description                              
 --------------------------|------------------------------------------------
+watch_directories()       | Updated when entries in directories are updated
 url_events()              | Browser url changes
 animation_frames()        | Request Animation Frame events
 encapsulate()             | Hide a graph of pipelets behind one pipelet
