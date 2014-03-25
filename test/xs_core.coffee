@@ -33,6 +33,8 @@ XS      = xs.XS
 extend  = XS.extend
 uuid_v4 = XS.uuid_v4
 
+slice = Array.prototype.slice
+
 # ----------------------------------------------------------------------------------------------
 # Check sorted pipelet content
 # ----------------------------
@@ -332,8 +334,8 @@ describe 'XS test suite:', ->
       expect( emitter._emit_event( 'data', {} ) ).to.be emitter
       
     it 'should allow to set a "data" event listener', ->
-      emitter._on "data", () -> data = arguments
-        
+      emitter._on "data", () -> data = slice.call( arguments, 0 )
+      
       expect( Object.keys emitter._events ).to.be.eql [ "data" ]
       expect( emitter._events.data.length ).to.be 1
       
@@ -342,7 +344,7 @@ describe 'XS test suite:', ->
       expect( data ).to.be.eql [ { a: 1 } ]
         
     it 'should allow to set a "complete" listener once', ->
-      emitter._once "complete", () -> complete = arguments
+      emitter._once "complete", () -> complete = slice.call( arguments, 0 )
       
       expect( Object.keys emitter._events ).to.be.eql [ "data", "complete" ]
       expect( emitter._events.complete.length ).to.be 1
@@ -647,7 +649,7 @@ describe 'XS test suite:', ->
         _get_name: -> 'Pipelet'
         
         __emit : ( operation, values, options ) ->
-          this._operations.push( arguments )
+          this._operations.push( slice.call( arguments, 0 ) )
           
           return this
       }
@@ -1733,7 +1735,7 @@ describe 'XS test suite:', ->
             { id: 2, brand: "Mercedes", model: "S Class" }
             { id: 3, brand: "BMW"     , model: "M Serie" }
           ]
-        , { key: [ "id", "model" ] }
+          { key: [ "id", "model" ] }
       )
       .set_flow( 'car' )
       .set()
