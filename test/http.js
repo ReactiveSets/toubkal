@@ -149,7 +149,7 @@ var mocha_css = xs
 
 var mocha_expect = xs.set( [
     { name: 'mocha/mocha.js'      },
-    { name: 'expect.js/expect.js' }
+    { name: 'expect.js'           }
   ] )
   .require_resolve()
   .auto_increment() // will auto-increment the id attribute starting at 1
