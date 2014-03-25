@@ -65,43 +65,6 @@
     return log('xs tests, ' + message);
   };
 
-  describe('Test utilities', function() {
-    describe('clone():', function() {
-      var bar, foo;
-      foo = {
-        id: 10,
-        array: [
-          1, 2, "a", "b", 3, {
-            x: 10,
-            y: void 0,
-            z: null
-          }
-        ],
-        obj: {
-          coordinate: 1,
-          label: "Coordinate",
-          values: [24, null, void 0]
-        }
-      };
-      bar = clone(foo);
-      it('should deep clone foo into bar', function() {
-        return expect(bar).to.be.eql(foo);
-      });
-      return it('should not return self', function() {
-        return expect(bar).to.not.be(foo);
-      });
-    });
-    return describe('Aynchronous test check()', function() {
-      return it('should succeed in 50 ms', function(done) {
-        return setTimeout((function() {
-          return check(done, function() {
-            return expect([]).to.be.eql([]);
-          });
-        }), 50);
-      });
-    });
-  });
-
 }).call(this);
 
 /*

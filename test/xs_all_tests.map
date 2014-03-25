@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "xs_all_tests.js",
+  "sourceRoot": "..",
+  "sources": [
+    "test/xs_all_tests.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;;;;;;;;;;;;;;;;;;CAAA;CAAA;CAAA;CAAA,CAwBA,KAAA,WAAA;;CAxBA,CAyBA,KAAA,OAAA;CAzBA"
+}

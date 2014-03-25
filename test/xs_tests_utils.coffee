@@ -64,29 +64,3 @@ log.newline_before = true;
 
 this.log = ( message ) ->
   log( 'xs tests, ' + message )
-
-# ----------------------------------------------------------------------------------------------
-# Test utils test suite
-# ---------------------
-
-describe 'Test utilities', ->
-  describe 'clone():', ->
-    foo =
-      id: 10
-      array: [ 1, 2, "a", "b", 3, { x: 10, y: undefined, z: null } ]
-      obj:
-        coordinate: 1
-        label: "Coordinate"
-        values: [ 24, null, undefined ]
-
-    bar = clone foo
-
-    it 'should deep clone foo into bar', ->
-      expect( bar ).to.be.eql foo
-
-    it 'should not return self', ->
-      expect( bar ).to.not.be foo
-
-  describe 'Aynchronous test check()', ->
-    it 'should succeed in 50 ms', ( done ) ->
-      setTimeout ( () -> check done, () -> expect( [] ).to.be.eql [] ), 50
