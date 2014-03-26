@@ -601,6 +601,8 @@ node server.js
 - Build Website, featuring documentation and tutorial
 - Implement as many ToDos as possible
 - Stabilize API
+- Implement SocksJS pipelets
+- Downstream query routing, optimize unions
 
 ### Version 0.4.0 - ETA May 2014
 
@@ -609,17 +611,22 @@ node server.js
 - Horizontal distribution of web socket dispatcher
 - Finalize module pattern
 - Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, modules
-- Implement SocksJS pipelets
 - Navigation pipelets
+- Implement Phantom.js pipelet to deliver content to search engines w/out javascript and imrpove SEO
+- Refactor Web Server API
+- Internationalization
 
 ### Version 0.3.0 - ETA April 2014
 
 #### Main Goals:
 
+- Refactor fetch() to provide operations instead of adds, enables versionning
 - Persistance
 - Authentication
 - Dynamic Authorizations Query Dataflow from user id
 - Out-of-band, global dataflows for: exceptions, errors, and debug information
+- WebRTC pipelets
+- else() query pipelet
 
 ### Version 0.2.0 - ETA March 2014
 
