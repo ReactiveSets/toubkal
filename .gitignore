@@ -10,6 +10,8 @@ test/xs_tests_utils.map
 test/xs_tests_utils.map
 test/xs_core.js
 test/xs_core.map
+test/xs_ui.js
+test/xs_ui.map
 test/xs_sketchfab_tests.js
 test/xs_sketchfab_tests.map
 test/xs_ui_tests.js
@@ -18,8 +20,8 @@ test/xs_form_tests.js
 test/xs_form_tests.map
 test/xs_table_tests.js
 test/xs_table_tests.map
-test/xs_url_tests.js
-test/xs_url_tests.map
+test/xs_url.js
+test/xs_url.map
 test/xs_control_tests.js
 test/xs_control_tests.map
 test/xs_load_images_tests.js
