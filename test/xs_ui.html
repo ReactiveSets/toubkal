@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>XS UI</title>
+    
+    <script src="../lib/xs_core-min.js" type="text/javascript"></script>
+    <script src="../lib/xs_ui-min.js"   type="text/javascript"></script>
+  </head>
+  
+  <body>
+    <script type="text/javascript">
+      var xs = this.XS.xs;
+      
+      this.url_with_no_options = xs
+        .url_events()
+        .url_parse ()
+        .last      ()
+      ;
+      
+      this.url_with_query_string = xs
+        .url_events()
+        .url_parse ( { parse_query_string : true } )
+        .last      ()
+      ;
+    </script>
+  </body>
+</html>
