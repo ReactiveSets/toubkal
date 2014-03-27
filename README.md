@@ -615,6 +615,7 @@ node server.js
 - Implement Phantom.js pipelet to deliver content to search engines w/out javascript and imrpove SEO
 - Refactor Web Server API
 - Internationalization
+- Amazon S3 pipelet to upload static content
 
 ### Version 0.3.0 - ETA April 2014
 
@@ -634,7 +635,7 @@ node server.js
 
 - Automate UI tests on Travis
 - Develop additional tests, goal is at least 300 automated tests
-- Watch directory metadata flow
+- Watch directories pipelet
 
 #### Features already developped:
 
