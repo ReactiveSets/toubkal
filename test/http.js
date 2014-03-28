@@ -196,34 +196,34 @@ var html_tests = xs
   .filter( function( _ ) {
     return _.type == 'file' && _.path.match( /html$/ );
   } )
+;
+
+// CSS and images for tests
+var css_tests = xs
+  .set( [ { path: 'test/css' }, { path: 'test/css/images' } ] )
   
-  .alter( function( _ ) {
-    _.name = _.path.substr( 2 );
-    
-    delete _.path;
-  } )
+  .watch_directories()
+  
+  .filter( [ { type: 'file' } ] )
 ;
 
 var tests = xs
-  .set( [
+  /*.set( [
     // JavaScript for tests
     // { name : 'test/javascript/jquery-1.10.2.min.js' },
     
     // Bootstrap
     // { name: 'test/bootstrap/css/bootstrap.css' },
     // { name: 'test/bootstrap/js/bootstrap.js'   },
-    
-    // CSS for tests
-    { name: 'test/css/mocha.css'               },
-    { name: 'test/css/table.css'               },
-    { name: 'test/css/xs_tests.css'            },
-    
-    // Images for tests
-    { name: 'test/css/images/ok.png'           },
-    { name: 'test/css/images/error.png'        },
-  ] )
+  ] )*/
   
-  .union( [ html_tests ] )
+  .union( [ html_tests, css_tests ] )
+  
+  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
+    _.name = _.path.substr( 2 );
+    
+    delete _.path;
+  } )
   
   .watch( { base_directory: __dirname + '/..' } )
 ;
