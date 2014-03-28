@@ -1,8 +1,9 @@
 # Connected Sets
 **High-Performances JavaScript Web Application Framework**
 
-[![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess)
+[![Dependency Status](https://gemnasium.com/ConnectedSets/ConnectedSets.svg)](https://gemnasium.com/ConnectedSets/ConnectedSets)
 
 ## Introduction
 Connected Sets (**XS** in short) is a high-performance, scalable, realtime web application framework
@@ -605,6 +606,7 @@ node server.js
 - Stabilize API
 - Implement SocksJS pipelets
 - Downstream query routing, optimize unions
+- Develop additional tests, goal is at least 450 automated tests
 
 ### Version 0.4.0 - ETA May 2014
 
@@ -618,6 +620,7 @@ node server.js
 - Refactor Web Server API
 - Internationalization
 - Amazon S3 pipelet to upload static content
+- Develop additional tests, goal is at least 400 automated tests
 
 ### Version 0.3.0 - ETA April 2014
 
@@ -630,6 +633,7 @@ node server.js
 - Out-of-band, global dataflows for: exceptions, errors, and debug information
 - WebRTC pipelets
 - else() query pipelet
+- Develop additional tests, goal is at least 350 automated tests
 
 ### Version 0.2.0 - ETA March 2014
 
