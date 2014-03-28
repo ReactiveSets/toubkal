@@ -187,14 +187,18 @@ var mocha_expect = xs.set( [
   .union( [ mocha_css ] )
 ;
 
-// HTML test pages
-var html_tests = xs
+var test_directory = xs
   .set( [ { path: 'test' } ] )
   
   .watch_directories()
   
+  .filter( [ { type: 'file' } ] )
+;
+
+// HTML test pages
+var html_tests = test_directory  
   .filter( function( _ ) {
-    return _.type == 'file' && _.path.match( /html$/ );
+    return _.path.match( /html$/ );
   } )
 ;
 
@@ -228,30 +232,27 @@ var tests = xs
   .watch( { base_directory: __dirname + '/..' } )
 ;
 
-var coffee_source = xs.set( [
-    { name: 'test/xs_tests_utils.coffee'       },
-    { name: 'test/xs_core.coffee'              },
-    { name: 'test/xs_ui_tests.coffee'          },
-    { name: 'test/xs_form_tests.coffee'        },
-    { name: 'test/xs_load_images_tests.coffee' },
-    { name: 'test/xs_control_tests.coffee'     },
-    { name: 'test/xs_table_tests.coffee'       },
-    { name: 'test/xs_url.coffee'               }
-  ] )
+
+var coffee_files = test_directory  
+  .filter( function( _ ) {
+    return _.path.match( /coffee$/ );
+  } )
   
+  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
+    _.name = _.path.substr( 2 );
+    
+    delete _.path;
+  } )
+;
+
+var coffee_source = coffee_files
   .watch( { base_directory: __dirname + '/..' } )
 ;
 
-var compiled_coffee = xs.set( [
-    { name: 'test/xs_tests_utils.js'           },
-    { name: 'test/xs_core.js'                  },
-    { name: 'test/xs_ui_tests.js'              },
-    { name: 'test/xs_form_tests.js'            },
-    { name: 'test/xs_load_images_tests.js'     },
-    { name: 'test/xs_control_tests.js'         },
-    { name: 'test/xs_table_tests.js'           },
-    { name: 'test/xs_url.js'                   }
-  ] )
+var compiled_coffee = coffee_files
+  .alter( function( _ ) {
+    _.name = _.name.replace( /coffee$/, 'js' )
+  } )
   
   .watch( { base_directory: __dirname + '/..' } )
   
@@ -263,19 +264,21 @@ var compiled_coffee = xs.set( [
   } )
 ;
 
-var source_maps = xs.set( [
-    { name: 'test/xs_tests_utils.map'          },
-    { name: 'test/xs_core.map'                 },
-    { name: 'test/xs_ui_tests.map'             },
-    { name: 'test/xs_form_tests.map'           },
-    { name: 'test/xs_load_images_tests.map'    },
-    { name: 'test/xs_control_tests.map'        },
-    { name: 'test/xs_table_tests.map'          },
-    { name: 'test/xs_url.map'                  }
-  ] )
+var source_maps = test_directory
+  .filter( function( _ ) {
+    return _.path.match( /map$/ );
+  } )
+  
+  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
+    _.name = _.path.substr( 2 );
+    
+    delete _.path;
+  } )
+  
   .watch( { base_directory: __dirname + '/..' } )
+  
   .alter( function( v ) {
-    // Fix Coffee-script source map 
+    // Fix Coffee-script source map
     v.content = v.content
       .replace( /"sourceRoot": ".."/, '"sourceRoot": ""' )
       .replace( /test\\\\/, '' )
