@@ -202,6 +202,15 @@ var html_tests = test_directory
   } )
 ;
 
+// JavaScript test files
+var javascript_files = xs
+  .set( [ { path: 'test/javascript' } ] )  
+  
+  .watch_directories()
+  
+  .filter( [ { type: 'file' } ] )
+;
+
 // CSS and images for tests
 var css_tests = xs
   .set( [ { path: 'test/css' }, { path: 'test/css/images' } ] )
@@ -221,7 +230,7 @@ var tests = xs
     // { name: 'test/bootstrap/js/bootstrap.js'   },
   ] )*/
   
-  .union( [ html_tests, css_tests ] )
+  .union( [ html_tests, javascript_files, css_tests ] )
   
   .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
     _.name = _.path.substr( 2 );
