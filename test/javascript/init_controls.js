@@ -1,5 +1,5 @@
-###
-    xs_ui.coffee
+/*
+    init_controls.js
 
     Copyright (C) 2013, 2014, Connected Sets
 
@@ -16,11 +16,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-###
+*/
 
-# -------------------------------------------------------------------------------
-# require modules tests
-# ---------------------
+( function( exports ) {
+var xs = exports.XS.xs
+  
+  , organizer       = [ { id: 'label' } ]
+  , checkbox_source = xs.order( organizer )
+  , checkbox        = checkbox_source.checkbox( document.getElementById( 'checkbox' ), { label: 'Charts' } )
+;
 
-require( './xs_url.js'      )
-require( './xs_controls.js' )
+exports.checkbox        = checkbox;
+exports.checkbox_source = checkbox_source;
+
+} ) ( this );
