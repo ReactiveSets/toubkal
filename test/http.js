@@ -233,7 +233,7 @@ var tests = xs
   .union( [ html_tests, javascript_files, css_tests ] )
   
   .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
-    _.name = _.path.substr( 2 );
+    _.name = _.path;
     
     delete _.path;
   } )
@@ -248,7 +248,7 @@ var coffee_files = test_directory
   } )
   
   .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
-    _.name = _.path.substr( 2 );
+    _.name = _.path;
     
     delete _.path;
   } )
@@ -279,7 +279,7 @@ var source_maps = test_directory
   } )
   
   .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
-    _.name = _.path.substr( 2 );
+    _.name = _.path;
     
     delete _.path;
   } )
