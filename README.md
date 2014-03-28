@@ -2,6 +2,7 @@
 **High-Performances JavaScript Web Application Framework**
 
 [![Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
+[![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess)
 
 ## Introduction
 Connected Sets (**XS** in short) is a high-performance, scalable, realtime web application framework
