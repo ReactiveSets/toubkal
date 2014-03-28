@@ -187,28 +187,25 @@ var mocha_expect = xs.set( [
   .union( [ mocha_css ] )
 ;
 
+// HTML test pages
+var html_tests = xs
+  .set( [ { path: 'test' } ] )
+  
+  .watch_directories()
+  
+  .filter( function( _ ) {
+    return _.type == 'file' && _.path.match( /html$/ );
+  } )
+  
+  .alter( function( _ ) {
+    _.name = _.path.substr( 2 );
+    
+    delete _.path;
+  } )
+;
+
 var tests = xs
   .set( [
-    // HTML test pages
-    { name: 'test/index.html'                  },
-    { name: 'test/index-min.html'              },
-    
-    { name: 'test/bootstrap_photo_album.html'  },
-    { name: 'test/carousel.html'               },
-    { name: 'test/control.html'                },
-    { name: 'test/form.html'                   },
-    { name: 'test/load_images.html'            },
-    { name: 'test/load_images-min.html'        },
-    { name: 'test/socketio.html'               },
-    { name: 'test/table.html'                  },
-    { name: 'test/table_controls.html'         },
-    { name: 'test/ui.html'                     },
-    { name: 'test/url.html'                    },
-    { name: 'test/pipelet.html'                },
-    { name: 'test/xs_core.html'                },
-    { name: 'test/xs_ui.html'                  },
-    { name: 'test/webrtc.html'                 },
-    
     // JavaScript for tests
     // { name : 'test/javascript/jquery-1.10.2.min.js' },
     
@@ -225,6 +222,8 @@ var tests = xs
     { name: 'test/css/images/ok.png'           },
     { name: 'test/css/images/error.png'        },
   ] )
+  
+  .union( [ html_tests ] )
   
   .watch( { base_directory: __dirname + '/..' } )
 ;
