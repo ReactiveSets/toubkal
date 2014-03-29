@@ -25,7 +25,7 @@
 Browser = require( 'zombie' )
 utils   = require( './xs_tests_utils.js' )
 
-browser = new Browser( { debug: true, silent: true } )
+browser = new Browser()
 expect  = this.expect || utils.expect
 check   = this.check  || utils.check
 # xs      = this.xs     || utils.xs
@@ -39,13 +39,13 @@ describe 'Controls Test Suite', ->
     before ( done ) ->
       browser.visit 'http://localhost:8080/test/xs_controls.html', done
     
-    it 'checkbox should be empty ', ( done ) ->
+    it 'checkbox should be empty', ( done ) ->
       checkbox = browser.window.checkbox
       
       checkbox._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.empty()
     
-    it 'after checkbox_source._add( { id: true } ), checkbox set should be equal to { id: true }', ( done ) ->
+    it 'after checkbox_source._add( { id: true } ), checkbox set should be equal { id: true }', ( done ) ->
       browser.window.checkbox_source._add [ { id: true } ]
       
       checkbox = browser.window.checkbox
@@ -56,20 +56,26 @@ describe 'Controls Test Suite', ->
     it 'checkbox element should be checked', ->
       expect( browser.query( '#checkbox input[type="checkbox"]' ).checked ).to.be true
     
+    it 'checkbox element should be disabled', ->
+      expect( browser.query( '#checkbox input[type="checkbox"]' ).disabled ).to.be true
+    
     it 'checkbox label should be equal to "Charts"', ->
       expect( browser.query( '#checkbox label' ).innerHTML ).to.be "Charts"
     
-    it 'after checkbox_source._add( { id: false, label: "No Charts" } ), checkbox set should be equal to { id: true }', ( done ) ->
-      browser.window.checkbox_source._add [ { id: false } ]
+    it 'after checkbox_source._add( { id: false, label: "No Charts" } ), checkbox set should be equal to { id: false, label: "No Charts" }', ( done ) ->
+      browser.window.checkbox_source._add [ { id: false, label: "No Charts" } ]
       
       checkbox = browser.window.checkbox
       
       checkbox._fetch_all ( values ) -> check done, ->
-        expect( values ).to.be.eql [ { id: true } ]
+        expect( values ).to.be.eql [ { id: false, label: "No Charts" } ]
     
-    it 'checkbox element should be checked, and label equal to "Charts"', ->
-      expect( browser.query( '#checkbox input[type="checkbox"]' ).checked   ).to.be true
+    it 'checkbox element should not be checked, and label equal to "Charts"', ->
+      expect( browser.query( '#checkbox input[type="checkbox"]' ).checked   ).to.be false
       expect( browser.query( '#checkbox label'                  ).innerHTML ).to.be "Charts"
+    
+    it 'checkbox element should not be disabled', ->
+      expect( browser.query( '#checkbox input[type="checkbox"]' ).disabled ).to.be false
     
     it 'after checkbox uncheck, checkbox element should be equal to { id: false }', ( done ) ->
       browser.uncheck( '#checkbox input[type="checkbox"]' )
@@ -77,9 +83,10 @@ describe 'Controls Test Suite', ->
       checkbox = browser.window.checkbox
       
       checkbox._fetch_all ( values ) -> check done, ->
-        expect( values ).to.be.eql [ { id: false } ]
+        expect( values ).to.be.eql [ { id: false, label: "No Charts" } ]
     
     it 'checkbox should be unchecked, and label equal to "Charts"', ->
       expect( browser.query( '#checkbox input[type="checkbox"]' ).checked   ).to.be false
       expect( browser.query( '#checkbox label'                  ).innerHTML ).to.be "Charts"
+    
     
