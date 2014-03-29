@@ -73,39 +73,39 @@ var xs_dependencies = xs
 var xs_min = xs
   .union( [ xs_dependencies, xs.set( [
     // IE compatibility
-    { name: 'test/javascript/es5.js'       },
-    { name: 'test/javascript/json2.js'     },
+    { path: 'test/javascript/es5.js'       },
+    { path: 'test/javascript/json2.js'     },
     
     // xs core
-    { name: 'lib/xs.js'                    },
-    { name: 'lib/code.js'                  },
-    { name: 'lib/pipelet.js'               },
-    { name: 'lib/filter.js'                },
-    { name: 'lib/order.js'                 },
-    { name: 'lib/aggregate.js'             },
-    { name: 'lib/join.js'                  },
+    { path: 'lib/xs.js'                    },
+    { path: 'lib/code.js'                  },
+    { path: 'lib/pipelet.js'               },
+    { path: 'lib/filter.js'                },
+    { path: 'lib/order.js'                 },
+    { path: 'lib/aggregate.js'             },
+    { path: 'lib/join.js'                  },
     
     // xs utilities
-    { name: 'lib/json.js'                  },
-    { name: 'lib/uri.js'                   },
-    { name: 'lib/events.js'                },
+    { path: 'lib/json.js'                  },
+    { path: 'lib/uri.js'                   },
+    { path: 'lib/events.js'                },
     
     // xs socket.io
-    { name: 'lib/socket_io_crossover.js'   },
-    { name: 'lib/socket_io_server.js'      },
+    { path: 'lib/socket_io_crossover.js'   },
+    { path: 'lib/socket_io_server.js'      },
     
     // xs client
-    { name: 'lib/selector.js'                },
-    { name: 'lib/client/animation_frames.js' },
-    { name: 'lib/client/url.js'              },
-    { name: 'lib/table.js'                   },
-    { name: 'lib/control.js'                 },
-    { name: 'lib/form.js'                    },
-    { name: 'lib/load_images.js'             },
+    { path: 'lib/selector.js'                },
+    { path: 'lib/client/animation_frames.js' },
+    { path: 'lib/client/url.js'              },
+    { path: 'lib/table.js'                   },
+    { path: 'lib/control.js'                 },
+    { path: 'lib/form.js'                    },
+    { path: 'lib/load_images.js'             },
     
     // bootstrap
-    { name: 'lib/bootstrap_carousel.js'    },
-    { name: 'lib/bootstrap_photo_album.js' },
+    { path: 'lib/bootstrap_carousel.js'    },
+    { path: 'lib/bootstrap_photo_album.js' },
   ] ) ] )
   
   .auto_increment( { name: 'javascript assets' } ) // will auto-increment the id attribute starting at 1
@@ -122,14 +122,14 @@ var xs_min = xs
 
 var xs_core_min = xs
   .union( [ xs_dependencies, xs.set( [
-    { name: 'lib/xs.js'                    },
-    { name: 'lib/code.js'                  },
-    { name: 'lib/pipelet.js'               },
-    { name: 'lib/filter.js'                },
-    { name: 'lib/order.js'                 },
-    { name: 'lib/aggregate.js'             },
-    { name: 'lib/join.js'                  },
-    { name: 'lib/last.js'             }
+    { path: 'lib/xs.js'                    },
+    { path: 'lib/code.js'                  },
+    { path: 'lib/pipelet.js'               },
+    { path: 'lib/filter.js'                },
+    { path: 'lib/order.js'                 },
+    { path: 'lib/aggregate.js'             },
+    { path: 'lib/join.js'                  },
+    { path: 'lib/last.js'             }
   ] ) ] )
   .auto_increment( { name: 'xs core' } )
   .watch()
@@ -139,20 +139,20 @@ var xs_core_min = xs
 
 var xs_ui_min = xs
   .set( [
-    { name: 'lib/selector.js'                },
-    { name: 'lib/uri.js'                     },
-    { name: 'lib/events.js'                  },
+    { path: 'lib/selector.js'                },
+    { path: 'lib/uri.js'                     },
+    { path: 'lib/events.js'                  },
     
-    { name: 'lib/client/animation_frames.js' },
-    { name: 'lib/load_images.js'             },
+    { path: 'lib/client/animation_frames.js' },
+    { path: 'lib/load_images.js'             },
     
-    { name: 'lib/bootstrap_photo_album.js'   },
-    { name: 'lib/bootstrap_carousel.js'      },
+    { path: 'lib/bootstrap_photo_album.js'   },
+    { path: 'lib/bootstrap_carousel.js'      },
     
-    { name: 'lib/client/url.js'              },
-    { name: 'lib/table.js'                   },
-    { name: 'lib/control.js'                 },
-    { name: 'lib/form.js'                    }
+    { path: 'lib/client/url.js'              },
+    { path: 'lib/table.js'                   },
+    { path: 'lib/control.js'                 },
+    { path: 'lib/form.js'                    }
   ] )
   
   .auto_increment( { name: 'xs ui' } )
@@ -164,7 +164,7 @@ var xs_ui_min = xs
   .uglify( 'lib/xs_ui-min.js', { warnings: false } )
 ;
 
-var pipelet_min = xs.set( [ { id: 1, name: 'lib/pipelet.js' } ] )
+var pipelet_min = xs.set( [ { id: 1, path: 'lib/pipelet.js' } ] )
   .watch()
   .uglify( 'lib/pipelet-min.js', { warnings: false } )
 ;
@@ -221,22 +221,7 @@ var css_tests = xs
 ;
 
 var tests = xs
-  /*.set( [
-    // JavaScript for tests
-    // { name : 'test/javascript/jquery-1.10.2.min.js' },
-    
-    // Bootstrap
-    // { name: 'test/bootstrap/css/bootstrap.css' },
-    // { name: 'test/bootstrap/js/bootstrap.js'   },
-  ] )*/
-  
   .union( [ html_tests, javascript_files, css_tests ] )
-  
-  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
-    _.name = _.path;
-    
-    delete _.path;
-  } )
   
   .watch( { base_directory: __dirname + '/..' } )
 ;
@@ -244,13 +229,7 @@ var tests = xs
 
 var coffee_files = test_directory  
   .filter( function( _ ) {
-    return _.path.match( /coffee$/ );
-  } )
-  
-  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
-    _.name = _.path;
-    
-    delete _.path;
+    return _.path.match( /coffee$/ ); // ToDo: should be able to use extension
   } )
 ;
 
@@ -260,7 +239,7 @@ var coffee_source = coffee_files
 
 var compiled_coffee = coffee_files
   .alter( function( _ ) {
-    _.name = _.name.replace( /coffee$/, 'js' )
+    _.path = _.path.replace( /coffee$/, 'js' )
   } )
   
   .watch( { base_directory: __dirname + '/..' } )
@@ -276,12 +255,6 @@ var compiled_coffee = coffee_files
 var source_maps = test_directory
   .filter( function( _ ) {
     return _.path.match( /map$/ );
-  } )
-  
-  .alter( function( _ ) { // ToDo: modify watch() and watch_directories() so that this alter becomes unecessary
-    _.name = _.path;
-    
-    delete _.path;
   } )
   
   .watch( { base_directory: __dirname + '/..' } )
