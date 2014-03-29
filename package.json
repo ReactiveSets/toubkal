@@ -44,7 +44,7 @@
   "scripts": {
     "postinstall": "ln -s ../. node_modules/excess || true",
     "pretest": "forever start test/http.js",
-    "posttest": "forever stop 0",
+    "posttest": "forever stop test/http.js",
     "test": "sh tests.sh"
   },
   
