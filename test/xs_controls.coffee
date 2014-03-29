@@ -45,6 +45,9 @@ describe 'Controls Test Suite', ->
       checkbox._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.empty()
     
+    it 'checkbox element name attribute should be "charts"', ->
+      expect( browser.query( '#checkbox input[type="checkbox"]' ).name ).to.be 'charts'
+    
     it 'after checkbox_source._add( { id: true } ), checkbox set should be equal { id: true }', ( done ) ->
       browser.window.checkbox_source._add [ { id: true } ]
       
@@ -89,4 +92,23 @@ describe 'Controls Test Suite', ->
       expect( browser.query( '#checkbox input[type="checkbox"]' ).checked   ).to.be false
       expect( browser.query( '#checkbox label'                  ).innerHTML ).to.be "Charts"
     
+    it 'after checkbox_source clear and add { id: false }, checkbox set should be equal to { id: false } ', ( done ) ->
+      browser.window.checkbox_source._notify [
+        { action: 'clear' }
+        { action: 'add' , objects: [ { id: false } ] }
+      ]
+      
+      checkbox = browser.window.checkbox
+      
+      checkbox._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.eql [ { id: false } ]
+    
+    it 'checkbox element should not be checked', ->
+      expect( browser.query( '#checkbox input[type="checkbox"]' ).checked ).to.be false
+    
+    it 'checkbox element should be disabled', ->
+      expect( browser.query( '#checkbox input[type="checkbox"]' ).disabled ).to.be true
+    
+    it 'checkbox label should be equal to "Charts"', ->
+      expect( browser.query( '#checkbox label' ).innerHTML ).to.be "Charts"
     
