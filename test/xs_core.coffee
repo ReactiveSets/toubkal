@@ -1212,9 +1212,9 @@ describe 'XS test suite:', ->
   describe 'XS.Pipelet(): tests for Query Tree', ->
     tree = new XS.Pipelet()
     
-    subscriber_1 = xs.set( { name: 'subscriber_1' } )
-    subscriber_2 = xs.set( { name: 'subscriber_2' } )
-    subscriber_3 = xs.set( { name: 'subscriber_3' } )
+    subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
+    subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
+    subscriber_3 = xs.set( [], { name: 'subscriber_3' } )
     
     it 'Pipelet() should allow to create a top query tree node', ->
       expect( tree.query_tree_top ).to.be.eql {
@@ -1556,10 +1556,10 @@ describe 'XS test suite:', ->
   describe 'Query_Tree routing:', ->
     tree = new XS.Pipelet()
     
-    subscriber_1 = xs.set( { name: 'subscriber_1' } )
-    subscriber_2 = xs.set( { name: 'subscriber_2' } )
-    subscriber_3 = xs.set( { name: 'subscriber_3' } )
-    subscriber_4 = xs.set( { name: 'subscriber_4' } )
+    subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
+    subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
+    subscriber_3 = xs.set( [], { name: 'subscriber_3' } )
+    subscriber_4 = xs.set( [], { name: 'subscriber_4' } )
     
     tree.__query_tree_add [ { flow: 'user', id: 123 } ], subscriber_1
     
@@ -1679,29 +1679,11 @@ describe 'XS test suite:', ->
   describe 'Pipelets Connections', ->
     values = [ { id: 1 }, { id: 2 } ]
     
-    ###
-    it 'should _fetch content through a stateless pipelet', ( done ) ->
-      p = xs.set( values ).pass_through()
-      
-      p._fetch_all ( _values ) -> check done, -> expect( _values ).to.be.eql values
-    ###
-    
     it 'should have fetched content into a set through a stateless pipelet', ->
       s = xs.set( values ).pass_through().set()
       
       expect( s.a ).to.be.eql values
     
-    ###
-    it 'should _fetch content even if stateless pipelet is pluged last into upstream pipelet', ( done ) ->
-      s = xs.set( values )
-      
-      p = xs.pass_through()
-      
-      s._add_destination( p )
-      
-      p._fetch_all ( _values ) -> check done, -> expect( _values ).to.be.eql values
-    ###
-      
     it 'should have fetched content into a set even if stateless pipelet is pluged last into upstream pipelet', ->
       s = xs.set( values )
       
@@ -1719,6 +1701,9 @@ describe 'XS test suite:', ->
     it 'set should be a Set', ->
       expect( set ).to.be.a XS.Set
     
+    it 'should throw an excpetion if trying to initialize a set with an Object not instance of Array', ->
+      expect( () -> xs.set( {} ) ).to.throwException()
+      
     cities = xs.set [
       { id: 1, name: "Marrakech"    , country: "Morocco"                      }
       { id: 2, name: "Mountain View", country: "USA"    , state: "California" }
