@@ -27,11 +27,16 @@ var xs = exports.XS.xs
   
   , drop_down_source = xs.order( organizer )
   , drop_down        = drop_down_source.drop_down( document.getElementById( 'drop_down' ) )
+  
+  , radio_source = xs.order( organizer )
+  , radio        = radio_source.radio( document.getElementById( 'radio' ) )
 ;
 
 exports.checkbox         = checkbox;
 exports.checkbox_source  = checkbox_source;
 exports.drop_down        = drop_down;
 exports.drop_down_source = drop_down_source;
+exports.radio            = radio
+exports.radio_source     = radio_source
 
 } ) ( this );

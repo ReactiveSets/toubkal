@@ -183,5 +183,98 @@ describe 'Controls Test Suite', ->
       
       drop_down._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [ { id: 2, label: 'Morocco' } ]
+  
+  # ------------------------- Radio() ---------------------------------------------------------------------------------------
+  
+  describe 'Radio():', ->
+    before ( done ) ->
+      browser.visit 'http://localhost:8080/test/xs_controls.html', done
+    
+    it 'radio set should be empty', ( done ) ->
+      radio = browser.window.radio
+      
+      radio._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.empty()
+    
+    it 'after radio_source._add( 6 objects ), radio set should be equal to [ { id: 1, label: "Islam", selected: true } ]', ( done ) ->
+      browser.window.radio_source._add [
+        { id: 1, label: "Islam"       , selected: true }
+        { id: 2, label: "Christianity" }
+        { id: 3, label: "Judaism"      }
+        { id: 6, label: "Satanism"     }
+        { id: 7, label: "Atheism"      }
+        { id: 8, label: "Rastafari"    }
+      ]
+      
+      radio = browser.window.radio
+      
+      radio._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.eql [ { id: 1, label: "Islam", selected: true } ]
+    
+    it 'radio container should contain 6 radio inputs', ->
+      expect( browser.queryAll( '#radio input' ).length ).to.be 6
+    
+    it 'radio elements name should be "radio"', ->
+      radios = browser.queryAll( '#radio input' )
+      
+      expect( radios[ 0 ].name ).to.be 'radio'
+      expect( radios[ 1 ].name ).to.be 'radio'
+      expect( radios[ 2 ].name ).to.be 'radio'
+      expect( radios[ 3 ].name ).to.be 'radio'
+      expect( radios[ 4 ].name ).to.be 'radio'
+      expect( radios[ 5 ].name ).to.be 'radio'
+    
+    it 'radio with label "Islam" should be checked', ->
+      expect( browser.queryAll( '#radio input' )[ 2 ].checked ).to.be true
+    
+    it 'after radio_source._remove( 2 objects ), expect radio set to be empty ( selected value is removed )', ( done ) ->
+      browser.window.radio_source._remove [
+        { id: 6, label: "Satanism" }
+        { id: 1, label: "Islam", selected: true }
+      ]
+      
+      radio = browser.window.radio
+      
+      radio._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.empty()
+    
+    it 'radio container should contain 4 radio inputs', ->
+      expect( browser.queryAll( '#radio input' ).length ).to.be 4
+    
+    it 'no radio should be checked', ->
+      expect( browser.query( '#radio input:checked' ) ).to.be null
+    
+    it 'after radio_source._add( { id: 5, label: "Hinduism", selected: true } ), radio set should be equal to { id: 5, label: "Hinduism", selected: true }', ( done ) ->
+      browser.window.radio_source._add [ { id: 5, label: 'Hinduism', selected: true } ]
+      
+      radio = browser.window.radio
+      
+      radio._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.eql [ { id: 5, label: 'Hinduism', selected: true } ]
+    
+    it 'radio container should contain 6 radio inputs, and radio with label "Hinduism" should be checked', ->
+      expect( browser.queryAll( '#radio input' ).length ).to.be 5
+      expect( browser.queryAll( '#radio input' )[ 2 ].checked ).to.be true
+    
+    ###
+    it 'after radio_source._update( 3 objects ), expect radio set to be equal to { id: 4, label: "Rastafari", selected: true }', ( done ) ->
+      browser.window.radio_source._update [
+        [ { id: 8, label: "Rastafari" }, { id: 4, label: "Rastafari", selected: true } ]
+        [ { id: 5, label: "Hinduism"  }, { id: 5, label: "Buddhism" } ]
+        [ { id: 7, label: "Atheism"   }, { id: 7, label: "Islam"    } ]
+      ]
+      
+      radio = browser.window.radio
+      
+      radio._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.eql [ { id: 4, label: 'Rastafari', selected: true } ]
     
     
+    it 'after "Christianity" radio check, radio set should be equal to  { id: 2, label: "Christianity"  }', ( done ) ->
+      browser.choose( '#radio input[value="2"]' )
+      
+      radio = browser.window.radio
+      
+      radio._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.eql [ { id: 2, label: 'Christianity'  } ]
+    ###
