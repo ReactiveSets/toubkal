@@ -21,16 +21,8 @@ var entries = xs
   .watch_directories()
 ;
 
-var files = entries
-  .filter( [ { type: 'file' } ] )
-;
-
-files
-  .filter( [ { type: 'file' } ] )
-  
-  .filter( function( _ ) {
-    return _.path.match( /html$/ );
-  } )
+entries
+  .filter( [ { type: 'file', extension: 'html' } ] )
   
   .trace( 'html files' )
   
@@ -43,10 +35,14 @@ entries
   .set()
 ;
 
-files
+entries
   .filter( [ { type: 'file', path: 'test/watch.js' } ] )
   .trace( 'watch.js' )
   .set()
+;
+
+var files = entries
+  .filter( [ { type: 'file' } ] )
 ;
 
 files
@@ -56,10 +52,7 @@ files
 ;
 
 files
-  .filter( function( _ ) {
-    return _.path.match( /js$/ );
-  } )
-  
+  .filter( [ { extension: 'js' } ] )
   .trace( 'javascript files' )
   .set()
 ;
