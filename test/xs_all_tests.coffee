@@ -24,4 +24,5 @@
 
 require( './clone_tests.js' )
 require( './xs_core.js' )
+require( './xs_file.js' )
 require( './xs_ui.js' )

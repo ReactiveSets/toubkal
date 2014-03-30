@@ -28,3 +28,5 @@ test/xs_load_images_tests.js
 test/xs_load_images_tests.map
 test/xs_controls.js
 test/xs_controls.map
+test/xs_file.js
+test/xs_file.map
