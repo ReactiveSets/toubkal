@@ -13,8 +13,8 @@ require( '../lib/server/file.js' );
 
 var entries = xs
   .set( [
-//      { path: 'test' },
-//      { path: 'test' },
+      { path: 'test' },
+      { path: 'test' },
       { path: 'test' }
     ], { key: [ 'path' ] }
   )
@@ -33,6 +33,7 @@ files
   } )
   
   .trace( 'html files' )
+  
   .set()
 ;
 
@@ -68,9 +69,9 @@ setTimeout( remove_directories, 10000 );
 function remove_directories() {
   entries
     ._remove( [ 
-//      { path: 'test' },
-//      { path: 'test' },
-//      { path: 'test' },
+      { path: 'test' },
+      { path: 'test' },
+      { path: 'test' },
       { path: 'test' }
     ] )
   ;
