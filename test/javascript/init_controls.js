@@ -24,9 +24,14 @@ var xs = exports.XS.xs
   , organizer       = [ { id: 'label' } ]
   , checkbox_source = xs.order( organizer )
   , checkbox        = checkbox_source.checkbox( document.getElementById( 'checkbox' ), { label: 'Charts', name: 'charts', selected_value: false } )
+  
+  , drop_down_source = xs.order( organizer )
+  , drop_down        = drop_down_source.drop_down( document.getElementById( 'drop_down' ) )
 ;
 
-exports.checkbox        = checkbox;
-exports.checkbox_source = checkbox_source;
+exports.checkbox         = checkbox;
+exports.checkbox_source  = checkbox_source;
+exports.drop_down        = drop_down;
+exports.drop_down_source = drop_down_source;
 
 } ) ( this );
