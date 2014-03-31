@@ -31,13 +31,18 @@ var xs = exports.XS.xs
   
   , radio_source = xs.order( organizer )
   , radio        = radio_source.radio( document.getElementById( 'radio' ) )
-;
+  
+  , checkbox_group_source = xs.order( organizer )
+  , checkbox_group        = checkbox_group_source.checkbox_group( document.getElementById( 'checkbox_group' ) )
+ ;
 
-exports.checkbox         = checkbox;
-exports.checkbox_source  = checkbox_source;
-exports.drop_down        = drop_down;
-exports.drop_down_source = drop_down_source;
-exports.radio            = radio
-exports.radio_source     = radio_source
+exports.checkbox              = checkbox;
+exports.checkbox_source       = checkbox_source;
+exports.drop_down             = drop_down;
+exports.drop_down_source      = drop_down_source;
+exports.radio                 = radio;
+exports.radio_source          = radio_source;
+exports.checkbox_group        = checkbox_group;
+exports.checkbox_group_source = checkbox_group_source;
 
 } ) ( this );
