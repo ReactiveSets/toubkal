@@ -22,7 +22,10 @@
 # require modules tests
 # ---------------------
 
-require( './clone_tests.js' )
-require( './xs_core.js' )
-require( './xs_file.js' )
-require( './xs_ui.js' )
+require './clone_tests.js'
+require './xs_core.js'
+require './xs_file.js'
+
+try
+  require.resolve 'zombie'
+  require './xs_ui.js'       
