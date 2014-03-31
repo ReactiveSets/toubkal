@@ -1,5 +1,5 @@
 # Connected Sets
-**High-Performances JavaScript Web Application Framework**
+**High-Performances Reactive Web Application Framework**
 
 [![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess)
@@ -53,9 +53,9 @@ environemental footprints.
 The bottom-line is that we want to be in better business faster, with less cash, and a lower
 environemental footprint that current technologies allow.
 
-Connected Sets addresses all of these issues thanks to its unique **Subscribe / Push** dataflow
-model that works accross and betwwen web browsers and nodejs servers, as well as just-in-time
-code generators and other optimizations.
+Connected Sets addresses all of these issues thanks to its unique **Subscribe / Push** reactive
+dataflow model that works accross and betwwen web browsers and nodejs servers, as well as
+just-in-time code generators and other optimizations.
 
 #### What's the big deal about authorizations?
 
@@ -75,7 +75,7 @@ shortcomming and usually will not fit the complexity of any real-world applicati
 provide acceptable performances at scale.
 
 Connected Sets provides a simple yet highly-efficient dataflow authorization model and system
-architecture that delivers **realtime UI updates on authorization changes** at scale.
+architecture that delivers **Reactive UI updates on authorization changes** at scale.
 
 Now, you might consider that you don't need this, that end-users can refresh their page on
 authorization changes. But the reality is that we can do this because we provide a model that works
@@ -167,16 +167,16 @@ function client( source ) { // source refers to the output of the database here
 }
 ```
 
-Connected Sets' unique **Subscribe / Push** dataflow model allows to solve the **how** so that you
-don't have to deal with it.
+Connected Sets' unique **Subscribe / Push** reactive dataflow model allows to solve the **how**
+so that you don't have to deal with it.
 
 To make it easier, the API describes **what** you want in **plain JavaScript** without requiring
 a graphical UI to glue hard-coded and hard-to-comprehend xml or json "nodes" and "links" together
 as many other dataflow libraries require.
 
-XS dataflow model provides higher level abstractions handling under the hood both subscribe
-dataflows and information push dataflows that allows to move in realtime the least amount of
-information possible between clients and servers.
+XS reactive dataflow model provides higher level abstractions handling under the hood both
+subscribe dataflows and information push dataflows that allows to move in realtime the least
+amount of information possible between clients and servers.
 
 ### XS Subscribe / Push Dataflow Model
 
@@ -229,7 +229,7 @@ high performances of each individual server query tree.
 #### Data Events, Operations, Stateless Sets and Pipelets
 
 Internally, Connected Sets dataflows represent the evolution of data sets over time where
-each event modifies a set. These dataflows are therefore sets change flows.
+each event modifies a set. These dataflows are therefore reactive sets change flows.
 
 Each event carries an opperation name such as *add* or *remove* and an array of values
 to add to, or remove from, a set.
@@ -280,7 +280,7 @@ and reporting over virtually unlimited size datasets.
 
 XS data events contain arrays of values which are typically processed in loops. In a traditional
 programming environement, one typically writes code that processes values in loops. With Connected Sets,
-architects do not write loops because these are absracted away in the XS dataflow model.
+architects do not write loops because these are absracted away in the XS reactive dataflow model.
 
 This greatly simplifies programming while removing the likelihood for common programming errors.
 
@@ -327,7 +327,8 @@ code.
 
 A network of services sharing the same event dispatcher network enables to effectively separate
 **XS Data Providers** from **XS Application Providers** increasing business opportunities
-arising from the portability of dataflows updated in real-time and as authorized by end-users.
+arising from the portability of reactive dataflows updated in real-time and as authorized by
+end-users.
 
 Within an XS network, end-users no longer need to duplicate their personal data endlessly and updates are
 propagated to all applications in realtime putting an end to today's world of out-of-date data between
@@ -348,7 +349,7 @@ third-party dataflows.
 End-users may use these services to backup their own data either on owned servers or using third-party
 XS Data Providers.
 
-End-Users control access to their own data through XS Authorization dataflows providing additional
+End-Users control access to their own data through XS Authorization reactive dataflows providing additional
 business opportunities for **XS Authorization Management Providers** helping end-users manage authorizations
 for all their data accross all their XS Applications.
 
@@ -360,7 +361,7 @@ boxed data-within-application model, resulting in more data and more services av
 XS backend runs on **Node.js** providing a scalable database, web server, validation, and
 authorizations.
 
-On the frontend, XS provides reactive controlers and views driven by dataflows.
+On the frontend, XS provides reactive controlers and views driven by reactive dataflows.
 XS can optionally be coupled with any other framework but we recommend using reactive libraries
 such as **AngularJS**, **Ember**, **Bacon.js**, **React**, which model is closer to XS.
 
@@ -400,7 +401,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 255 automated tests for the XS core pipelets that run after every
+We have curently developped 309 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
 Travis had an issue with it around January 2014. Version 0.11 is not officially supported
 because ui tests using zombie cannot pass at this time.
@@ -422,25 +423,26 @@ updates just let us know.
 
 From npm, latest release:
 ```bash
-npm install excess
+# npm install excess
 ```
 
 Some image manipulation pipelets require ImageMagick that [you can download here](http://www.imagemagick.org/script/binary-releases.php.).
 
 ## Running tests
 ```bash
-npm install -g coffee-script
-npm install mocha
-npm install expect.js
-npm install mocha-unfunk-reporter
-
-git clone https://github.com/ConnectedSets/ConnectedSets.git
-
-cd ConnectedSets
-./run_tests.sh
--> passed 255 of 255 tests (2182ms)
-
-less -R test.out # for tests detailed traces
+# npm install -g coffee-script
+# npm install -g mocha
+# npm install expect.js
+# npm install mocha-unfunk-reporter
+#
+# git clone https://github.com/ConnectedSets/ConnectedSets.git
+#
+# cd ConnectedSets
+# ./run_tests.sh
+Full test results are in test.out
+-> passed 309 of 309 tests (4121ms)
+#
+# less -R test.out # for tests detailed traces
 ```
 
 ## Example of complete client and server application
@@ -635,24 +637,17 @@ node server.js
 - else() query pipelet
 - Develop additional tests, goal is at least 350 automated tests
 
-### Version 0.2.0 - ETA March 2014
+### Version 0.2.0 - March 31 2014:
 
-#### Main Goals:
-
-- Develop additional tests, goal is at least 300 automated tests
-
-#### Features already developped:
-
-- Finalize Subscribe / Push model using optimized Query Tree Router and lazy connection of stateless pipelets
+- Finalize Subscribe / Push reactive dataflow model using optimized Query Tree Router and lazy connection of stateless pipelets
 - Filter support for static and dynamic queries
 - Transactions
 - Automate UI tests on Travis
+- 309 automated tests
 - Controllets which control upstream query trees using downstream queries
 - Improve Pipelet API and naming conventions
 - Virtual Hosts w/ optimized routing
 - Touch Events on bootstrap pipelets
-
-#### New pipelets (available now):
 
 Pipelet                   | Short Description                              
 --------------------------|------------------------------------------------
@@ -680,7 +675,7 @@ value_to_attribute()      | Sets value as an attribute and add other default att
 
 #### Features:
 
-- Push dataflow model with lazy evaluation of stateless pipelets
+- Push reactive dataflow model with lazy evaluation of stateless pipelets
 - Core Database engine with order / aggregates / join / union, and much more
 - Automated tests
 - Dataflows between clients and server using socket.io
