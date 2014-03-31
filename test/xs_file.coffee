@@ -162,9 +162,7 @@ describe 'file', ->
         'test/bootstrap'
       ]
 
-###    
     it 'should remove both directories after removing the "test" directory', ->
       entries._remove [ { path: 'test' } ]
       
       expect( Object.keys( entries._directories ) ).to.be.eql []
-###      
