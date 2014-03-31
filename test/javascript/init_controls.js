@@ -22,6 +22,7 @@
 var xs = exports.XS.xs
   
   , organizer       = [ { id: 'label' } ]
+  
   , checkbox_source = xs.order( organizer )
   , checkbox        = checkbox_source.checkbox( document.getElementById( 'checkbox' ), { label: 'Charts', name: 'charts', selected_value: false } )
   
