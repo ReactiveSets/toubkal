@@ -6,20 +6,22 @@
 [![Dependency Status](https://gemnasium.com/ConnectedSets/ConnectedSets.svg)](https://gemnasium.com/ConnectedSets/ConnectedSets)
 
 ## Introduction
-Connected Sets (**XS** in short) is a high-performance, scalable, realtime web application framework
-aiming at massively reducing servers environmental footprint and improving mobile clients battery
-life by making an optimal use of server, network and client resources.
+Connected Sets (**XS** in short) is a high-performances, scalable, reactive web application framework
+aiming at massively improving productivity and reducing servers environmental footprint and mobile
+clients battery life by making an optimal use of server, network and client resources.
 
-Although XS is currently used to deliver a basic web application, some features described here are
-still work in progress meaning that XS should be considered Alpha at this time. XS should provide
-most of the features described bellow by version 0.4 in May 2014, and the first Beta version would
-be 0.5 expected in June 2014 including reasonably complete documentation extracted from the code
-where it currently stands.
+### Development Stage
+Although XS is already very reliable thanks to its comprehensive test suite and is currently used to deliver a
+production web application, some features are still work in progress and some APIs are subject to changes
+meaning that XS should be considered Alpha at this time.
+
+XS should provide most of the features described bellow by version 0.4 in May 2014, and the first Beta version
+would be 0.5 expected in June 2014 including reasonably complete documentation extracted from the code where it
+currently stands.
 
 ### Why yet-another JavaScript Web Application Framework?
 
-The short answer is because we are not satisfied with the performances, authorization models,
-and productivity, of existing frameworks.
+The short answer is because we are not satisfied with the productivity, performances, and authorization models, of existing frameworks.
 
 Internet servers are consuming an increasily significant share of worldwide exlectricity production,
 contributing to climate change and threatening Internet growth as the availability of cheap fosil fuels
