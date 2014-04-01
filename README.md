@@ -1,21 +1,76 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets)
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) **309 tests**
+
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess)
+
 [![Dependency Status](https://gemnasium.com/ConnectedSets/ConnectedSets.svg)](https://gemnasium.com/ConnectedSets/ConnectedSets)
+
+*Liberating your Creativity, while fighting Climate Change*
+
+## Teaser
+Displaying a reactive \<table\> which DOM id is ```sales_table```, ordered by date, for the year 2014, from a source ```sales``` dataflow coming from a ```socket.io``` server, pulling the minimum amount of data from the server and updating the table as soon as some data is available from the server:
+
+#### client.js
+
+```javascript
+xs.socket_io_server()
+  .flow  ( 'sales' )
+  .filter( [ { year: 2014 } ] )
+  .order ( [ { id: 'date' } ] )
+  .table ( 'sales_table', sales_columns )
+;
+```
+
+#### How does this work?
+
+The table is updated reactively in realtime whenever sales are updated on the server.
+
+```[ { year: 2014 } ]``` is a filter *query*, it controls how much sales data is actually pulled from the server therefore reducing both bandwidth usage and latency.
+
+Latency is further reduced by displaying the table as soon as the first sales come from the server, improving user experience.
+
+This query can be a dataflow, updated by DOM controls and automatically pulling the minimum amount of data from the server.
+
+```[ { id: 'date' } ]``` is an *organizer*, it can also be a dataflow dynamically updated by DOM controls, or any other application source.
+
+The ```sales_columns``` dataflow controls table's columns. When it is updated, columns are reactively added
+or removed in realtime without any addtitional programing required. ```sales_columns``` can be defined in the client
+or also come from the socket.io server using the following declarative code:
+
+```javascript
+var sales_columns = xs
+  .socket_io_server()
+  .flow( 'sales_columns' )
+;
+```
+
+The above code automatically shares the same socket.io connection with the previous code, reducing resource usage on both clients and servers while only pulling from the server the additional ```sales_columns``` dataflow.
+
+Table updates are optimized to add and remove the minimum set of rows and columns, improving client responsiveness, battery life and user experience.
+
+#### What does this mean?
+
+The Connected Sets program above is expressed in one third the words required to express the problem in plain english replacing thousands of lines of complex and error-prone code.
+
+Connected Sets programs have no *loops*, and no *ifs*, dramatically reducing the likelyhood of bugs and hence improving productivity by orders of magnitude. Under the hood, Connected Sets provides all the optimized and comprehensively tested *loops* and *ifs* you will ever need.
+
+These same Occam's razor declarative techniques can be applied on the server side delivering a full stack scallable and secure framework with highest performances featuring reactive database and fine-grained authorization model.
+
+The bottom line is that Connected Sets allows you to write the minimum amount of code while resulting in the highest performance reactive applications you could only dream of writing liberating your creativity and allowing you to finaly beat large teams of developpers.
 
 ## Introduction
 Connected Sets (**XS** in short) is a high-productivity, high-performances, scalable, reactive web application framework
-aiming at massively improving productivity, reducing servers environmental footprint, and increasing mobile
+aiming at massively improving productivity, reducing servers' environmental footprint, and increasing mobile
 clients battery life by making an optimal use of server, network and client resources.
 
 ### Development Stage
-Although XS is already very reliable thanks to its comprehensive test suite and is currently used to deliver a
-production web application, some features are still work in progress and some APIs are subject to changes
-meaning that XS should be considered Alpha at this time.
+XS is already very reliable thanks to its comprehensive test suite and is currently used to deliver a production web application.
 
-XS should provide most of the features described bellow by version 0.4 in May 2014, and the first Beta version
+Some features are still work in progress and some APIs are subject to changes meaning that XS should be considered Alpha at this time.
+
+XS should provide most of the features described bellow by version 0.4 in May 2014, while the first Beta version
 would be 0.5 expected in June 2014 including reasonably complete documentation extracted from the code where it
 currently stands.
 
@@ -56,7 +111,7 @@ The bottom-line is that we want to be in better business faster, with less cash,
 environemental footprint that current technologies allow.
 
 Connected Sets addresses all of these issues thanks to its unique **Subscribe / Push** reactive
-dataflow model that works accross and betwwen web browsers and nodejs servers, as well as
+dataflow model that works accross and between web browsers and nodejs servers, as well as
 just-in-time code generators and other optimizations.
 
 #### What's the big deal about authorizations?
@@ -87,29 +142,37 @@ role in a corner-case.
 
 #### How do you improve Productivity?
 
-By allowing you to describe **what** you want instead of **how-the-hell** this could ever be
-accomplished.
+By allowing you to describe **what** you want in a declarative style, instead of **how-the-hell** this
+could ever be accomplished.
 
 Figuring-out **how** this should a) work securely, b) scale and c) have best possible performances
 as stated above, is hard, really hard. So hard that there is not a single company today able to
 achieve that without throwing millions of dollars at the problem, and/or not struggling with bugs,
 bottlenecks and hard-to-work-around architecture limitations.
 
-The following provides an example of a non-trivial, high-performance, data server with realtime
-updates on everything including authorization changes, in 52 lines of code, comments included.
+The only thing you need to know to understand XS programs is about **XS Pipelets**.
 
-The only thing you need to know to understand this code is about **Pipelets**:
-- An XS pipelet, aka a "node" in other dataflow libraries, is a JavaScript function that
-processes data events on datasets with no side effects on other pipelets
-- it processes events emitted by **upstream** pipelets
-- it emits events to **downstream pipelets**
-- it's name describes what it provides or does
-- pipelets are connected together using the JavaScript '.' operator or, as parameters when
-there is more than one upstream or downstream pipelet connected
+```javascript
+xs.upstream_pipelet( parameter, ... )
+  .a_pipelet( ... )
+  .downstream_pipelet( ... )
+;
+```
 
-Each pipelet therefore represents a set connected to other sets which states evolve in realtime
-as data events flow through the network of pipelets.
+A pipelet is a JavaScript function() that:
+- Maintains a dataset state, e.g. in memory, mass storage, the DOM, or virtually
+- Reacts to events emitted by **upstream** source pipelets
+- Processes these upstream events to update the state of their dataset
+- Emits events to **downstream** destination pipelets
+- Has no side effects on other pipelets upstream or downstream
+- Has a name that describes what it provides or does
+- Is syntactically connected to upstream and downstream pipelets using the JavaScript '.' operator, or as parameters when there is more than one upstream or downstream pipelet connected
+- Is optimized to process large amounts for data events
 
+An XS program is a JavaScript program where one can mix imperative-style programming with XS declarative-style programming.
+
+The following provides an example of a non-trivial, high-performance, data server with reactive
+updates on everything including authorization changes, in 52 lines of code, comments included:
 ```javascript
 var xs = require( 'excess' ); // Loads XS core pipelets, returns xs head pipelet
 
@@ -119,8 +182,7 @@ require( 'excess/lib/server/socket_io_clients.js' ); // Loads socket.io server p
 
 var database = xs.file_json_store( 'data_store.json' ); // Input/Output dataflows to/from datastore, one-line, no external database required
 
-var users = database.flow( 'users' ); // Dataflow of users' credentials
-
+var users = database.flow( 'users' ); // Dataflow of users' credentials:
 var clients = xs
   // Define a set of web servers
   .set( [ 
