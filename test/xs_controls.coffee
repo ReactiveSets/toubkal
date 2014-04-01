@@ -25,7 +25,7 @@
 Browser = require( 'zombie' )
 utils   = require( './xs_tests_utils.js' )
 
-browser = new Browser( { silent: true } )
+browser = new Browser()
 expect  = this.expect || utils.expect
 check   = this.check  || utils.check
 # xs      = this.xs     || utils.xs
@@ -174,7 +174,7 @@ describe 'Controls Test Suite', ->
     it 'drop_down element should contain 6 options element', ->
       expect( browser.query( '#drop_down select' ).length ).to.be 5
     
-    ###
+    
     it 'after drop_down_source._update( 3 objects ), drop_down set should be equal to { id: 8, label: "Madagascar" }', ( done ) ->
       browser.window.drop_down_source._update [
         [ { id: 6, label: 'Portugal'   }, { id: 5, label: 'Germany' } ]
@@ -185,8 +185,8 @@ describe 'Controls Test Suite', ->
       drop_down = browser.window.drop_down
       
       drop_down._fetch_all ( values ) -> check done, ->
-        expect( values ).to.be.eql [ { id: 8, label: 'Madagascar' } ]
-    ###
+        expect( values ).to.be.eql [ { id: 8, label: 'Madagascar', selected: true } ]
+    
     
     it 'after select "Morocco", drop_down element should be equal to { id: 2, label: "Morocco" }', ( done ) ->
       browser.select( 'drop_down', 'Morocco' )
@@ -197,7 +197,7 @@ describe 'Controls Test Suite', ->
         expect( values ).to.be.eql [ { id: 2, label: 'Morocco' } ]
     
     it 'drop_down selectedindex should be 2', ->
-      expect( browser.query( '#drop_down select' ).selectedIndex ).to.be 2
+      expect( browser.query( '#drop_down select' ).selectedIndex ).to.be 3
   
   # ------------------------- Radio() ---------------------------------------------------------------------------------------
   
@@ -271,7 +271,6 @@ describe 'Controls Test Suite', ->
       expect( browser.queryAll( '#radio input' ).length ).to.be 5
       expect( browser.queryAll( '#radio input' )[ 2 ].checked ).to.be true
     
-    ###
     it 'after radio_source._update( 3 objects ), expect radio set to be equal to { id: 4, label: "Rastafari", selected: true }', ( done ) ->
       browser.window.radio_source._update [
         [ { id: 8, label: "Rastafari" }, { id: 4, label: "Rastafari", selected: true } ]
@@ -283,7 +282,6 @@ describe 'Controls Test Suite', ->
       
       radio._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [ { id: 4, label: 'Rastafari', selected: true } ]
-    ###
     
     it 'after "Christianity" radio check, radio set should be equal to  { id: 2, label: "Christianity"  }', ( done ) ->
       browser.choose( '#radio input[value="2"]' )
@@ -362,7 +360,6 @@ describe 'Controls Test Suite', ->
       expect( browser.queryAll( '#checkbox_group input' )[ 2 ].checked ).to.be true
       expect( browser.queryAll( '#checkbox_group input' )[ 3 ].checked ).to.be true
     
-    ###
     it 'after checkbox_group_source._update( objects ), checkbox_group should be equal to result', ( done )->
       browser.window.checkbox_group_source._update [
         [ { id: 3, label: "Playing Computer Games"  }, { id: 3, label: "Playing Video Games"                   } ]
@@ -376,7 +373,7 @@ describe 'Controls Test Suite', ->
           { id: 1, label: "Photography"            , selected: true }
           { id: 6, label: "Stamp / Coin Collection", selected: true }
         ]
-    ###
+    
     ###
     it 'after "Cooking" check and "Stamp / Coin Collection" uncheck, checkbox_group set should be equal to result', ( done ) ->
       browser
