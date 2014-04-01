@@ -6,8 +6,8 @@
 [![Dependency Status](https://gemnasium.com/ConnectedSets/ConnectedSets.svg)](https://gemnasium.com/ConnectedSets/ConnectedSets)
 
 ## Introduction
-Connected Sets (**XS** in short) is a high-performances, scalable, reactive web application framework
-aiming at massively improving productivity and reducing servers environmental footprint and mobile
+Connected Sets (**XS** in short) is a high-productivity, high-performances, scalable, reactive web application framework
+aiming at massively improving productivity, reducing servers environmental footprint, and increasing mobile
 clients battery life by making an optimal use of server, network and client resources.
 
 ### Development Stage
