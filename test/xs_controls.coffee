@@ -25,7 +25,7 @@
 Browser = require( 'zombie' )
 utils   = require( './xs_tests_utils.js' )
 
-browser = new Browser()
+browser = new Browser( { silent: true } )
 expect  = this.expect || utils.expect
 check   = this.check  || utils.check
 # xs      = this.xs     || utils.xs
@@ -314,17 +314,20 @@ describe 'Controls Test Suite', ->
         { id: 4, label: "Traveling"              , selected: true }
         { id: 5, label: "Cooking"                                 }
         { id: 6, label: "Stamp / Coin Collection", selected: true }
+        { id: 7, label: "Pottery"                , selected: true }
+        { id: 8, label: "Gardening"                               }
       ]
       
       browser.window.checkbox_group._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [
           { id: 1, label: "Photography"            , selected: true }
+          { id: 7, label: "Pottery"                , selected: true }
           { id: 6, label: "Stamp / Coin Collection", selected: true }
           { id: 4, label: "Traveling"              , selected: true }
         ]
     
     it 'checkbox_group container should contain 6 checkboxes', ->
-      expect( browser.queryAll( '#checkbox_group input' ).length ).to.be 6
+      expect( browser.queryAll( '#checkbox_group input' ).length ).to.be 8
     
     it 'checkbox elements name should be "checkbox_group"', ->
       checkboxes = browser.queryAll( '#checkbox_group input' )
@@ -335,11 +338,14 @@ describe 'Controls Test Suite', ->
       expect( checkboxes[ 3 ].name ).to.be 'checkbox_group'
       expect( checkboxes[ 4 ].name ).to.be 'checkbox_group'
       expect( checkboxes[ 5 ].name ).to.be 'checkbox_group'
+      expect( checkboxes[ 6 ].name ).to.be 'checkbox_group'
+      expect( checkboxes[ 7 ].name ).to.be 'checkbox_group'
     
     it 'checkboxes with label "Photography", "Stamp / Coin Collection" and "Traveling" should be checked', ->
-      expect( browser.queryAll( '#checkbox_group input' )[ 2 ].checked ).to.be true
-      expect( browser.queryAll( '#checkbox_group input' )[ 4 ].checked ).to.be true
+      expect( browser.queryAll( '#checkbox_group input' )[ 3 ].checked ).to.be true
       expect( browser.queryAll( '#checkbox_group input' )[ 5 ].checked ).to.be true
+      expect( browser.queryAll( '#checkbox_group input' )[ 6 ].checked ).to.be true
+      expect( browser.queryAll( '#checkbox_group input' )[ 7 ].checked ).to.be true
     
     it 'after checkbox_group_source._remove( 2 objects ), checkbox_group set should be equal to result', ( done )->
       browser.window.checkbox_group_source._remove [
@@ -350,15 +356,17 @@ describe 'Controls Test Suite', ->
       browser.window.checkbox_group._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [
           { id: 1, label: "Photography"            , selected: true }
+          { id: 7, label: "Pottery"                , selected: true }
           { id: 6, label: "Stamp / Coin Collection", selected: true }
         ]
     
-    it 'checkbox_group container should contain 4 checkboxes', ->
-      expect( browser.queryAll( '#checkbox_group input' ).length ).to.be 4
+    it 'checkbox_group container should contain 6 checkboxes', ->
+      expect( browser.queryAll( '#checkbox_group input' ).length ).to.be 6
     
     it 'checkboxes with label "Photography" and "Stamp / Coin Collection" should be checked', ->
-      expect( browser.queryAll( '#checkbox_group input' )[ 2 ].checked ).to.be true
       expect( browser.queryAll( '#checkbox_group input' )[ 3 ].checked ).to.be true
+      expect( browser.queryAll( '#checkbox_group input' )[ 4 ].checked ).to.be true
+      expect( browser.queryAll( '#checkbox_group input' )[ 5 ].checked ).to.be true
     
     it 'after checkbox_group_source._update( objects ), checkbox_group should be equal to result', ( done )->
       browser.window.checkbox_group_source._update [
@@ -374,20 +382,19 @@ describe 'Controls Test Suite', ->
           { id: 6, label: "Stamp / Coin Collection", selected: true }
         ]
     
-    ###
     it 'after "Cooking" check and "Stamp / Coin Collection" uncheck, checkbox_group set should be equal to result', ( done ) ->
       browser
-        # .check  ( '#checkbox_group input[value="5"]' )
+        .check  ( '#checkbox_group input[value="5"]' )
         .uncheck( '#checkbox_group input[value="6"]' )
       
       browser.window.checkbox_group._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [
-          #{ id: 5, label: "Cooking"                     }
-          { id: 1, label: "Photography", selected: true }
+          { id: 5, label: "Cooking"                                 }
+          { id: 8, label: "Gardening and Plants"   , selected: true }
+          { id: 1, label: "Photography"            , selected: true }
         ]
     
     it 'checkboxes with label "Photography" and "Cooking" should be checked', ->
-      expect( browser.queryAll( '#checkbox_group input' )[ 0 ].checked ).to.be true
       expect( browser.queryAll( '#checkbox_group input' )[ 2 ].checked ).to.be true
-    ###
+      expect( browser.queryAll( '#checkbox_group input' )[ 3 ].checked ).to.be true
     
