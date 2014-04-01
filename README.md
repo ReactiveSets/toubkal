@@ -1,9 +1,9 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) **309 tests**
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *309 tests*
 
-[![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess)
+[![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
 [![Dependency Status](https://gemnasium.com/ConnectedSets/ConnectedSets.svg)](https://gemnasium.com/ConnectedSets/ConnectedSets)
 
@@ -474,9 +474,6 @@ Our continuous integration process also requires that before each commit the dev
 these tests so travis usually passes all tests. In the event that a test does not pass the top
 priority is to fix the test before anything else.
 
-We have developped at least 100 other ui tests that are not currently automated because we have not yet
-integrated Phantomjs or another headless browser.
-
 We also do manual testing on the following web browsers: Chrome (latest), Firefox (latest),
 IE 8, 9, and 10 but enventually plan on dropping support for IE8.
 
@@ -512,7 +509,7 @@ Full test results are in test.out
 ## Example of complete client and server application
 
 Application retrieving sales and employees from a server, aggregates these by year and displays the results
-incrementally in an html table (a * indicates that a pipelet is not yet implemented or is work in progress).
+incrementally in an html table.
 
 This example also shows how to produce in realtime minified `all.css` and `all-min.js`. All assets content
 is prefetched in this example for maximum performance. The less css compiler is also used to compile in real
@@ -605,16 +602,18 @@ var servers = xs
 // Merge and mimify client javascript assets in realtime
 var all_min_js = xs
   .set( [ // Define the minimum set of javascript files required to serve this client application
-    { name: 'excess/lib/xs.js'        },
-    { name: 'excess/lib/pipelet.js'   },
-    { name: 'excess/lib/filter.js'    },
-    { name: 'excess/lib/join.js'      },
-    { name: 'excess/lib/aggregate.js' },
-    { name: 'excess/lib/order.js'     },
-    { name: 'excess/lib/table.js'     }
-  ], { auto_increment: true } ) // Use auto_increment option to keep track of files order
+    { path: 'excess/lib/xs.js'        },
+    { path: 'excess/lib/pipelet.js'   },
+    { path: 'excess/lib/filter.js'    },
+    { path: 'excess/lib/join.js'      },
+    { path: 'excess/lib/aggregate.js' },
+    { path: 'excess/lib/order.js'     },
+    { path: 'excess/lib/table.js'     }
+  ] )
   
-  .require_resolve()            // Resolve node module paths
+  .auto_increment() // Keeps track of files load order by adding an id attribute starting at 1
+  
+  .require_resolve()            // Resolves node module paths
   
   .union( xs.set( [             // Add other javascript assets
     { name: 'javascript/client.js', id: 8 } // client code must be loaded after excess
@@ -624,19 +623,21 @@ var all_min_js = xs
   
   .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
   
-  .uglify( 'all-min.js' )       // Minify in realtime using uglify-js
+  .uglify( 'all-min.js' )       // Minify in realtime using uglify-js and provide "all-min.map" source map
 ;
 
 // Other static assets
 xs.set( [
-    { name: 'index.html' },
-    { name: 'css/*.css'  }
+    { path: 'html' },
+    { path: 'css'  }
   ] )
-  .glob()                  // * Retrrieves files list with realtime updates (watching the css directory)
+  
+  .watch_directories()     // Retrrieves files list with realtime updates (watching html and css directories)
+  
   .watch()                 // Retrieves file content with realtime updates
-  .union(                  // Add other compiled assets
-    [ all-min.js, all.css ]
-  )
+  
+  .union( [ all-min.js ] ) // Add minified assets
+
   .serve( servers )        // Deliver up-to-date compiled and mimified assets to clients
 ;
 
