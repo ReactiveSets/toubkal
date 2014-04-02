@@ -49,14 +49,18 @@ describe 'file', ->
       )
       .union( [] )
     
-    entries = directories_source
-      .watch_directories()
+    entries = directories_source.watch_directories()
     
-    directories_source._add_source entries.filter [ { path: 'test/bootstrap' } ]
+    bootstrap = entries.filter [
+      { type: 'directory', path: 'test/bootstrap' }
+      { type: 'directory', path: 'test/bootstrap/css' }
+    ]
     
-    xs_file = entries
+    directories_source._add_source bootstrap
+    
+    coffee = entries
       .filter( [ { type: 'file', extension: 'coffee', path: 'test/xs_file.coffee', depth: 1 } ] )
-      .trace( 'xs_file' )
+      .trace( 'coffee' )
       .set()
     
     javascript = entries
@@ -67,11 +71,23 @@ describe 'file', ->
       .filter( [ { type: 'directory' } ] )
       .trace( 'directories' )
       .set()
+    
+    css = entries
+      .filter( [ { type: 'file', extension: 'css' } ] )  
+      .trace( 'css files' )
+      .set()
       
+    get_entry_static_attributes = ( e ) ->
+      { path: e.path, type: e.type, extension: e.extension, depth: e.depth }
+    
+    entry_sorter = ( a, b ) ->
+      if a.path < b.path then -1 else a.path > b.path
+    
     it 'should have one directory: "test"', ->
       expect( Object.keys( entries._directories ) ).to.be.eql [
         'test'
         'test/bootstrap'
+        'test/bootstrap/css'
       ]
       
     it '"test" directory should have a count of 3', ->
@@ -80,17 +96,24 @@ describe 'file', ->
     it '"test/bootstrap" directory should have a count of 1', ->
       expect( entries._directories[ 'test/bootstrap' ].count ).to.be.eql 1
     
+    it '"test/bootstrap/css" directory should have a count of 1', ->
+      expect( entries._directories[ 'test/bootstrap/css' ].count ).to.be.eql 1
+    
     it 'should have one value for test/xs_file.coffee at depth 1', ( done ) ->
-      xs_file._fetch_all ( values ) -> check done, () ->
-        expect( values.length ).to.be.eql 1
+      coffee._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.eql 1
+    
+    it 'should have css files', ( done ) ->
+      css._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 3
         
+    it 'should have javascript files', ( done ) ->
+      javascript._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 5
+    
+    it 'should have entries', ( done ) ->
+      entries._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 20
+    
     it 'should emit 5 directories at depth 1 and 3 directories at depth 2', ( done ) ->
       directories._fetch_all ( values ) -> check done, () ->
-        expect(
-          values
-            .map( ( e ) -> { path: e.path, type: e.type, extension: e.extension, depth: e.depth } )
-            .sort ( a, b ) -> if a.path < b.path then -1 else a.path > b.path
-        ).to.be.eql [
+        expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
           {
             "path": "test/bootstrap"
             "type": "directory"
@@ -156,13 +179,35 @@ describe 'file', ->
       
       expect( entries._directories[ 'test' ].count ).to.be.eql 1
     
-    it 'should still have two directories', ->
+    it 'should still have three directories', ->
       expect( Object.keys( entries._directories ) ).to.be.eql [
         'test'
         'test/bootstrap'
+        'test/bootstrap/css'
       ]
 
     it 'should remove both directories after removing the "test" directory', ->
       entries._remove [ { path: 'test' } ]
       
       expect( Object.keys( entries._directories ) ).to.be.eql []
+    
+    it 'should have no directory left', ( done ) ->
+      directories._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
+    
+    it 'should have no css files left', ( done ) ->
+      css._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
+    
+    it 'should have no coffee files left', ( done ) ->
+      coffee._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
+
+    it 'should have no javascript files left', ( done ) ->
+      javascript._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
+    
+    it 'should have no entries left', ( done ) ->
+      entries._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
+    
+    it 'should not throw after attempting to remove extra directory', ->
+      entries._remove [ { path: 'test' } ]
+      
+      expect( Object.keys( entries._directories ) ).to.be.eql []
+    
