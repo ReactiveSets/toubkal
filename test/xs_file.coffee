@@ -39,22 +39,36 @@ if require?
 
 describe 'file', ->
   describe 'require_resolve():', ->
-    uuid = xs
-      .set( [ { name: 'node-uuid/uuid.js' } ] )
+    modules = xs
+      .set( [
+        { id: 1, name: 'node-uuid/uuid.js' }
+        { id: 2, name: 'not_an_existing_module' }
+      ], { key: [ 'id', 'name' ] } )
+    
+    resolved = modules
       .require_resolve()
       .trace( 'uuid.js' )
       .set()
     
     it 'should resolve node-uuid/uuid.js', ( done ) ->
-      uuid._fetch_all ( values ) -> check done, () ->
+      resolved._fetch_all ( values ) -> check done, () ->
+        uuid = values[ 0 ]
+        
+        expect( uuid.name ).to.be.eql 'node-uuid/uuid.js'
+        expect( uuid.path.length ).to.be.above 10
+        expect( uuid.uri ).to.be.eql '/node_modules/node-uuid/uuid.js'
+    
+    it 'should have only one resolved module', ( done ) ->
+      resolved._fetch_all ( values ) -> check done, () ->
         expect( values.length ).to.be.eql 1
+        expect( resolved._key ).to.be.eql [ 'id', 'name' ]
         
-        v = values[ 0 ]
-        
-        expect( v.name ).to.be.eql 'node-uuid/uuid.js'
-        expect( v.path.length ).to.be.above 10
-        expect( v.uri ).to.be.eql '/node_modules/node-uuid/uuid.js'
-  
+    it 'should allow to remove a module', ( done ) ->
+      modules._remove [ { id: 1, name: 'node-uuid/uuid.js' } ]
+      
+      resolved._fetch_all ( values ) -> check done, () ->
+        expect( values.length ).to.be.eql 0
+    
   describe 'watch_directories():', ->
     directories_source = xs
       .set( [
