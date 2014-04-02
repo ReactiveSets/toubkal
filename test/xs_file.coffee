@@ -38,6 +38,23 @@ if require?
 # ------------------
 
 describe 'file', ->
+  describe 'require_resolve():', ->
+    uuid = xs
+      .set( [ { name: 'node-uuid/uuid.js' } ] )
+      .require_resolve()
+      .trace( 'uuid.js' )
+      .set()
+    
+    it 'should resolve node-uuid/uuid.js', ( done ) ->
+      uuid._fetch_all ( values ) -> check done, () ->
+        expect( values.length ).to.be.eql 1
+        
+        v = values[ 0 ]
+        
+        expect( v.name ).to.be.eql 'node-uuid/uuid.js'
+        expect( v.path.length ).to.be.above 10
+        expect( v.uri ).to.be.eql '/node_modules/node-uuid/uuid.js'
+  
   describe 'watch_directories():', ->
     directories_source = xs
       .set( [
