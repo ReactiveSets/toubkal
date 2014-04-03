@@ -12,6 +12,7 @@ coffee -m -c test/xs_controls.coffee
 coffee -m -c test/xs_ui.coffee
 coffee -m -c test/xs_all_tests.coffee
 coffee -m -c test/xs_file.coffee
+coffee -m -c test/xs_transforms.coffee
 
 echo
 echo "Run tests"

@@ -30,3 +30,5 @@ test/xs_controls.js
 test/xs_controls.map
 test/xs_file.js
 test/xs_file.map
+test/xs_transforms.js
+test/xs_transforms.map
