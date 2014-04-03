@@ -44,6 +44,8 @@ describe 'transforms', ->
         { id: 1, content: { adjective: 'strong' } }
         { id: 2, content: { adjective: 'weak'   } }
       ]
+      
+    adjectives = null
     
     it 'should provide adjectives', ( done ) ->
       adjectives = source
@@ -56,7 +58,13 @@ describe 'transforms', ->
           { adjective: 'strong' }
           { adjective: 'weak'   }
         ]
-  
+        
+    it 'should allow to remove adjective containers', ( done ) ->
+      source._remove [ { id: 2, content: { adjective: 'weak'   } } ]
+      
+      adjectives._fetch_all ( adjectives ) -> check done, () ->
+        expect( adjectives ).to.be.eql [ { adjective: 'strong' } ]
+    
   describe 'value_to_attribute():', ->
     adjectives = [
       { adjective: 'strong' }
@@ -65,18 +73,24 @@ describe 'transforms', ->
     
     source = xs.set( adjectives, { key: [ 'adjective' ] } )
     
+    containers = null
+    
     it 'should embed adjectives in content attribute', ( done ) ->
-      xs.set( adjectives )
+      containers = source
         .value_to_attribute()
-        .set()
-        ._fetch_all ( values )  -> check done, () ->
-          expect( values ).to.be.eql [
-            { content: { adjective: 'strong' } }
-            { content: { adjective: 'weak'   } }
-          ]
+        .trace( 'adjectives' )
+        .auto_increment()
+      
+      containers._fetch_all ( values )  -> check done, () ->
+        expect( values ).to.be.eql [
+          { adjective: 1, content: { adjective: 'strong' } }
+          { adjective: 2, content: { adjective: 'weak'   } }
+        ]
     
     it 'should embed adjectives in content attribute and add defaults attributes', ( done ) ->
-      xs.set( adjectives )
+      source = xs.set( adjectives, { key: [ 'adjective' ] } )
+      
+      containers = source
         .value_to_attribute( { defaults: { flow: 'adjective' } } )
         .set()
         ._fetch_all ( values )  -> check done, () ->
