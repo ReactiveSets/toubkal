@@ -38,7 +38,7 @@ if require?
 # ------------------
 
 describe 'transforms', ->
-  describe 'content_to_set():', ->
+  describe 'attribute_to_value():', ->
     source = xs
       .set [
         { id: 1, content: { adjective: 'strong' } }
@@ -46,7 +46,7 @@ describe 'transforms', ->
       ]
     
     adjectives = source
-      .content_to_set( { key: [ 'adjective' ] } )
+      .attribute_to_value( { key: [ 'adjective' ] } )
       .trace( 'adjectives' )
       .set()
     
@@ -56,4 +56,22 @@ describe 'transforms', ->
           { adjective: 'strong' }
           { adjective: 'weak'   }
         ]
+  
+  describe 'value_to_attribute():', ->
+    adjectives = [
+      { adjective: 'strong' }
+      { adjective: 'weak'   }
+    ]
+    
+    source = xs.set( adjectives, { key: [ 'adjective' ] } )
+    
+    it 'should embed adjectives in content attribute', ( done ) ->
+      xs.set( adjectives )
+        .value_to_attribute()
+        .set()
+        ._fetch_all ( values )  -> check done, () ->
+          expect( values ).to.be.eql [
+            { content: { adjective: 'strong' } }
+            { content: { adjective: 'weak'   } }
+          ]
     
