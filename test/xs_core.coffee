@@ -3199,31 +3199,3 @@ describe 'XS test suite:', ->
           break
 
         expect( found ).to.be true
-
-
-describe 'json.js', ->
-  books = [
-    { operation: "add", content: { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         } }
-    { operation: "add", content: { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        } }
-    { operation: "add", content: { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        } }
-  ]
-  
-  book_operations = xs.set books
-  
-  books_stringified = book_operations.json_stringify()
-  
-  books_parsed = books_stringified.json_parse().set()
-  
-  it 'json_stringify() should stringify content attributes', ( done ) ->
-    books_stringified._fetch_all ( books ) ->
-      check done, () ->
-        expect( books ).to.be.eql [
-          { operation: "add", content: '{"id":1,"title":"A Tale of Two Cities","author_id":1,"author_name":"Charles Dickens"}' }
-          { operation: "add", content: '{"id":8,"title":"The Hobbit","author_id":2,"author_name":"J. R. R. Tolkien"}' }
-          { operation: "add", content: '{"id":2,"title":"The Lord of the Rings","author_id":2,"author_name":"J. R. R. Tolkien"}' }
-        ]
-
-  it 'json_parse() should parse stringified content', ( done ) ->
-    books_parsed._fetch_all ( _books ) ->
-      check done, () ->
-        expect( _books ).to.be.eql books

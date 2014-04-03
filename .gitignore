@@ -32,3 +32,5 @@ test/xs_file.js
 test/xs_file.map
 test/xs_transforms.js
 test/xs_transforms.map
+test/xs_json.js
+test/xs_json.map
