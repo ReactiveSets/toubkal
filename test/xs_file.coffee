@@ -69,6 +69,60 @@ describe 'file', ->
       resolved._fetch_all ( values ) -> check done, () ->
         expect( values.length ).to.be.eql 0
   
+  describe 'attribute_to_values()', ->
+    source = xs.set( [
+      {
+        id: 1
+        
+        content: [
+          { city: 'Paris'     }
+          { city: 'Marseille' }
+        ]
+      }
+      
+      {
+        id: 2
+        
+        content: [
+          { city: 'Lille' }
+          { city: 'Caen'  }
+        ]
+      }
+    ] )
+    
+    attribute_to_values = source
+      .attribute_to_values( { key: [ 'city' ] } )
+      .set()
+    
+    it 'should get ', ( done ) ->
+      attribute_to_values._fetch_all ( values ) ->
+        check done, () ->
+          expect( values ).to.be.eql [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+          ]
+          
+    it 'should allow to remove content', ( done ) ->
+      source._remove [
+        {
+          id: 2
+          
+          content: [
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+          ]
+        }
+      ]
+      
+      attribute_to_values._fetch_all ( values ) ->
+        check done, () ->
+          expect( values ).to.be.eql [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+          ]
+    
   describe 'configuration():', ->
     it 'should read a confirugation file in fixtures/config.json', ( done ) ->
       configuration = xs
@@ -78,8 +132,6 @@ describe 'file', ->
           base_directory: __dirname
           key           : [ 'module' ]
         } )
-        
-        .set()
       
       configuration._on 'complete', () ->
         configuration._fetch_all ( values ) -> check done, () ->
