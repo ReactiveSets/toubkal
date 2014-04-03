@@ -68,7 +68,30 @@ describe 'file', ->
       
       resolved._fetch_all ( values ) -> check done, () ->
         expect( values.length ).to.be.eql 0
-    
+  
+  describe 'configuration():', ->
+    it 'should read a confirugation file in fixtures/config.json', ( done ) ->
+      configuration = xs
+      
+        .configuration( {
+          filepath      : 'fixtures/config.json'
+          base_directory: __dirname
+          key           : [ 'module' ]
+        } )
+        
+        .set()
+      
+      configuration._on 'complete', () ->
+        configuration._fetch_all ( values ) -> check done, () ->
+          expect( values ).to.be.eql [
+            {
+              flow: "configuration"
+              module: "nodemailer"
+              transport: "sendmail"
+              transport_options: {}
+            }
+          ]
+  
   describe 'watch_directories():', ->
     directories_source = xs
       .set( [
@@ -187,6 +210,13 @@ describe 'file', ->
             "depth": 1
           }
           
+          {
+            path: 'test/fixtures'
+            type: 'directory'
+            extension: ''
+            depth: 1
+          }
+                        
           {
             "path": "test/images"
             "type": "directory"

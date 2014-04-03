@@ -1,0 +1,8 @@
+[
+  {
+    "module": "nodemailer",
+    "transport": "sendmail",
+    "transport_options": {
+    }
+  }
+]
