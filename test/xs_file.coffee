@@ -90,12 +90,12 @@ describe 'file', ->
       }
     ] )
     
-    attribute_to_values = source
+    cities = source
       .attribute_to_values( { key: [ 'city' ] } )
       .set()
     
-    it 'should get ', ( done ) ->
-      attribute_to_values._fetch_all ( values ) ->
+    it 'should get cities', ( done ) ->
+      cities._fetch_all ( values ) ->
         check done, () ->
           expect( values ).to.be.eql [
             { city: 'Paris'     }
@@ -116,7 +116,7 @@ describe 'file', ->
         }
       ]
       
-      attribute_to_values._fetch_all ( values ) ->
+      cities._fetch_all ( values ) ->
         check done, () ->
           expect( values ).to.be.eql [
             { city: 'Paris'     }
