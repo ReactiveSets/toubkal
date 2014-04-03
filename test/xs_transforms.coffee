@@ -45,12 +45,12 @@ describe 'transforms', ->
         { id: 2, content: { adjective: 'weak'   } }
       ]
     
-    adjectives = source
-      .attribute_to_value( { key: [ 'adjective' ] } )
-      .trace( 'adjectives' )
-      .set()
-    
     it 'should provide adjectives', ( done ) ->
+      adjectives = source
+        .attribute_to_value( { key: [ 'adjective' ] } )
+        .trace( 'adjectives' )
+        .set()
+      
       adjectives._fetch_all ( adjectives ) -> check done, () ->
         expect( adjectives ).to.be.eql [
           { adjective: 'strong' }
@@ -75,3 +75,12 @@ describe 'transforms', ->
             { content: { adjective: 'weak'   } }
           ]
     
+    it 'should embed adjectives in content attribute and add defaults attributes', ( done ) ->
+      xs.set( adjectives )
+        .value_to_attribute( { defaults: { flow: 'adjective' } } )
+        .set()
+        ._fetch_all ( values )  -> check done, () ->
+          expect( values ).to.be.eql [
+            { flow: 'adjective', content: { adjective: 'strong' } }
+            { flow: 'adjective', content: { adjective: 'weak'   } }
+          ]

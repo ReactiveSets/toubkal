@@ -697,6 +697,7 @@ node server.js
 - Persistance
 - Authentication
 - Dynamic Authorizations Query Dataflow from user id
+- File write, write to configuration file
 - Out-of-band, global dataflows for: exceptions, errors, and debug information
 - WebRTC pipelets
 - else() query pipelet
