@@ -42,9 +42,9 @@
   
   "scripts": {
     "postinstall": "ln -s ../. node_modules/excess || true",
-    "pretest":  "which forever > /dev/null 2>&1 && forever start test/http.js || echo 'forever not found, not starting test/http.js' 1>&2",
-    "posttest": "which forever > /dev/null 2>&1 && forever stop  test/http.js || true",
-    "test": "sh tests.sh"
+    "pretest"    : "sh test/pre_test.sh",
+    "posttest"   : "sh test/post_test.sh",
+    "test"       : "sh test/tests.sh"
   },
   
   "repository": {

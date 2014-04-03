@@ -1,4 +1,5 @@
 #!/bin/sh
+
 coffee --version
 which coffee
 echo
@@ -16,6 +17,4 @@ coffee -m -c test/xs_transforms.coffee
 
 echo
 echo "Run tests"
-mocha -R mocha-unfunk-reporter test/xs_all_tests.js && \
-# add more test suites here
-true
+mocha -R mocha-unfunk-reporter test/xs_all_tests.js
