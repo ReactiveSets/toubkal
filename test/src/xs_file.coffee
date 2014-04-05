@@ -128,7 +128,7 @@ describe 'file', ->
       configuration = xs
       
         .configuration( {
-          filepath      : '../fixtures/config.json'
+          filepath      : '../fixtures/file/config.json'
           base_directory: __dirname
           key           : [ 'module' ]
         } )
@@ -148,41 +148,47 @@ describe 'file', ->
     # ToDo: create test directories in fixtures/file/...
     directories_source = xs
       .set( [
-          { path: 'test' }
-          { path: 'test' }
-          { path: 'test' }
+          { path: 'directories' }
+          { path: 'directories' }
+          { path: 'directories' }
         ]
         { key: [ 'path' ] }
       )
       .union( [] )
     
-    entries = directories_source.watch_directories()
-    
-    bootstrap = entries.filter [
-      { type: 'directory' }
-    ]
-    
-    directories_source._add_source bootstrap
-    
-    coffee = entries
-      .filter( [ { type: 'file', extension: 'coffee', path: 'test/src/xs_file.coffee', depth: 2 } ] )
-      .trace( 'coffee' )
-      .set()
-    
-    javascript = entries
-      .filter( [ { type: 'file', extension: 'js' } ] )
-      .set()
+    entries = directories_source.watch_directories( { base_directory: 'test/fixtures/file' } )
     
     directories = entries
-      .filter( [ { type: 'directory' } ] )
+      .filter [ { type: 'directory' } ]
       .trace( 'directories' )
-      .set()
+    
+    directories_source._add_source directories
+    
+    expected_directories = [
+      'directories'
+      'directories/css'
+      'directories/html'
+      'directories/lib'
+      'directories/lib/client'
+      'directories/lib/server'
+      'directories/lib/client/index'
+      'directories/lib/server/index'
+    ]
     
     css = entries
       .filter( [ { type: 'file', extension: 'css' } ] )  
       .trace( 'css files' )
       .set()
       
+    html = entries
+      .filter( [ { type: 'file', extension: 'html' } ] )  
+      .trace( 'html files' )
+      .set()
+      
+    javascript = entries
+      .filter( [ { type: 'file', extension: 'js' } ] )
+      .set()
+    
     get_entry_static_attributes = ( e ) ->
       { path: e.path, type: e.type, extension: e.extension, depth: e.depth }
     
@@ -190,176 +196,127 @@ describe 'file', ->
       if a.path < b.path then -1 else a.path > b.path
     
     it 'should have many directories', ->
-      expect( Object.keys( entries._directories ) ).to.be.eql [
-        'test'
-        'test/bin'
-        'test/bootstrap'
-        'test/css'
-        'test/deprecated'
-        'test/fixtures'
-        'test/images'
-        'test/javascript'
-        'test/lib'
-        'test/src'
-        'test/bootstrap/css'
-        'test/bootstrap/fonts'
-        'test/bootstrap/js'
-        'test/css/images'
-        'test/images/thumbnails'
-      ]
+      expect( Object.keys( entries._directories ) ).to.be.eql expected_directories
     
-    it '"test" directory should have a count of 3', ->
-      expect( entries._directories[ 'test' ].count ).to.be.eql 3
+    it '"directories" directory should have a count of 3', ->
+      expect( entries._directories[ 'directories' ].count ).to.be.eql 3
     
-    it '"test/bootstrap" directory should have a count of 1', ->
-      expect( entries._directories[ 'test/bootstrap' ].count ).to.be.eql 1
+    it '"directories/css" directory should have a count of 1', ->
+      expect( entries._directories[ 'directories/css' ].count ).to.be.eql 1
     
-    it '"test/bootstrap/css" directory should have a count of 1', ->
-      expect( entries._directories[ 'test/bootstrap/css' ].count ).to.be.eql 1
-    
-    it 'should have one value for test/xs_file.coffee at depth 1', ( done ) ->
-      coffee._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.eql 1
-    
-    it 'should have css files', ( done ) ->
-      css._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 3
+    it '"directories/lib/client/index" directory should have a count of 1', ->
+      expect( entries._directories[ 'directories/lib/client/index' ].count ).to.be.eql 1
     
     it 'should have javascript files', ( done ) ->
-      javascript._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 5
+      javascript._fetch_all ( values ) -> check done, () ->
+        expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
+          {
+            "path": "directories/lib/client/index/start.js"
+            "type": "file"
+            "extension": "js"
+            "depth": 4
+          }
+          
+          {
+            "path": "directories/lib/server/index/models.js"
+            "type": "file"
+            "extension": "js"
+            "depth": 4
+          }
+        ]
     
-    it 'should have entries', ( done ) ->
-      entries._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 20
+    it 'should have css files', ( done ) ->
+      css._fetch_all ( values ) -> check done, () ->
+        expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
+          {
+            "path": "directories/css/index.css"
+            "type": "file"
+            "extension": "css"
+            "depth": 2
+          }
+        ]
+    
+    it 'should have an html file', ( done ) ->
+      html._fetch_all ( values ) -> check done, () ->
+        expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
+          {
+            "path": "directories/html/index.html"
+            "type": "file"
+            "extension": "html"
+            "depth": 2
+          }
+        ]
+    
+    it 'should have 11 entries', ( done ) ->
+      entries._fetch_all ( values ) -> check done, () ->
+        expect( values.length ).to.be 11
     
     it 'should many directories at depths 1, and 2', ( done ) ->
       directories._fetch_all ( values ) -> check done, () ->
         expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
           {
-            "path": "test/bin"
+            "path": "directories/css"
             "type": "directory"
             "extension": ""
             "depth": 1
           }
           
           {
-            "path": "test/bootstrap"
+            "path": "directories/html"
             "type": "directory"
             "extension": ""
             "depth": 1
           }
           
           {
-            path: 'test/bootstrap/css'
-            type: 'directory'
-            extension: ''
-            depth: 2
-          }
-          
-          {
-            path: 'test/bootstrap/fonts'
-            type: 'directory'
-            extension: ''
-            depth: 2
-          }
-          
-          {
-            path: 'test/bootstrap/js'
-            type: 'directory'
-            extension: ''
-            depth: 2
-          }
-          
-          {
-            "path": "test/css"
-            "type": "directory"
-            "extension": ""
-            "depth": 1
-          }
-          
-          {
-            "path": "test/css/images"
-            "type": "directory"
-            "extension": ""
-            "depth": 2
-          }
-          
-          {
-            "path": "test/deprecated"
-            "type": "directory"
-            "extension": ""
-            "depth": 1
-          }
-          
-          {
-            path: 'test/fixtures'
+            path: 'directories/lib'
             type: 'directory'
             extension: ''
             depth: 1
           }
-                        
+          
           {
-            "path": "test/images"
-            "type": "directory"
-            "extension": ""
-            "depth": 1
+            path: 'directories/lib/client'
+            type: 'directory'
+            extension: ''
+            depth: 2
           }
           
           {
-            "path": "test/images/thumbnails"
+            path: 'directories/lib/client/index'
+            type: 'directory'
+            extension: ''
+            depth: 3
+          }
+          
+          {
+            "path": "directories/lib/server"
             "type": "directory"
             "extension": ""
             "depth": 2
           }
           
           {
-            "path": "test/javascript"
+            "path": "directories/lib/server/index"
             "type": "directory"
             "extension": ""
-            "depth": 1
-          }
-          
-          {
-            "path": "test/lib"
-            "type": "directory"
-            "extension": ""
-            "depth": 1
-          }
-          
-          {
-            "path": "test/src"
-            "type": "directory"
-            "extension": ""
-            "depth": 1
+            "depth": 3
           }
         ]
     
-    it 'should not remove test directory after removing 2 extra path from directories_source', ->
+    it 'should not remove "directories" directory after removing 2 extra path from directories_source', ->
       entries._remove [
-          { path: 'test' }
-          { path: 'test' }
+          { path: 'directories' }
+          { path: 'directories' }
         ]
       
-      expect( entries._directories[ 'test' ].count ).to.be.eql 1
+      expect( entries._directories[ 'directories' ].count ).to.be.eql 1
     
     it 'should still have many directories', ->
-      expect( Object.keys( entries._directories ) ).to.be.eql [
-        'test'
-        'test/bin'
-        'test/bootstrap'
-        'test/css'
-        'test/deprecated'
-        'test/fixtures'
-        'test/images'
-        'test/javascript'
-        'test/lib'
-        'test/src'
-        'test/bootstrap/css'
-        'test/bootstrap/fonts'
-        'test/bootstrap/js'
-        'test/css/images'
-        'test/images/thumbnails'
-      ]
-
-    it 'should remove both directories after removing the "test" directory', ->
-      entries._remove [ { path: 'test' } ]
+      expect( Object.keys( entries._directories ) ).to.be.eql expected_directories
+    
+    it 'should remove both directories after removing the "directories" directory', ->
+      entries._remove [ { path: 'directories' } ]
       
       expect( Object.keys( entries._directories ) ).to.be.eql []
     
@@ -369,9 +326,9 @@ describe 'file', ->
     it 'should have no css files left', ( done ) ->
       css._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
     
-    it 'should have no coffee files left', ( done ) ->
-      coffee._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
-
+    it 'should have no html files left', ( done ) ->
+      html._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
+    
     it 'should have no javascript files left', ( done ) ->
       javascript._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
     
@@ -379,7 +336,7 @@ describe 'file', ->
       entries._fetch_all ( values ) -> check done, () -> expect( values ).to.be.eql []
     
     it 'should not throw after attempting to remove extra directory', ->
-      entries._remove [ { path: 'test' } ]
+      entries._remove [ { path: 'directories' } ]
       
       expect( Object.keys( entries._directories ) ).to.be.eql []
-    
+
