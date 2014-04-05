@@ -170,8 +170,8 @@ describe 'file', ->
       'directories/html'
       'directories/lib'
       'directories/lib/client'
-      'directories/lib/server'
       'directories/lib/client/index'
+      'directories/lib/server'
       'directories/lib/server/index'
     ]
     
@@ -196,7 +196,7 @@ describe 'file', ->
       if a.path < b.path then -1 else a.path > b.path
     
     it 'should have many directories', ->
-      expect( Object.keys( entries._directories ) ).to.be.eql expected_directories
+      expect( Object.keys( entries._directories ).sort() ).to.be.eql expected_directories
     
     it '"directories" directory should have a count of 3', ->
       expect( entries._directories[ 'directories' ].count ).to.be.eql 3
@@ -313,7 +313,7 @@ describe 'file', ->
       expect( entries._directories[ 'directories' ].count ).to.be.eql 1
     
     it 'should still have many directories', ->
-      expect( Object.keys( entries._directories ) ).to.be.eql expected_directories
+      expect( Object.keys( entries._directories ).sort() ).to.be.eql expected_directories
     
     it 'should remove both directories after removing the "directories" directory', ->
       entries._remove [ { path: 'directories' } ]
