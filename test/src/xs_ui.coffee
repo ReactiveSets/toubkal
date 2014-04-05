@@ -24,3 +24,5 @@
 
 require( './xs_url.js'      )
 require( './xs_controls.js' )
+require( './xs_form.js'     )
+
