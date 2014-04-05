@@ -23,7 +23,7 @@
 # include modules
 # ---------------
 expect = if require? then ( require 'expect.js' ) else this.expect
-XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
+XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
 
 xs = XS.xs
 

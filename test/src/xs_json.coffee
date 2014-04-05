@@ -49,7 +49,7 @@ check_set_content = ( done, source, values ) ->
 # ----------------------
 
 if require?
-  require '../lib/json.js'
+  require '../../lib/json.js'
 
 Pipelet = XS.Pipelet
 Set     = XS.Set

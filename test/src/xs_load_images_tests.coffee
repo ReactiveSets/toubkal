@@ -34,11 +34,11 @@ check = ( done, test ) ->
 
 
 # include modules
-XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
+XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
 expect = if require? then ( require 'expect.js' ) else this.expect
 
 if require?
-  require '../lib/load_images.js'
+  require '../../lib/load_images.js'
 
 xs = XS.xs
 

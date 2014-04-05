@@ -42,9 +42,9 @@
   
   "scripts": {
     "postinstall": "ln -s ../. node_modules/excess || true",
-    "pretest"    : "sh test/pre_test.sh",
-    "posttest"   : "sh test/post_test.sh",
-    "test"       : "sh test/tests.sh"
+    "pretest"    : "sh test/bin/pre_test.sh",
+    "posttest"   : "sh test/bin/post_test.sh",
+    "test"       : "sh test/bin/tests.sh"
   },
   
   "repository": {

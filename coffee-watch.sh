@@ -1,3 +1,5 @@
 #!/bin/sh
 
-coffee --watch -m -c test
+mkdir -p test/lib
+
+coffee --watch --map --output test/lib --compile test/src

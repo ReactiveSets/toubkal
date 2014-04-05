@@ -23,16 +23,16 @@
 # ------------------------
 
 # include modules
-XS = if require? then ( require '../lib/xs.js' ).XS else this.XS
+XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
 
 if require?
-  require '../lib/code.js'
-  require '../lib/pipelet.js'
-  require '../lib/filter.js'
-  require '../lib/order.js'
-  require '../lib/aggregate.js'
-  require '../lib/table.js'
-  require '../lib/form.js'
+  require '../../lib/code.js'
+  require '../../lib/pipelet.js'
+  require '../../lib/filter.js'
+  require '../../lib/order.js'
+  require '../../lib/aggregate.js'
+  require '../../lib/table.js'
+  require '../../lib/form.js'
 
 xs = XS.xs
 

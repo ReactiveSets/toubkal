@@ -30,8 +30,8 @@ check  = this.check  || utils.check
 xs     = this.xs     || utils.xs
 
 if require?
-  require '../lib/filter.js'
-  require '../lib/server/file.js'
+  require '../../lib/filter.js'
+  require '../../lib/server/file.js'
 
 # ----------------------------------------------------------------------------------------------
 # Test File pipelets
@@ -128,7 +128,7 @@ describe 'file', ->
       configuration = xs
       
         .configuration( {
-          filepath      : 'fixtures/config.json'
+          filepath      : '../fixtures/config.json'
           base_directory: __dirname
           key           : [ 'module' ]
         } )
@@ -145,6 +145,7 @@ describe 'file', ->
           ]
   
   describe 'watch_directories():', ->
+    # ToDo: create test directories in fixtures/file/...
     directories_source = xs
       .set( [
           { path: 'test' }
@@ -158,21 +159,20 @@ describe 'file', ->
     entries = directories_source.watch_directories()
     
     bootstrap = entries.filter [
-      { type: 'directory', path: 'test/bootstrap' }
-      { type: 'directory', path: 'test/bootstrap/css' }
+      { type: 'directory' }
     ]
     
     directories_source._add_source bootstrap
     
     coffee = entries
-      .filter( [ { type: 'file', extension: 'coffee', path: 'test/xs_file.coffee', depth: 1 } ] )
+      .filter( [ { type: 'file', extension: 'coffee', path: 'test/src/xs_file.coffee', depth: 2 } ] )
       .trace( 'coffee' )
       .set()
     
     javascript = entries
-      .filter( [ { type: 'file', extension: 'js', depth: 1 } ] )
+      .filter( [ { type: 'file', extension: 'js' } ] )
       .set()
-      
+    
     directories = entries
       .filter( [ { type: 'directory' } ] )
       .trace( 'directories' )
@@ -189,13 +189,25 @@ describe 'file', ->
     entry_sorter = ( a, b ) ->
       if a.path < b.path then -1 else a.path > b.path
     
-    it 'should have one directory: "test"', ->
+    it 'should have many directories', ->
       expect( Object.keys( entries._directories ) ).to.be.eql [
         'test'
+        'test/bin'
         'test/bootstrap'
+        'test/css'
+        'test/deprecated'
+        'test/fixtures'
+        'test/images'
+        'test/javascript'
+        'test/lib'
+        'test/src'
         'test/bootstrap/css'
+        'test/bootstrap/fonts'
+        'test/bootstrap/js'
+        'test/css/images'
+        'test/images/thumbnails'
       ]
-      
+    
     it '"test" directory should have a count of 3', ->
       expect( entries._directories[ 'test' ].count ).to.be.eql 3
     
@@ -210,16 +222,23 @@ describe 'file', ->
     
     it 'should have css files', ( done ) ->
       css._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 3
-        
+    
     it 'should have javascript files', ( done ) ->
       javascript._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 5
     
     it 'should have entries', ( done ) ->
       entries._fetch_all ( values ) -> check done, () -> expect( values.length ).to.be.above 20
     
-    it 'should emit 5 directories at depth 1 and 3 directories at depth 2', ( done ) ->
+    it 'should many directories at depths 1, and 2', ( done ) ->
       directories._fetch_all ( values ) -> check done, () ->
         expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
+          {
+            "path": "test/bin"
+            "type": "directory"
+            "extension": ""
+            "depth": 1
+          }
+          
           {
             "path": "test/bootstrap"
             "type": "directory"
@@ -256,6 +275,13 @@ describe 'file', ->
           }
           
           {
+            "path": "test/css/images"
+            "type": "directory"
+            "extension": ""
+            "depth": 2
+          }
+          
+          {
             "path": "test/deprecated"
             "type": "directory"
             "extension": ""
@@ -277,7 +303,28 @@ describe 'file', ->
           }
           
           {
+            "path": "test/images/thumbnails"
+            "type": "directory"
+            "extension": ""
+            "depth": 2
+          }
+          
+          {
             "path": "test/javascript"
+            "type": "directory"
+            "extension": ""
+            "depth": 1
+          }
+          
+          {
+            "path": "test/lib"
+            "type": "directory"
+            "extension": ""
+            "depth": 1
+          }
+          
+          {
+            "path": "test/src"
             "type": "directory"
             "extension": ""
             "depth": 1
@@ -292,11 +339,23 @@ describe 'file', ->
       
       expect( entries._directories[ 'test' ].count ).to.be.eql 1
     
-    it 'should still have three directories', ->
+    it 'should still have many directories', ->
       expect( Object.keys( entries._directories ) ).to.be.eql [
         'test'
+        'test/bin'
         'test/bootstrap'
+        'test/css'
+        'test/deprecated'
+        'test/fixtures'
+        'test/images'
+        'test/javascript'
+        'test/lib'
+        'test/src'
         'test/bootstrap/css'
+        'test/bootstrap/fonts'
+        'test/bootstrap/js'
+        'test/css/images'
+        'test/images/thumbnails'
       ]
 
     it 'should remove both directories after removing the "test" directory', ->

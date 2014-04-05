@@ -49,12 +49,12 @@ check_set_content = ( done, source, values ) ->
 # ----------------------
 
 if require?
-  require '../lib/code.js'
-  require '../lib/filter.js'
-  require '../lib/order.js'
-  require '../lib/aggregate.js'
-  require '../lib/join.js'
-  require '../lib/json.js'
+  require '../../lib/code.js'
+  require '../../lib/filter.js'
+  require '../../lib/order.js'
+  require '../../lib/aggregate.js'
+  require '../../lib/join.js'
+  require '../../lib/json.js'
 
 Pipelet = XS.Pipelet
 Set     = XS.Set

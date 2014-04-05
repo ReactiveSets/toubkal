@@ -37,10 +37,10 @@ check = ( done, test ) ->
 # Require tested modules
 # ----------------------------------------------------------------------------------------------
 
-xs     = ( require '../lib/pipelet.js' ).XS.xs
+xs     = ( require '../../lib/pipelet.js' ).XS.xs
 expect = require 'expect.js'
 
-require '../lib/server/sketchfab.js'
+require '../../lib/server/sketchfab.js'
 
 # ----------------------------------------------------------------------------------------------
 # xs Sketchfab Get Models unit test suite

@@ -30,8 +30,8 @@ check  = this.check  || utils.check
 xs     = this.xs     || utils.xs
 
 if require?
-  require '../lib/filter.js'
-  require '../lib/transforms.js'
+  require '../../lib/filter.js'
+  require '../../lib/transforms.js'
 
 # ----------------------------------------------------------------------------------------------
 # Test File pipelets
