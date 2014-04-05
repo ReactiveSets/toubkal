@@ -1,7 +1,6 @@
 #!/bin/sh
 
-rm lib/*~
-rm lib/server/*~
-rm lib/client/*~
-rm test/*~
+# Delete all backup files in all sub-directories
+find -name '*~' -exec rm {} ';'
+
 npm publish
