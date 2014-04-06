@@ -13,8 +13,7 @@ npm test > test.out || echo " test failed"
 
 echo
 
-tail -n 10 test.out | egrep 'passed ([0-9]*).*of \1[^0-9].*tests'
+grep '[[:cntrl:]]' test.out
 
 echo
-echo "Get full test results: less -R test.out"
-
+echo "To get full test results: less -R test.out"
