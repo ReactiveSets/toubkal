@@ -47,12 +47,13 @@ function ug( m ) {
 var servers = xs.set( [
     { ip_address: '0.0.0.0' },
     { port: 8080 },
+    { ip_address: '192.168.254.45' }, // bad ip address
     { port: 8043, key: '', cert: '' }, // https server usimg key and cert
     { port: 8044, pfx: '' }, // https server using pfx
   ] )
   .auto_increment()
-  .trace( 'http servers' )
   .http_servers()
+  .trace( 'http servers' )
 ;
 
 /* -------------------------------------------------------------------------------------------
