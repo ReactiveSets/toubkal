@@ -56,14 +56,11 @@
   },
   
   "keywords": [
+    "dataflow",
+    "reactive",
     "database",
     "reactive database",
-    
-    "green software",
-    
-    "dataflow",
-    
-    "reactive",
+    "green software"
   ],
   
   "author": "ConnectedSets",
