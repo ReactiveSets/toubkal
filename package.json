@@ -3,7 +3,7 @@
   
   "version": "0.2.4",
   
-  "description": "High-Efficiency Reactive Web Application Framework",
+  "description": "High-Performances Reactive Web Application Framework",
   
   "main": "lib/pipelet.js",
   
@@ -62,12 +62,8 @@
     "green software",
     
     "dataflow",
-    "dataflow programming",
     
     "reactive",
-    "reactive programming",
-    "functional reactive programming",
-    "FRP"
   ],
   
   "author": "ConnectedSets",
