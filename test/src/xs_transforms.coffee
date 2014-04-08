@@ -98,3 +98,57 @@ describe 'transforms', ->
             { flow: 'adjective', content: { adjective: 'strong' } }
             { flow: 'adjective', content: { adjective: 'weak'   } }
           ]
+  
+  describe 'attribute_to_values()', ->
+    source = xs.set( [
+      {
+        id: 1
+        
+        content: [
+          { city: 'Paris'     }
+          { city: 'Marseille' }
+        ]
+      }
+      
+      {
+        id: 2
+        
+        content: [
+          { city: 'Lille' }
+          { city: 'Caen'  }
+        ]
+      }
+    ] )
+    
+    cities = source
+      .attribute_to_values( { key: [ 'city' ] } )
+      .set()
+    
+    it 'should get cities', ( done ) ->
+      cities._fetch_all ( values ) ->
+        check done, () ->
+          expect( values ).to.be.eql [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+          ]
+          
+    it 'should allow to remove content', ( done ) ->
+      source._remove [
+        {
+          id: 2
+          
+          content: [
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+          ]
+        }
+      ]
+      
+      cities._fetch_all ( values ) ->
+        check done, () ->
+          expect( values ).to.be.eql [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+          ]
