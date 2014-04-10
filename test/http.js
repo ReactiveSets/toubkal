@@ -62,7 +62,7 @@ var servers = xs.set( [
 var authentication_url = '/authentication';
 /*  , authentication = servers
       .virtual_http_servers( function( request ) {
-        return request.url.substr( 0, authentication_url.length ) == authentication_url;
+        return request.url.indexOf( authentication_url ) == 0;
       } )
 ;
 /*
@@ -84,8 +84,9 @@ authentication._on_complete( function() {
 */
 var serve_servers = servers
   .virtual_http_servers( function( request ) {
-    de&&ug( 'serve_servers filter' )
-    return true; //request.url.substr( 0, authentication_url.length ) != authentication_url;
+    de&&ug( 'serve_servers filter' );
+    
+    return request.url.indexOf( authentication_url ) != 0;
   } )
 ;
 

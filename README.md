@@ -684,23 +684,23 @@ node server.js
 - Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, modules
 - Navigation pipelets
 - Implement Phantom.js pipelet to deliver content to search engines w/out javascript and imrpove SEO
-- Refactor Web Server API
 - Internationalization
-- Amazon S3 pipelet to upload static content
+- Amazon S3 pipelet to upload static content with knox
+- WebRTC pipelets
+- else() query pipelet
 - Develop additional tests, goal is at least 400 automated tests
 
 ### Version 0.3.0 - ETA April 2014
 
 #### Main Goals:
 
+- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
+- Authentication with Passport
 - Refactor fetch() to provide operations instead of adds, enables versionning
 - Persistance
-- Authentication
 - Dynamic Authorizations Query Dataflow from user id
 - File write, write to configuration file
 - Out-of-band, global dataflows for: exceptions, errors, and debug information
-- WebRTC pipelets
-- else() query pipelet
 - Develop additional tests, goal is at least 350 automated tests
 
 Pipelet                   | Short Description
