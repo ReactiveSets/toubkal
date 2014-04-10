@@ -1,7 +1,7 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *334 tests*
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *340 tests*
 
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
@@ -465,7 +465,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 334 automated tests for the XS core pipelets that run after every
+We have curently developped 340 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
 Travis had an issue with it around January 2014. Version 0.11 is not officially supported
 because ui tests using zombie cannot pass at this time.
@@ -501,7 +501,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd ConnectedSets
 # ./run_tests.sh
 Full test results are in test.out
--> passed 334 of 334 tests (4121ms)
+-> passed 340 of 340 tests (4121ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -703,6 +703,13 @@ node server.js
 - else() query pipelet
 - Develop additional tests, goal is at least 350 automated tests
 
+Pipelet                   | Short Description
+--------------------------|------------------------------------------------
+http_listen()             | Listen to http servers
+virtual_http_servers()    | Allows to run many frameworks and socket.io servers virtual hosts
+passport()                | Passport authentication
+passport_strategies()     | Manage Passport strategies
+
 ### Version 0.2.0 - March 31 2014:
 
 - Finalize Subscribe / Push reactive dataflow model using optimized Query Tree Router and lazy connection of stateless pipelets
@@ -715,7 +722,7 @@ node server.js
 - Virtual Hosts w/ optimized routing
 - Touch Events on bootstrap pipelets
 
-Pipelet                   | Short Description                              
+Pipelet                   | Short Description
 --------------------------|------------------------------------------------
 watch_directories()       | Updated when entries in directories are updated
 url_events()              | Browser url changes
@@ -753,7 +760,7 @@ value_to_attribute()      | Sets value as an attribute and add other default att
 - File watch w/ realtime updates
 - JSON Configuration Files w/ realtime updates
 
-Core Pipelets             | Short Description                              
+Core Pipelets             | Short Description
 --------------------------|------------------------------------------------
 set()                     | Base stateful pipelet
 filter()                  | Filters a dataflow
@@ -765,7 +772,7 @@ watch()                   | Dataflow updated on file content changes
 dispatch()                | Dispatches dataflows to a dataflow of branches
 parse_JSON()              | JSON dataflow to parsed JSON dataflow
 
-Server Pipelets           | Short Description                              
+Server Pipelets           | Short Description
 --------------------------|------------------------------------------------
 uglify()                  | Minifies a dataflow of files into a bundle, using [Uglify JS 2](https://github.com/mishoo/UglifyJS2)
 http_servers()            | A dataflow of http servers
@@ -775,7 +782,7 @@ socket_io_server()        | A dataflow client for socket.io server
 send_mail()               | Send emails from email dataflow
 configuration()           | Dataflow of application configuration parameters
 
-DOM Pipelets              | Short Description                              
+DOM Pipelets              | Short Description
 --------------------------|------------------------------------------------
 table()                   | DOM table bound to incoming dataflows
 form()                    | DOM Form using fields dataflow, emiting submited forms
@@ -785,10 +792,9 @@ checkbox_group()          | DOM input chexbox group
 radio()                   | DOM radio button
 drop_down()               | DOM drop-down menu
 
-EC2 Pipelets              | Short Description                              
+EC2 Pipelets              | Short Description
 --------------------------|------------------------------------------------
 ec2_regions()             | Set of AWS EC2 regions, starts ec2 clients
-
 
 ## Licence
 

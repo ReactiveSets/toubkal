@@ -53,7 +53,40 @@ var servers = xs.set( [
   ] )
   .auto_increment()
   .http_servers()
+  //.virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.0.36' ] )
   .trace( 'http servers' )
+;
+
+//var application = require( 'connect' )();
+
+var authentication_url = '/authentication';
+/*  , authentication = servers
+      .virtual_http_servers( function( request ) {
+        return request.url.substr( 0, authentication_url.length ) == authentication_url;
+      } )
+;
+/*
+authentication._on_complete( function() {
+  servers._fetch_all( function( servers ) {
+    servers.forEach( function( server ) {
+      de&&ug( 'server: ' + log.s( server ) );
+      
+      server.handler.set( {
+        handler: application,
+        
+        options: {
+          hostname: [ 'localhost', '127.0.0.1', '192.168.0.36' ]
+        }
+      } );
+    } )
+  } );
+} );
+*/
+var serve_servers = servers
+  .virtual_http_servers( function( request ) {
+    de&&ug( 'serve_servers filter' )
+    return true; //request.url.substr( 0, authentication_url.length ) != authentication_url;
+  } )
 ;
 
 /* -------------------------------------------------------------------------------------------
@@ -164,6 +197,9 @@ var xs_ui_min = xs
   
   .uglify( 'lib/xs_ui-min.js', { warnings: false } )
 ;
+
+// Listen when lib/xs_ui-min.js is ready
+serve_servers.http_listen( xs_ui_min );
 
 var pipelet_min = xs.set( [ { id: 1, path: 'lib/pipelet.js' } ] )
   .watch()
@@ -276,7 +312,7 @@ var source_maps = test_directory
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
 
 // xs.union( [ pipelet_min, xs_core_min, xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
-xs.serve( servers, { hostname: [ 'localhost', '127.0.0.1', '192.168.0.36' ] } )
+xs.serve( serve_servers, { hostname: [ 'localhost', '127.0.0.1', '192.168.0.36' ] } )
   ._insert_source_union()
   ._add_source( pipelet_min     )
   ._add_source( xs_core_min     )
@@ -290,7 +326,7 @@ xs.serve( servers, { hostname: [ 'localhost', '127.0.0.1', '192.168.0.36' ] } )
 ;
 
 // Socket.io Server tests
-var clients = servers.socket_io_clients( { remove_timeout: 10 } );
+var clients = serve_servers.socket_io_clients( { remove_timeout: 10 } );
 
 var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
   , source_1 = xs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
