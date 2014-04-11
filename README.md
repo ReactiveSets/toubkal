@@ -709,6 +709,7 @@ http_listen()             | Listen to http servers
 virtual_http_servers()    | Allows to run many frameworks and socket.io servers virtual hosts
 passport()                | Passport authentication
 passport_strategies()     | Manage Passport strategies
+greedy()                  | A non-lazy stateless pipelet
 
 ### Version 0.2.0 - March 31 2014:
 
