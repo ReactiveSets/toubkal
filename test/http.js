@@ -53,7 +53,7 @@ var servers = xs.set( [
   ] )
   .auto_increment()
   .http_servers()
-  //.virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.0.36' ] )
+  .virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.0.36' ] )
   .trace( 'http servers' )
 ;
 
@@ -308,22 +308,24 @@ var source_maps = test_directory
 ;
 
 // Serve assets to http servers
+tests.serve( serve_servers, { routes: '/test' } );
+
+xs.union( [ mocha_expect, compiled_coffee, source_maps, coffee_source ] )
+  .serve( serve_servers ) // test serve() with default route ('/')
+;
+
+mocha_css.serve( serve_servers, { routes: '/node_modules' } );
+
+pipelet_min.serve( serve_servers, { routes: '/lib' } );
 
 // The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
-
-// xs.union( [ pipelet_min, xs_core_min, xs_min, mocha_expect, tests, compiled_coffee, source_maps, coffee_source ] )
-xs.serve( serve_servers, { hostname: [ 'localhost', '127.0.0.1', '192.168.0.36' ] } )
-  ._insert_source_union()
-  ._add_source( pipelet_min     )
-  ._add_source( xs_core_min     )
+// xs.union( [ xs_core_min, xs_ui_min, xs_min ] )
+xs.serve( serve_servers, { routes: [ '/lib', '/node_modules' ] } )
+  ._insert_source_union()         // adding a union as the source of xs.serve()
+  ._add_source( xs_core_min     ) // now adding sources to that union
   ._add_source( xs_ui_min       )
   ._add_source( xs_min          )
-  ._add_source( mocha_expect    )
-  ._add_source( tests           )
-  ._add_source( compiled_coffee )
-  ._add_source( source_maps     )
-  ._add_source( coffee_source   )
 ;
 
 // Socket.io Server tests
