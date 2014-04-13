@@ -57,36 +57,43 @@ var servers = xs.set( [
   .trace( 'http servers' )
 ;
 
-//var application = require( 'connect' )();
+var application = require( 'connect' )();
+
+application.use( function( request, response, next ) {
+  de&&ug( 'connect, url: ' + request.url );
+  
+  next();
+} );
 
 var authentication_url = '/authentication';
-/*  , authentication = servers
-      .virtual_http_servers( function( request ) {
-        return request.url.indexOf( authentication_url ) == 0;
-      } )
-;
-/*
-authentication._on_complete( function() {
-  servers._fetch_all( function( servers ) {
+
+servers
+  .virtual_http_servers( function( request ) {
+    var is_authentication = request.url.indexOf( authentication_url ) == 0;
+    
+    de&&ug( 'is_authentication: ' + is_authentication );
+    
+    return is_authentication;
+  } )
+  
+  ._fetch( function( servers ) {
+    de&&ug( 'Add authentication severs: ' + servers.length );
+    
     servers.forEach( function( server ) {
       de&&ug( 'server: ' + log.s( server ) );
       
-      server.handler.set( {
-        handler: application,
-        
-        options: {
-          hostname: [ 'localhost', '127.0.0.1', '192.168.0.36' ]
-        }
-      } );
+      server.http_server.on( 'request', application );
     } )
-  } );
-} );
-*/
+  } )
+;
+
 var serve_servers = servers
   .virtual_http_servers( function( request ) {
-    de&&ug( 'serve_servers filter' );
+    var is_not_authentication = request.url.indexOf( authentication_url ) != 0;
     
-    return request.url.indexOf( authentication_url ) != 0;
+    de&&ug( 'is_not_authentication: ' + is_not_authentication );
+    
+    return is_not_authentication;
   } )
 ;
 
