@@ -59,25 +59,21 @@ var servers = xs.set( [
 
 var application = require( 'connect' )();
 
-application.use( function( request, response, next ) {
-  de&&ug( 'connect, url: ' + request.url );
-  
-  next();
-} );
+require( './passport.js' )( application );
 
-var authentication_url = '/authentication';
+var passport_url = '/passport';
 
 servers
   .virtual_http_servers( function( request ) {
-    var is_authentication = request.url.indexOf( authentication_url ) == 0;
+    var is_passport = request.url.indexOf( passport_url ) == 0;
     
-    de&&ug( 'is_authentication: ' + is_authentication );
+    de&&ug( 'is_passport: ' + is_passport );
     
-    return is_authentication;
+    return is_passport;
   } )
   
   ._fetch( function( servers ) {
-    de&&ug( 'Add authentication severs: ' + servers.length );
+    de&&ug( 'Add passport severs: ' + servers.length );
     
     servers.forEach( function( server ) {
       de&&ug( 'server: ' + log.s( server ) );
@@ -89,11 +85,11 @@ servers
 
 var serve_servers = servers
   .virtual_http_servers( function( request ) {
-    var is_not_authentication = request.url.indexOf( authentication_url ) != 0;
+    var is_not_passport = request.url.indexOf( passport_url ) != 0;
     
-    de&&ug( 'is_not_authentication: ' + is_not_authentication );
+    de&&ug( 'is_not_passport: ' + is_not_passport );
     
-    return is_not_authentication;
+    return is_not_passport;
   } )
 ;
 
