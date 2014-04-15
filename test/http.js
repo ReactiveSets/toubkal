@@ -67,6 +67,7 @@ require( './passport.js' )( connect, application );
 var passport_url = '/passport';
 
 servers
+/*
   .virtual_http_servers( function( request ) {
     var is_passport = request.url.indexOf( passport_url ) == 0;
     
@@ -74,26 +75,26 @@ servers
     
     return is_passport;
   } )
-  
-  ._fetch( function( servers ) {
-    de&&ug( 'Add passport severs: ' + servers.length );
-    
-    servers.forEach( function( server ) {
-      de&&ug( 'server: ' + log.s( server ) );
-      
-      server.http_server.on( 'request', application );
-    } )
+ */ 
+  .serve_http_servers( {
+    'request': {
+      'handler': application,
+      'options': {
+        'methods': [ 'GET', 'HEAD' ],
+        'routes' : '/passport'
+      }
+    }
   } )
 ;
 
 var serve_servers = servers
-  .virtual_http_servers( function( request ) {
+/*  .virtual_http_servers( function( request ) {
     var is_not_passport = request.url.indexOf( passport_url ) != 0;
     
     de&&ug( 'is_not_passport: ' + is_not_passport );
     
     return is_not_passport;
-  } )
+  } )*/
 ;
 
 /* -------------------------------------------------------------------------------------------
