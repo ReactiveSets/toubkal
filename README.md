@@ -674,38 +674,45 @@ node server.js
 - Implement SocksJS pipelets
 - Downstream query routing, optimize unions
 - Develop additional tests, goal is at least 450 automated tests
+- WebRTC pipelets
 
 ### Version 0.4.0 - ETA May 2014
 
 #### Main Goals:
 
 - Horizontal distribution of web socket dispatcher
-- Finalize module pattern
-- Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, modules
+- else() query pipelet
 - Navigation pipelets
 - Implement Phantom.js pipelet to deliver content to search engines w/out javascript and imrpove SEO
 - Internationalization
 - Amazon S3 pipelet to upload static content with knox
-- WebRTC pipelets
-- else() query pipelet
+- Packaging:
+  - Review semver scheme to allow explicit alpha / beta releases
+  - Finalize module pattern
+  - Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, ... repositories
+  - Implement xs package manager
+  - Implement xs automatic pipelet testing pipelets
 - Develop additional tests, goal is at least 400 automated tests
 
 ### Version 0.3.0 - ETA April 2014
 
 #### Main Goals:
 
-- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-- Authentication with Passport
+- Dynamic Authorizations Query Dataflow from user id
 - Refactor fetch() to provide operations instead of adds, enables versionning
 - Persistance
-- Dynamic Authorizations Query Dataflow from user id
 - File write, write to configuration file
-- Out-of-band, global dataflows for: exceptions, errors, and debug information
+- Out-of-band fetchable global dataflows for: exceptions, errors, and debug information
 - Develop additional tests, goal is at least 350 automated tests
+
+##### Features already developped or in progress:
+
+- Authentication with Passport WIP
+- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
-http_listen()             | Listen to http servers
+http_listen()             | Listen to http servers, allows to get the 'listening' event (used by socket.io 0.9 for its garbage collector)
 virtual_http_servers()    | Allows to run many frameworks and socket.io servers virtual hosts
 passport()                | Passport authentication
 passport_strategies()     | Manage Passport strategies
