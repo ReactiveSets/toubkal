@@ -9,8 +9,8 @@ var XS = xs.XS
 
 function ug( message ) { log( 'passport, ' + message ) };
 
-module.exports = function( application ) {
-  // application is an instance of a connect-compatible framework
+module.exports = function( connect, application ) {
+  // application is an instance of the connect framework
   
   application.use( function( request, response, next ) {
     de&&ug( 'url: ' + request.url );

@@ -21,7 +21,7 @@
 */
 "use strict";
 
-var xs      = require( '../lib/pipelet.js' )
+var xs      = require( '..' )
   , XS      = xs.XS
   , log     = XS.log
   , extend  = XS.extend
@@ -40,7 +40,8 @@ var de = true;
 function ug( m ) {
   log( "xs tests http, " + m );
 } // ug()
-  
+
+ 
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
@@ -57,9 +58,11 @@ var servers = xs.set( [
   .trace( 'http servers' )
 ;
 
-var application = require( 'connect' )();
+var connect     = require( 'connect' )
+  , application = connect()
+;
 
-require( './passport.js' )( application );
+require( './passport.js' )( connect, application );
 
 var passport_url = '/passport';
 
