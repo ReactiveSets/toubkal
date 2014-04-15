@@ -31,3 +31,8 @@ require './xs_file.js'
 try
   require.resolve 'zombie'
   require './xs_ui.js'       
+
+fs = require 'fs'
+
+require './xs_passport.js' if fs.existsSync '~/config.xs.json'
+
