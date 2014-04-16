@@ -25,7 +25,11 @@ xs.socket_io_server()
 
 #### How does this work?
 
-The table is updated reactively in realtime whenever sales are updated on the server.
+```sales_table``` is updated reactively in realtime whenever sales are updated on the server.
+
+```xs.socket_io_server()``` connects the client to Connected Sets socket.io server.
+
+```flow( 'sales' )``` declares that the ```sales``` dataflow is needed from the server.
 
 ```[ { year: 2014 } ]``` is a filter *query*, it controls how much sales data is actually pulled from the server therefore reducing both bandwidth usage and latency.
 
@@ -714,9 +718,14 @@ Pipelet                   | Short Description
 --------------------------|------------------------------------------------
 http_listen()             | Listen to http servers, allows to get the 'listening' event (used by socket.io 0.9 for its garbage collector)
 virtual_http_servers()    | Allows to run many frameworks and socket.io servers virtual hosts
+serve_http_servers()      | Bind http event handlers to HTTP_Router()
 passport()                | Passport authentication
 passport_strategies()     | Manage Passport strategies
 greedy()                  | A non-lazy stateless pipelet
+
+Other Classes             | Short Description
+--------------------------|------------------------------------------------
+HTTP_Router               | Efficiently route HTTP requests using base URLs
 
 ### Version 0.2.0 - March 31 2014:
 
