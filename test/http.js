@@ -45,7 +45,8 @@ function ug( m ) {
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
-var servers = xs.set( [
+var http_servers = xs
+  .set( [
     { ip_address: '0.0.0.0' },
     { port: 8080 },
     { ip_address: '192.168.254.45' }, // bad ip address
@@ -58,44 +59,26 @@ var servers = xs.set( [
   .trace( 'http servers' )
 ;
 
+/* -------------------------------------------------------------------------------------------
+   Connect Application for Passport
+*/
 var connect     = require( 'connect' )
   , application = connect()
+  
+  // Make a handler that does not receive the next() parameter, because errors will be
+  // handled by connect
+  , handler = function( request, response ) { application( request, response ) }
+  
+  , passport_route = '/passport'
 ;
 
-require( './passport.js' )( connect, application );
-
-var passport_url = '/passport';
-
-servers
-/*
-  .virtual_http_servers( function( request ) {
-    var is_passport = request.url.indexOf( passport_url ) == 0;
-    
-    de&&ug( 'is_passport: ' + is_passport );
-    
-    return is_passport;
-  } )
- */ 
-  .serve_http_servers( {
-    'request': {
-      'handler': application,
-      'options': {
-        'methods': [ 'GET', 'HEAD' ],
-        'routes' : '/passport'
-      }
-    }
-  } )
+// Bind Connect Application to base url route '/passport'
+http_servers
+  .serve_http_servers( handler, { routes: passport_route } )
 ;
 
-var serve_servers = servers
-/*  .virtual_http_servers( function( request ) {
-    var is_not_passport = request.url.indexOf( passport_url ) != 0;
-    
-    de&&ug( 'is_not_passport: ' + is_not_passport );
-    
-    return is_not_passport;
-  } )*/
-;
+// Passport Application is described in ./passport.js
+require( './passport.js' )( connect, application, passport_route );
 
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
@@ -207,7 +190,7 @@ var xs_ui_min = xs
 ;
 
 // Listen when lib/xs_ui-min.js is ready
-serve_servers.http_listen( xs_ui_min );
+http_servers.http_listen( xs_ui_min );
 
 var pipelet_min = xs.set( [ { id: 1, path: 'lib/pipelet.js' } ] )
   .watch()
@@ -315,20 +298,20 @@ var source_maps = test_directory
 ;
 
 // Serve assets to http servers
-tests.serve( serve_servers, { routes: '/test' } );
+tests.serve( http_servers, { routes: '/test' } );
 
 xs.union( [ mocha_expect, compiled_coffee, source_maps, coffee_source ] )
-  .serve( serve_servers ) // test serve() with default route ('/')
+  .serve( http_servers ) // test serve() with default route ('/')
 ;
 
-mocha_css.serve( serve_servers, { routes: '/node_modules' } );
+mocha_css.serve( http_servers, { routes: '/node_modules' } );
 
-pipelet_min.serve( serve_servers, { routes: '/lib' } );
+pipelet_min.serve( http_servers, { routes: '/lib' } );
 
 // The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
 // xs.union( [ xs_core_min, xs_ui_min, xs_min ] )
-xs.serve( serve_servers, { routes: [ '/lib', '/node_modules' ] } )
+xs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
   ._insert_source_union()         // adding a union as the source of xs.serve()
   ._add_source( xs_core_min     ) // now adding sources to that union
   ._add_source( xs_ui_min       )
@@ -336,7 +319,7 @@ xs.serve( serve_servers, { routes: [ '/lib', '/node_modules' ] } )
 ;
 
 // Socket.io Server tests
-var clients = serve_servers.socket_io_clients( { remove_timeout: 10 } );
+var clients = http_servers.socket_io_clients( { remove_timeout: 10 } );
 
 var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
   , source_1 = xs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
