@@ -91,7 +91,6 @@ describe 'file', ->
           ]
   
   describe 'watch_directories():', ->
-    # ToDo: create test directories in fixtures/file/...
     directories_source = xs
       .set( [
           { path: 'directories' }
@@ -286,3 +285,33 @@ describe 'file', ->
       
       expect( Object.keys( entries._directories ) ).to.be.eql []
 
+    it 'from_empty_directory_path should emit three entries with no leading "/"', ( done ) ->
+      from_empty_directory_path = xs
+        .set( [ { path: '' } ], { key: [ 'path' ] } )
+        
+        .watch_directories( { base_directory: 'test/fixtures/file/directories', name: 'from_empty_directory_path' } )
+      
+      from_empty_directory_path._on 'complete' , () ->
+        from_empty_directory_path._fetch_all ( values ) -> check done, () ->
+          expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
+            {
+              "path": "css"
+              "type": "directory"
+              "extension": ""
+              "depth": 1
+            }
+            
+            {
+              "path": "html"
+              "type": "directory"
+              "extension": ""
+              "depth": 1
+            }
+            
+            {
+              "path": "lib"
+              "type": "directory"
+              "extension": ""
+              "depth": 1
+            }
+          ]
