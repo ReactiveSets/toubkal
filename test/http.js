@@ -329,9 +329,12 @@ var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
 function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
-  var input  = this.socket._add_source( source )
+  var socket = this.socket
+    , input  = socket._add_source( source )
     , output = input.trace( 'from socket.io clients' )
   ;
+  
+  de&&ug( 'client, socket handshake cookie: ' + log.s( socket.socket.handshake.headers.cookie, null, ' ' ) );
   
   return { input: input, output: output };
 } // client()
