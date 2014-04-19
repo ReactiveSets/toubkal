@@ -62,15 +62,75 @@ var http_servers = xs
 /* -------------------------------------------------------------------------------------------
    Connect Application for Passport
 */
-var connect     = require( 'connect' )
-  , application = connect()
-  
+var Connect            = require( 'connect' )
+  , parse_cookie       = require( 'cookie' ).parse
+  , session            = require( 'express-session' )
+  , uid2               = require( 'uid2' )
+  , session_store      = new session.MemoryStore()
+  , application        = Connect()
+  , session_options    = { key: 'xs_sid', secret: 'fudge', store: session_store }
+  , parseSignedCookies = Connect.utils.parseSignedCookies
   // Make a handler that does not receive the next() parameter, because errors will be
-  // handled by connect
+  // handled by Connect
   , handler = function( request, response ) { application( request, response ) }
   
   , passport_route = '/passport'
 ;
+
+function get_session( request, fn ) {
+  var cookie = request.headers.cookie;
+  
+  if ( ! request.signedCookies ) {
+    if ( ! request.cookies ) {
+      cookie = decodeURIComponent( cookie );
+      
+      de&&ug( 'get_session(), decoded cookie: ' + cookie );
+      
+      request.cookies = cookie = parse_cookie( cookie );
+      
+      de&&ug( 'get_session(), parsed cookie: ' + log.s( cookie ) );
+    }
+    
+    request.signedCookies = cookie = parseSignedCookies( cookie, session_options.secret );
+    
+    de&&ug( 'get_session(), signed cookie parsed: ' + log.s( cookie ) );
+  }
+  
+  var xs_sid = request.signedCookies[ session_options.key ];
+  
+  de&&ug( 'get_session(), xs_sid: ' + xs_sid );
+  
+  session_store.get( xs_sid, function( error, _session ) {
+    if ( error ) {
+      de&&ug( 'get_session(), error getting session from store: ' + error );
+    } else if ( _session ) {
+      de&&ug( 'get_session(), create session in request' );
+      
+      request.sessionID = xs_sid;
+      request.sessionStore = session_store;
+      
+      _session = session_store.createSession( request, _session );
+    } else {
+      de&&ug( 'get_session(), no session, create empty session' );
+      
+      if ( ! xs_sid ) {
+        xs_sid = new uid2();
+        
+        de&&ug( 'get_session(), no xs_sid, generate: ' + xs_sid );
+      }
+      
+      request.sessionID = xs_sid;
+      request.sessionStore = session_store;
+      
+      _session = new session.Session( request );
+      _session.cookie = new session.Cookie( {} );
+      
+      _session = session_store.createSession( request, _session );
+    }
+    
+    fn( error, _session );
+  } )
+} // get_session()
 
 // Bind Connect Application to base url route '/passport'
 http_servers
@@ -78,7 +138,7 @@ http_servers
 ;
 
 // Passport Application is described in ./passport.js
-require( './passport.js' )( connect, application, passport_route );
+require( './passport.js' )( Connect, session_options, application, passport_route );
 
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
@@ -334,7 +394,30 @@ function client( source, options ) {
     , output = input.trace( 'from socket.io clients' )
   ;
   
-  de&&ug( 'client, socket handshake cookie: ' + log.s( socket.socket.handshake.headers.cookie, null, ' ' ) );
+  get_session( socket.socket.handshake, function( error, session ) {
+    if ( session ) {
+      session.views = ( session.views || 0 ) + 1;
+      
+      //session.resetMaxAge();
+      session.save( function( error ) {
+        if ( error ) {
+          de&&ug( 'client, failed saving session, error: '
+            + log.s( {
+              name: error.name,
+              message: error.message,
+              stack: error.stack && error.stack.split( '\n' )
+            } )
+          );
+          
+          return;
+        }
+        
+        de&&ug( 'client, saved session' + log.s( session ) );
+      } );
+    }
+    
+    de&&ug( 'client, session: ' + log.s( { error: error || 'no error', session: session || 'no session' }, null, ' ' ) );
+  } );
   
   return { input: input, output: output };
 } // client()

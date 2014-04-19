@@ -16,9 +16,7 @@ function ug( message ) { log( 'passport, ' + message ) }
 
 var passport = require( 'passport' ), TwitterStrategy = require('passport-twitter').Strategy;
 
-module.exports = function( connect, application ) {
-  var session_options = { secret: 'fudge' };
-  
+module.exports = function( connect, session_options, application, __base ) {
   passport.serializeUser( function( user, done ) {
     done( null, user );
   } );
@@ -50,11 +48,10 @@ module.exports = function( connect, application ) {
     .use( passport.initialize() )
     .use( passport.session   () )
     .use( function( request, response, next ) { 
-      de&&ug( 'router middleware' );
+      de&&ug( 'router middleware, session id: ' + request.sessionID );
       
       var url    = request.url
         , method = request.method
-        , __base = '/passport'
         , message
       ;
       
@@ -125,8 +122,6 @@ module.exports = function( connect, application ) {
     
     ._on( 'add', config )
   ;
-  
-  var session_options = { secret: 'fudge' };
   
   function config( values ) {
     var passport = values[ 0 ];

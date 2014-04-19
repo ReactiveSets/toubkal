@@ -30,7 +30,10 @@
     "nodemailer"  : "0.6.2",
     "easyimage"   : "0.1.6",
     "passport"    : "0.2.0",
-    "compressible": "1.0.1"
+    "compressible": "1.0.1",
+    "express-session": "^1.0.2",
+    "cookie"         : "^0.1.2",
+    "uid2"           : "0.0.3"
   },
   
   "devDependencies": {
