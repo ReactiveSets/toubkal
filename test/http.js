@@ -114,9 +114,11 @@ function get_session( request, fn ) {
       de&&ug( 'get_session(), no session, create empty session' );
       
       if ( ! xs_sid ) {
-        xs_sid = new uid2();
+        xs_sid = uid2( 24 );
         
         de&&ug( 'get_session(), no xs_sid, generate: ' + xs_sid );
+        
+        // ToDo: Need to setup cookie on response.end that needs to be captured in socket.io handshake, cannot be done here
       }
       
       request.sessionID = xs_sid;
