@@ -55,7 +55,7 @@ var http_servers = xs
   ] )
   .auto_increment()
   .http_servers()
-  .virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.0.36' ] )
+  .virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.0.36', '146.185.152.167' ] )
   .trace( 'http servers' )
 ;
 
