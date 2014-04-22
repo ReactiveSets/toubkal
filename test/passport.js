@@ -1,6 +1,8 @@
 // passport.js
 
-xs = require( '..' );
+var xs  = require( '..'  )
+  , url = require( 'url' )
+;
 
 // require( '../lib/server/passport.js' );
 // require( '../lib/join.js' );
@@ -17,27 +19,61 @@ function ug( message ) { log( 'passport, ' + message ) }
 var passport = require( 'passport' ), TwitterStrategy = require('passport-twitter').Strategy;
 
 module.exports = function( connect, session_options, application, __base ) {
-  passport.serializeUser( function( user, done ) {
-    done( null, user );
-  } );
-  
-  passport.deserializeUser( function( obj, done ) {
-    done( null, obj );
-  } );
+  var application_routes = {
+    '/passport/twitter': { method: 'GET'
+      , middleware: passport.authenticate( 'twitter', function( error, user, info ) {
+          de&&ug( 'passport.authenticate() : ' + log.s( error ) );
+          
+          if( error ) return next( error );
+          
+          if( !user ) {
+            de&&ug( 'passport.authenticate(), user not found' );
+            
+            return response.redirect( __base + '/login' );
+          }
+          
+          request.logIn( user, function( err ) {
+            if( err ) return next( err );
+            
+            return response.redirect( __base + '/profile' );
+          } );
+        } )
+    },
+    
+    '/passport/twitter/callback': { method: 'GET'
+      , middleware: function( request, response, next ) {
+          return response.end( 'test' );
+        } // passport.authenticate( 'twitter', { successRedirect: '/', failureRedirect: '/login' } )
+    }
+  };
   
   passport.use(
     new TwitterStrategy( {
         consumerKey   : 'srpPDY5XOggG8iBjO1qOU2i7A'
       , consumerSecret: 'yBDPnmATAf1AwBrr2hvRqI683gXotnIS8VttzGFBwdAPmeDHmx'
-      , callbackURL   : "/passport/auth/twitter/callback"
+      , callbackURL   : 'http://146.185.152.167:7001/passport/twitter/callback'
     },
     
     function( token, tokenSecret, profile, done ) {
+      de&&ug( 'new TwitterStrategy(), verify(): ' + log.s( profile ) );
+      
       process.nextTick( function () {
-        return done( null, profile);
+        return done( null, profile );
       } );
     } )
   );
+  
+  passport.serializeUser( function( user, done ) {
+    de&&ug( 'passport.serializeUser(), user: ' + log.s( user ) );
+    
+    done( null, user );
+  } );
+  
+  passport.deserializeUser( function( user, done ) {
+    de&&ug( 'passport.deserializeUser(), user' + log.s( user ) );
+    
+    done( null, user );
+  } );
   
   application
     .use( connect.logger        ()                  ) // request logger middleware
@@ -48,52 +84,21 @@ module.exports = function( connect, session_options, application, __base ) {
     .use( passport.initialize() )
     .use( passport.session   () )
     .use( function( request, response, next ) { 
-      de&&ug( 'router middleware, session id: ' + request.sessionID );
-      
-      var url    = request.url
+      var _url   = url.parse( request.url ).pathname
         , method = request.method
-        , message
+        , route  = application_routes[ _url ]
       ;
       
-      switch( method ) {
-        case 'GET':
-               if( url === __base + '/login'        ) message = '<a href="/passport/auth/twitter">Login with Twitter</a>';
-          else if( url === __base + '/signup'       ) message = 'Registration Form';
-          else if( url === __base + '/logout'       ) message = 'Logout';
-          else if( url === __base + '/error'        ) message = 'Error';
-          
-          else if( url === __base + '/auth/twitter' ) {
-            passport.authenticate( 'twitter', function( error, user, info ) {
-              if( error ) { return next( error ); }
-              
-              if( !user ) { return response.redirect( __base + '/error' ); }
-              
-              request.logIn( user, function( err ) {
-                if( err ) { return next( err ); }
-                
-                return response.redirect( __base + '/account' );
-              } );
-            } )( request, response, next );
-          }
-        break;
-        
-        case 'POST':
-               if( url === __base + '/login'  ) message = 'Authentify user';
-          else if( url === __base + '/signup' ) message = 'Create new User';
-        break;
-      }
+      if( ! route ) return next();
       
-      response.end( message );
+      if( route.method !== method ) return next();
+      
+      de&&ug( 'router middleware, session id: ' + request.sessionID + ', url: ' + _url + ', method: ' + method );
+      
+      route.middleware( request, response, next );
     } )
   ;
   
-  
-  
-  
-
-
-
-  // application is an instance of the connect framework
   /*
   XS.notifications = xs.set();
   
@@ -128,69 +133,16 @@ module.exports = function( connect, session_options, application, __base ) {
     
     if( ! passport ) return;
     
-    passport.serializeUser( function( user, done ) {
-      done( null, user );
-    } );
     
-    passport.deserializeUser( function( user, done ) {
-      done( null, obj );
-    } );
-    
-    application
-      .use( connect.logger        ()                  ) // request logger middleware
-      .use( connect.cookieParser  ()                  ) // cookie parser
-      .use( connect.bodyParser    ()                  ) // extensible request body parser
-      .use( connect.methodOverride()                  ) // faux HTTP method support
-      .use( connect.session       ( session_options ) ) // session management
-      .use( passport.initialize() )
-      .use( passport.session   () )
-      // .use( connect.router( router ) )
-      .use( function( request, response, next ) { 
-        de&&ug( 'router middleware' );
-        
-        var url    = request.url
-          , method = request.method
-          , __base = '/passport'
-          , message
-        ;
-        
-        switch( method ) {
-          case 'GET':
-                 if( url === __base + '/login'        ) message = '<a href="/passport/auth/twitter">Login with Twitter</a>';
-            else if( url === __base + '/signup'       ) message = 'Registration Form';
-            else if( url === __base + '/logout'       ) message = 'Logout';
-            else if( url === __base + '/error'        ) message = 'Error';
-            
-            else if( url === __base + '/auth/twitter' ) {
-              passport.authenticate( 'twitter', function( error, user, info ) {
-                if( error ) { return next( error ); }
-                
-                if( !user ) { return response.redirect( __base + '/error' ); }
-                
-                request.logIn( user, function( err ) {
-                  if( err ) { return next( err ); }
-                  
-                  return response.redirect( __base + '/account' );
-                } );
-              } )( request, response, next );
-            }
-          break;
-          
-          case 'POST':
-                 if( url === __base + '/login'  ) message = 'Authentify user';
-            else if( url === __base + '/signup' ) message = 'Create new User';
-          break;
-        }
-        
-        // console.log( 'url: ', url, ', method: ', method, ', message: ', message );
-        
-        response.end( message );
-      } )
-    ;
-    
-    
+    user_profile._fetch_all( function( values ) { console.log( values ); } );
   } // config()
+  */
   
+  /*
+  */
+  
+  // application is an instance of the connect framework
+  /*
   /*
   application
     .use( connect.logger        ()                  ) // request logger middleware
