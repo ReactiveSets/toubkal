@@ -16,53 +16,15 @@ var XS  = xs.XS
 
 function ug( message ) { log( 'passport, ' + message ) }
 
-var passport = require( 'passport' ), TwitterStrategy = require('passport-twitter').Strategy;
+var logger          = require( 'morgan' )
+  , cookie_parser   = require( 'cookie-parser' )
+  , body_parser     = require( 'body-parser' )
+  , session         = require( 'express-session' )
+  , passport        = require( 'passport' )
+  , TwitterStrategy = require( 'passport-twitter' ).Strategy
+;
 
-module.exports = function( connect, session_options, application, __base ) {
-  var application_routes = {
-    '/passport/twitter': { method: 'GET'
-      , middleware: passport.authenticate( 'twitter', function( error, user, info ) {
-          de&&ug( 'passport.authenticate() : ' + log.s( error ) );
-          
-          if( error ) return next( error );
-          
-          if( !user ) {
-            de&&ug( 'passport.authenticate(), user not found' );
-            
-            return response.redirect( __base + '/login' );
-          }
-          
-          request.logIn( user, function( err ) {
-            if( err ) return next( err );
-            
-            return response.redirect( __base + '/profile' );
-          } );
-        } )
-    },
-    
-    '/passport/twitter/callback': { method: 'GET'
-      , middleware: function( request, response, next ) {
-          return response.end( 'test' );
-        } // passport.authenticate( 'twitter', { successRedirect: '/', failureRedirect: '/login' } )
-    }
-  };
-  
-  passport.use(
-    new TwitterStrategy( {
-        consumerKey   : 'srpPDY5XOggG8iBjO1qOU2i7A'
-      , consumerSecret: 'yBDPnmATAf1AwBrr2hvRqI683gXotnIS8VttzGFBwdAPmeDHmx'
-      , callbackURL   : 'http://146.185.152.167:7001/passport/twitter/callback'
-    },
-    
-    function( token, tokenSecret, profile, done ) {
-      de&&ug( 'new TwitterStrategy(), verify(): ' + log.s( profile ) );
-      
-      process.nextTick( function () {
-        return done( null, profile );
-      } );
-    } )
-  );
-  
+module.exports = function( express, session_options, application, __base ) {
   passport.serializeUser( function( user, done ) {
     de&&ug( 'passport.serializeUser(), user: ' + log.s( user ) );
     
@@ -75,27 +37,73 @@ module.exports = function( connect, session_options, application, __base ) {
     done( null, user );
   } );
   
+  passport.use(
+    new TwitterStrategy( {
+        consumerKey   : 'srpPDY5XOggG8iBjO1qOU2i7A'
+      , consumerSecret: 'yBDPnmATAf1AwBrr2hvRqI683gXotnIS8VttzGFBwdAPmeDHmx'
+      , callbackURL   : 'http://146.185.152.167:7001/passport/twitter/callback'
+    },
+    
+    function( token, tokenSecret, profile, done ) {
+      de&&ug( 'new TwitterStrategy(), verify(): ' + log.s( profile ) );
+      
+      return done( null, profile );
+    } )
+  );
+  
   application
-    .use( connect.logger        ()                  ) // request logger middleware
-    .use( connect.cookieParser  ()                  ) // cookie parser
-    .use( connect.bodyParser    ()                  ) // extensible request body parser
-    .use( connect.methodOverride()                  ) // faux HTTP method support
-    .use( connect.session       ( session_options ) ) // session management
+    .use( logger()                   ) // request logger middleware
+    .use( cookie_parser()            ) // cookie parser
+    .use( body_parser()              ) // extensible request body parser
+    .use( session( session_options ) ) // session management
     .use( passport.initialize() )
     .use( passport.session   () )
+  ;
+  
+  var application_routes = {
+    '/passport/twitter': { method: 'GET'
+      , handler: passport.authenticate( 'twitter' )
+    },
+    
+    '/passport/twitter/callback': { method: 'GET'
+      , handler: ( function() {
+          var fn = passport.authenticate( 'twitter', { successRedirect: __base + '/profile', failureRedirect: __base + '/login' } )
+          
+          return function( request, response, next ) {
+            de&&ug( 'passport.authenticate with options' );
+            console.log( "request._passport: ", request._passport );
+            
+            fn( request, response, next );
+          }
+        } )()
+    }
+  };
+  
+  application
     .use( function( request, response, next ) { 
       var _url   = url.parse( request.url ).pathname
         , method = request.method
         , route  = application_routes[ _url ]
       ;
       
+      console.log( response.redirect );
+      
       if( ! route ) return next();
       
       if( route.method !== method ) return next();
       
-      de&&ug( 'router middleware, session id: ' + request.sessionID + ', url: ' + _url + ', method: ' + method );
+      de&&ug( 'router middleware, session id: ' + request.sessionID + ', url: ' + _url + ', method: ' + method
+        + ', session: ' + log.s( request.session )
+      );
       
-      route.middleware( request, response, next );
+      response.redirect = function( url ) {
+        de&&ug( 'redirecting to : ' + url );
+        
+        response.writeHead( 302, { location: url } )
+        response.end()
+      };
+      
+      route.handler.call( this, request, response, next );
     } )
   ;
   

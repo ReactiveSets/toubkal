@@ -60,18 +60,18 @@ var http_servers = xs
 ;
 
 /* -------------------------------------------------------------------------------------------
-   Connect Application for Passport
+   Express Application for Passport
 */
-var Connect            = require( 'connect' )
+var express            = require( 'express' )
   , parse_cookie       = require( 'cookie' ).parse
   , session            = require( 'express-session' )
   , uid2               = require( 'uid2' )
   , session_store      = new session.MemoryStore()
-  , application        = Connect()
+  , application        = express()
   , session_options    = { key: 'xs_sid', secret: 'fudge', store: session_store }
-  , parseSignedCookies = Connect.utils.parseSignedCookies
+  , parseSignedCookies = express.parseSignedCookies
   // Make a handler that does not receive the next() parameter, because errors will be
-  // handled by Connect
+  // handled by express
   , handler = function( request, response ) { application( request, response ) }
   
   , passport_route = '/passport'
@@ -134,13 +134,13 @@ function get_session( request, fn ) {
   } )
 } // get_session()
 
-// Bind Connect Application to base url route '/passport'
+// Bind express Application to base url route '/passport'
 http_servers
   .serve_http_servers( handler, { routes: passport_route } )
 ;
 
 // Passport Application is described in ./passport.js
-require( './passport.js' )( Connect, session_options, application, passport_route );
+require( './passport.js' )( express, session_options, application, passport_route );
 
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
@@ -441,7 +441,7 @@ xs.union( [
   
   .set()
 ;
-
+/*
 setInterval( function() {
   source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 );
@@ -449,3 +449,4 @@ setInterval( function() {
 setTimeout( function() {
   client_filter._add( [ { flow: 'client_set', id: 2 } ] );
 }, 15000 );
+*/
