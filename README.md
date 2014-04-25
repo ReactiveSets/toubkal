@@ -666,53 +666,75 @@ node server.js
 
 ## Roadmap / Releases
 
-### Version 0.5.0 - ETA June 2014
+### Version 0.8.0 - P2P Dataflows - ETA October 2014
 
 #### Main Goals:
 
-- This should be the first Beta version
+- WebRTC pipelets
+- Implement Peer-To-Peer dataflows using WebRTC
+- else() query pipelet
+- Develop additional tests, goal is at least 650 automated tests
+
+### Version 0.7.0 - Charding - ETA September 2014
+
+#### Main Goals:
+
+- Implement websocket_clients() and websocket_server() pipelets as an alternative to socket_io equivalents.
+- Horizontal distribution / Charding using websocket dispatcher
+- Develop additional tests, goal is at least 600 automated tests
+- Session Strorage Dataflow
+- Implement Phantom.js pipelet to deliver content to search engines w/out JavaScript and imrpove SEO
+
+### Version 0.6.0 - Packaging / First Beta - ETA July 2014
+
+#### Main Goals:
+
+- This is the first Beta version with a reasonably stable API
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
 - Implement as many ToDos as possible
 - Stabilize API
-- Implement SocksJS pipelets
 - Downstream query routing, optimize unions
-- Develop additional tests, goal is at least 450 automated tests
-- WebRTC pipelets
+- Develop additional tests, goal is at least 500 automated tests
 
-### Version 0.4.0 - ETA May 2014
+### Version 0.5.0 - Web Application Framework - ETA June 2014
 
 #### Main Goals:
 
-- Horizontal distribution of web socket dispatcher
-- else() query pipelet
 - Navigation pipelets
-- Implement Phantom.js pipelet to deliver content to search engines w/out javascript and imrpove SEO
 - Internationalization
 - Amazon S3 pipelet to upload static content with knox
 - Packaging:
-  - Review semver scheme to allow explicit alpha / beta releases
   - Finalize module pattern
   - Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, ... repositories
   - Implement xs package manager
-  - Implement xs automatic pipelet testing pipelets
+  - Implement xs automatic pipelet patching
+- Develop additional tests, goal is at least 450 automated tests
+
+### Version 0.4.0 - Persistance - ETA May 2014
+
+#### Main Goals:
+
+- Refactor fetch() to provide operations instead of adds, enables versionning
+- Persistance
+- Dataflows Meta Data for key, and query indexes definition
+- File write, write to configuration file
+- User Account Management
 - Develop additional tests, goal is at least 400 automated tests
 
-### Version 0.3.0 - ETA April 2014
+### Version 0.3.0 - Authentication && Authorizations - ETA April 2014
 
 #### Main Goals:
 
 - Dynamic Authorizations Query Dataflow from user id
-- Refactor fetch() to provide operations instead of adds, enables versionning
-- Persistance
-- File write, write to configuration file
-- Out-of-band fetchable global dataflows for: exceptions, errors, and debug information
-- Develop additional tests, goal is at least 350 automated tests
+- Out-of-band fetchable global 'trace' dataflow for: exceptions, errors, and debug information
+- Implement Query comparison operators: > >= < <=
 
 ##### Features already developped or in progress:
 
 - Authentication with Passport WIP
 - Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
+- 350 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
@@ -727,7 +749,7 @@ Other Classes             | Short Description
 --------------------------|------------------------------------------------
 HTTP_Router               | Efficiently route HTTP requests using base URLs
 
-### Version 0.2.0 - March 31 2014:
+### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
 
 - Finalize Subscribe / Push reactive dataflow model using optimized Query Tree Router and lazy connection of stateless pipelets
 - Filter support for static and dynamic queries
