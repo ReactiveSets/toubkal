@@ -1,7 +1,7 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *341 tests*
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *365 tests*
 
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
@@ -74,8 +74,8 @@ XS is already very reliable thanks to its comprehensive test suite and is curren
 
 Some features are still work in progress and some APIs are subject to changes meaning that XS should be considered Alpha at this time.
 
-XS should provide most of the features described bellow by version 0.4 in May 2014, while the first Beta version
-would be 0.5 expected in June 2014 including reasonably complete documentation extracted from the code where it
+XS should provide most of the features described bellow by version 0.5 in May 2014, while the first Beta version
+would be 0.6 expected in July 2014 including reasonably complete documentation extracted from the code where it
 currently stands.
 
 ### Why yet-another JavaScript Web Application Framework?
@@ -469,7 +469,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 341 automated tests for the XS core pipelets that run after every
+We have curently developped 365 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
 Travis had an issue with it around January 2014. Version 0.11 is not officially supported
 because ui tests using zombie cannot pass at this time.
@@ -505,7 +505,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd ConnectedSets
 # ./run_tests.sh
 Full test results are in test.out
--> passed 341 of 341 tests (4121ms)
+-> passed 365 of 365 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -734,7 +734,7 @@ node server.js
 
 - Authentication with Passport WIP
 - Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-- 350 automated tests
+- 365 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
@@ -748,6 +748,7 @@ greedy()                  | A non-lazy stateless pipelet
 Other Classes             | Short Description
 --------------------------|------------------------------------------------
 HTTP_Router               | Efficiently route HTTP requests using base URLs
+Trace_Domain              | Dymamic traces controlled by queries
 
 ### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
 
