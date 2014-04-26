@@ -102,7 +102,7 @@ describe 'Trace Domain', ->
     
     _trace = null
   
-  it 'trace( 6 ) should return false and the trace object should be null', ->
+  it 'should not allow trace to progress at level 6', ->
     expect( trace 6 ).to.be false
     expect( _trace ).to.be null
   
@@ -148,12 +148,17 @@ describe 'Trace Domain', ->
     
     expect( trace.valueOf() ).to.be 4
   
-  it 'should not allow a trace level 4 to an instance that is not "an other instance"', ->
+  it 'should not allow trace to progress at level 5', ->
+    expect( trace >= 5 ).to.be false
+  
+  it 'should allow trace to progress at level 4', ->
     expect( trace >= 4 && trace 4 ).to.be true
+  
+  it 'should not allow trace to further progress for "that instance"', ->
     expect( trace "that instance" ).to.be false
     expect( _trace ).to.be null
   
-  it 'should allow traces at level 4 to "an other instance"', ->
+  it 'should allow traces at level 4 for method "_add" to "an other instance"', ->
     expect( trace >= 4 && trace 4, "another instance" ).to.be true
     expect( _trace ).to.be null
     expect( trace( "_add" ) ).to.be true
@@ -172,4 +177,99 @@ describe 'Trace Domain', ->
       _method        : "_add"
       message        : "!! this is a warning"
     }
+    
+    _trace = null
+  
+  it 'should allow that trace on method _remove for "an instance" at level 4', ->
+    expect( trace >= 4 && trace 4, "an instance", "_remove", { a: 1 } ).to.be true
+    
+    expect( _trace._timestamp ).to.be.a Date
+    delete _trace._timestamp
+    
+    expect( _trace ).to.be.eql {
+      flow           : "trace"
+      _level         : 4
+      _realm         : "my test trace domain"
+      _name          : "an instance"
+      _method        : "_remove"
+      a              : 1
+    }
+  
+  it 'should allow trace to progress for "another instance" at level 4', ->
+    expect( trace >= 4 && trace 4, "another instance" ).to.be true
+  
+  it 'should not allow trace to further progress on method _remove', ->
+    expect( trace "_remove" ).to.be false
+  
+  it 'should allow that trace on method _remove for "another instance" at level 3', ->
+    expect( trace >= 3 && trace 3, "another instance", "_remove", { a: 1 } ).to.be true
+    
+    expect( _trace._timestamp ).to.be.a Date
+    delete _trace._timestamp
+    
+    expect( _trace ).to.be.eql {
+      flow           : "trace"
+      _level         : 3
+      _realm         : "my test trace domain"
+      _name          : "another instance"
+      _method        : "_remove"
+      a              : 1
+    }
+  
+  it 'should allow trace to progress for "some instance" at level 3', ->
+    expect( trace >= 3 && trace 3, "some instance" ).to.be true
+  
+  it 'should not allow trace to further progress with method "_add"', ->
+    expect( trace "_add" ).to.be false
+  
+  it 'should allow a trace on method _remove for "some instance" at level 3', ->
+    expect( trace >= 3 && trace 3, "some instance", "_remove", { a: 1 } ).to.be true
+    
+    expect( _trace._timestamp ).to.be.a Date
+    delete _trace._timestamp
+    
+    expect( _trace ).to.be.eql {
+      flow           : "trace"
+      _level         : 3
+      _realm         : "my test trace domain"
+      _name          : "some instance"
+      _method        : "_remove"
+      a              : 1
+    }
+    
+    _trace = null
+
+  it 'should allow that trace on method _clear for "some instance" at level 2', ->
+    expect( trace >= 2 && trace 2, "some instance", "_clear", { a: 1 } ).to.be true
+    
+    expect( _trace._timestamp ).to.be.a Date
+    delete _trace._timestamp
+    
+    expect( _trace ).to.be.eql {
+      flow           : "trace"
+      _level         : 2
+      _realm         : "my test trace domain"
+      _name          : "some instance"
+      _method        : "_clear"
+      a              : 1
+    }
+    
+    _trace = null
+    
+  it 'should allow that trace on method _clear for "some instance" at level 1', ->
+    expect( trace >= 1 && trace 1, "some instance", "_clear", { a: 1 } ).to.be true
+    
+    expect( _trace._timestamp ).to.be.a Date
+    delete _trace._timestamp
+    
+    expect( _trace ).to.be.eql {
+      flow           : "trace"
+      _level         : 1
+      _realm         : "my test trace domain"
+      _name          : "some instance"
+      _method        : "_clear"
+      a              : 1
+    }
+    
+    _trace = null
     
