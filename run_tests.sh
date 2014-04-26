@@ -1,15 +1,25 @@
 #!/bin/sh
-# Runs tests for cygwin
+# Runs Connected Sets tests
 #
 # Assumes that node_modules/excess links to this repository root. This can be achieved
 # by running 'npm link' after which 'ls -l node_modules' should show:
 #   excess -> ../.
 #
-# usage: ./run_tests.sh
+# Usage:
+#   ./run_tests.sh [target]
+#
+# Where target can be:
+#   empty-string: uses npm test to run all tests, possibly running pretest and posttest scripts
+#   "all"       : all coffee source are compiled and executed
+#   other       : ./test/src/$1.coffee is compiled and ./test/lib/$1.js is executed
 #
 # Tests results are then available in test.out
-
-npm test > test.out || echo " test failed"
+#
+if [ "$1" == "" ]; then
+  npm test > test.out || echo " test failed"
+else
+  ./test/bin/tests.sh $1 > test.out || echo " test failed"
+fi
 
 echo
 
