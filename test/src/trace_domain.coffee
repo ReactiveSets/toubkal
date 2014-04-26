@@ -32,7 +32,7 @@ log    = console.log
 # Require tested modules
 # ----------------------
 
-Trace_Domain = require '../../lib/trace.js' if require?
+Trace_Domain = require '../../lib/trace_domain.js' if require?
 
 # ----------------------------------------------------------------------------------------------
 # Trace test suite
