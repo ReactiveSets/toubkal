@@ -126,7 +126,7 @@ describe 'Trace Domain', ->
     
     trace.query_add [      
       {
-        _level         : 4
+        _level         : [ "<=", 4 ]
         _name          : "another instance"
         _method        : "_add"
       }
@@ -142,7 +142,7 @@ describe 'Trace Domain', ->
       }
 
       {
-        _level         : 2
+        _level         : [ "<=", 2 ]
       }
     ]
     
