@@ -126,6 +126,22 @@ describe 'Trace Domain', ->
     
     trace.query_add [      
       {
+        flow           : "not a trace"
+        _realm         : "my test trace domain"
+        _level         : 5
+        _name          : "an instance"
+        _method        : "_add"
+      }
+      
+      {
+        flow           : "trace"
+        _realm         : "not my test trace domain"
+        _level         : 5
+        _name          : "an instance"
+        _method        : "_add"
+      }
+
+      {
         _level         : [ "<=", 4 ]
         _name          : "another instance"
         _method        : "_add"
