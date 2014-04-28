@@ -63,13 +63,14 @@ var http_servers = xs
    Express Application for Passport
 */
 var express            = require( 'express' )
-  , parse_cookie       = require( 'cookie' ).parse
+  , cookie             = require( 'cookie' )
+  , parse_cookie       = cookie.parse
   , session            = require( 'express-session' )
   , uid2               = require( 'uid2' )
   , session_store      = new session.MemoryStore()
   , application        = express()
   , session_options    = { key: 'xs_sid', secret: 'fudge', store: session_store }
-  , parseSignedCookies = express.parseSignedCookies
+  , parseSignedCookies = require( 'cookie-parser/lib/parse.js' ).signedCookies
   // Make a handler that does not receive the next() parameter, because errors will be
   // handled by express
   , handler = function( request, response ) { application( request, response ) }
@@ -166,6 +167,7 @@ var xs_min = xs
     // xs core
     { path: 'lib/xs.js'                    },
     { path: 'lib/code.js'                  },
+    { path: 'lib/query.js'                 },
     { path: 'lib/pipelet.js'               },
     { path: 'lib/filter.js'                },
     { path: 'lib/order.js'                 },
@@ -211,6 +213,7 @@ var xs_core_min = xs
   .union( [ xs_dependencies, xs.set( [
     { path: 'lib/xs.js'                    },
     { path: 'lib/code.js'                  },
+    { path: 'lib/query.js'                 },
     { path: 'lib/pipelet.js'               },
     { path: 'lib/filter.js'                },
     { path: 'lib/order.js'                 },
@@ -254,7 +257,12 @@ var xs_ui_min = xs
 // Listen when lib/xs_ui-min.js is ready
 http_servers.http_listen( xs_ui_min );
 
-var pipelet_min = xs.set( [ { id: 1, path: 'lib/pipelet.js' } ] )
+var pipelet_min = xs.set( [
+    { id: 1, path: 'lib/xs.js'      },
+    { id: 2, path: 'lib/code.js'    },
+    { id: 1, path: 'lib/query.js'   },
+    { id: 1, path: 'lib/pipelet.js' }
+  ] )
   .watch()
   .uglify( 'lib/pipelet-min.js', { warnings: false } )
 ;
@@ -445,8 +453,7 @@ xs.union( [
 setInterval( function() {
   source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 );
-
+*/
 setTimeout( function() {
   client_filter._add( [ { flow: 'client_set', id: 2 } ] );
 }, 15000 );
-*/
