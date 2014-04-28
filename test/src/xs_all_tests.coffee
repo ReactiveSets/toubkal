@@ -24,6 +24,7 @@
 
 require './clone_tests.js'
 require './trace_domain.js'
+require './query.js'
 require './xs_core.js'
 require './xs_json.js'
 require './xs_transforms.js'
