@@ -63,7 +63,7 @@ module.exports = function( express, session_options, application, __base ) {
             if( request.isAuthenticated() ) {
               response.redirect( '/passport/profile' );
             } else {
-              response.end( '<a href="/passport/twitter">Login with Twitter</a>' );
+              response.end( '<a href="/passport/facebook">Login with Facebook</a> | <a href="/passport/twitter">Login with Twitter</a>' );
             }
           }
       },
@@ -104,6 +104,14 @@ module.exports = function( express, session_options, application, __base ) {
       
       '/passport/twitter/callback': { method: 'GET'
         , handler: passport.authenticate( 'twitter', { successRedirect: __base + '/profile', failureRedirect: __base + '/login' } )
+      },
+      
+      '/passport/facebook': { method: 'GET'
+        , handler: passport.authenticate( 'facebook' )
+      },
+      
+      '/passport/facebook/callback': { method: 'GET'
+        , handler: passport.authenticate( 'facebook', { successRedirect: __base + '/profile', failureRedirect: __base + '/login' } )
       }
     };
     
