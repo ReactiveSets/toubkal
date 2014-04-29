@@ -88,6 +88,26 @@ describe 'file', ->
               transport: "sendmail"
               transport_options: {}
             }
+            
+            {
+              flow: "configuration"
+              pipelet: "passport_strategy"
+              name: "twitter"
+              credentials: {
+                key: "***"
+                secret: "---"
+              }
+            }
+            
+            {
+              flow: "configuration"
+              pipelet: "passport_strategy"
+              name: "facebook"
+              credentials: {
+                key: "***"
+                secret: "---"
+              }
+            }
           ]
   
   describe 'watch_directories():', ->

@@ -4,5 +4,23 @@
     "transport": "sendmail",
     "transport_options": {
     }
+  },
+  
+  {
+    "pipelet": "passport_strategy",
+    "name": "twitter",
+    "credentials": {
+      "key": "***",
+      "secret": "---"
+    }
+  },
+  
+  {
+    "pipelet": "passport_strategy",
+    "name": "facebook",
+    "credentials": {
+      "key": "***",
+      "secret": "---"
+    }
   }
 ]
