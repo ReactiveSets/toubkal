@@ -711,28 +711,54 @@ node server.js
   - Implement xs automatic pipelet patching
 - Develop additional tests, goal is at least 450 automated tests
 
-### Version 0.4.0 - Persistance - ETA May 2014
+### Version 0.4.0 - Persistance - ETA June 2014
 
 #### Main Goals:
 
-- Refactor fetch() to provide operations instead of adds, enables versionning
 - Persistance
-- Dataflows Meta Data for key, and query indexes definition
-- File write, write to configuration file
-- User Account Management
-- Develop additional tests, goal is at least 400 automated tests
+  - Refactor fetch() to provide operations instead of adds, enables versionning
+  - Dataflows Meta Data for key, and query indexes definition
+  - Operations log
+  - Query cache
+  - File write, write to configuration file
+  
+- Develop additional tests, goal is at least 450 automated tests
 
-### Version 0.3.0 - Authentication && Authorizations - ETA April 2014
+### Version 0.3.0 - Authentication && Authorizations / Complex Queries - ETA May 2014
 
 #### Main Goals:
 
 - Dynamic Authorizations Query Dataflow from user id
+- Multi-provider Sign-in Widget
+- User Identities Management
+  - Link / Unlink user identities
+
+##### Features in progress:
+
+- Authentication with Passport
+  - Provider credentials from configuration
+  - User Identities Management
+  - Dynamic Routes Management
+  - Integration with express
+
 - Out-of-band fetchable global 'trace' dataflow for: exceptions, errors, and debug information
-- Implement Query comparison operators: > >= < <=
+
+- Complex Query expressions:
+  - any depth abstract syntax tree
+  - multi-attributes combinations
+  - all progressive operators
+  - sub-values
+  - operators:
+    - comparison         : > >= < <= != ==
+    - alternatives       : in not_in
+    - arithmetic         : + - * / %
+    - regular expressions: match group
+    - logical            : && || ! nor nand
+    - literals           : $ _ __ . {}
+    - custom operators   : defined using JavaScript functions
 
 ##### Features already developped or in progress:
 
-- Authentication with Passport WIP
 - Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
 - 371 automated tests
 
