@@ -74,9 +74,8 @@ XS is already very reliable thanks to its comprehensive test suite and is curren
 
 Some features are still work in progress and some APIs are subject to changes meaning that XS should be considered Alpha at this time.
 
-XS should provide most of the features described bellow by version 0.5 in May 2014, while the first Beta version
-would be 0.6 expected in July 2014 including reasonably complete documentation extracted from the code where it
-currently stands.
+XS should provide a functionally-rich framework by version 0.6 in July 2014 including reasonably complete documentation
+extracted from the code where it currently stands, and reasonably stable API.
 
 ### Why yet-another JavaScript Web Application Framework?
 
@@ -749,12 +748,13 @@ node server.js
   - all progressive operators
   - sub-values
   - operators:
-    - comparison         : > >= < <= != ==
-    - alternatives       : in not_in
+    - comparison         : == != > >= < <=
     - arithmetic         : + - * / %
-    - regular expressions: match group
+    - regular expressions: regexp match match_index group split
+    - alternatives       : in not_in
+    - Array / String     : length
+    - literals           : $ _ __ . []
     - logical            : && || ! nor nand
-    - literals           : $ _ __ . {}
     - custom operators   : defined using JavaScript functions
 
 ##### Features already developped or in progress:
