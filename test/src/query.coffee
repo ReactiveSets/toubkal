@@ -65,6 +65,21 @@ valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 # ------------------
 
 describe 'Query & Query_Tree test suite:', ->
+  describe 'Query.Error()', ->
+    Query_Error = XS.Query.Error
+    
+    e = new Query_Error 'message'
+    
+    it 'should be a Query_Error', ->
+      expect( e ).to.be.a Query_Error
+      expect( e ).to.be.a Error
+      
+    it 'should have a message', ->
+      expect( e.message ).to.be 'message'
+    
+    it 'should have a stack', ->
+      expect( e.stack ).to.be.a 'string'
+  
   describe 'Query():', ->
     Query = XS.Query
     
@@ -223,17 +238,17 @@ describe 'Query & Query_Tree test suite:', ->
       expect( q.adds    ).to.be.eql [ { flow: 'group' } ]
       expect( q.removes ).to.be.eql [ { flow: 'group' } ]
     
-    it 'Query..remove() should raise an exception after "remove" from empty query', ->
+    it 'Query..remove() should raise a Query.Error after "remove" from empty query', ->
       expect( () -> new Query( [] ).remove( [ { flow: 'group' } ] ).query )
-        .to.throwException()
+        .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
     
-    it 'Query..remove() should raise an exception after "remove" with not-found query', ->
+    it 'Query..remove() should raise a Query.Error after "remove" with not-found query', ->
       expect( () -> new Query( [ { flow: 'group', id: 1 } ] ).remove( [ { flow: 'group' } ] ).query )
-        .to.throwException()
+        .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
     
-    it 'Query..remove() should raise an exception after "remove" with not-found query', ->
+    it 'Query..remove() should raise a Query.Error after "remove" with not-found query', ->
       expect( () -> new Query( [ { flow: 'group' } ] ).remove( [ { flow: 'group', id: 1 } ] ).query )
-        .to.throwException()
+        .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
     
     it 'Query..remove() should remove two queries after "remove"', ->
       q = new Query( [
