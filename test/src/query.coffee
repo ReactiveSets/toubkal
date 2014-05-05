@@ -194,20 +194,35 @@ describe 'Query & Query_Tree test suite:', ->
         it 'profile.last_name -> false', ->
           expect( Query.evaluate user, 'profile', [ '.', 'last_name' ] ).to.be false
     
-    describe 'testing non-existance using fails', ->
-      it '_ fails -> true', ->
-        expect( Query.evaluate user, '_', [ 'fails' ] ).to.be true
-      
-      it 'flow fails -> false', ->
-        expect( Query.evaluate user, 'flow', [ 'fails' ] ).to.be false
-      
-      describe 'using [ ".", sub-attribute ]', ->
-        it 'profile.last_name fails -> true', ->
-          expect( Query.evaluate user, 'profile', [ [ '.', 'last_name' ], 'fails' ] ).to.be true
+    describe 'testing non-existance', ->
+      describe 'using failed', ->
+        it '_ failed -> true', ->
+          expect( Query.evaluate user, '_', [ 'failed' ] ).to.be true
         
-        it 'profile.first_name fails -> false', ->
-          expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], 'fails' ] ).to.be false
-    
+        it 'flow failed -> false', ->
+          expect( Query.evaluate user, 'flow', [ 'failed' ] ).to.be false
+        
+        describe 'using [ ".", sub-attribute ]', ->
+          it 'profile.last_name failed -> true', ->
+            expect( Query.evaluate user, 'profile', [ [ '.', 'last_name' ], 'failed' ] ).to.be true
+          
+          it 'profile.first_name failed -> false', ->
+            expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], 'failed' ] ).to.be false
+      
+      describe 'using "!"', ->
+        it '! _ -> true', ->
+          expect( Query.evaluate user, '_', [ '!', [] ] ).to.be true
+        
+        it '! flow -> false', ->
+          expect( Query.evaluate user, 'flow', [ '!', [] ] ).to.be false
+        
+        describe 'using [ ".", sub-attribute ]', ->
+          it '! profile.last_name -> true', ->
+            expect( Query.evaluate user, 'profile', [ '!', [ '.', 'last_name' ] ] ).to.be true
+          
+          it '! profile.first_name -> false', ->
+            expect( Query.evaluate user, 'profile', [ '!', [ '.', 'first_name' ] ] ).to.be false
+      
     describe '[ ".", sub-attribute ]', ->
       it 'profile.first_name == "Alice" -> true', ->
         expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], '==', 'Alice' ] ).to.be true
