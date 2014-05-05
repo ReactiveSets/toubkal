@@ -64,9 +64,11 @@ valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 # xs unit test suite
 # ------------------
 
+Query = XS.Query
+
 describe 'Query & Query_Tree test suite:', ->
   describe 'Query.Error()', ->
-    Query_Error = XS.Query.Error
+    Query_Error = Query.Error
     
     e = new Query_Error 'message'
     
@@ -80,9 +82,23 @@ describe 'Query & Query_Tree test suite:', ->
     it 'should have a stack', ->
       expect( e.stack ).to.be.a 'string'
   
-  describe 'Query():', ->
-    Query = XS.Query
+  describe 'Query.evaluate()', ->
+    evaluate = Query.evaluate
     
+    user = {
+      flow: 'user'
+      
+      id: 1
+      
+      profile: {
+        first_name: 'Alice'
+      }
+    }
+    
+    it 'should allow to express user.id == 1', ->
+      expect( Query.evaluate user, 'id', [ "==", 1 ] ).to.be true
+      
+  describe 'Query():', ->
     q = q1 = null
     
     it 'new Query( [] ) should create an empty query', ->
