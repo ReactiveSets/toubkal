@@ -754,7 +754,7 @@ node server.js
     - alternatives       : in not_in
     - Array / String     : length
     - literals           : $ _ __ . []
-    - logical            : && (and) || (or) ! (not) nor nand
+    - logical            : && (and) || (or) ! (not) fails nor nand
     - custom operators   : defined using JavaScript functions
 
 ##### Features already developped or in progress:

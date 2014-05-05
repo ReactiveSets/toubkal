@@ -95,34 +95,192 @@ describe 'Query & Query_Tree test suite:', ->
       profile: {
         first_name: 'Alice'
       }
+      
+      sales: 100
+      
+      count: 5
     }
     
-    it 'should allow to express user.id == 1', ->
-      expect( Query.evaluate user, 'id', [ "==", 1 ] ).to.be true
+    describe '==', ->
+      it 'user.id == 1 -> true', ->
+        expect( Query.evaluate user, 'id', [ "==", 1 ] ).to.be true
+      
+      it 'user.id == 2 -> false', ->
+        expect( Query.evaluate user, 'id', [ "==", 2 ] ).to.be false
+      
+    describe '!=', ->
+      it 'user.id != 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ "!=", 1 ] ).to.be false
+      
+      it 'user.id != 2 -> true', ->
+        expect( Query.evaluate user, 'id', [ "!=", 2 ] ).to.be true
+      
+    describe '>', ->
+      it 'user.id > 0 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0 ] ).to.be true
+      
+      it 'user.id > 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 1 ] ).to.be false
+      
+    describe '<', ->
+      it 'user.id < 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ "<", 1 ] ).to.be false
+      
+      it 'user.id < 2 -> true', ->
+        expect( Query.evaluate user, 'id', [ "<", 2 ] ).to.be true
+      
+    describe 'progressivity of < operator', ->
+      it '0 < user.id < 2 -> true', ->
+        expect( Query.evaluate user, 'id', [ [ '$', 0 ], "<", [], "<", 2 ] ).to.be true
+      
+      it '1 < user.id < 2 -> false', ->
+        expect( Query.evaluate user, 'id', [ [ '$', 1 ], "<", [], "<", 2 ] ).to.be false
+      
+      it '0 < user.id < 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ [ '$', 0 ], "<", [], "<", 1 ] ).to.be false
+      
+    describe '>=', ->
+      it 'user.id >= 1 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">=", 1 ] ).to.be true
+      
+      it 'user.id >= 2 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">=", 2 ] ).to.be false
+      
+    describe '<=', ->
+      it 'user.id <= 0 -> false', ->
+        expect( Query.evaluate user, 'id', [ "<=", 0 ] ).to.be false
+      
+      it 'user.id <= 1 -> true', ->
+        expect( Query.evaluate user, 'id', [ "<=", 1 ] ).to.be true
     
-    it 'user.id != 1 should be false', ->
-      expect( Query.evaluate user, 'id', [ "!=", 1 ] ).to.be false
+    describe '[ "_", attribute ]', ->
+      it 'count == 5 -> true', ->
+        expect( Query.evaluate user, 'sales', [ [ '_', 'count' ], '==', 5 ] ).to.be true
+      
+      it 'count != 5 -> false', ->
+        expect( Query.evaluate user, 'sales', [ [ '_', 'count' ], '!=', 5 ] ).to.be false
+      
+    describe '[ "_", attribute, sub-attribute ]', ->
+      it 'profile.first_name == "Alice" -> true', ->
+        expect( Query.evaluate user, 'sales', [ [ '_', 'profile', 'first_name' ], '==', 'Alice' ] ).to.be true
+      
+      it 'profile.first_name != "Alice" -> false', ->
+        expect( Query.evaluate user, 'sales', [ [ '_', 'profile', 'first_name' ], '!=', 'Alice' ] ).to.be false
     
-    it 'user.id > 0 -> true', ->
-      expect( Query.evaluate user, 'id', [ ">", 0 ] ).to.be true
+    describe 'testing existance', ->
+      it 'flow" -> true', ->
+        expect( Query.evaluate user, 'flow', [] ).to.be true
+      
+      it '_ -> false', ->
+        expect( Query.evaluate user, '_', [] ).to.be false
+      
+      describe 'using [ "_", attribute, sub-attribute ]', ->
+        it 'flow" -> true', ->
+          expect( Query.evaluate user, 'sales', [ '_', 'flow' ] ).to.be true
+        
+        it 'not_defined -> false', ->
+          expect( Query.evaluate user, 'sales', [ '_', 'not_defined' ] ).to.be false
+        
+        it 'profile.first_name -> true', ->
+          expect( Query.evaluate user, 'sales', [ '_', 'profile', 'first_name' ] ).to.be true
+        
+        it 'profile.last_name -> false', ->
+          expect( Query.evaluate user, 'sales', [ '_', 'profile', 'last_name' ] ).to.be false
+        
+      describe 'using [ ".", sub-attribute ]', ->
+        it 'profile.first_name -> true', ->
+          expect( Query.evaluate user, 'profile', [ '.', 'first_name' ] ).to.be true
+        
+        it 'profile.last_name -> false', ->
+          expect( Query.evaluate user, 'profile', [ '.', 'last_name' ] ).to.be false
     
-    it 'user.id > 1 -> false', ->
-      expect( Query.evaluate user, 'id', [ ">", 1 ] ).to.be false
+    describe 'testing non-existance using fails', ->
+      it '_ fails -> true', ->
+        expect( Query.evaluate user, '_', [ 'fails' ] ).to.be true
+      
+      it 'flow fails -> false', ->
+        expect( Query.evaluate user, 'flow', [ 'fails' ] ).to.be false
+      
+      describe 'using [ ".", sub-attribute ]', ->
+        it 'profile.last_name fails -> true', ->
+          expect( Query.evaluate user, 'profile', [ [ '.', 'last_name' ], 'fails' ] ).to.be true
+        
+        it 'profile.first_name fails -> false', ->
+          expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], 'fails' ] ).to.be false
     
-    it 'user.id < 1 -> false', ->
-      expect( Query.evaluate user, 'id', [ "<", 1 ] ).to.be false
+    describe '[ ".", sub-attribute ]', ->
+      it 'profile.first_name == "Alice" -> true', ->
+        expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], '==', 'Alice' ] ).to.be true
+      
+      it 'profile.first_name != "Alice" -> false', ->
+        expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], '!=', 'Alice' ] ).to.be false
+      
+    describe '[ "$", value ]', ->
+      it '5 == 5 -> true', ->
+        expect( Query.evaluate user, 'sales', [ [ '$', 5 ], '==', 5 ] ).to.be true
+      
+      it '5 != 5 -> false', ->
+        expect( Query.evaluate user, 'sales', [ [ '$', 5 ], '!=', 5 ] ).to.be false
+      
+    describe '/', ->
+      it 'sales / count == 20 -> true', ->
+        expect( Query.evaluate user, 'sales', [ '/', [ '_', 'count' ], '==', 20 ] ).to.be true
+      
+      it 'sales / count != 20 -> false', ->
+        expect( Query.evaluate user, 'sales', [ '/', [ '_', 'count' ], '!=', 20 ] ).to.be false
+      
+      it 'sales / ( 0 != count ) == 20 -> true', ->
+        expect( Query.evaluate user, 'sales', [ '/', [ [ '$', 0 ], '!=', [ '_', 'count' ] ], '==', 20 ] ).to.be true
+      
+      it 'sales / ( 5 != count ) == 20 -> false', ->
+        expect( Query.evaluate user, 'sales', [ '/', [ [ '$', 5 ], '!=', [ '_', 'count' ] ], '==', 20 ] ).to.be false
     
-    it 'user.id < 2 -> true', ->
-      expect( Query.evaluate user, 'id', [ "<", 2 ] ).to.be true
-    
-    it 'progressivity: 0 < user.id < 2 -> true', ->
-      expect( Query.evaluate user, 'id', [ [ '$', 0 ], "<", [], "<", 2 ] ).to.be true
-    
-    it 'progressivity: 1 < user.id < 2 -> false', ->
-      expect( Query.evaluate user, 'id', [ [ '$', 1 ], "<", [], "<", 2 ] ).to.be false
-    
-    it 'progressivity: 0 < user.id < 1 -> false', ->
-      expect( Query.evaluate user, 'id', [ [ '$', 0 ], "<", [], "<", 1 ] ).to.be false
+    describe 'division by zero', ->
+      it '5 / 0 == Infinity -> true', ->
+        expect( Query.evaluate user, 'id', [ [ '$', 5 ], '/', [ '$',  0 ], '==',  Infinity ] ).to.be true
+        
+      it '5 / -0 == -Infinity -> true', ->
+        expect( Query.evaluate user, 'id', [ [ '$', 5 ], '/', [ '$', -0 ], '==', -Infinity ] ).to.be true
+        
+    describe 'or', ->
+      it 'id > 10 or id < 5 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 10, "or", "<", 5 ] ).to.be true
+      
+      it 'id > 0 or id < 0 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "or", "<", 0 ] ).to.be true
+      
+      it 'id > 10 or id < 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 10, "or", "<", 1 ] ).to.be false
+      
+    describe '|| (or alias)', ->
+      it 'id > 10 || id < 5 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 10, "||", "<", 5 ] ).to.be true
+      
+      it 'id > 10 || id < 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 10, "||", "<", 1 ] ).to.be false
+      
+    describe 'and', ->
+      it 'user.id > 0 and user.id < 2 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 2 ] ] ).to.be true
+      
+      it 'user.id > 1 and user.id < 2 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 1, "and", [ "<", 2 ] ] ).to.be false
+      
+      it 'user.id > 0 and user.id < 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 1 ] ] ).to.be false
+      
+      it 'user.id > 0 and user.id < 2 and sales == 100 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 2 ], 'and', [ [ '_', 'sales' ], '==', 100 ] ] ).to.be true
+      
+      it 'user.id > 0 and user.id < 2 and sales != 100 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 2 ], 'and', [ [ '_', 'sales' ], '!=', 100 ] ] ).to.be false
+      
+    describe '&& (and alias)', ->
+      it 'user.id > 0 && user.id < 2 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "&&", [ "<", 2 ] ] ).to.be true
+      
+      it 'user.id > 1 && user.id < 2 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 1, "&&", [ "<", 2 ] ] ).to.be false
     
   describe 'Query():', ->
     q = q1 = null
