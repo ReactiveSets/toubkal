@@ -241,7 +241,21 @@ describe 'Query & Query_Tree test suite:', ->
         
       it '5 / -0 == -Infinity -> true', ->
         expect( Query.evaluate user, 'id', [ [ '$', 5 ], '/', [ '$', -0 ], '==', -Infinity ] ).to.be true
-        
+    
+    describe 'not', ->
+      it 'not ( id > 0 ) -> false', ->
+        expect( Query.evaluate user, 'id', [ "not", [ ">", 0 ] ] ).to.be false
+      
+      it 'not ( id > 1 ) -> true', ->
+        expect( Query.evaluate user, 'id', [ "not", [ ">", 1 ] ] ).to.be true
+      
+    describe '! (not alias)', ->
+      it '! ( id > 0 ) -> false', ->
+        expect( Query.evaluate user, 'id', [ "!", [ ">", 0 ] ] ).to.be false
+      
+      it '! ( id > 1 ) -> true', ->
+        expect( Query.evaluate user, 'id', [ "!", [ ">", 1 ] ] ).to.be true
+      
     describe 'or', ->
       it 'id > 10 or id < 5 -> true', ->
         expect( Query.evaluate user, 'id', [ ">", 10, "or", "<", 5 ] ).to.be true
