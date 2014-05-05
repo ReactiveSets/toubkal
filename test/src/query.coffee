@@ -80,6 +80,8 @@ describe 'Query & Query_Tree test suite:', ->
       expect( e.message ).to.be 'message'
     
     it 'should have a stack', ->
+      console.log 'Query_Error stack trace', e.stack
+      
       expect( e.stack ).to.be.a 'string'
   
   describe 'Query.evaluate()', ->
@@ -97,7 +99,31 @@ describe 'Query & Query_Tree test suite:', ->
     
     it 'should allow to express user.id == 1', ->
       expect( Query.evaluate user, 'id', [ "==", 1 ] ).to.be true
-      
+    
+    it 'user.id != 1 should be false', ->
+      expect( Query.evaluate user, 'id', [ "!=", 1 ] ).to.be false
+    
+    it 'user.id > 0 -> true', ->
+      expect( Query.evaluate user, 'id', [ ">", 0 ] ).to.be true
+    
+    it 'user.id > 1 -> false', ->
+      expect( Query.evaluate user, 'id', [ ">", 1 ] ).to.be false
+    
+    it 'user.id < 1 -> false', ->
+      expect( Query.evaluate user, 'id', [ "<", 1 ] ).to.be false
+    
+    it 'user.id < 2 -> true', ->
+      expect( Query.evaluate user, 'id', [ "<", 2 ] ).to.be true
+    
+    it 'progressivity: 0 < user.id < 2 -> true', ->
+      expect( Query.evaluate user, 'id', [ [ '$', 0 ], "<", [], "<", 2 ] ).to.be true
+    
+    it 'progressivity: 1 < user.id < 2 -> false', ->
+      expect( Query.evaluate user, 'id', [ [ '$', 1 ], "<", [], "<", 2 ] ).to.be false
+    
+    it 'progressivity: 0 < user.id < 1 -> false', ->
+      expect( Query.evaluate user, 'id', [ [ '$', 0 ], "<", [], "<", 1 ] ).to.be false
+    
   describe 'Query():', ->
     q = q1 = null
     
