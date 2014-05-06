@@ -99,6 +99,8 @@ describe 'Query & Query_Tree test suite:', ->
       sales: 100
       
       count: 5
+      
+      fruits: [ 'orange', 'pear', 'tomato' ]
     }
     
     describe '==', ->
@@ -107,6 +109,21 @@ describe 'Query & Query_Tree test suite:', ->
       
       it 'user.id == 2 -> false', ->
         expect( Query.evaluate user, 'id', [ "==", 2 ] ).to.be false
+      
+      it 'user.profile == { first_name: "Alice" } -> true', ->
+        expect( Query.evaluate user, 'profile', [ "==", { first_name: "Alice" } ] ).to.be true
+      
+      it 'user.profile == { first_name: "Bob" } -> false', ->
+        expect( Query.evaluate user, 'profile', [ "==", { first_name: "Bob" } ] ).to.be false
+      
+      it 'user.profile == { last_name: "Alice" } -> false', ->
+        expect( Query.evaluate user, 'profile', [ "==", { last_name: "Alice" } ] ).to.be false
+      
+      it 'user.profile == {} -> false', ->
+        expect( Query.evaluate user, 'profile', [ "==", {} ] ).to.be false
+      
+      it 'user.fuits == [ "orange", "pear", "tomato" ] -> true', ->
+        expect( Query.evaluate user, 'fruits', [ "==", [ '$', [ "orange", "pear", 'tomato' ] ] ] ).to.be true
       
     describe '!=', ->
       it 'user.id != 1 -> false', ->
@@ -168,14 +185,14 @@ describe 'Query & Query_Tree test suite:', ->
         expect( Query.evaluate user, 'sales', [ [ '_', 'profile', 'first_name' ], '!=', 'Alice' ] ).to.be false
     
     describe 'testing existance', ->
-      it 'flow" -> true', ->
+      it 'flow -> true', ->
         expect( Query.evaluate user, 'flow', [] ).to.be true
       
       it '_ -> false', ->
         expect( Query.evaluate user, '_', [] ).to.be false
       
       describe 'using [ "_", attribute, sub-attribute ]', ->
-        it 'flow" -> true', ->
+        it 'flow -> true', ->
           expect( Query.evaluate user, 'sales', [ '_', 'flow' ] ).to.be true
         
         it 'not_defined -> false', ->
@@ -303,13 +320,59 @@ describe 'Query & Query_Tree test suite:', ->
       
       it 'user.id > 0 and user.id < 2 and sales != 100 -> false', ->
         expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 2 ], 'and', [ [ '_', 'sales' ], '!=', 100 ] ] ).to.be false
-      
+    
     describe '&& (and alias)', ->
       it 'user.id > 0 && user.id < 2 -> true', ->
         expect( Query.evaluate user, 'id', [ ">", 0, "&&", [ "<", 2 ] ] ).to.be true
       
       it 'user.id > 1 && user.id < 2 -> false', ->
         expect( Query.evaluate user, 'id', [ ">", 1, "&&", [ "<", 2 ] ] ).to.be false
+    
+    describe 'and !', ->
+      it 'user.id > 1 and ! ( user.id >= 2 ) -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 1, "and", [ '!', [ "<", 2 ] ] ] ).to.be false
+    
+    describe 'or with !', ->
+      it 'user.id > 0 or $ false -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "or", '$', false ] ).to.be true
+      
+      it 'user.id > 0 or ( ! true ) -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "or", [ '!', true ] ] ).to.be true
+      
+      it 'user.id > 0 or ! true -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "or", '!', true ] ).to.be true
+    
+    describe 'failed', ->
+      it 'id > 1 failed -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 1, 'failed' ] ).to.be true
+      
+      it 'id > 0 failed -> false', ->
+        expect( Query.evaluate user, 'id', [ '>', 0, 'failed' ] ).to.be false
+      
+      it 'id > 1 failed id < 5 -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 1, 'failed', '<', 5 ] ).to.be true
+      
+      it 'id > 1 failed id < 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ '>', 1, 'failed', '<', 1 ] ).to.be false
+      
+      it 'id > 0 failed id < 5 -> false', ->
+        expect( Query.evaluate user, 'id', [ '>', 0, 'failed', '<', 5 ] ).to.be false
+      
+      it 'id > 0 failed or -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 0, 'failed', 'or' ] ).to.be true
+      
+    describe 'Switching default attribute value using __ attribute', ->
+      it 'profile .first_name == "Alice" && ( ( __ id ) && .first_name == "Alice" failed && id > 0 && id < 2 ) ) -> true', ->
+        expect( Query.evaluate user, 'profile', [ 
+          [ '.', 'first_name' ], '==', 'Alice',
+          '&&', [
+            '&&', [ '__', 'id' ],
+            '&&', [ [ '.', 'first_name' ], '==', 'Alice' ],
+            'failed',
+            '&&', [ '>', 0 ]
+            '&&', [ '<', 2 ]
+          ]
+        ] ).to.be true
     
   describe 'Query():', ->
     q = q1 = null
