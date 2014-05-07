@@ -254,25 +254,87 @@ describe 'Query & Query_Tree test suite:', ->
       it '5 != 5 -> false', ->
         expect( Query.evaluate user, 'sales', [ [ '$', 5 ], '!=', 5 ] ).to.be false
       
-    describe '/', ->
-      it 'sales / count == 20 -> true', ->
-        expect( Query.evaluate user, 'sales', [ '/', [ '_', 'count' ], '==', 20 ] ).to.be true
-      
-      it 'sales / count != 20 -> false', ->
-        expect( Query.evaluate user, 'sales', [ '/', [ '_', 'count' ], '!=', 20 ] ).to.be false
-      
-      it 'sales / ( 0 != count ) == 20 -> true', ->
-        expect( Query.evaluate user, 'sales', [ '/', [ [ '$', 0 ], '!=', [ '_', 'count' ] ], '==', 20 ] ).to.be true
-      
-      it 'sales / ( 5 != count ) == 20 -> false', ->
-        expect( Query.evaluate user, 'sales', [ '/', [ [ '$', 5 ], '!=', [ '_', 'count' ] ], '==', 20 ] ).to.be false
-    
-    describe 'division by zero', ->
-      it '5 / 0 == Infinity -> true', ->
-        expect( Query.evaluate user, 'id', [ [ '$', 5 ], '/', [ '$',  0 ], '==',  Infinity ] ).to.be true
+    describe 'Arithmetic operators', ->
+      describe '+', ->
+        it 'id + 0 == 1 -> true', ->
+          expect( Query.evaluate user, 'id', [ '+', 0, '==', 1 ] ).to.be true
         
-      it '5 / -0 == -Infinity -> true', ->
-        expect( Query.evaluate user, 'id', [ [ '$', 5 ], '/', [ '$', -0 ], '==', -Infinity ] ).to.be true
+        it 'id + 2 == 3 -> true', ->
+          expect( Query.evaluate user, 'id', [ '+', 2, '==', 3 ] ).to.be true
+        
+        it 'id + 1 == 3 -> false', ->
+          expect( Query.evaluate user, 'id', [ '+', 1, '==', 3 ] ).to.be false
+        
+        it 'id + 1 + 1 == 3 -> true', ->
+          expect( Query.evaluate user, 'id', [ '+', 1, '+', 1, '==', 3 ] ).to.be true
+      
+      describe '-', ->
+        it 'id - 0 == 1 -> true', ->
+          expect( Query.evaluate user, 'id', [ '-', 0, '==', 1 ] ).to.be true
+        
+        it 'id - 2 == -1 -> true', ->
+          expect( Query.evaluate user, 'id', [ '-', 2, '==', -1 ] ).to.be true
+        
+        it 'id - 1 == -1 -> false', ->
+          expect( Query.evaluate user, 'id', [ '-', 1, '==', -1 ] ).to.be false
+        
+        it 'id - 1 - 1 == -1 -> true', ->
+          expect( Query.evaluate user, 'id', [ '-', 1, '-', 1, '==', -1 ] ).to.be true
+      
+      describe '*', ->
+        it 'id * 0 == 0 -> true', ->
+          expect( Query.evaluate user, 'id', [ '*', 0, '==', 0 ] ).to.be true
+        
+        it 'id * 1 == 1 -> true', ->
+          expect( Query.evaluate user, 'id', [ '*', 1, '==', 1 ] ).to.be true
+        
+        it 'id * 2 == 2 -> true', ->
+          expect( Query.evaluate user, 'id', [ '*', 2, '==', 2 ] ).to.be true
+        
+        it 'id * 2 * 3 == 6 -> true', ->
+          expect( Query.evaluate user, 'id', [ '*', 2, '*', 3, '==', 6 ] ).to.be true
+      
+      describe '/', ->
+        describe 'division by zero', ->
+          it '5 / 0 == Infinity -> true', ->
+            expect( Query.evaluate user, 'id', [ [ '$', 5 ], '/', [ '$',  0 ], '==',  Infinity ] ).to.be true
+          
+          it '5 / -0 == -Infinity -> true', ->
+            expect( Query.evaluate user, 'id', [ [ '$', 5 ], '/', [ '$', -0 ], '==', -Infinity ] ).to.be true
+        
+        it '3 / 1 == 3 -> true', ->
+          expect( Query.evaluate user, 'id', [ [ '$', 3 ], '/', 1, '==', 3 ] ).to.be true
+        
+        it '3 / 2 == 1.5 -> true', ->
+          expect( Query.evaluate user, 'id', [ [ '$', 3 ], '/', 2, '==', 1.5 ] ).to.be true
+        
+        it '36 / 2 / 3 == 6 -> true', ->
+          expect( Query.evaluate user, 'id', [ [ '$', 36 ], '/', 2, '/', 3, '==', 6 ] ).to.be true
+        
+        it 'sales / count == 20 -> true', ->
+          expect( Query.evaluate user, 'sales', [ '/', [ '_', 'count' ], '==', 20 ] ).to.be true
+        
+        it 'sales / count != 20 -> false', ->
+          expect( Query.evaluate user, 'sales', [ '/', [ '_', 'count' ], '!=', 20 ] ).to.be false
+        
+        it 'sales / ( 0 != count ) == 20 -> true', ->
+          expect( Query.evaluate user, 'sales', [ '/', [ [ '$', 0 ], '!=', [ '_', 'count' ] ], '==', 20 ] ).to.be true
+        
+        it 'sales / ( 5 != count ) == 20 -> false', ->
+          expect( Query.evaluate user, 'sales', [ '/', [ [ '$', 5 ], '!=', [ '_', 'count' ] ], '==', 20 ] ).to.be false
+      
+      describe '%', ->
+        it '3 % 1 == 0 -> true', ->
+          expect( Query.evaluate user, 'id', [ [ '$', 3 ], '%', 1, '==', 0 ] ).to.be true
+        
+        it '3 % 2 == 1 -> true', ->
+          expect( Query.evaluate user, 'id', [ [ '$', 3 ], '%', 2, '==', 1 ] ).to.be true
+        
+        it '5 % 3 == 2 -> true', ->
+          expect( Query.evaluate user, 'id', [ [ '$', 5 ], '%', 3, '==', 2 ] ).to.be true
+        
+        it '5 % 0 == NaN -> true', ->
+          expect( Query.evaluate user, 'id', [ [ '$', 5 ], '%', 0, '==', NaN ] ).to.be true
     
     describe 'not', ->
       it 'not ( id > 0 ) -> false', ->
@@ -360,7 +422,7 @@ describe 'Query & Query_Tree test suite:', ->
       
       it 'id > 0 failed or -> true', ->
         expect( Query.evaluate user, 'id', [ '>', 0, 'failed', 'or' ] ).to.be true
-      
+    
     describe 'Switching default attribute value using __ attribute', ->
       it 'profile .first_name == "Alice" && ( ( __ id ) && .first_name == "Alice" failed && id > 0 && id < 2 ) ) -> true', ->
         expect( Query.evaluate user, 'profile', [ 
