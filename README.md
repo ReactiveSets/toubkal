@@ -1,7 +1,7 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *470 tests*
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *489 tests*
 
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
@@ -468,7 +468,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 470 automated tests for the XS core pipelets that run after every
+We have curently developped 489 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
 Travis had an issue with it around January 2014. Version 0.11 is not officially supported
 because ui tests using zombie cannot pass at this time.
@@ -504,7 +504,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd ConnectedSets
 # ./run_tests.sh
 Full test results are in test.out
--> passed 470 of 470 tests (4196ms)
+-> passed 489 of 489 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -672,7 +672,7 @@ node server.js
 - WebRTC pipelets
 - Implement Peer-To-Peer dataflows using WebRTC
 - else() query pipelet
-- Develop additional tests, goal is at least 650 automated tests
+- Develop additional tests, goal is at least 850 automated tests
 
 ### Version 0.7.0 - Charding - ETA September 2014
 
@@ -680,9 +680,9 @@ node server.js
 
 - Implement websocket_clients() and websocket_server() pipelets as an alternative to socket_io equivalents.
 - Horizontal distribution / Charding using websocket dispatcher
-- Develop additional tests, goal is at least 600 automated tests
+- Develop additional tests, goal is at least 800 automated tests
 - Session Strorage Dataflow
-- Implement Phantom.js pipelet to deliver content to search engines w/out JavaScript and imrpove SEO
+- Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
 
 ### Version 0.6.0 - Packaging / First Beta - ETA July 2014
 
@@ -694,7 +694,7 @@ node server.js
 - Implement as many ToDos as possible
 - Stabilize API
 - Downstream query routing, optimize unions
-- Develop additional tests, goal is at least 500 automated tests
+- Develop additional tests, goal is at least 700 automated tests
 
 ### Version 0.5.0 - Web Application Framework - ETA June 2014
 
@@ -708,7 +708,7 @@ node server.js
   - Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, ... repositories
   - Implement xs package manager
   - Implement xs automatic pipelet patching
-- Develop additional tests, goal is at least 450 automated tests
+- Develop additional tests, goal is at least 650 automated tests
 
 ### Version 0.4.0 - Persistance - ETA June 2014
 
@@ -721,9 +721,9 @@ node server.js
   - Query cache
   - File write, write to configuration file
   
-- Develop additional tests, goal is at least 450 automated tests
+- Develop additional tests, goal is at least 600 automated tests
 
-### Version 0.3.0 - Authentication && Authorizations / Complex Queries - ETA May 2014
+### Version 0.3.0 - Complex Queries, Authentication && Authorizations - ETA May 2014
 
 #### Main Goals:
 
@@ -742,25 +742,54 @@ node server.js
 
 - Out-of-band fetchable global 'trace' dataflow for: exceptions, errors, and debug information
 
-- Complex Query expressions:
-  - any depth abstract syntax tree
-  - multi-attributes combinations
-  - all progressive operators
-  - sub-values
-  - operators:
-    - comparison         : == != > >= < <=
-    - arithmetic         : + - * / %
-    - regular expressions: regexp match match_index group split
-    - alternatives       : in not_in
-    - Array / String     : length
-    - literals           : $ _ __ . []
-    - control flow       : && (and) || (or) ! (not) failed nor nand
-    - custom operators   : defined using JavaScript functions
+- Safe Complex Query expressions:
+  - Sanitized for safe execution on server even when crafted by untrusted clients
+  
+  - For execution by upstream servers to reduce bandwidth, cpu usage and latency
+  
+  - JSON-friendly Objects and Arrays for any JSON transport such as socket.io or websocket
+  
+  - Side-effect free
+  
+  - Any depth Abstract Syntax Tree, can be limited to prevent Denial of Service attacks
+  
+  - Consistent and rich semantic, above that of SQL and MongoDB:
+    - Nested Object and Array expressions
+    
+    - Regular expressions
+    
+    - All progressive operators, e.g.:
+      ```18 <= age <= 25```
+      ```sales / ( 0 != count ) > 1000```
+  
+  - Operators:
+    - Control flow       : ```&& || ! failed```
+    - Literals           : ```$ _ __ .```
+    - Grouping           : ```[]```
+    - Comparison         : ```== != > >= < <=```
+    - Arithmetic         : ```+ - * / %```
+    - Regular expressions: ```RegExp match match_index group split```
+    - Alternatives       : ```in not_in```
+    - Array / String     : ```length```
+    - Date               : ```year month day hours minutes seconds miliseconds```
+    - Custom operators   : defined using JavaScript functions but used as JSON-friendly Strings and Arrays to prevent code-injection
+  
+  - Example: Expression to get active users whom last logged-in before 2013:
 
-##### Features already developped or in progress:
+```javascript
+    {
+        flow   : 'user'
+      , active : [ '==', true ]
+      , profile: {
+            last_logged_in: [ 'year', '<', 2013 ]
+        }
+    }
+```
+
+##### Features already developped:
 
 - Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-- 470 automated tests
+- 489 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
@@ -771,10 +800,15 @@ passport()                | Passport authentication
 passport_strategies()     | Manage Passport strategies
 greedy()                  | A non-lazy stateless pipelet
 
-Other Classes             | Short Description
+Other Classes && methods  | Short Description
 --------------------------|------------------------------------------------
 HTTP_Router               | Efficiently route HTTP requests using base URLs
 Trace_Domain              | Dymamic traces controlled by queries using '<=' operator
+Query_Error               | Custom Error class for Queries
+Query.Evaluation_Context  | Evaluation context for complex query expressions
+Query.evaluate()          | Query class method to evaluate complex query expressions
+Query.Operator()          | Adds a Query expression operator
+Query.fail                | Failure value for Query expressions
 
 ### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
 

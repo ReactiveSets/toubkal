@@ -101,6 +101,8 @@ describe 'Query & Query_Tree test suite:', ->
       count: 5
       
       fruits: [ 'orange', 'pear', 'tomato' ]
+      
+      text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     }
     
     describe '==', ->
@@ -184,7 +186,7 @@ describe 'Query & Query_Tree test suite:', ->
       it 'profile.first_name != "Alice" -> false', ->
         expect( Query.evaluate user, 'sales', [ [ '_', 'profile', 'first_name' ], '!=', 'Alice' ] ).to.be false
     
-    describe 'testing existance', ->
+    describe 'Testing existance', ->
       it 'flow -> true', ->
         expect( Query.evaluate user, 'flow', [] ).to.be true
       
@@ -211,7 +213,7 @@ describe 'Query & Query_Tree test suite:', ->
         it 'profile.last_name -> false', ->
           expect( Query.evaluate user, 'profile', [ '.', 'last_name' ] ).to.be false
     
-    describe 'testing non-existance', ->
+    describe 'Testing non-existance', ->
       describe 'using failed', ->
         it '_ failed -> true', ->
           expect( Query.evaluate user, '_', [ 'failed' ] ).to.be true
@@ -336,73 +338,73 @@ describe 'Query & Query_Tree test suite:', ->
         it '5 % 0 == NaN -> true', ->
           expect( Query.evaluate user, 'id', [ [ '$', 5 ], '%', 0, '==', NaN ] ).to.be true
     
-    describe 'not', ->
-      it 'not ( id > 0 ) -> false', ->
-        expect( Query.evaluate user, 'id', [ "not", [ ">", 0 ] ] ).to.be false
-      
-      it 'not ( id > 1 ) -> true', ->
-        expect( Query.evaluate user, 'id', [ "not", [ ">", 1 ] ] ).to.be true
-      
-    describe '! (not alias)', ->
+    describe '!', ->
       it '! ( id > 0 ) -> false', ->
         expect( Query.evaluate user, 'id', [ "!", [ ">", 0 ] ] ).to.be false
       
       it '! ( id > 1 ) -> true', ->
         expect( Query.evaluate user, 'id', [ "!", [ ">", 1 ] ] ).to.be true
-      
-    describe 'or', ->
-      it 'id > 10 or id < 5 -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 10, "or", "<", 5 ] ).to.be true
-      
-      it 'id > 0 or id < 0 -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "or", "<", 0 ] ).to.be true
-      
-      it 'id > 10 or id < 1 -> false', ->
-        expect( Query.evaluate user, 'id', [ ">", 10, "or", "<", 1 ] ).to.be false
-      
-    describe '|| (or alias)', ->
+    
+    describe '||', ->
       it 'id > 10 || id < 5 -> true', ->
         expect( Query.evaluate user, 'id', [ ">", 10, "||", "<", 5 ] ).to.be true
       
+      it 'id > 0 || id < 0 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, "||", "<", 0 ] ).to.be true
+      
       it 'id > 10 || id < 1 -> false', ->
         expect( Query.evaluate user, 'id', [ ">", 10, "||", "<", 1 ] ).to.be false
-      
-    describe 'and', ->
-      it 'user.id > 0 and user.id < 2 -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 2 ] ] ).to.be true
-      
-      it 'user.id > 1 and user.id < 2 -> false', ->
-        expect( Query.evaluate user, 'id', [ ">", 1, "and", [ "<", 2 ] ] ).to.be false
-      
-      it 'user.id > 0 and user.id < 1 -> false', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 1 ] ] ).to.be false
-      
-      it 'user.id > 0 and user.id < 2 and sales == 100 -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 2 ], 'and', [ [ '_', 'sales' ], '==', 100 ] ] ).to.be true
-      
-      it 'user.id > 0 and user.id < 2 and sales != 100 -> false', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "and", [ "<", 2 ], 'and', [ [ '_', 'sales' ], '!=', 100 ] ] ).to.be false
     
-    describe '&& (and alias)', ->
+    describe '&&', ->
       it 'user.id > 0 && user.id < 2 -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "&&", [ "<", 2 ] ] ).to.be true
+        expect( Query.evaluate user, 'id', [ ">", 0, '&&', [ "<", 2 ] ] ).to.be true
       
       it 'user.id > 1 && user.id < 2 -> false', ->
-        expect( Query.evaluate user, 'id', [ ">", 1, "&&", [ "<", 2 ] ] ).to.be false
-    
-    describe 'and !', ->
-      it 'user.id > 1 and ! ( user.id >= 2 ) -> false', ->
-        expect( Query.evaluate user, 'id', [ ">", 1, "and", [ '!', [ "<", 2 ] ] ] ).to.be false
-    
-    describe 'or with !', ->
-      it 'user.id > 0 or $ false -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "or", '$', false ] ).to.be true
+        expect( Query.evaluate user, 'id', [ ">", 1, '&&', [ "<", 2 ] ] ).to.be false
       
-      it 'user.id > 0 or ( ! true ) -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "or", [ '!', true ] ] ).to.be true
+      it 'user.id > 0 && user.id < 1 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, '&&', [ "<", 1 ] ] ).to.be false
       
-      it 'user.id > 0 or ! true -> true', ->
-        expect( Query.evaluate user, 'id', [ ">", 0, "or", '!', true ] ).to.be true
+      it 'user.id > 0 && user.id < 2 && sales == 100 -> true', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, '&&', [ "<", 2 ], '&&', [ [ '_', 'sales' ], '==', 100 ] ] ).to.be true
+      
+      it 'user.id > 0 && user.id < 2 && sales != 100 -> false', ->
+        expect( Query.evaluate user, 'id', [ ">", 0, '&&', [ "<", 2 ], '&&', [ [ '_', 'sales' ], '!=', 100 ] ] ).to.be false
+    
+    describe 'Implicit and', ->
+      describe 'Using []', ->
+        it 'user.id ( > 0 ( == 1 ) ) -> true', ->
+          expect( Query.evaluate user, 'id', [ ">", 0, [ "==", 1 ] ] ).to.be true
+        
+        it 'user.id ( > 0 ( == 0 ) ) -> false', ->
+          expect( Query.evaluate user, 'id', [ ">", 0, [ "==", 0 ] ] ).to.be false
+        
+        it 'user.id ( > 1 ( == 1 ) ) -> false', ->
+          expect( Query.evaluate user, 'id', [ ">", 1, [ "==", 1 ] ] ).to.be false
+      
+      describe 'Progressive', ->
+        it 'user.id ( > 0 == 0 ) ) -> true', ->
+          expect( Query.evaluate user, 'id', [ ">", 0, "==", 0 ] ).to.be true
+        
+        it 'user.id ( > 0 == 1 ) ) -> false', ->
+          expect( Query.evaluate user, 'id', [ ">", 0, "==", 1 ] ).to.be false
+        
+        it 'user.id ( > 1 == 1 ) ) -> false', ->
+          expect( Query.evaluate user, 'id', [ ">", 1, "==", 1 ] ).to.be false
+    
+    describe '&& !', ->
+      it 'user.id > 1 && ! ( user.id >= 2 ) -> false', ->
+        expect( Query.evaluate user, 'id', [ '>', 1, '&&', [ '!', [ '<', 2 ] ] ] ).to.be false
+    
+    describe '|| with !', ->
+      it 'user.id > 0 || $ false -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 0, '||', '$', false ] ).to.be true
+      
+      it 'user.id > 0 || ( ! true ) -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 0, '||', [ '!', true ] ] ).to.be true
+      
+      it 'user.id > 0 || ! true -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 0, '||', '!', true ] ).to.be true
     
     describe 'failed', ->
       it 'id > 1 failed -> true', ->
@@ -420,8 +422,11 @@ describe 'Query & Query_Tree test suite:', ->
       it 'id > 0 failed id < 5 -> false', ->
         expect( Query.evaluate user, 'id', [ '>', 0, 'failed', '<', 5 ] ).to.be false
       
-      it 'id > 0 failed or -> true', ->
-        expect( Query.evaluate user, 'id', [ '>', 0, 'failed', 'or' ] ).to.be true
+      it 'id > 0 failed || -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 0, 'failed', '||' ] ).to.be true
+      
+      it 'id > 1 failed == 1 -> true', ->
+        expect( Query.evaluate user, 'id', [ '>', 1, 'failed', '==', 1 ] ).to.be true
     
     describe 'Switching default attribute value using __ attribute', ->
       it 'profile .first_name == "Alice" && ( ( __ id ) && .first_name == "Alice" failed && id > 0 && id < 2 ) ) -> true', ->
@@ -436,6 +441,64 @@ describe 'Query & Query_Tree test suite:', ->
           ]
         ] ).to.be true
     
+    describe 'Regular Expressions', ->
+      describe 'RegExp, regular expression constructor', ->
+        it '( RegExp "test" ) == /test/ -> true', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], "==", /test/ ] ).to.be true
+        
+        it '( RegExp "test" ) == "test" -> false', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], "==", "test" ] ).to.be false
+        
+        it '( RegExp "test" ) == /tes/ -> false', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], "==", /tes/ ] ).to.be false
+        
+        it '( RegExp "test", "g" ) == /test/g -> true', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "g" ], "==", /test/g ] ).to.be true
+        
+        it '( RegExp "test", "g" ) == /test/i -> false', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "g" ], "==", /test/i ] ).to.be false
+        
+        it '( RegExp "test", "i" ) == /test/i -> true', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "i" ], "==", /test/i ] ).to.be true
+        
+        it '( RegExp "test", "i" ) == /test/ -> false', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "i" ], "==", /test/ ] ).to.be false
+        
+        it '( RegExp "test", "m" ) == /test/m -> true', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "m" ], "==", /test/m ] ).to.be true
+        
+        it '( RegExp "test", "m" ) == /test/g -> false', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "m" ], "==", /test/g ] ).to.be false
+      
+        it '( RegExp "test", "gim" ) == /test/gim -> true', ->
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "gim" ], "==", /test/gim ] ).to.be true
+      
+      describe 'match', ->
+        it 'text match "dolor" -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', "dolor" ] ).to.be true
+        
+        it 'text match "dolor == 12" -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12 ] ).to.be true
+        
+        it 'text match "Dolor" -> false', ->
+          expect( Query.evaluate user, "text", [ 'match', "Dolor" ] ).to.be false
+        
+        it 'text match ( RegExp "Dolor", "i" ) -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "Dolor", "i" ] ] ).to.be true
+      
+      describe 'match_index', ->
+        it 'text match "dolor" == 12 match_index == 0 -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12, "match_index", '==', 0 ] ).to.be true
+        
+        it 'text match ( RegExp "dolor", "g" ) == 12 match_index == 17 -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17 ] ).to.be true
+        
+        it 'text match ( RegExp "dolor", "g" ) == 12 match_index == 17 ( match ) -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17, [ "match" ] ] ).to.be true
+        
+        it 'text match ( RegExp "dolor", "g" ) == 12 match_index == 17 ( match ) == 23 -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17, [ "match" ], '==', 104  ] ).to.be true
+  
   describe 'Query():', ->
     q = q1 = null
     
