@@ -533,7 +533,7 @@ describe 'Query & Query_Tree test suite:', ->
             'match', /(d.*?r).*?in/g
             'groups', 1, '==', "dolor"
           ] ).to.be true
-        
+      
       describe 'split', ->
         it 'text split /,/" -> true', ->
           expect( Query.evaluate user, "text", [ 'split', ',' ] ).to.be true
@@ -545,7 +545,22 @@ describe 'Query & Query_Tree test suite:', ->
           expect( Query.evaluate user, "text", [
             'split', ',', 'groups', 1, '==', ' consectetur adipisicing elit'
           ] ).to.be true
+      
+      describe 'in', ->
+        it '"orange" in "pear", "orange", "banana"" -> true', ->
+          expect( Query.evaluate user, "text", [
+            [ '$', "orange" ], 'in', "pear", "orange", "banana"
+          ] ).to.be true
         
+        it '( "orange" in "pear", "orange", "banana" ) == 1" -> true', ->
+          expect( Query.evaluate user, "text", [
+            [ [ '$', "orange" ], 'in', "pear", "orange", "banana" ], '==', 1
+          ] ).to.be true
+        
+        it '"tomato" in "pear", "orange", "banana"" -> false', ->
+          expect( Query.evaluate user, "text", [
+            [ '$', "tomato" ], 'in', "pear", "orange", "banana"
+          ] ).to.be false
   
   describe 'Query():', ->
     q = q1 = null
