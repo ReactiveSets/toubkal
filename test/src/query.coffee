@@ -487,17 +487,22 @@ describe 'Query & Query_Tree test suite:', ->
           expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "Dolor", "i" ] ] ).to.be true
       
       describe 'match_index', ->
-        it 'text match "dolor" == 12 match_index == 0 -> true', ->
+        it 'text match "dolor" == 12, match_index == 0 -> true', ->
           expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12, "match_index", '==', 0 ] ).to.be true
         
-        it 'text match ( RegExp "dolor", "g" ) == 12 match_index == 17 -> true', ->
+        it 'text match ( RegExp "dolor", "g" ) == 12, match_index == 17 -> true', ->
           expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17 ] ).to.be true
         
-        it 'text match ( RegExp "dolor", "g" ) == 12 match_index == 17 ( match ) -> true', ->
+        it 'text match ( RegExp "dolor", "g" ) == 12, match_index == 17, ( match ) -> true', ->
           expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17, [ "match" ] ] ).to.be true
         
-        it 'text match ( RegExp "dolor", "g" ) == 12 match_index == 17 ( match ) == 23 -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17, [ "match" ], '==', 104  ] ).to.be true
+        it 'text match /dolor/g == 12, match_index == 17, ( match ) == 104, match_index == 109 -> true', ->
+          expect( Query.evaluate user, "text", [
+            'match', /dolor/g, "==", 12
+            'match_index', '==', 17
+            [ 'match' ], '==', 104
+            'match_index', '==', 109
+          ] ).to.be true
   
   describe 'Query():', ->
     q = q1 = null
