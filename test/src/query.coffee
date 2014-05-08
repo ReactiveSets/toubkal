@@ -534,6 +534,18 @@ describe 'Query & Query_Tree test suite:', ->
             'groups', 1, '==', "dolor"
           ] ).to.be true
         
+      describe 'split', ->
+        it 'text split /,/" -> true', ->
+          expect( Query.evaluate user, "text", [ 'split', ',' ] ).to.be true
+        
+        it 'text split /,/ == 5" -> true', ->
+          expect( Query.evaluate user, "text", [ 'split', ',', '==', 5 ] ).to.be true
+        
+        it 'text split /,/ groups 1 == " consectetur adipisicing elit" -> true', ->
+          expect( Query.evaluate user, "text", [
+            'split', ',', 'groups', 1, '==', ' consectetur adipisicing elit'
+          ] ).to.be true
+        
   
   describe 'Query():', ->
     q = q1 = null
