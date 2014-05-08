@@ -477,7 +477,7 @@ describe 'Query & Query_Tree test suite:', ->
         it 'text match "dolor" -> true', ->
           expect( Query.evaluate user, "text", [ 'match', "dolor" ] ).to.be true
         
-        it 'text match "dolor == 12" -> true', ->
+        it 'text match "dolor" == 12 -> true', ->
           expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12 ] ).to.be true
         
         it 'text match "Dolor" -> false', ->
@@ -486,23 +486,54 @@ describe 'Query & Query_Tree test suite:', ->
         it 'text match ( RegExp "Dolor", "i" ) -> true', ->
           expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "Dolor", "i" ] ] ).to.be true
       
-      describe 'match_index', ->
-        it 'text match "dolor" == 12, match_index == 0 -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12, "match_index", '==', 0 ] ).to.be true
+      describe 'last_index', ->
+        it 'text match "dolor" == 12, last_index == 0 -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12, "last_index", '==', 0 ] ).to.be true
         
-        it 'text match ( RegExp "dolor", "g" ) == 12, match_index == 17 -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17 ] ).to.be true
+        it 'text match ( RegExp "dolor", "g" ) == 12, last_index == 17 -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "last_index", '==', 17 ] ).to.be true
         
-        it 'text match ( RegExp "dolor", "g" ) == 12, match_index == 17, ( match ) -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "match_index", '==', 17, [ "match" ] ] ).to.be true
+        it 'text match ( RegExp "dolor", "g" ) == 12, last_index == 17, ( match ) -> true', ->
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "last_index", '==', 17, [ "match" ] ] ).to.be true
         
-        it 'text match /dolor/g == 12, match_index == 17, ( match ) == 104, match_index == 109 -> true', ->
+        it 'text match /dolor/g == 12, last_index == 17, ( match ) == 104, last_index == 109 -> true', ->
           expect( Query.evaluate user, "text", [
             'match', /dolor/g, "==", 12
-            'match_index', '==', 17
+            'last_index', '==', 17
             [ 'match' ], '==', 104
-            'match_index', '==', 109
+            'last_index', '==', 109
           ] ).to.be true
+      
+      describe 'groups', ->
+        it 'text match /(d.*?r).*?in/g == 12" -> true', ->
+          expect( Query.evaluate user, "text", [
+            'match', /(d.*?r).*?in/g, '==', 12
+          ] ).to.be true
+        
+        it 'text match /(d.*?r).*?in/g, group "index" == 12" -> true', ->
+          expect( Query.evaluate user, "text", [
+            'match', /(d.*?r).*?in/g
+            'groups', 'index', '==', 12
+          ] ).to.be true
+        
+        it 'text match /(d.*?r).*?in/g, group "length" == 2" -> true', ->
+          expect( Query.evaluate user, "text", [
+            'match', /(d.*?r).*?in/g
+            'groups', 'length', '==', 2
+          ] ).to.be true
+        
+        it 'text match /(d.*?r).*?in/g, group 0 == "dolor sit amet, consectetur adipisicin" -> true', ->
+          expect( Query.evaluate user, "text", [
+            'match', /(d.*?r).*?in/g
+            'groups', 0, '==', "dolor sit amet, consectetur adipisicin"
+          ] ).to.be true
+        
+        it 'text match /(d.*?r).*?in/g, group 1 == "dolor" -> true', ->
+          expect( Query.evaluate user, "text", [
+            'match', /(d.*?r).*?in/g
+            'groups', 1, '==', "dolor"
+          ] ).to.be true
+        
   
   describe 'Query():', ->
     q = q1 = null
