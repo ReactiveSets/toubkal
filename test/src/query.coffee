@@ -94,6 +94,10 @@ describe 'Query & Query_Tree test suite:', ->
       
       profile: {
         first_name: 'Alice'
+        
+        favorite_colors: [ 'green', 'blue' ]
+        
+        options: { busy: true }
       }
       
       sales: 100
@@ -112,11 +116,23 @@ describe 'Query & Query_Tree test suite:', ->
       it 'user.id == 2 -> false', ->
         expect( Query.evaluate user, 'id', [ "==", 2 ] ).to.be false
       
-      it 'user.profile == { first_name: "Alice" } -> true', ->
-        expect( Query.evaluate user, 'profile', [ "==", { first_name: "Alice" } ] ).to.be true
+      it 'user.profile == { first_name: "Alice", favorite_colors: [ "green", "blue" ] } -> true', ->
+        expect( Query.evaluate user, 'profile', [ "==", {
+          first_name: "Alice"
+          
+          favorite_colors: [ 'green', 'blue' ]
+          
+          options: { busy: true }
+        } ] ).to.be true
       
-      it 'user.profile == { first_name: "Bob" } -> false', ->
-        expect( Query.evaluate user, 'profile', [ "==", { first_name: "Bob" } ] ).to.be false
+      it 'user.profile == { first_name: "Bob", favorite_colors: [ "green", "blue" ] } -> false', ->
+        expect( Query.evaluate user, 'profile', [ "==", {
+          first_name: "Bob"
+          
+          favorite_colors: [ 'green', 'blue' ]
+          
+          options: { busy: true }
+        } ] ).to.be false
       
       it 'user.profile == { last_name: "Alice" } -> false', ->
         expect( Query.evaluate user, 'profile', [ "==", { last_name: "Alice" } ] ).to.be false
@@ -126,6 +142,106 @@ describe 'Query & Query_Tree test suite:', ->
       
       it 'user.fuits == [ "orange", "pear", "tomato" ] -> true', ->
         expect( Query.evaluate user, 'fruits', [ "==", [ '$', [ "orange", "pear", 'tomato' ] ] ] ).to.be true
+    
+    describe 'Object expression', ->
+      it 'user.profile: { first_name: "Alice" } -> true', ->
+        expect( Query.evaluate user, 'profile', { first_name: "Alice" } ).to.be true
+      
+      it 'user.profile: { first_name: "Bob" } -> false', ->
+        expect( Query.evaluate user, 'profile', { first_name: "Bob" } ).to.be false
+      
+      it 'user.profile: { first_name: "Alice", last_name: "" } -> false', ->
+        expect( Query.evaluate user, 'profile', { first_name: "Alice", last_name: '' } ).to.be false
+      
+      it 'user.profile: { first_name: [ "==", "Alice" ] } -> true', ->
+        expect( Query.evaluate user, 'profile', { first_name: [ "==", "Alice" ] } ).to.be true
+      
+      it 'user.profile: { first_name: [ "==", "Bob" ] } -> false', ->
+        expect( Query.evaluate user, 'profile', { first_name: [ "==", "Bob" ] } ).to.be false
+      
+      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green", "blue" ] } -> true', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          favorite_colors: [ '==', [ '$', [ "green", "blue" ] ] ]
+        } ).to.be true
+      
+      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green" ] } -> false', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Bob"
+          
+          favorite_colors: [ '==', [ '$', [ "green", "blue" ] ] ]
+        } ).to.be false
+      
+      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green" ] } -> false', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          favorite_colors: [ '==', [ '$', [ "green" ] ] ]
+        } ).to.be false
+      
+      it 'user.profile: { first_name: "Alice", favorite_colors: { 0: "green" } } -> true', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          favorite_colors: { 0: "green" }
+        } ).to.be true
+      
+      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green", "blue" ] } -> true', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          favorite_colors: [ '==', [ '$', [ "green", "blue" ] ] ]
+          
+          options: { busy: true }
+        } ).to.be true
+      
+      it 'user.profile: { first_name: "Alice", options: { busy: true } } -> true', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          options: { busy: true }
+        } ).to.be true
+      
+      it 'user.profile: { first_name: "Alice", _options: { busy: true } } -> false', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          _options: { busy: true }
+        } ).to.be false
+      
+      it 'user.profile: { first_name: "Alice", options: { busy: false } } -> false', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          options: { busy: false }
+        } ).to.be false
+      
+      it 'user.profile: { first_name: "Alice", options: { more: {} } } -> false', ->
+        expect( Query.evaluate user, 'profile', {
+          first_name: "Alice"
+          
+          options: { more: {} }
+        } ).to.be false
+      
+      it 'user.profile: [ { more: { busy: true } }, [ ".", "first_name" ], "==", "Alice" ] -> true', ->
+        expect( Query.evaluate user, 'profile', [
+          { options: { busy: true } }
+          
+          [ '.', 'first_name' ], '==', "Alice"
+        ] ).to.be true
+      
+      it 'user.profile: [ [ { more: { busy: true } }, ".", "first_name" ], "==", "Alice" ] -> true', ->
+        expect( Query.evaluate user, 'profile', [
+          [ { options: { busy: true } }, '.', 'first_name' ], '==', "Alice"
+        ] ).to.be true
+      
+      it 'user.profile: [ { more: { busy: false } }, [ ".", "first_name" ], "==", "Alice" ] -> false', ->
+        expect( Query.evaluate user, 'profile', [
+          { options: { busy: false } }
+          
+          [ '.', 'first_name' ], '==', "Alice"
+        ] ).to.be false
       
     describe '!=', ->
       it 'user.id != 1 -> false', ->
