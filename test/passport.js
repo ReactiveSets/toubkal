@@ -1,11 +1,15 @@
 // passport.js
 
 var xs  = require( '..'  )
-  , url = require( 'url' )
+  
+  , logger        = require(     'morgan'      )
+  , cookie_parser = require(  'cookie-parser'  )
+  , body_parser   = require(   'body-parser'   )
+  , session       = require( 'express-session' )
+  
 ;
 
 require( '../lib/server/passport.js' );
-require( '../lib/join.js' );
 
 var XS  = xs.XS
   , log = XS.log
@@ -16,7 +20,7 @@ var XS  = xs.XS
 
 function ug( message ) { log( 'passport, ' + message ) }
 
-module.exports = function( express, session_options, application, __base ) {
+module.exports = function( express, session_options, application, base_route ) {
   XS.notifications = xs.set();
   
   var input                 = xs.pass_through()
@@ -28,17 +32,26 @@ module.exports = function( express, session_options, application, __base ) {
     , output                = xs.union( [ user_profile, user_provider_profile, user_provider_email ] )
     
     , users_database        = xs.encapsulate( input, output )
-    
-    , passport_route        = require( './passport_routes.js' )
   ;
   
   xs
     .passport_strategies( users_database )
     
-    .passport( users_database, application, passport_route, { session: session_options, base_route: __base } )
+    .passport( users_database )
+    
+    ._on( 'middleware', app_config )
   ;
+  
+  function app_config( passport, passport_routes ) {
+    application
+      .use( logger()                   ) // request logger middleware
+      .use( cookie_parser()            ) // cookie parser
+      .use( body_parser()              ) // extensible request body parser
+      .use( session( session_options ) ) // session management
+      .use( passport.initialize()      )
+      .use( passport.session()         )
+      .use( passport_routes()          )
+    ;
+  } // app_config()
+  
 } // module.exports
-
-function join_strategies( config_strategie, commun_strategie ) {
-  return extend( commun_strategie, config_strategie );
-}
