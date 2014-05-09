@@ -662,21 +662,45 @@ describe 'Query & Query_Tree test suite:', ->
             'split', ',', 'groups', 1, '==', ' consectetur adipisicing elit'
           ] ).to.be true
       
-      describe 'in', ->
-        it '"orange" in "pear", "orange", "banana"" -> true', ->
+      describe 'in, contains', ->
+        it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] -> true', ->
           expect( Query.evaluate user, "text", [
-            [ '$', "orange" ], 'in', "pear", "orange", "banana"
+            [ '$', "orange" ], 'in', [ '$',[ "pear", "orange", "banana" ] ]
           ] ).to.be true
         
-        it '( "orange" in "pear", "orange", "banana" ) == 1" -> true', ->
+        it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] == 1" -> true', ->
           expect( Query.evaluate user, "text", [
-            [ [ '$', "orange" ], 'in', "pear", "orange", "banana" ], '==', 1
+            [ '$', "orange" ], 'in', [ '$', [ "pear", "orange", "banana" ] ], '==', 1
           ] ).to.be true
         
-        it '"tomato" in "pear", "orange", "banana"" -> false', ->
+        it '"tomato" in [ "$", [ "pear", "orange", "banana" ] ] -> false', ->
           expect( Query.evaluate user, "text", [
-            [ '$', "tomato" ], 'in', "pear", "orange", "banana"
+            [ '$', "tomato" ], 'in', [ '$', [ "pear", "orange", "banana" ] ]
           ] ).to.be false
+        
+        it '"tomato" in user.fruits -> true', ->
+          expect( Query.evaluate user, "fruits", [ [ '$', "tomato" ], 'in', [] ] ).to.be true
+        
+        it '"apple" in user.fruits -> false', ->
+          expect( Query.evaluate user, "apple", [ [ '$', "tomato" ], 'in', [] ] ).to.be false
+        
+        it '"apple" in user.fruits == 2 -> false', ->
+          expect( Query.evaluate user, "apple", [ [ '$', "tomato" ], 'in', [], "==", 2 ] ).to.be false
+        
+        it '[ "tomato", "pear" ] in user.fruits -> true', ->
+          expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "pear" ] ], 'in', [] ] ).to.be true
+        
+        it '[ "tomato", "apple" ] in user.fruits -> false', ->
+          expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "apple" ] ], 'in', [] ] ).to.be false
+        
+        it '[ "apple", "tomato" ] in user.fruits -> false', ->
+          expect( Query.evaluate user, "fruits", [ [ '$', [ "apple", "tomato" ] ], 'in', [] ] ).to.be false
+        
+        it '[ "tomato", "pear" ] in user.fruits == 1 -> true', ->
+          expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "pear" ] ], 'in', [], "==", 1 ] ).to.be true
+        
+        it 'user.fruits contains [ "tomato", "pear" ] -> true', ->
+          expect( Query.evaluate user, "fruits", [ 'contains', [ '$', [ "tomato", "pear" ] ] ] ).to.be true
   
   describe 'Query():', ->
     q = q1 = null
