@@ -80,8 +80,6 @@ describe 'Query & Query_Tree test suite:', ->
       expect( e.message ).to.be 'message'
     
     it 'should have a stack', ->
-      console.log 'Query_Error stack trace', e.stack
-      
       expect( e.stack ).to.be.a 'string'
   
   describe 'Query.evaluate()', ->
