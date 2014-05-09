@@ -178,6 +178,7 @@ var xs_min = xs
     { path: 'lib/json.js'                  },
     { path: 'lib/uri.js'                   },
     { path: 'lib/events.js'                },
+    { path: 'lib/transforms.js'            },
     
     // xs socket.io
     { path: 'lib/socket_io_crossover.js'   },
