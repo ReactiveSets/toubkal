@@ -713,23 +713,28 @@ describe 'Query & Query_Tree test suite:', ->
           [ '$', 2014 ], 'year', '==', 2014
         ] ).to.be false
       
-      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'value', '==', 1399629385432 -> true", ->
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'value', '==', 1399632985432 -> true", ->
         expect( Query.evaluate user, "id", [
-          [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'value', '==', 1399629385432
+          [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'value', '==', 1399632985432
+        ] ).to.be true
+      
+      it "[ 'Date', 1399632985432 ], 'value', '==', 1399632985432 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 1399632985432 ], 'value', '==', 1399632985432
         ] ).to.be true
       
       it "user.date == [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] -> true", ->
-        user = { date: new Date( 2014, 4, 9, 10, 56, 25, 432 ) }
+        user = { date: new Date( Date.UTC( 2014, 4, 9, 10, 56, 25, 432 ) ) }
         
         expect( Query.evaluate user, "date", [
           '==', [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ]
         ] ).to.be true
       
       it "user.date value == 1399629385432 -> true", ->
-        user = { date: new Date( 2014, 4, 9, 10, 56, 25, 432 ) }
+        user = { date: new Date(  Date.UTC( 2014, 4, 9, 10, 56, 25, 432 ) ) }
         
         expect( Query.evaluate user, "date", [
-          'value', '==', 1399629385432
+          'value', '==', 1399632985432
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56 ] month == 4 -> true", ->
