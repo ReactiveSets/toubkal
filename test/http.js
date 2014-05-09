@@ -285,19 +285,13 @@ var mocha_expect = xs.set( [
   .union( [ mocha_css ] )
 ;
 
-var test_directory = xs
+// HTML test pages
+var html_tests = xs  
   .set( [ { path: 'test' } ] )
   
   .watch_directories()
   
-  .filter( [ { type: 'file' } ] )
-;
-
-// HTML test pages
-var html_tests = test_directory  
-  .filter( function( _ ) {
-    return _.path.match( /html$/ );
-  } )
+  .filter( [ { type: 'file', extension: 'html' } ] )
 ;
 
 // JavaScript test files
@@ -306,7 +300,7 @@ var javascript_files = xs
   
   .watch_directories()
   
-  .filter( [ { type: 'file' } ] )
+  .filter( [ { type: 'file', extension: 'js' } ] )
 ;
 
 // CSS and images for tests
@@ -325,20 +319,27 @@ var tests = xs
 ;
 
 
-var coffee_files = test_directory  
-  .filter( function( _ ) {
-    return _.path.match( /coffee$/ ); // ToDo: should be able to use extension
-  } )
+var coffee_files = xs
+  .set( [ { path: 'test/src' } ] )
+  
+  .watch_directories()
+  
+  .filter( [ { type: 'file', extension: 'coffee' } ] )
 ;
 
 var coffee_source = coffee_files
   .watch( { base_directory: __dirname + '/..' } )
 ;
 
-var compiled_coffee = coffee_files
-  .alter( function( _ ) {
-    _.path = _.path.replace( /coffee$/, 'js' )
-  } )
+
+var test_lib = xs
+  .set( [ { path: 'test/lib' } ] )
+  
+  .watch_directories()
+;
+
+var compiled_coffee = test_lib
+  .filter( [ { type: 'file', extension: 'js' } ] )
   
   .watch( { base_directory: __dirname + '/..' } )
   
@@ -350,10 +351,8 @@ var compiled_coffee = coffee_files
   } )
 ;
 
-var source_maps = test_directory
-  .filter( function( _ ) {
-    return _.path.match( /map$/ );
-  } )
+var source_maps = test_lib
+  .filter( [ { type: 'file', extension: 'map' } ] )
   
   .watch( { base_directory: __dirname + '/..' } )
   
@@ -371,7 +370,7 @@ var source_maps = test_directory
 tests.serve( http_servers, { routes: '/test' } );
 
 xs.union( [ mocha_expect, compiled_coffee, source_maps, coffee_source ] )
-  .serve( http_servers ) // test serve() with default route ('/')
+  .serve( http_servers, { routes: '/test' } ) // test serve() with default route ('/') does not work
 ;
 
 mocha_css.serve( http_servers, { routes: '/node_modules' } );
