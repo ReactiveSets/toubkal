@@ -661,46 +661,135 @@ describe 'Query & Query_Tree test suite:', ->
           expect( Query.evaluate user, "text", [
             'split', ',', 'groups', 1, '==', ' consectetur adipisicing elit'
           ] ).to.be true
+    
+    describe 'in, contains', ->
+      it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] -> true', ->
+        expect( Query.evaluate user, "text", [
+          [ '$', "orange" ], 'in', [ '$',[ "pear", "orange", "banana" ] ]
+        ] ).to.be true
       
-      describe 'in, contains', ->
-        it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] -> true', ->
-          expect( Query.evaluate user, "text", [
-            [ '$', "orange" ], 'in', [ '$',[ "pear", "orange", "banana" ] ]
-          ] ).to.be true
+      it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] == 1" -> true', ->
+        expect( Query.evaluate user, "text", [
+          [ '$', "orange" ], 'in', [ '$', [ "pear", "orange", "banana" ] ], '==', 1
+        ] ).to.be true
+      
+      it '"tomato" in [ "$", [ "pear", "orange", "banana" ] ] -> false', ->
+        expect( Query.evaluate user, "text", [
+          [ '$', "tomato" ], 'in', [ '$', [ "pear", "orange", "banana" ] ]
+        ] ).to.be false
+      
+      it '"tomato" in user.fruits -> true', ->
+        expect( Query.evaluate user, "fruits", [ [ '$', "tomato" ], 'in', [] ] ).to.be true
+      
+      it '"apple" in user.fruits -> false', ->
+        expect( Query.evaluate user, "apple", [ [ '$', "tomato" ], 'in', [] ] ).to.be false
+      
+      it '"apple" in user.fruits == 2 -> false', ->
+        expect( Query.evaluate user, "apple", [ [ '$', "tomato" ], 'in', [], "==", 2 ] ).to.be false
+      
+      it '[ "tomato", "pear" ] in user.fruits -> true', ->
+        expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "pear" ] ], 'in', [] ] ).to.be true
+      
+      it '[ "tomato", "apple" ] in user.fruits -> false', ->
+        expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "apple" ] ], 'in', [] ] ).to.be false
+      
+      it '[ "apple", "tomato" ] in user.fruits -> false', ->
+        expect( Query.evaluate user, "fruits", [ [ '$', [ "apple", "tomato" ] ], 'in', [] ] ).to.be false
+      
+      it '[ "tomato", "pear" ] in user.fruits == 1 -> true', ->
+        expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "pear" ] ], 'in', [], "==", 1 ] ).to.be true
+      
+      it 'user.fruits contains [ "tomato", "pear" ] -> true', ->
+        expect( Query.evaluate user, "fruits", [ 'contains', [ '$', [ "tomato", "pear" ] ] ] ).to.be true
+      
+    describe 'Date Object', ->
+      it "[ 'Date', 2014, 4, 9, 10, 56 ] year == 2014 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56 ], 'year', '==', 2014
+        ] ).to.be true
+      
+      it "2014 year == 2014 -> false", ->
+        expect( Query.evaluate user, "id", [
+          [ '$', 2014 ], 'year', '==', 2014
+        ] ).to.be false
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'value', '==', 1399629385432 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'value', '==', 1399629385432
+        ] ).to.be true
+      
+      it "user.date == [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] -> true", ->
+        user = { date: new Date( 2014, 4, 9, 10, 56, 25, 432 ) }
         
-        it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] == 1" -> true', ->
-          expect( Query.evaluate user, "text", [
-            [ '$', "orange" ], 'in', [ '$', [ "pear", "orange", "banana" ] ], '==', 1
-          ] ).to.be true
+        expect( Query.evaluate user, "date", [
+          '==', [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ]
+        ] ).to.be true
+      
+      it "user.date value == 1399629385432 -> true", ->
+        user = { date: new Date( 2014, 4, 9, 10, 56, 25, 432 ) }
         
-        it '"tomato" in [ "$", [ "pear", "orange", "banana" ] ] -> false', ->
-          expect( Query.evaluate user, "text", [
-            [ '$', "tomato" ], 'in', [ '$', [ "pear", "orange", "banana" ] ]
-          ] ).to.be false
-        
-        it '"tomato" in user.fruits -> true', ->
-          expect( Query.evaluate user, "fruits", [ [ '$', "tomato" ], 'in', [] ] ).to.be true
-        
-        it '"apple" in user.fruits -> false', ->
-          expect( Query.evaluate user, "apple", [ [ '$', "tomato" ], 'in', [] ] ).to.be false
-        
-        it '"apple" in user.fruits == 2 -> false', ->
-          expect( Query.evaluate user, "apple", [ [ '$', "tomato" ], 'in', [], "==", 2 ] ).to.be false
-        
-        it '[ "tomato", "pear" ] in user.fruits -> true', ->
-          expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "pear" ] ], 'in', [] ] ).to.be true
-        
-        it '[ "tomato", "apple" ] in user.fruits -> false', ->
-          expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "apple" ] ], 'in', [] ] ).to.be false
-        
-        it '[ "apple", "tomato" ] in user.fruits -> false', ->
-          expect( Query.evaluate user, "fruits", [ [ '$', [ "apple", "tomato" ] ], 'in', [] ] ).to.be false
-        
-        it '[ "tomato", "pear" ] in user.fruits == 1 -> true', ->
-          expect( Query.evaluate user, "fruits", [ [ '$', [ "tomato", "pear" ] ], 'in', [], "==", 1 ] ).to.be true
-        
-        it 'user.fruits contains [ "tomato", "pear" ] -> true', ->
-          expect( Query.evaluate user, "fruits", [ 'contains', [ '$', [ "tomato", "pear" ] ] ] ).to.be true
+        expect( Query.evaluate user, "date", [
+          'value', '==', 1399629385432
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56 ] month == 4 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56 ], 'month', '==', 4
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56 ] day == 9 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56 ], 'day', '==', 9
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56 ] hours == 10 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56 ], 'hours', '==', 10
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56 ] minutes == 56 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56 ], 'minutes', '==', 56
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25 ] seconds == 25 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56, 25 ], 'seconds', '==', 25
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] milliseconds == 432 -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'milliseconds', '==', 432
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] < [ 'Date' ] -> true", ->
+        expect( Query.evaluate user, "id", [
+          [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], '<', [ 'Date' ]
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], '-' [ 'Date', 2014, 4, 10, 10, 56, 25, 432 ] == -86400000 -> true", ->
+        expect( Query.evaluate user, "id", [
+            [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ]
+          '-'
+            [ 'Date', 2014, 4, 10, 10, 56, 25, 432 ]
+          '=='
+            -86400000
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] time == [ 'Date', 1970, 0, 1, 10, 56, 25, 432 ] -> true", ->
+        expect( Query.evaluate user, "id", [
+            [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'time'
+          '=='
+            [ 'Date', 1970, 0, 1, 10, 56, 25, 432  ]
+        ] ).to.be true
+      
+      it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'time' - [ [ 'Date', 2014, 4, 10, 10, 56, 26, 432 ], 'time' ] == -1000 -> true", ->
+        expect( Query.evaluate user, "id", [
+            [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'time'
+          '-'
+            [ [ 'Date', 2014, 4, 10, 10, 56, 26, 432 ], 'time' ]
+          '==', -1000
+        ] ).to.be true
   
   describe 'Query():', ->
     q = q1 = null
