@@ -838,7 +838,7 @@ describe 'XS test suite:', ->
     it 'set should be a Set', ->
       expect( set ).to.be.a XS.Set
     
-    it 'should throw an excpetion if trying to initialize a set with an Object not instance of Array', ->
+    it 'should throw an exception if trying to initialize a set with an Object not instance of Array', ->
       expect( () -> xs.set( {} ) ).to.throwException()
       
     cities = xs.set [
