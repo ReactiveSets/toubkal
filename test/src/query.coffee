@@ -1200,7 +1200,6 @@ describe 'Query & Query_Tree test suite:', ->
         branches   : {}
         keys       : []
         subscribers: []
-        subscribers_values: []
       }
     
     it 'Adding a query should generate a query tree', ->
@@ -1214,13 +1213,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_1 ]
-              subscribers_values: []
             }
           }
         }
         keys       : [ "flow" ]
         subscribers: []
-        subscribers_values: []
       }
       
     it 'Adding an empty OR-term should add subscriber to the root of the tree - i.e. unfiltered', ->
@@ -1234,13 +1231,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_1 ]
-              subscribers_values: []
             }
           }
         }
         keys       : [ "flow" ]
         subscribers: [ subscriber_2 ]
-        subscribers_values: []
       }
       
     it 'Adding an additional query should expand the query tree', ->
@@ -1261,7 +1256,6 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_1, subscriber_3 ]
-              subscribers_values: []
             }
             
             "group": {
@@ -1271,20 +1265,17 @@ describe 'Query & Query_Tree test suite:', ->
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
               subscribers: []
-              subscribers_values: []
             }
           }
           
@@ -1293,13 +1284,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_3 ]
-              subscribers_values: []
             }
           }
         }
         keys       : [ "flow", "id" ]
         subscribers: [ subscriber_2 ]
-        subscribers_values: []
       }
       
     it 'Remove a query should shrink the query tree', ->
@@ -1313,7 +1302,6 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_1, subscriber_3 ]
-              subscribers_values: []
             }
             
             "group": {
@@ -1323,20 +1311,17 @@ describe 'Query & Query_Tree test suite:', ->
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
               subscribers: []
-              subscribers_values: []
             }
           }
           
@@ -1345,13 +1330,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_3 ]
-              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
         subscribers: []
-        subscribers_values: []
       }
       
     it 'Remove another query should shrink the query tree further', ->
@@ -1365,7 +1348,6 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_1 ]
-              subscribers_values: []
             }
             
             "group": {
@@ -1375,20 +1357,17 @@ describe 'Query & Query_Tree test suite:', ->
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
               subscribers: []
-              subscribers_values: []
             }
           }
           
@@ -1397,13 +1376,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_3 ]
-              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
         subscribers: []
-        subscribers_values: []
       }
       
     it 'Remove another query should shrink the query tree even further', ->
@@ -1420,20 +1397,17 @@ describe 'Query & Query_Tree test suite:', ->
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
               subscribers: []
-              subscribers_values: []
             }
           }
           
@@ -1442,13 +1416,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_3 ]
-              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
         subscribers: []
-        subscribers_values: []
       }
       
     it 'Add and Remove empty queries should not change anything', ->
@@ -1465,20 +1437,17 @@ describe 'Query & Query_Tree test suite:', ->
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                   
                   "521": {
                     branches: {}
                     keys: []
                     subscribers: [ subscriber_3 ]
-                    subscribers_values: []
                   }
                 }
               }
               keys: [ "id" ]
               subscribers: []
-              subscribers_values: []
             }
           }
           
@@ -1487,13 +1456,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_3 ]
-              subscribers_values: []
             }
           }
         }
         keys      : [ "flow", "id" ]
         subscribers: []
-        subscribers_values: []
       }
       
     it 'Remove another query should shrink the query tree even further', ->
@@ -1512,13 +1479,11 @@ describe 'Query & Query_Tree test suite:', ->
               branches: {}
               keys: []
               subscribers: [ subscriber_3 ]
-              subscribers_values: []
             }
           }
         }
         keys      : [ "id" ]
         subscribers: []
-        subscribers_values: []
       }
       
     it 'Remove the last record, should empty the query tree', ->
@@ -1529,7 +1494,6 @@ describe 'Query & Query_Tree test suite:', ->
         branches  : {}
         keys      : []
         subscribers: []
-        subscribers_values: []
       }
       
   describe 'Query_Tree routing:', ->
