@@ -1189,14 +1189,14 @@ describe 'Query & Query_Tree test suite:', ->
     
     
   describe 'Query_Tree()', ->
-    tree = new XS.Pipelet()
+    tree = ( new XS.Pipelet() ).__output
     
     subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
     subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
     subscriber_3 = xs.set( [], { name: 'subscriber_3' } )
     
     it 'Pipelet() should allow to create a top query tree node', ->
-      expect( tree.query_tree_top ).to.be.eql {
+      expect( tree.top ).to.be.eql {
         branches   : {}
         keys       : []
         subscribers: []
@@ -1204,8 +1204,8 @@ describe 'Query & Query_Tree test suite:', ->
     
     it 'Adding a query should generate a query tree', ->
       expect( tree
-        .__query_tree_add( [ { flow: 'user' } ], subscriber_1 )
-        .query_tree_top
+        .add( [ { flow: 'user' } ], subscriber_1 )
+        .top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -1222,8 +1222,8 @@ describe 'Query & Query_Tree test suite:', ->
       
     it 'Adding an empty OR-term should add subscriber to the root of the tree - i.e. unfiltered', ->
       expect( tree
-        .__query_tree_add( [ {} ], subscriber_2 )
-        .query_tree_top
+        .add( [ {} ], subscriber_2 )
+        .top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -1241,14 +1241,14 @@ describe 'Query & Query_Tree test suite:', ->
     it 'Adding an additional query should expand the query tree', ->
       expect( tree
         
-        .__query_tree_add( [
+        .add( [
           { flow: 'user' }
           { flow: 'group', id: 527 }
           { id: 521, flow: 'group' }
           { id: 425 }
         ], subscriber_3 )
         
-        .query_tree_top
+        .top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -1293,8 +1293,8 @@ describe 'Query & Query_Tree test suite:', ->
       
     it 'Remove a query should shrink the query tree', ->
       expect( tree
-        .__query_tree_remove( [ {} ], subscriber_2 )
-        .query_tree_top
+        .remove( [ {} ], subscriber_2 )
+        .top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -1339,8 +1339,8 @@ describe 'Query & Query_Tree test suite:', ->
       
     it 'Remove another query should shrink the query tree further', ->
       expect( tree
-        .__query_tree_remove( [ { flow: 'user' } ], subscriber_3 )
-        .query_tree_top
+        .remove( [ { flow: 'user' } ], subscriber_3 )
+        .top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -1385,8 +1385,8 @@ describe 'Query & Query_Tree test suite:', ->
       
     it 'Remove another query should shrink the query tree even further', ->
       expect( tree
-        .__query_tree_remove( [ { flow: 'user' } ], subscriber_1 )
-        .query_tree_top
+        .remove( [ { flow: 'user' } ], subscriber_1 )
+        .top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -1425,8 +1425,8 @@ describe 'Query & Query_Tree test suite:', ->
       
     it 'Add and Remove empty queries should not change anything', ->
       expect( tree
-        .__query_tree_add( [] ).__query_tree_remove( [] )
-        .query_tree_top
+        .add( [] ).remove( [] )
+        .top
       ).to.be.eql {
         branches: {
           "flow": {
@@ -1466,12 +1466,12 @@ describe 'Query & Query_Tree test suite:', ->
     it 'Remove another query should shrink the query tree even further', ->
       expect( tree
         
-        .__query_tree_remove( [
+        .remove( [
           { flow: 'group', id: 521 }
           { id: 527, flow: 'group' }
         ], subscriber_3 )
         
-        .query_tree_top
+        .top
       ).to.be.eql {
         branches: {
           "id" : {
@@ -1488,8 +1488,8 @@ describe 'Query & Query_Tree test suite:', ->
       
     it 'Remove the last record, should empty the query tree', ->
       expect( tree
-        .__query_tree_remove( [ { id: 425 } ], subscriber_3 )
-        .query_tree_top
+        .remove( [ { id: 425 } ], subscriber_3 )
+        .top
       ).to.be.eql {
         branches  : {}
         keys      : []
@@ -1497,22 +1497,22 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    tree = new XS.Pipelet()
+    tree = new XS.Pipelet().__output
     
     subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
     subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
     subscriber_3 = xs.set( [], { name: 'subscriber_3' } )
     subscriber_4 = xs.set( [], { name: 'subscriber_4' } )
     
-    tree.__query_tree_add [ { flow: 'user', id: 123 } ], subscriber_1
+    tree.add [ { flow: 'user', id: 123 } ], subscriber_1
     
-    tree.__query_tree_add [ { flow: 'user', id: 345 } ], subscriber_2
+    tree.add [ { flow: 'user', id: 345 } ], subscriber_2
     
-    tree.__query_tree_add [ {} ], subscriber_3
+    tree.add [ {} ], subscriber_3
     
-    tree.__query_tree_add [ { id: 123 }, { flow: 'user' } ], subscriber_4
+    tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4
     
-    tree.__query_tree_emit 'add', [
+    tree.emit 'add', [
       { flow: 'group' }
       { id: 123 }
       { flow: 'user', id: 123 }
@@ -1549,7 +1549,7 @@ describe 'Query & Query_Tree test suite:', ->
         ]
 
     it "should alter first recepient's set", ( done ) ->
-      tree.__query_tree_emit 'remove', [ { flow: 'user', id: 123 } ]
+      tree.emit 'remove', [ { flow: 'user', id: 123 } ]
       
       subscriber_1._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -1561,7 +1561,7 @@ describe 'Query & Query_Tree test suite:', ->
         ]
     
     it 'Third subscriber set should have two record less after removing one more record', ( done ) ->
-      tree.__query_tree_emit 'remove', [ { id: 123 } ]
+      tree.emit 'remove', [ { id: 123 } ]
       
       subscriber_3._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
@@ -1570,7 +1570,7 @@ describe 'Query & Query_Tree test suite:', ->
         ]
       
     it 'Second subscriber be empy after removing one more record', ( done ) ->
-      tree.__query_tree_emit 'remove', [ { flow: 'user', id: 345 } ]
+      tree.emit 'remove', [ { flow: 'user', id: 345 } ]
       
       subscriber_2._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -1582,28 +1582,28 @@ describe 'Query & Query_Tree test suite:', ->
         ]
       
     it 'third subscriber should be empty after removing last record', ( done ) ->
-      tree.__query_tree_emit 'remove', [ { flow: 'group' } ]
+      tree.emit 'remove', [ { flow: 'group' } ]
       
       subscriber_3._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
       
     it '_clear should clear all records from all subscribers', ( done ) ->
-      tree.__query_tree_add [ { flow: 'user', id: 123 } ], subscriber_1
+      tree.add [ { flow: 'user', id: 123 } ], subscriber_1
       
-      tree.__query_tree_add [ { flow: 'user', id: 345 } ], subscriber_2
+      tree.add [ { flow: 'user', id: 345 } ], subscriber_2
       
-      tree.__query_tree_add [ {} ], subscriber_3
+      tree.add [ {} ], subscriber_3
       
-      tree.__query_tree_add [ { id: 123 }, { flow: 'user' } ], subscriber_4
+      tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4
       
-      tree.__query_tree_emit 'add', [
+      tree.emit 'add', [
         { flow: 'group' }
         { id: 123 }
         { flow: 'user', id: 123 }
         { flow: 'user', id: 345 }
       ]
       
-      tree.__query_tree_emit 'clear'
+      tree.emit 'clear'
       
       count = 4
       all_values = []
