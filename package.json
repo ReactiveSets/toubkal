@@ -47,6 +47,8 @@
     "body-parser"           : "1.0.2",
     "passport-twitter"      : "1.0.2",
     "passport-facebook"     : "1.0.3",
+    "passport-github"       : "0.1.5",
+    "passport-google-oauth" : "0.1.5",
     "cookie"                : "0.1.2",
     "uid2"                  : "0.0.3"
   },
