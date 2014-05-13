@@ -1189,7 +1189,7 @@ describe 'Query & Query_Tree test suite:', ->
     
     
   describe 'Query_Tree()', ->
-    tree = ( new XS.Pipelet() ).__output
+    tree = ( new XS.Pipelet() )._output
     
     subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
     subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
@@ -1497,7 +1497,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    tree = new XS.Pipelet().__output
+    tree = new XS.Pipelet()._output
     
     subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
     subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
