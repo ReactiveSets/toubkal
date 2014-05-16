@@ -1189,7 +1189,7 @@ describe 'Query & Query_Tree test suite:', ->
     
     
   describe 'Query_Tree()', ->
-    tree = ( new XS.Pipelet() )._output
+    tree = new XS.Query_Tree()
     
     subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
     subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
@@ -1497,7 +1497,9 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    tree = new XS.Pipelet()._output
+    output = new XS.Query_Tree_Output()
+    
+    tree = output.tree
     
     subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
     subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
@@ -1512,7 +1514,7 @@ describe 'Query & Query_Tree test suite:', ->
     
     tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4
     
-    tree.emit 'add', [
+    output.emit 'add', [
       { flow: 'group' }
       { id: 123 }
       { flow: 'user', id: 123 }
@@ -1549,7 +1551,7 @@ describe 'Query & Query_Tree test suite:', ->
         ]
 
     it "should alter first recepient's set", ( done ) ->
-      tree.emit 'remove', [ { flow: 'user', id: 123 } ]
+      output.emit 'remove', [ { flow: 'user', id: 123 } ]
       
       subscriber_1._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -1561,7 +1563,7 @@ describe 'Query & Query_Tree test suite:', ->
         ]
     
     it 'Third subscriber set should have two record less after removing one more record', ( done ) ->
-      tree.emit 'remove', [ { id: 123 } ]
+      output.emit 'remove', [ { id: 123 } ]
       
       subscriber_3._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
@@ -1570,7 +1572,7 @@ describe 'Query & Query_Tree test suite:', ->
         ]
       
     it 'Second subscriber be empy after removing one more record', ( done ) ->
-      tree.emit 'remove', [ { flow: 'user', id: 345 } ]
+      output.emit 'remove', [ { flow: 'user', id: 345 } ]
       
       subscriber_2._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -1582,7 +1584,7 @@ describe 'Query & Query_Tree test suite:', ->
         ]
       
     it 'third subscriber should be empty after removing last record', ( done ) ->
-      tree.emit 'remove', [ { flow: 'group' } ]
+      output.emit 'remove', [ { flow: 'group' } ]
       
       subscriber_3._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql []
@@ -1596,14 +1598,14 @@ describe 'Query & Query_Tree test suite:', ->
       
       tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4
       
-      tree.emit 'add', [
+      output.emit 'add', [
         { flow: 'group' }
         { id: 123 }
         { flow: 'user', id: 123 }
         { flow: 'user', id: 345 }
       ]
       
-      tree.emit 'clear'
+      output.emit 'clear'
       
       count = 4
       all_values = []
