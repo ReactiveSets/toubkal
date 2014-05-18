@@ -57,6 +57,7 @@ if require?
   require '../../lib/json.js'
 
 Pipelet = XS.Pipelet
+Greedy  = XS.Greedy
 Set     = XS.Set
 
 # ----------------------------------------------------------------------------------------------
@@ -815,6 +816,29 @@ describe 'XS test suite:', ->
   
   describe 'Pipelets Connections', ->
     values = [ { id: 1 }, { id: 2 } ]
+    
+    source = new Pipelet()
+    lazy   = new Pipelet()
+    greedy = new Greedy()
+    
+    lazy._add_source source
+    greedy._add_source source
+    
+    it 'source should have lazy and greedy as outputs', ->
+      expect( source._output.destinations ).to.be.eql [ lazy, greedy ]
+    
+    it 'lazy should have source as its input', ->
+      expect( lazy._input.source ).to.be source
+      
+    it 'greedy should have source as its input', ->
+      expect( greedy._input.source ).to.be source
+      
+    it 'source query tree should have greedy as a subscriber in its top node', ->
+      expect( source._output.tree.top ).to.be.eql {
+        branches   : {}
+        keys       : []
+        subscribers: [ greedy ]
+      }
     
     it 'should have fetched content into a set through a stateless pipelet', ->
       s = xs.set( values ).pass_through().set()

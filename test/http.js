@@ -167,6 +167,7 @@ var xs_min = xs
     // xs core
     { path: 'lib/xs.js'                    },
     { path: 'lib/code.js'                  },
+    //{ path: 'lib/trace_domain.js'          },
     { path: 'lib/query.js'                 },
     { path: 'lib/pipelet.js'               },
     { path: 'lib/filter.js'                },
@@ -382,6 +383,7 @@ pipelet_min.serve( http_servers, { routes: '/lib' } );
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
 // xs.union( [ xs_core_min, xs_ui_min, xs_min ] )
 xs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
+  ._input // To add xs.serve() sources
   ._insert_source_union()         // adding a union as the source of xs.serve()
   ._add_source( xs_core_min     ) // now adding sources to that union
   ._add_source( xs_ui_min       )
@@ -449,11 +451,11 @@ xs.union( [
   
   .set()
 ;
-/*
+
 setInterval( function() {
   source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 );
-*/
+
 setTimeout( function() {
   client_filter._add( [ { flow: 'client_set', id: 2 } ] );
 }, 15000 );
