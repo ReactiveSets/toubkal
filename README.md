@@ -1,7 +1,7 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *541 tests*
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *545 tests*
 
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
@@ -468,7 +468,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 541 automated tests for the XS core pipelets that run after every
+We have curently developped 545 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
 Travis had an issue with it around January 2014. Version 0.11 is not officially supported
 because ui tests using zombie cannot pass at this time.
@@ -504,7 +504,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd ConnectedSets
 # ./run_tests.sh
 Full test results are in test.out
--> passed 541 of 541 tests (4196ms)
+-> passed 545 of 545 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -744,6 +744,8 @@ node server.js
 
 - Intergrate Safe Complex Query expressions into Query and Query_Tree
 
+- Refactor class model, extract input and output attributes and methods to Input and Output plug classes
+
 ##### Features already developped:
 
 - Safe Complex Query expressions:
@@ -791,7 +793,7 @@ node server.js
 ```
 
 - Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-- 541 automated tests
+- 545 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
@@ -811,6 +813,14 @@ Query.Evaluation_Context  | Evaluation context for complex query expressions
 Query.evaluate()          | Query class method to evaluate complex query expressions
 Query.Operator()          | Adds a Query expression operator
 Query.fail                | Failure value for Query expressions
+Plug                      | Base class for Input and Output plugs
+Input                     | Pipelet default Input plug
+Output                    | Base Output plug
+Query_Tree_Output         | Pipelet default Output plug
+Controllet_Input          | Input plug for controllets
+Controllet_Output         | Output plug for controllets
+Union_Input               | Input plug for Union (allows many sources)
+Union_Output              | Output plug for Union
 
 ### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
 
