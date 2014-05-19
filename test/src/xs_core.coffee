@@ -824,8 +824,8 @@ describe 'XS test suite:', ->
     lazy._add_source source
     greedy._add_source source
     
-    it 'source should have lazy and greedy as outputs', ->
-      expect( source._output.destinations ).to.be.eql [ lazy, greedy ]
+    it 'source should have lazy and greedy inputs as outputs', ->
+      expect( source._output.destinations ).to.be.eql [ lazy._input, greedy._input ]
     
     it 'lazy should have source as its input', ->
       expect( lazy._input.source ).to.be source
