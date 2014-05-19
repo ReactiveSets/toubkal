@@ -1191,9 +1191,11 @@ describe 'Query & Query_Tree test suite:', ->
   describe 'Query_Tree()', ->
     tree = new XS.Query_Tree()
     
-    subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
-    subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
-    subscriber_3 = xs.set( [], { name: 'subscriber_3' } )
+    Input = XS.Input
+    
+    subscriber_1 = new Input( {}, 'subscriber_1' )
+    subscriber_2 = new Input( {}, 'subscriber_2' )
+    subscriber_3 = new Input( {}, 'subscriber_3' )
     
     it 'Pipelet() should allow to create a top query tree node', ->
       expect( tree.top ).to.be.eql {
@@ -1506,13 +1508,13 @@ describe 'Query & Query_Tree test suite:', ->
     subscriber_3 = xs.set( [], { name: 'subscriber_3' } )
     subscriber_4 = xs.set( [], { name: 'subscriber_4' } )
     
-    tree.add [ { flow: 'user', id: 123 } ], subscriber_1
+    tree.add [ { flow: 'user', id: 123 } ], subscriber_1._input
     
-    tree.add [ { flow: 'user', id: 345 } ], subscriber_2
+    tree.add [ { flow: 'user', id: 345 } ], subscriber_2._input
     
-    tree.add [ {} ], subscriber_3
+    tree.add [ {} ], subscriber_3._input
     
-    tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4
+    tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4._input
     
     output.emit 'add', [
       { flow: 'group' }
@@ -1590,13 +1592,13 @@ describe 'Query & Query_Tree test suite:', ->
         expect( values ).to.be.eql []
       
     it '_clear should clear all records from all subscribers', ( done ) ->
-      tree.add [ { flow: 'user', id: 123 } ], subscriber_1
+      tree.add [ { flow: 'user', id: 123 } ], subscriber_1._input
       
-      tree.add [ { flow: 'user', id: 345 } ], subscriber_2
+      tree.add [ { flow: 'user', id: 345 } ], subscriber_2._input
       
-      tree.add [ {} ], subscriber_3
+      tree.add [ {} ], subscriber_3._input
       
-      tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4
+      tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4._input
       
       output.emit 'add', [
         { flow: 'group' }

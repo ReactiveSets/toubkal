@@ -837,7 +837,7 @@ describe 'XS test suite:', ->
       expect( source._output.tree.top ).to.be.eql {
         branches   : {}
         keys       : []
-        subscribers: [ greedy ]
+        subscribers: [ greedy._input ]
       }
     
     it 'should have fetched content into a set through a stateless pipelet', ->
