@@ -817,10 +817,11 @@ Plug                      | Base class for Input and Output plugs
 Input                     | Pipelet default Input plug
 Output                    | Base Output plug
 Query_Tree_Output         | Pipelet default Output plug
-Controllet_Input          | Input plug for controllets
-Controllet_Output         | Output plug for controllets
-Union_Input               | Input plug for Union (allows many sources)
-Union_Output              | Output plug for Union
+Controllet.Input          | Input plug for controllets
+Controllet.Output         | Output plug for controllets
+Union.Input               | Input plug for Union (allows many sources)
+Union.Output              | Output plug for Union
+Set.Output                | Output plug for Set
 
 ### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
 
