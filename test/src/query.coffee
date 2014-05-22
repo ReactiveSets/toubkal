@@ -1191,7 +1191,7 @@ describe 'Query & Query_Tree test suite:', ->
   describe 'Query_Tree()', ->
     tree = new XS.Query_Tree()
     
-    Input = XS.Input
+    Input = Pipelet.Input
     
     subscriber_1 = new Input( {}, 'subscriber_1' )
     subscriber_2 = new Input( {}, 'subscriber_2' )
@@ -1499,7 +1499,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    output = new XS.Query_Tree_Output()
+    output = new XS.Pipelet.Output()
     
     tree = output.tree
     

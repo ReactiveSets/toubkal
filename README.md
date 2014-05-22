@@ -734,19 +734,21 @@ node server.js
 
 ##### Features in progress:
 
-- Authentication with Passport
-  - Provider credentials from configuration
-  - User Identities Management
-  - Dynamic Routes Management
-  - Integration with express
-
 - Out-of-band fetchable global 'trace' dataflow for: exceptions, errors, and debug information
 
 - Intergrate Safe Complex Query expressions into Query and Query_Tree
 
 - Refactor class model, extract input and output attributes and methods to Input and Output plug classes
 
+- Finalize transactions model, including solution for graph diamond issue
+
 ##### Features already developped:
+
+- Authentication with Passport
+  - Provider credentials from configuration
+  - User Identities Management
+  - Dynamic Routes Management
+  - Integration with express
 
 - Safe Complex Query expressions:
   - Sanitized for safe execution on server even when crafted by untrusted clients
@@ -814,9 +816,8 @@ Query.evaluate()          | Query class method to evaluate complex query express
 Query.Operator()          | Adds a Query expression operator
 Query.fail                | Failure value for Query expressions
 Plug                      | Base class for Input and Output plugs
-Input                     | Pipelet default Input plug
-Output                    | Base Output plug
-Query_Tree_Output         | Pipelet default Output plug
+Pipelet.Input             | Pipelet default Input plug
+Pipelet.Output            | Base Output plug
 Controllet.Input          | Input plug for controllets
 Controllet.Output         | Output plug for controllets
 Union.Input               | Input plug for Union (allows many sources)
