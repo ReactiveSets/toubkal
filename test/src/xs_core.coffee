@@ -416,28 +416,41 @@ describe 'XS test suite:', ->
       expect( more_2.transaction_id ).to.match valid_uuid_v4
 
     it 'XS.more( { a: 1, b: {} } ) should conserve a and b', ->
-      expect( more_2 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: more_2.transaction_id }
+      expect( more_2 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: more_2.transaction_id, _t: {
+        id: more_2.transaction_id
+        more: true
+      } }
 
     it 'XS.more( { a: 1, b: {}, more: true, transaction_id: uuid_v4() } ) should return self', ->
       expect( more_3 ).to.be more_2
 
     it 'check test value { a: 1, b: {}, more: false, transaction_id: uuid_v4() }', ->
-      expect( more_4 ).to.be.eql { a: 1, b: {}, more: false, transaction_id: more_3.transaction_id }
+      expect( more_4 ).to.be.eql { a: 1, b: {}, more: false, transaction_id: more_3.transaction_id, _t: {
+        id: more_3.transaction_id
+      } }
 
     it 'XS.more( { a: 1, b: {}, more: false, transaction_id: uuid_v4() } ) should set more to true', ->
       expect( more_5 ).to.be.eql more_2
 
     it 'check test value { a: 1, b: {}, transaction_id: uuid_v4() }', ->
-      expect( more_6 ).to.be.eql { a: 1, b: {}, transaction_id: more_3.transaction_id }
+      expect( more_6 ).to.be.eql { a: 1, b: {}, transaction_id: more_3.transaction_id, _t: {
+        id: more_3.transaction_id
+      } }
 
     it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set more to true', ->
       expect( more_7 ).to.be.eql more_2
 
     it 'check test value { a: 1, b: {}, transaction_id: 1 }', ->
-      expect( more_8 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: 1 }
+      expect( more_8 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: 1, _t: {
+        id: 1
+        more: true
+      } }
 
     it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set transaction id to uuid v4 ', ->
-      expect( more_9 ).to.be.eql( { a: 1, b: {}, more: true, transaction_id: more_9.transaction_id } ) &&
+      expect( more_9 ).to.be.eql( { a: 1, b: {}, more: true, transaction_id: more_9.transaction_id, _t: {
+        id: more_9.transaction_id
+        more: true
+      } } ) &&
       expect( more_9.transaction_id ).to.match valid_uuid_v4
 
   # more()
@@ -529,7 +542,7 @@ describe 'XS test suite:', ->
       it 'should be a Transaction with a count of 4', ->
         expect( t ).to.be.a Transaction
         expect( t.source_options ).to.be undefined
-        expect( t.emit_options ).to.be undefined
+        expect( t.emit_options ).to.be.eql {}
         expect( t.o.__t ).to.be t
         
       it 't.toJSON() should return a representation of the new transaction', ->
@@ -579,7 +592,10 @@ describe 'XS test suite:', ->
       
       it 'should continue to provide "more" and the same "transaction_id" after next().get_emit_options()', ->
         expect( t.next().get_emit_options() ).to.be     options
-        expect( options                     ).to.be.eql { more: true, transaction_id: tid }
+        expect( options                     ).to.be.eql { more: true, transaction_id: tid, _t: {
+          id: tid
+          more: true
+        } }
       
       it 'should decrease count to 1 and set added_length to 2 after t.__emit_add( [{}{}] )', ->
         expect( t.__emit_add( [{},{}] ).toJSON() ).to.be.eql {
@@ -609,7 +625,10 @@ describe 'XS test suite:', ->
         expect( t.get_options() ).to.be.eql { __t: t, more: true }
       
       it 'should return more with transaction id with t.get_emit_options()', ->
-        expect( t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid }
+        expect( t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid, _t: {
+          id: tid
+          more: true
+        } }
       
       it 'should no longer need close but it should now be closed', ->
         expect( t.toJSON() ).to.be.eql {
@@ -624,7 +643,10 @@ describe 'XS test suite:', ->
         }
       
       it 'should allow to retrieve options with t.get_emit_options()', ->
-        expect( options = t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid }
+        expect( options = t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid, _t: {
+          id: tid
+          more: true
+        } }
         
       it 'should not change the state of the transaction', ->
         expect( t.toJSON() ).to.be.eql {
@@ -658,7 +680,10 @@ describe 'XS test suite:', ->
       tid = uuid_v4()
       
       options = { more: true, transaction_id: tid, a: 1, b: [1,2] }
-      options_original = clone( options );
+      options_original = clone( options )
+      options_original._t = {
+        more: true
+      };
       
       t = transactions.get_transaction 4, options, pipelet
       
