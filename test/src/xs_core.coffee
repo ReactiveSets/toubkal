@@ -679,11 +679,8 @@ describe 'XS test suite:', ->
       
       tid = uuid_v4()
       
-      options = { more: true, transaction_id: tid, a: 1, b: [1,2] }
+      options = { more: true, transaction_id: tid, _t: { id: tid, more: true }, a: 1, b: [1,2] }
       options_original = clone( options )
-      options_original._t = {
-        more: true
-      };
       
       t = transactions.get_transaction 4, options, pipelet
       
@@ -804,6 +801,8 @@ describe 'XS test suite:', ->
         
       it 'should return the same transaction after follow-up transactions.get_transaction()', ->
         options.more = false
+        delete options._t.more
+        
         orginal_options = clone options
         
         t1 = transactions.get_transaction 4, options, pipelet
