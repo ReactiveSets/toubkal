@@ -575,8 +575,8 @@ describe 'XS test suite:', ->
       it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
         options = t.get_emit_options()
         
-        expect( options.more ).to.be.eql true
-        expect( tid = options.transaction_id ).to.match valid_uuid_v4
+        expect( options._t.more ).to.be.eql true
+        expect( tid = options._t.id ).to.match valid_uuid_v4
       
       it 'need_close should be true', ->
         expect( t.toJSON() ).to.be.eql {
@@ -592,7 +592,7 @@ describe 'XS test suite:', ->
       
       it 'should continue to provide "more" and the same "transaction_id" after next().get_emit_options()', ->
         expect( t.next().get_emit_options() ).to.be     options
-        expect( options                     ).to.be.eql { more: true, transaction_id: tid, _t: {
+        expect( options                     ).to.be.eql { more: true, _t: {
           id: tid
           more: true
         } }
@@ -625,7 +625,7 @@ describe 'XS test suite:', ->
         expect( t.get_options() ).to.be.eql { __t: t, more: true }
       
       it 'should return more with transaction id with t.get_emit_options()', ->
-        expect( t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid, _t: {
+        expect( t.get_emit_options() ).to.be.eql { more: true, _t: {
           id: tid
           more: true
         } }
@@ -643,7 +643,7 @@ describe 'XS test suite:', ->
         }
       
       it 'should allow to retrieve options with t.get_emit_options()', ->
-        expect( options = t.get_emit_options() ).to.be.eql { more: true, transaction_id: tid, _t: {
+        expect( options = t.get_emit_options() ).to.be.eql { more: true, _t: {
           id: tid
           more: true
         } }
