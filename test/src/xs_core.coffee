@@ -477,57 +477,64 @@ describe 'XS test suite:', ->
   # no_more()
   ###
 
-  describe 'XS.only_more():', ->
-    it 'XS.only_more should be a function with one parameter', ->
-      expect( XS.only_more ).to.be.a( 'function' ) &&
-      expect( XS.only_more.length ).to.be.eql 1
+  describe 'XS.options_forward():', ->
+    options_forward = XS.options_forward
+    uuid = uuid_v4()
+    
+    it 'should be a function with one parameter', ->
+      expect( options_forward ).to.be.a( 'function' ) &&
+      expect( options_forward.length ).to.be.eql 1
+    
+    it 'should return {} when called with no source options', ->
+      expect( options_forward() ).to.be.eql {}
+    
+    it 'should return {} with options { a: 1, b: {}, _t: { more: false } }', ->
+      expect( options_forward { a: 1, b: {}, _t: { more: false } } ).to.be.eql {}
+    
+    it 'should return {} with options { a: 1; b: {} }', ->
+      expect( options_forward { a: 1, b: {} } ).to.be.eql {}
+    
+    it 'should return {} with options { a: 1, _t: { more: "" } }', ->
+      expect( options_forward { a: 1, _t: { more: "" } } ).to.be.eql {}
+    
+    it 'should throw an exception for missing transaction id with options { a: 1, _t: { more: true } }', ->
+      expect( () -> options_forward { a: 1, b: {}, _t: { more: true } } ).to.throwException()
 
-    it 'XS.only_more() should return undefined', ->
-      expect( XS.only_more() ).to.be.eql {}
-
-    it 'XS.only_more( { more: false, a: 1; b: {} } ) should return {}', ->
-      expect( XS.only_more( { more: false, a: 1; b: {} } ) ).to.be.eql {}
-
-    it 'XS.only_more( { a: 1; b: {} } ) should return {}', ->
-      expect( XS.only_more( { a: 1; b: {} } ) ).to.be.eql {}
-
-    it 'XS.only_more( { more: "", a: 1; b: {} } ) should return {}', ->
-      expect( XS.only_more( { more: '', a: 1; b: {} } ) ).to.be.eql {}
-
-    it 'XS.only_more( { more: true, a: 1; b: {} } ) should throw an exception for missing transaction id', ->
-      expect( () -> XS.only_more( { more: true, a: 1; b: {} } ) ).to.throwException()
-
-    it 'XS.only_more( { more: true, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
-      more = { more: true, transaction_id: uuid_v4(), a: 1; b: {} }
-
-      expect( XS.only_more( more ) ).to.be.eql( { more: true, transaction_id: more.transaction_id } ) &&
-      expect( more.transaction_id ).to.match valid_uuid_v4
-
-    it 'XS.only_more( { more: false, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
-      more = { more: false, transaction_id: uuid_v4(), a: 1; b: {} }
-
-      expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
-      expect( more.transaction_id ).to.match valid_uuid_v4
-
-    it 'XS.only_more( { more: 1, transaction_id: uuid_v4, a: 1; b: {} } ) should return { more: true, transaction_id: uuid_v4 }', ->
-      more = { more: 1, transaction_id: uuid_v4(), a: 1; b: {} }
-
-      expect( XS.only_more( more ) ).to.be.eql( { more: true, transaction_id: more.transaction_id } ) &&
-      expect( more.transaction_id ).to.match valid_uuid_v4
-
-    it 'XS.only_more( { more: 0, transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', ->
-      more = { more: 0, transaction_id: uuid_v4(), a: 1; b: {} }
-
-      expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
-      expect( more.transaction_id ).to.match valid_uuid_v4
-
-    it 'XS.only_more( { transaction_id: uuid_v4, a: 1; b: {} } ) should return { transaction_id: uuid_v4 }', ->
-      more = { transaction_id: uuid_v4(), a: 1; b: {} }
-
-      expect( XS.only_more( more ) ).to.be.eql( { transaction_id: more.transaction_id } ) &&
-      expect( more.transaction_id ).to.match valid_uuid_v4
-
-  # only_more()
+    it 'should return { more: true, transaction_id: uuid, _t: { more: true, id: uuid } } with options { a: 1, _t: { more: true, id: uuid } }', ->
+      more = { a: 1, _t: { more: true, id: uuid } }
+      
+      expect( options_forward more ).to.be.eql {
+        more: true, transaction_id: uuid, _t: { more: true, id: uuid }
+      }
+    
+    it 'should return { transaction_id: uuid, _t: { id: uuid } } with options { _t: { more: false, id: uuid } )', ->
+      more = { _t: { more: false, id: uuid } }
+      
+      expect( options_forward more ).to.be.eql {
+        transaction_id: uuid, _t: { id: uuid }
+      }
+      
+    it 'should return { more: true, transaction_id: uuid, _t: { more: true, id: uuid } } with options { _t: { more: 1, id: uuid } }', ->
+      more = { _t: { more: 1, id: uuid } }
+      
+      expect( options_forward more ).to.be.eql {
+        more: true, transaction_id: uuid, _t: { more: true, id: uuid }
+      }
+      
+    it 'should return { transaction_id: uuid, _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
+      more = { _t: { more: 0, id: uuid } }
+      
+      expect( XS.options_forward( more ) ).to.be.eql {
+        transaction_id: uuid, _t: { id: uuid }
+      }
+    
+    it 'should return { transaction_id: uuid; _t: { id: uuid } } with options { _t: { id: uuid } }', ->
+      more = { _t : { id: uuid } }
+      
+      expect( XS.options_forward( more ) ).to.be.eql {
+        transaction_id: uuid, _t: { id: uuid }
+      }
+  # options_forward()
 
   describe 'XS.Transactions() and XS.Transaction():', ->
     Transaction  = XS.Transaction
