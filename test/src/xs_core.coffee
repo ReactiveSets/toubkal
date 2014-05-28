@@ -500,39 +500,39 @@ describe 'XS test suite:', ->
     it 'should throw an exception for missing transaction id with options { a: 1, _t: { more: true } }', ->
       expect( () -> options_forward { a: 1, b: {}, _t: { more: true } } ).to.throwException()
 
-    it 'should return { more: true, transaction_id: uuid, _t: { more: true, id: uuid } } with options { a: 1, _t: { more: true, id: uuid } }', ->
+    it 'should return { _t: { more: true, id: uuid } } with options { a: 1, _t: { more: true, id: uuid } }', ->
       more = { a: 1, _t: { more: true, id: uuid } }
       
       expect( options_forward more ).to.be.eql {
-        more: true, transaction_id: uuid, _t: { more: true, id: uuid }
+        _t: { more: true, id: uuid }
       }
     
-    it 'should return { transaction_id: uuid, _t: { id: uuid } } with options { _t: { more: false, id: uuid } )', ->
+    it 'should return { _t: { id: uuid } } with options { _t: { more: false, id: uuid } )', ->
       more = { _t: { more: false, id: uuid } }
       
       expect( options_forward more ).to.be.eql {
-        transaction_id: uuid, _t: { id: uuid }
+        _t: { id: uuid }
       }
       
-    it 'should return { more: true, transaction_id: uuid, _t: { more: true, id: uuid } } with options { _t: { more: 1, id: uuid } }', ->
+    it 'should return { _t: { more: true, id: uuid } } with options { _t: { more: 1, id: uuid } }', ->
       more = { _t: { more: 1, id: uuid } }
       
       expect( options_forward more ).to.be.eql {
-        more: true, transaction_id: uuid, _t: { more: true, id: uuid }
+        _t: { more: true, id: uuid }
       }
       
-    it 'should return { transaction_id: uuid, _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
+    it 'should return { _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
       more = { _t: { more: 0, id: uuid } }
       
       expect( XS.options_forward( more ) ).to.be.eql {
-        transaction_id: uuid, _t: { id: uuid }
+        _t: { id: uuid }
       }
     
-    it 'should return { transaction_id: uuid; _t: { id: uuid } } with options { _t: { id: uuid } }', ->
+    it 'should return { _t: { id: uuid } } with options { _t: { id: uuid } }', ->
       more = { _t : { id: uuid } }
       
       expect( XS.options_forward( more ) ).to.be.eql {
-        transaction_id: uuid, _t: { id: uuid }
+        _t: { id: uuid }
       }
   # options_forward()
 
@@ -599,7 +599,7 @@ describe 'XS test suite:', ->
       
       it 'should continue to provide "more" and the same "transaction_id" after next().get_emit_options()', ->
         expect( t.next().get_emit_options() ).to.be     options
-        expect( options                     ).to.be.eql { more: true, _t: {
+        expect( options                     ).to.be.eql { _t: {
           id: tid
           more: true
         } }
@@ -632,7 +632,7 @@ describe 'XS test suite:', ->
         expect( t.get_options() ).to.be.eql { __t: t, more: true }
       
       it 'should return more with transaction id with t.get_emit_options()', ->
-        expect( t.get_emit_options() ).to.be.eql { more: true, _t: {
+        expect( t.get_emit_options() ).to.be.eql { _t: {
           id: tid
           more: true
         } }
@@ -650,7 +650,7 @@ describe 'XS test suite:', ->
         }
       
       it 'should allow to retrieve options with t.get_emit_options()', ->
-        expect( options = t.get_emit_options() ).to.be.eql { more: true, _t: {
+        expect( options = t.get_emit_options() ).to.be.eql { _t: {
           id: tid
           more: true
         } }
@@ -686,7 +686,7 @@ describe 'XS test suite:', ->
       
       tid = uuid_v4()
       
-      options = { more: true, transaction_id: tid, _t: { id: tid, more: true }, a: 1, b: [1,2] }
+      options = { _t: { id: tid, more: true }, a: 1, b: [1,2] }
       options_original = clone( options )
       
       t = transactions.get_transaction 4, options, pipelet
@@ -807,7 +807,6 @@ describe 'XS test suite:', ->
         ]
         
       it 'should return the same transaction after follow-up transactions.get_transaction()', ->
-        options.more = false
         delete options._t.more
         
         orginal_options = clone options
