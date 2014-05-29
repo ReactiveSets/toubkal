@@ -351,9 +351,9 @@ describe 'XS test suite:', ->
       expect( emitter._events.complete.length ).to.be 1
       
     it 'should allow to emit the "complete" event', ->
-      expect( emitter._emit_event( "complete", [ { more: false } ] ) ).to.be emitter
+      expect( emitter._emit_event( "complete", [ { _t: { more: false } } ] ) ).to.be emitter
       expect( data ).to.be.eql [ { a: 1 } ]
-      expect( complete ).to.be.eql [ { more: false } ]
+      expect( complete ).to.be.eql [ { _t: { more: false } } ]
       
     it 'should then remove the listener on the "complete" event', ->
       expect( Object.keys emitter._events ).to.be.eql [ "data", "complete" ]
@@ -363,120 +363,10 @@ describe 'XS test suite:', ->
     it 'should then allow to emit the "complete" event with calling the complete listener', ->
       expect( emitter._emit_event( "complete", [ { id: 1 } ] ) ).to.be emitter
       expect( data ).to.be.eql [ { a: 1 } ]
-      expect( complete ).to.be.eql [ { more: false } ]
+      expect( complete ).to.be.eql [ { _t: { more: false } } ]
       
   # XS.Event_Emitter()
   
-  ###
-  describe 'XS.more():', ->
-    v4 = uuid_v4()
-
-    more_0 = XS.more()
-    more_1 = XS.more {}
-    more_2 = XS.more { a: 1, b: {} }
-    more_3 = XS.more more_2
-
-    more_4 = extend {}, more_3
-    more_4.more = false
-    more_5 = XS.more more_4
-
-    more_6 = extend {}, more_3
-    delete more_6.more
-    more_7 = XS.more more_6
-
-    more_8 = extend {}, more_7
-    more_8.transaction_id = 1
-    more_9 = XS.more more_8
-    
-    it 'XS.more() should set more', ->
-      expect( more_0.more ).to.be.eql true
-
-    it 'XS.more() should provide a transaction_id string', ->
-      expect( more_0.transaction_id ).to.be.a 'string'
-
-    it 'XS.more() transaction id should match uuid v4 string', ->
-      expect( more_0.transaction_id ).to.match valid_uuid_v4
-
-    it 'XS.more( {} ) should set more', ->
-      expect( more_1.more ).to.be.eql true
-
-    it 'XS.more( {} ) should provide a transaction_id string', ->
-      expect( more_1.transaction_id ).to.be.a 'string'
-
-    it 'XS.more( {} ) transaction id should match uuid v4 string', ->
-      expect( more_1.transaction_id ).to.match valid_uuid_v4
-
-    it 'XS.more( { a: 1, b: {} } ) should set more', ->
-      expect( more_2.more ).to.be.eql true
-
-    it 'XS.more( { a: 1, b: {} } ) should provide a transaction_id string', ->
-      expect( more_2.transaction_id ).to.be.a 'string'
-
-    it 'XS.more( { a: 1, b: {} } ) transaction id should match uuid v4 string', ->
-      expect( more_2.transaction_id ).to.match valid_uuid_v4
-
-    it 'XS.more( { a: 1, b: {} } ) should conserve a and b', ->
-      expect( more_2 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: more_2.transaction_id, _t: {
-        id: more_2.transaction_id
-        more: true
-      } }
-
-    it 'XS.more( { a: 1, b: {}, more: true, transaction_id: uuid_v4() } ) should return self', ->
-      expect( more_3 ).to.be more_2
-
-    it 'check test value { a: 1, b: {}, more: false, transaction_id: uuid_v4() }', ->
-      expect( more_4 ).to.be.eql { a: 1, b: {}, more: false, transaction_id: more_3.transaction_id, _t: {
-        id: more_3.transaction_id
-      } }
-
-    it 'XS.more( { a: 1, b: {}, more: false, transaction_id: uuid_v4() } ) should set more to true', ->
-      expect( more_5 ).to.be.eql more_2
-
-    it 'check test value { a: 1, b: {}, transaction_id: uuid_v4() }', ->
-      expect( more_6 ).to.be.eql { a: 1, b: {}, transaction_id: more_3.transaction_id, _t: {
-        id: more_3.transaction_id
-      } }
-
-    it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set more to true', ->
-      expect( more_7 ).to.be.eql more_2
-
-    it 'check test value { a: 1, b: {}, transaction_id: 1 }', ->
-      expect( more_8 ).to.be.eql { a: 1, b: {}, more: true, transaction_id: 1, _t: {
-        id: 1
-        more: true
-      } }
-
-    it 'XS.more( { a: 1, b: {}, transaction_id: uuid_v4() } ) should set transaction id to uuid v4 ', ->
-      expect( more_9 ).to.be.eql( { a: 1, b: {}, more: true, transaction_id: more_9.transaction_id, _t: {
-        id: more_9.transaction_id
-        more: true
-      } } ) &&
-      expect( more_9.transaction_id ).to.match valid_uuid_v4
-
-  # more()
-
-  describe 'XS.no_more():', ->
-    more_0 = XS.more()
-    more_0_clone = clone more_0
-
-    more_1 = XS.more { a: 1 }
-    more_1_clone = clone more_1
-
-    it 'should have original transaction id but no "more" flag', ->
-      expect( XS.no_more more_0 ).to.be.eql { transaction_id: more_0.transaction_id }
-
-    it 'should not alter original object', ->
-      expect( more_0 ).to.be.eql more_0_clone
-
-    it 'should have original transaction id with other attributes but no "more" flag', ->
-      expect( XS.no_more more_1 ).to.be.eql { transaction_id: more_1.transaction_id, a: 1 }
-
-    it 'should not alter original object', ->
-      expect( more_1 ).to.be.eql more_1_clone
-
-  # no_more()
-  ###
-
   describe 'XS.options_forward():', ->
     options_forward = XS.options_forward
     uuid = uuid_v4()
@@ -581,9 +471,15 @@ describe 'XS test suite:', ->
       
       it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
         options = t.get_emit_options()
+        _t = options._t
+        tid = _t.id
         
-        expect( options._t.more ).to.be.eql true
-        expect( tid = options._t.id ).to.match valid_uuid_v4
+        expect( tid ).to.match valid_uuid_v4
+        
+        expect( _t ).to.be.eql {
+          more: true
+          id: tid
+        }
       
       it 'need_close should be true', ->
         expect( t.toJSON() ).to.be.eql {
