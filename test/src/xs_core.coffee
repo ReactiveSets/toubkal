@@ -778,7 +778,7 @@ describe 'XS test suite:', ->
       
       s1 = p.set()
       
-      s._output._add_destination( p )
+      s._output._add_destination( p._input )
       
       expect( s1.a ).to.be.eql values
       
