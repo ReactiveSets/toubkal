@@ -127,7 +127,7 @@ describe 'file', ->
       .filter [ { type: 'directory' } ]
       .trace( 'directories' )
     
-    directories_source._add_source directories
+    directories_source._input._add_source directories
     
     expected_directories = [
       'directories'

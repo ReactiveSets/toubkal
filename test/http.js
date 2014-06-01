@@ -383,8 +383,8 @@ pipelet_min.serve( http_servers, { routes: '/lib' } );
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
 // xs.union( [ xs_core_min, xs_ui_min, xs_min ] )
 xs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
-  ._input // To add xs.serve() sources
-  ._insert_source_union()         // adding a union as the source of xs.serve()
+  ._input._insert_source_union()  // adding a union as the source of xs.serve()
+  ._input                         // adding source to union's input
   ._add_source( xs_core_min     ) // now adding sources to that union
   ._add_source( xs_ui_min       )
   ._add_source( xs_min          )
@@ -402,9 +402,13 @@ function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
   var socket = this.socket
-    , input  = socket._add_source( source )
-    , output = input.trace( 'from socket.io clients' )
+    , input  = socket
+    , output
   ;
+  
+  input._input._add_source( source );
+  
+  output = input.trace( 'from socket.io clients' );
   
   get_session( socket.socket.handshake, function( error, session ) {
     if ( session ) {
