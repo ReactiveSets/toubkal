@@ -753,11 +753,11 @@ describe 'XS test suite:', ->
     it 'source should have lazy and greedy inputs as outputs', ->
       expect( source._output.destinations ).to.be.eql [ lazy._input, greedy._input ]
     
-    it 'lazy should have source as its input', ->
-      expect( lazy._input.source ).to.be source
+    it 'lazy should have source._output as its input', ->
+      expect( lazy._input.source ).to.be source._output
       
-    it 'greedy should have source as its input', ->
-      expect( greedy._input.source ).to.be source
+    it 'greedy should have source._output as its input', ->
+      expect( greedy._input.source ).to.be source._output
       
     it 'source query tree should have greedy as a subscriber in its top node', ->
       expect( source._output.tree.top ).to.be.eql {

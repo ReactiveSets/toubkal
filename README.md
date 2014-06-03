@@ -202,7 +202,7 @@ var authorizations = database.flow( 'authorizations' ); // Dataflow of all users
 
 database
   .dispatch( clients, client )  // Serve 64k simultaneous user connexions over one core
-  ._add_destination( database ) // Directs output of the dispatcher to the database pipelet
+  ._output_add_destination( database._input ) // Directs output of the dispatcher to the database pipelet
 ;
 
 // Individual client composition
@@ -223,8 +223,8 @@ function client( source ) { // source refers to the output of the database here
   
   source                        // Dataflows from the database through dispatch()
     .filter( get_query )        // delivers only what this user is authorized to get
-    
-    ._add_destination( socket ) // Send data to web browser
+    ._output
+    ._add_destination( socket._input ) // Send data to web browser
   ;
   
   return socket          // Receive data from web browser
@@ -644,15 +644,19 @@ xs.set( [
   .serve( servers )        // Deliver up-to-date compiled and mimified assets to clients
 ;
 
-// Start socket servers on all servers using socket.io
+// Start socket servers on all http servers using socket.io
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
 xs.file_json_store( 'database.json' ) // * The dataflow store of all database transactions
-
-  .dispatch( clients, function( source, options ) { // Serve realtime content to all socket.io clients
-    return source
-      ._add_destination( this.socket ) // Insert socket dataflow to exchage data with this client
-    ;
+  
+  // Serve realtime content to all socket.io clients
+  .dispatch( clients, function( source, options ) {
+    var socket = this.socket;
+    
+    // Insert socket dataflow to exchage data with this client
+    source._output._add_destination( this.socket._input );
+    
+    return socket;
   } )
 ;
 ```
@@ -665,44 +669,49 @@ node server.js
 
 ## Roadmap / Releases
 
-### Version 0.8.0 - P2P Dataflows - ETA October 2014
+### Version 0.9.0 - Finalize API - ETA December 2014
+
+#### Main Goals:
+
+- Finalize API, in view of 1.0 release
+- Implement all remaining ToDo
+- Feature freeze
+- Develop additional tests, goal is at least 1100 automated tests
+- Improve documentation and tutorial
+
+### Version 0.8.0 - P2P Dataflows - ETA November 2014
 
 #### Main Goals:
 
 - WebRTC pipelets
 - Implement Peer-To-Peer dataflows using WebRTC
-- else() query pipelet
-- Develop additional tests, goal is at least 850 automated tests
+- Develop additional tests, goal is at least 1000 automated tests
 
-### Version 0.7.0 - Charding - ETA September 2014
+### Version 0.7.0 - Charding - ETA October 2014
 
 #### Main Goals:
 
-- Implement websocket_clients() and websocket_server() pipelets as an alternative to socket_io equivalents.
 - Horizontal distribution / Charding using websocket dispatcher
-- Develop additional tests, goal is at least 800 automated tests
+- Develop additional tests, goal is at least 900 automated tests
 - Session Strorage Dataflow
 - Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
 
-### Version 0.6.0 - Packaging / First Beta - ETA July 2014
+### Version 0.6.0 - Packaging / First Beta - ETA September 2014
 
 #### Main Goals:
 
-- This is the first Beta version with a reasonably stable API
+- This is the first Beta version with a reasonably stable API:
+  - Implement as many ToDo as possible
+  - Develop additional tests, goal is at least 800 automated tests
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
-- Implement as many ToDos as possible
-- Stabilize API
-- Downstream query routing, optimize unions
-- Develop additional tests, goal is at least 700 automated tests
 
-### Version 0.5.0 - Web Application Framework - ETA June 2014
+### Version 0.5.0 - Web Application Framework / Packaging - ETA August 2014
 
 #### Main Goals:
 
 - Navigation pipelets
 - Internationalization
-- Amazon S3 pipelet to upload static content with knox
 - Packaging:
   - Finalize module pattern
   - Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, ... repositories
@@ -710,7 +719,7 @@ node server.js
   - Implement xs automatic pipelet patching
 - Develop additional tests, goal is at least 650 automated tests
 
-### Version 0.4.0 - Persistance - ETA June 2014
+### Version 0.4.0 - Persistance - ETA July 2014
 
 #### Main Goals:
 
@@ -723,22 +732,57 @@ node server.js
   
 - Develop additional tests, goal is at least 600 automated tests
 
-### Version 0.3.0 - Complex Queries, Authentication && Authorizations - ETA May 2014
+- Implement websocket_clients() and websocket_server() pipelets as an alternative to socket_io equivalents.
 
-#### Main Goals:
+- Query Tree else()
+  - Emits data events not routed to any other destination input
+  - Pipelet else() captures these events
+  - May be used to detect clients attempts to submit un-authorize data
+
+### Version 0.3.0 - Complex Queries, Authentication && Authorizations, API Refactoring - ETA June 2014
+
+#### Goals:
 
 - Dynamic Authorizations Query Dataflow from user id
 - Multi-provider Sign-in Widget
-- User Identities Management
-  - Link / Unlink user identities
+- Union upstream query routing:
+  - Prevents useless duplication of fetch and query updates on all upstream union branches
+  - Routes fetch and update queries based on downstream query
+- Refactor / stabilize pipelet API
 
-##### Features in progress:
+##### Work in progress:
+
+- Dropbox file sharing for photo albums (developped and tested in demo repository)
 
 - Out-of-band fetchable global 'trace' dataflow for: exceptions, errors, and debug information
 
 - Intergrate Safe Complex Query expressions into Query and Query_Tree
 
-- Refactor class model, extract input and output attributes and methods to Input and Output plug classes
+- Refactor pipelet class model:
+  - Ease the definition of multiple, semantically distinct, inputs and outputs without definining pipelets
+  - Define Plug base class for:
+    - Inputs (Pipelet.Input)
+    - Outputs (Pipelet.Output)
+  - Pipelet.Input class:
+    - Receives data events from upstream to be processed by pipelet
+    - Provides upstream transactions management
+    - Provides methods for connectivity to source outputs
+    - Fetches upstream data as requested by pipelet
+    - Determines lazyness
+    - Emits upstream query updates
+  - Pipelet.Output class:
+    - Provides methods for connectivity to destination inputs
+    - Fetches 
+    - Fetches and filters pipelet's state
+    - Emits data events to downstream inputs using query trees
+    - Emits transaction events
+    - Manages output transactions
+    - Updates query tree from downstream query updates
+    - Propagates query updates to pipelet
+    
+  - Pipelet modified class:
+    - Manages state
+    - Defaults remains stateless (i.e. uses altered upstream state)
 
 - Finalize transactions model, including solution for graph diamond issue
 
