@@ -202,7 +202,7 @@ var authorizations = database.flow( 'authorizations' ); // Dataflow of all users
 
 database
   .dispatch( clients, client )  // Serve 64k simultaneous user connexions over one core
-  ._output_add_destination( database._input ) // Directs output of the dispatcher to the database pipelet
+  ._add_destination( database ) // Directs output of the dispatcher to the database pipelet
 ;
 
 // Individual client composition
@@ -223,8 +223,7 @@ function client( source ) { // source refers to the output of the database here
   
   source                        // Dataflows from the database through dispatch()
     .filter( get_query )        // delivers only what this user is authorized to get
-    ._output
-    ._add_destination( socket._input ) // Send data to web browser
+    ._add_destination( socket ) // Send data to web browser
   ;
   
   return socket          // Receive data from web browser
@@ -654,7 +653,7 @@ xs.file_json_store( 'database.json' ) // * The dataflow store of all database tr
     var socket = this.socket;
     
     // Insert socket dataflow to exchage data with this client
-    source._output._add_destination( this.socket._input );
+    source._add_destination( socket );
     
     return socket;
   } )
