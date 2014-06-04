@@ -745,10 +745,10 @@ describe 'XS test suite:', ->
     
     source = new Pipelet()
     lazy   = new Pipelet()
-    greedy = new Greedy()
+    greedy = xs.greedy()
     
-    lazy._input._add_source source
-    greedy._input._add_source source
+    lazy._add_source source
+    greedy._input._add_source source._output
     
     it 'source should have lazy and greedy inputs as outputs', ->
       expect( source._output.destinations ).to.be.eql [ lazy._input, greedy._input ]

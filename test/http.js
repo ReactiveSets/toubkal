@@ -211,6 +211,9 @@ var xs_min = xs
   .uglify( 'lib/xs-min.js', { warnings: false } )
 ;
 
+// Listen when lib/xs-min.js is ready
+http_servers.http_listen( xs_min );
+
 var xs_core_min = xs
   .union( [ xs_dependencies, xs.set( [
     { path: 'lib/xs.js'                    },
@@ -255,9 +258,6 @@ var xs_ui_min = xs
   
   .uglify( 'lib/xs_ui-min.js', { warnings: false } )
 ;
-
-// Listen when lib/xs_ui-min.js is ready
-http_servers.http_listen( xs_ui_min );
 
 var pipelet_min = xs.set( [
     { id: 1, path: 'lib/xs.js'      },
@@ -383,11 +383,11 @@ pipelet_min.serve( http_servers, { routes: '/lib' } );
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
 // xs.union( [ xs_core_min, xs_ui_min, xs_min ] )
 xs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
-  ._input._insert_source_union()  // adding a union as the source of xs.serve()
-  ._input                         // adding source to union's input
-  ._add_source( xs_core_min     ) // now adding sources to that union
-  ._add_source( xs_ui_min       )
-  ._add_source( xs_min          )
+  ._input
+  ._insert_source_union()     // adding a union as the source of xs.serve() input
+  ._add_source( xs_core_min ) // now adding sources to that union
+  ._add_source( xs_ui_min   )
+  ._add_source( xs_min      )
 ;
 
 // Socket.io Server tests
@@ -406,7 +406,7 @@ function client( source, options ) {
     , output
   ;
   
-  input._input._add_source( source );
+  input._add_source( source );
   
   output = input.trace( 'from socket.io clients' );
   

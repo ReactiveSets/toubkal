@@ -783,6 +783,10 @@ node server.js
   - Pipelet modified class:
     - Manages state
     - Defaults remains stateless (i.e. uses altered upstream state)
+  
+  - XS.Options object defined methods for manipulating operations' options:
+    - forward(): returns an options Objects with options that must be forwarded
+    - has_more(): returns truly if there is an incomplete transaction
 
 - Finalize transactions model, including solution for graph diamond issue
 

@@ -1499,7 +1499,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    output = new XS.Pipelet.Output()
+    output = new XS.Pipelet()._output
     
     tree = output.tree
     
