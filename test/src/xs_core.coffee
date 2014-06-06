@@ -569,16 +569,16 @@ describe 'XS test suite:', ->
     describe 'Transactions()..get_transaction() for four operations with pseudo pipelet, options with more', ->
       transactions = new Transactions()
       
-      pipelet = {
+      pipelet = { _output: {
         _operations: []
         
-        _get_name: -> 'Pipelet'
+        _get_name: -> 'output'
         
-        __emit : ( operation, values, options ) ->
+        emit : ( operation, values, options ) ->
           this._operations.push( slice.call( arguments, 0 ) )
           
           return this
-      }
+      } }
       
       tid = uuid_v4()
       
@@ -591,7 +591,7 @@ describe 'XS test suite:', ->
         expect( t.get_tid()   ).to.be tid
         expect( t.is_closed() ).to.be false
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 4
           source_more   : true
@@ -609,7 +609,7 @@ describe 'XS test suite:', ->
         t.emit_nothing()
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 3
           source_more   : true
@@ -623,7 +623,7 @@ describe 'XS test suite:', ->
         t.__emit_add( [] )
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 2
           source_more   : true
@@ -637,7 +637,7 @@ describe 'XS test suite:', ->
         t.__emit_add( [ { id: 1 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 1
           source_more   : true
@@ -651,7 +651,7 @@ describe 'XS test suite:', ->
         t.__emit_add( [ { id: 2 } ], true )
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 0
           source_more   : true
@@ -662,7 +662,7 @@ describe 'XS test suite:', ->
         }
       
       it 'should have emited an add operation to the pipelet', ->
-        expect( pipelet._operations ).to.be.eql [
+        expect( pipelet._output._operations ).to.be.eql [
           [ 'add', [ { id: 2 } ], options_original ]
         ]
         
@@ -670,7 +670,7 @@ describe 'XS test suite:', ->
         expect( -> t.__emit_add( [ { id: 3 } ], true ) ).to.throwException()
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 0
           source_more   : true
@@ -684,7 +684,7 @@ describe 'XS test suite:', ->
         transactions.end_transaction( t )
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 0
           source_more   : true
@@ -698,7 +698,7 @@ describe 'XS test suite:', ->
         expect( transactions.get_tids() ).to.be.eql [ tid ]
       
       it 'should have emited two operations in total to the pipelet', ->
-        expect( pipelet._operations ).to.be.eql [
+        expect( pipelet._output._operations ).to.be.eql [
           [ 'add', [ { id: 2 } ], options_original ]
         ]
         
@@ -713,7 +713,7 @@ describe 'XS test suite:', ->
         
       it 'should have increased transaction\'s operations count by 4', ->
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 4
           source_more   : false
@@ -727,7 +727,7 @@ describe 'XS test suite:', ->
         t.__emit_remove( [ { id:1 }, { id: 2 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'Pipelet'
+          name          : 'output'
           tid           : tid
           count         : 3
           source_more   : false
