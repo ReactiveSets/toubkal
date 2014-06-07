@@ -569,7 +569,7 @@ describe 'XS test suite:', ->
     describe 'Transactions()..get_transaction() for four operations with pseudo pipelet, options with more', ->
       transactions = new Transactions()
       
-      pipelet = { _output: {
+      output = {
         _operations: []
         
         _get_name: -> 'output'
@@ -578,14 +578,14 @@ describe 'XS test suite:', ->
           this._operations.push( slice.call( arguments, 0 ) )
           
           return this
-      } }
+      }
       
       tid = uuid_v4()
       
       options = { _t: { id: tid, more: true }, a: 1, b: [1,2] }
       options_original = clone( options )
       
-      t = transactions.get_transaction 4, options, pipelet
+      t = transactions.get_transaction 4, options, output
       
       it 'should create a transaction with a count of 4, and a name', ->
         expect( t.get_tid()   ).to.be tid
@@ -662,7 +662,7 @@ describe 'XS test suite:', ->
         }
       
       it 'should have emited an add operation to the pipelet', ->
-        expect( pipelet._output._operations ).to.be.eql [
+        expect( output._operations ).to.be.eql [
           [ 'add', [ { id: 2 } ], options_original ]
         ]
         
@@ -698,7 +698,7 @@ describe 'XS test suite:', ->
         expect( transactions.get_tids() ).to.be.eql [ tid ]
       
       it 'should have emited two operations in total to the pipelet', ->
-        expect( pipelet._output._operations ).to.be.eql [
+        expect( output._operations ).to.be.eql [
           [ 'add', [ { id: 2 } ], options_original ]
         ]
         
@@ -707,7 +707,7 @@ describe 'XS test suite:', ->
         
         orginal_options = clone options
         
-        t1 = transactions.get_transaction 4, options, pipelet
+        t1 = transactions.get_transaction 4, options, output
         
         expect( t1 ).to.be t
         
