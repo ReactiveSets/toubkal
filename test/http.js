@@ -169,6 +169,7 @@ var xs_min = xs
     { path: 'lib/code.js'                  },
     //{ path: 'lib/trace_domain.js'          },
     { path: 'lib/query.js'                 },
+    { path: 'lib/transactions.js'          },
     { path: 'lib/pipelet.js'               },
     { path: 'lib/filter.js'                },
     { path: 'lib/order.js'                 },
@@ -219,6 +220,7 @@ var xs_core_min = xs
     { path: 'lib/xs.js'                    },
     { path: 'lib/code.js'                  },
     { path: 'lib/query.js'                 },
+    { path: 'lib/transactions.js'          },
     { path: 'lib/pipelet.js'               },
     { path: 'lib/filter.js'                },
     { path: 'lib/order.js'                 },
@@ -260,10 +262,11 @@ var xs_ui_min = xs
 ;
 
 var pipelet_min = xs.set( [
-    { id: 1, path: 'lib/xs.js'      },
-    { id: 2, path: 'lib/code.js'    },
-    { id: 1, path: 'lib/query.js'   },
-    { id: 1, path: 'lib/pipelet.js' }
+    { id: 1, path: 'lib/xs.js'           },
+    { id: 2, path: 'lib/code.js'         },
+    { id: 3, path: 'lib/query.js'        },
+    { id: 4, path: 'lib/transactions.js' },
+    { id: 1, path: 'lib/pipelet.js'      }
   ] )
   .watch()
   .uglify( 'lib/pipelet-min.js', { warnings: false } )
@@ -372,10 +375,12 @@ var source_maps = test_lib
 tests.serve( http_servers, { routes: '/test' } );
 
 xs.union( [ mocha_expect, compiled_coffee, source_maps, coffee_source ] )
-  .serve( http_servers, { routes: '/test' } ) // test serve() with default route ('/') does not work
+  .serve( http_servers, { routes: '/test' } ) // ToDo: test serve() with default route ('/') does not work
 ;
 
-mocha_css.serve( http_servers, { routes: '/node_modules' } );
+xs.union( [ mocha_css, mocha_expect ] )
+  .serve( http_servers, { routes: '/node_modules' } )
+;
 
 pipelet_min.serve( http_servers, { routes: '/lib' } );
 
