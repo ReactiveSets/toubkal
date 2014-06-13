@@ -506,6 +506,146 @@ describe 'Transactions test suite:', ->
           added_length  : 1
           removed_length: 2
         }
+    
+    describe 'Transactions()..get_transaction() with a fork tag', ->
+      transactions = new Transactions()
+      
+      output = {
+        _operations: []
+        
+        _get_name: -> 'output'
+        
+        emit : ( operation, values, options ) ->
+          this._operations.push( slice.call( arguments, 0 ) )
+          
+          return this
+      }
+      
+      tid = uuid_v4()
+      
+      options = { _t: { id: tid, more: true }, a: 1, b: [1,2] }
+      options_with_tag = clone options
+      options_with_tag._t.forks = [ 'fork_tag' ]
+      
+      t = transactions.get_transaction 2, options, output, 'fork_tag'
+      
+      it 'should create a transaction with a count of 3, a name, and a fork tag', ->
+        expect( t.get_tid()   ).to.be tid
+        expect( t.is_closed() ).to.be false
+        expect( t.fork        ).to.be 'fork_tag'
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 2
+          source_more   : true
+          need_close    : false
+          closed        : false
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 'should decrease count and increse added_length after t.__emit_add( [ { id: 1 }, { id: 2 }  ] )', ->
+        t.__emit_add( [ { id: 1 }, { id: 2 } ] )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 1
+          source_more   : true
+          need_close    : false
+          closed        : false
+          added_length  : 2
+          removed_length: 0
+        }
+        
+      it 'should decrease count and need close after t.__emit_add( [ { id: 3 } ] )', ->
+        t.__emit_add( [ { id: 3 } ] )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 0
+          source_more   : true
+          need_close    : false
+          closed        : false
+          added_length  : 3
+          removed_length: 0
+        }
+      
+      it 'should have emited no add operation to the pipelet', ->
+        expect( output._operations ).to.be.eql []
+      
+      it 'after ending transation it should have emited nothing because there is more expected upstream', ->
+        t.end()
+        
+        expect( output._operations ).to.be.eql []
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 0
+          source_more   : true
+          need_close    : false
+          closed        : false
+          added_length  : 3
+          removed_length: 0
+        }
+      
+      it 'should return the same transaction after follow-up transactions.get_transaction() with no more', ->
+        delete options._t.more
+        
+        orginal_options = clone options
+        
+        t1 = transactions.get_transaction 1, options, output
+        
+        expect( t1 ).to.be t
+        
+      it 'should have increased transaction\'s operations count by 1', ->
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 1
+          source_more   : false
+          need_close    : false
+          closed        : false
+          added_length  : 3
+          removed_length: 0
+        }
+      
+      it 'should increase removed_length to 2 after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
+        t.__emit_remove( [ { id:1 }, { id: 2 } ] )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 0
+          source_more   : false
+          need_close    : false
+          closed        : false
+          added_length  : 3
+          removed_length: 2
+        }
+      
+      it 'ending the transaction should emit operations', ->
+        t.end()
+        
+        delete options_with_tag._t.more
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 0
+          source_more   : false
+          need_close    : false
+          closed        : true
+          added_length  : 0
+          removed_length: 0
+        }
+        
+        expect( output._operations ).to.be.eql [
+          [ 'remove', [ { id:1 }, { id: 2 } ], options_with_tag ]
+          [ 'add', [ { id:1 }, { id: 2 }, { id: 3 } ], options_with_tag ]
+        ]
       
     
   # XS.Transactions() and XS.Transaction()
