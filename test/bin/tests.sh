@@ -25,7 +25,7 @@ mkdir -p test/lib
 if [ $test = "all" ]; then
   coffee --map --output test/lib --compile test/src
   
-  test=test/lib/xs_all_tests.js
+  test=test/lib/all_tests.js
 else
   coffee --map --output test/lib --compile test/src/$test.coffee
   

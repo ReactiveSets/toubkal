@@ -23,7 +23,7 @@
 # ----------------------------------------------------------------------------------------------
 
 Browser = require( 'zombie' )
-utils   = require( './xs_tests_utils.js' )
+utils   = require( './tests_utils.js' )
 
 browser = new Browser( { silent: true } )
 expect  = this.expect || utils.expect

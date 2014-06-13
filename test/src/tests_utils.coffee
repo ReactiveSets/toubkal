@@ -1,5 +1,5 @@
 ###
-    xs_tests_utils.coffee
+    tests_utils.coffee
 
     Copyright (C) 2013, 2014, Connected Sets
 

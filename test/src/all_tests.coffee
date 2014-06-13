@@ -26,16 +26,16 @@ require './clone_tests.js'
 require './trace_domain.js'
 require './query.js'
 require './transactions.js'
-require './xs_core.js'
-require './xs_json.js'
-require './xs_transforms.js'
-require './xs_file.js'
+require './core.js'
+require './json.js'
+require './transforms.js'
+require './file.js'
 
 try
   require.resolve 'zombie'
-  require './xs_ui.js'       
+  require './ui.js'       
 
 fs = require 'fs'
 
-require './xs_passport.js' if fs.existsSync '~/config.xs.json'
+require './passport.js' if fs.existsSync '~/config.xs.json'
 

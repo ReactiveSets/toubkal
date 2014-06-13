@@ -22,7 +22,7 @@
 # xs test utils
 # -------------
 
-utils  = require( './xs_tests_utils.js' ) if require?
+utils  = require( './tests_utils.js' ) if require?
 
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
