@@ -1,7 +1,7 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *545 tests*
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *566 tests*
 
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
@@ -467,7 +467,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 545 automated tests for the XS core pipelets that run after every
+We have curently developped 566 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
 Travis had an issue with it around January 2014. Version 0.11 is not officially supported
 because ui tests using zombie cannot pass at this time.
@@ -503,7 +503,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd ConnectedSets
 # ./run_tests.sh
 Full test results are in test.out
--> passed 545 of 545 tests (4196ms)
+-> passed 566 of 566 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -757,37 +757,11 @@ node server.js
 
 - Intergrate Safe Complex Query expressions into Query and Query_Tree
 
-- Refactor pipelet class model:
-  - Ease the definition of multiple, semantically distinct, inputs and outputs without definining pipelets
-  - Define Plug base class for:
-    - Inputs (Pipelet.Input)
-    - Outputs (Pipelet.Output)
-  - Pipelet.Input class:
-    - Receives data events from upstream to be processed by pipelet
-    - Provides upstream transactions management
-    - Provides methods for connectivity to source outputs
-    - Fetches upstream data as requested by pipelet
-    - Determines lazyness
-    - Emits upstream query updates
-  - Pipelet.Output class:
-    - Provides methods for connectivity to destination inputs
-    - Fetches 
-    - Fetches and filters pipelet's state
-    - Emits data events to downstream inputs using query trees
-    - Emits transaction events
-    - Manages output transactions
-    - Updates query tree from downstream query updates
-    - Propagates query updates to pipelet
-    
-  - Pipelet modified class:
-    - Manages state
-    - Defaults remains stateless (i.e. uses altered upstream state)
-  
-  - XS.Options object defined methods for manipulating operations' options:
-    - forward(): returns an options Objects with options that must be forwarded
-    - has_more(): returns truly if there is an incomplete transaction
+- Concurrent Transactions Synchronization (fully developped, adding tests)
 
-- Finalize transactions model, including solution for graph diamond issue
+- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
+  - Bug with routing algorythm for / route
+  - Fix updates
 
 ##### Features already developped:
 
@@ -841,8 +815,37 @@ node server.js
     }
 ```
 
-- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-- 545 automated tests
+- Refactor pipelet class model:
+  - Ease the definition of multiple, semantically distinct, inputs and outputs without definining pipelets
+  - Define Plug base class for:
+    - Inputs (Pipelet.Input)
+    - Outputs (Pipelet.Output)
+  - Pipelet.Input class:
+    - Receives data events from upstream to be processed by pipelet
+    - Provides upstream transactions management
+    - Provides methods for connectivity to source outputs
+    - Fetches upstream data as requested by pipelet
+    - Determines lazyness
+    - Emits upstream query updates
+  - Pipelet.Output class:
+    - Provides methods for connectivity to destination inputs
+    - Fetches 
+    - Fetches and filters pipelet's state
+    - Emits data events to downstream inputs using query trees
+    - Emits transaction events
+    - Manages output transactions
+    - Updates query tree from downstream query updates
+    - Propagates query updates to pipelet
+    
+  - Pipelet modified class:
+    - Manages state
+    - Defaults remains stateless (i.e. uses altered upstream state)
+  
+  - XS.Options object defined methods for manipulating operations' options:
+    - forward(): returns an options Objects with options that must be forwarded
+    - has_more(): returns truly if there is an incomplete transaction
+
+- 566 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
@@ -870,6 +873,8 @@ Controllet.Output         | Output plug for controllets
 Union.Input               | Input plug for Union (allows many sources)
 Union.Output              | Output plug for Union
 Set.Output                | Output plug for Set
+Input_Transactions        | Concurrent Transactions Synchronization at Inputs
+Output_Transactions       | Concurrent Transactions Synchronization at Outputs
 
 ### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
 
