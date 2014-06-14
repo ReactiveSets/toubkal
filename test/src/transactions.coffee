@@ -646,6 +646,90 @@ describe 'Transactions test suite:', ->
           [ 'remove', [ { id:1 }, { id: 2 } ], options_with_tag ]
           [ 'add', [ { id:1 }, { id: 2 }, { id: 3 } ], options_with_tag ]
         ]
-      
     
+    describe 'Input / Output Transactions()', ->
+      input = new XS.Input_Transactions().set_tag_branches 'source', 2
+      
+      output_1 = new XS.Output_Transactions()
+      output_2 = new XS.Output_Transactions()
+      
+      tid = uuid_v4()
+      
+      no_more = {
+        _t: {
+          tid: tid
+          forks: [
+            'top'
+            'source'
+          ]
+        }
+      }
+      
+      more = clone no_more
+      more._t.more = true
+      
+      o = output_1.get_concurrent_options( input, more )
+      keys = null
+      
+      it 'output_1 concurrent options should be returned unaltered (more)', ->
+        expect( o ).to.be more
+      
+      it 'input transactions should have one transaction waiting for another output to terminate', ->
+        expect( Object.keys input.transactions ).to.be.eql [ tid ]
+        
+        keys = Object.keys input.transactions[ tid ]
+        
+        expect( keys ).to.be.eql [ keys[ 0 ], '_' ]
+        
+        expect( input.transactions[ tid ]._ ).to.be.eql { count: 1, terminated_count: 0, tagged: true }
+        
+        expect( input.transactions[ tid ][ keys[ 0 ] ] ).to.be.eql { source: output_1, position: 0 }
+      
+      it 'output_1 should have one input', ->
+        expect( Object.keys output_1.transactions ).to.be.eql [ tid ]
+        expect( output_1.transactions[ tid ].inputs ).to.be.eql [ input ]
+      
+      it 'concurent options should have more even after sending no more', ->
+        o = output_1.get_concurrent_options input, no_more
+        
+        expect( o ).to.be.eql more
+      
+      it 'input transactions should have one transaction waiting for another output to terminate', ->
+        expect( input.transactions[ tid ]._ ).to.be.eql { count: 0, terminated_count: 1, tagged: true }
+        
+        expect( input.transactions[ tid ][ keys[ 0 ] ] ).to.be null
+      
+      it 'output_1 should have zero inputs', ->
+        expect( Object.keys output_1.transactions ).to.be.eql []
+        expect( output_1.transactions[ tid ] ).to.be undefined
+      
+      it 'output_2 concurrent options should be returned unaltered (more)', ->
+        o = output_2.get_concurrent_options( input, more )
+        
+        expect( o ).to.be more
+      
+      it 'input transactions should show ongoing progress of transaction from output_2', ->
+        keys = Object.keys input.transactions[ tid ]
+        
+        expect( keys ).to.be.eql [ keys[ 0 ], keys[ 1 ], '_' ]
+        expect( input.transactions[ tid ]._ ).to.be.eql { count: 1, terminated_count: 1, tagged: true }
+        expect( input.transactions[ tid ][ keys[ 0 ] ] ).to.be null
+        expect( input.transactions[ tid ][ keys[ 1 ] ] ).to.be.eql { source: output_2, position: 0 }
+      
+      it 'output_2 should have one input', ->
+        expect( Object.keys output_2.transactions ).to.be.eql [ tid ]
+        expect( output_2.transactions[ tid ].inputs ).to.be.eql [ input ]
+      
+      it 'concurent options for output_2 should have no more after sending no more', ->
+        o = output_2.get_concurrent_options input, no_more
+        
+        expect( o ).to.be no_more
+      
+      it 'input transactions should have been deleted', ->
+        expect( Object.keys input.transactions ).to.be.eql []
+      
+      it 'output_2 should have zero inputs', ->
+        expect( Object.keys output_2.transactions ).to.be.eql []
+      
+      
   # XS.Transactions() and XS.Transaction()
