@@ -209,7 +209,7 @@ describe 'Transactions test suite:', ->
       it 'should be a Transaction with a count of 4', ->
         expect( t ).to.be.a Transaction
         expect( t.source_options ).to.be undefined
-        expect( t.emit_options ).to.be.eql {}
+        expect( t.emit_options ).to.be undefined
         expect( t.o.__t ).to.be t
         
       it 't.toJSON() should return a representation of the new transaction', ->
@@ -353,7 +353,9 @@ describe 'Transactions test suite:', ->
       tid = uuid_v4()
       
       options = { _t: { id: tid, more: true }, a: 1, b: [1,2] }
-      options_original = clone( options )
+      
+      no_more = clone options
+      delete no_more._t.more
       
       t = transactions.get_transaction 4, options, output
       
@@ -433,7 +435,7 @@ describe 'Transactions test suite:', ->
       
       it 'should have emited an add operation to the pipelet', ->
         expect( output._operations ).to.be.eql [
-          [ 'add', [ { id: 2 } ], options_original ]
+          [ 'add', [ { id: 2 } ], options ]
         ]
         
       it 'should raise an exception on extra t.__emit_add( [ { id: 1 } ], true )', ->
@@ -453,7 +455,7 @@ describe 'Transactions test suite:', ->
       it 'should not terinate the transaction after transactions.end_transaction( t ) because of more from upstream', ->
         transactions.end_transaction( t )
         
-        expect( t.toJSON()    ).to.be.eql {
+        expect( t.toJSON() ).to.be.eql {
           name          : 'output'
           tid           : tid
           count         : 0
@@ -469,23 +471,19 @@ describe 'Transactions test suite:', ->
       
       it 'should have emited two operations in total to the pipelet', ->
         expect( output._operations ).to.be.eql [
-          [ 'add', [ { id: 2 } ], options_original ]
+          [ 'add', [ { id: 2 } ], options ]
         ]
         
       it 'should return the same transaction after follow-up transactions.get_transaction()', ->
-        delete options._t.more
-        
-        orginal_options = clone options
-        
-        t1 = transactions.get_transaction 4, options, output
+        t1 = transactions.get_transaction 2, no_more, output
         
         expect( t1 ).to.be t
         
-      it 'should have increased transaction\'s operations count by 4', ->
+      it 'should have increased transaction\'s operations count by 2', ->
         expect( t.toJSON()    ).to.be.eql {
           name          : 'output'
           tid           : tid
-          count         : 4
+          count         : 2
           source_more   : false
           need_close    : true
           closed        : false
@@ -499,13 +497,48 @@ describe 'Transactions test suite:', ->
         expect( t.toJSON()    ).to.be.eql {
           name          : 'output'
           tid           : tid
-          count         : 3
+          count         : 1
           source_more   : false
           need_close    : true
           closed        : false
           added_length  : 1
           removed_length: 2
         }
+      
+      it 'should increase added_length to 3 after t.__emit_add( [ { id:4 }, { id: 5 } ] )', ->
+        t.__emit_add( [ { id: 4 }, { id: 5 } ] )
+        
+        expect( t.toJSON()    ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 0
+          source_more   : false
+          need_close    : true
+          closed        : false
+          added_length  : 3
+          removed_length: 2
+        }
+      
+      it 'ending the transaction should emit operations', ->
+        t.end()
+        
+        expect( t.toJSON() ).to.be.eql {
+          name          : 'output'
+          tid           : tid
+          count         : 0
+          source_more   : false
+          need_close    : false
+          closed        : true
+          added_length  : 0
+          removed_length: 0
+        }
+      
+      it 'should have emitted all operations', ->
+        expect( output._operations ).to.be.eql [
+          [ 'add', [ { id: 2 } ], options ]
+          [ 'remove', [ { id: 1 }, { id: 2 } ], options ]
+          [ 'add', [  { id: 1 }, { id: 4 }, { id: 5 } ], no_more ]
+        ]
     
     describe 'Transactions()..get_transaction() with a fork tag', ->
       transactions = new Transactions()
@@ -524,8 +557,12 @@ describe 'Transactions test suite:', ->
       tid = uuid_v4()
       
       options = { _t: { id: tid, more: true }, a: 1, b: [1,2] }
+      
       options_with_tag = clone options
       options_with_tag._t.forks = [ 'fork_tag' ]
+      
+      options_with_tag_no_more = clone options_with_tag
+      delete options_with_tag_no_more._t.more
       
       t = transactions.get_transaction 2, options, output, 'fork_tag'
       
@@ -629,8 +666,6 @@ describe 'Transactions test suite:', ->
       it 'ending the transaction should emit operations', ->
         t.end()
         
-        delete options_with_tag._t.more
-        
         expect( t.toJSON()    ).to.be.eql {
           name          : 'output'
           tid           : tid
@@ -644,7 +679,7 @@ describe 'Transactions test suite:', ->
         
         expect( output._operations ).to.be.eql [
           [ 'remove', [ { id:1 }, { id: 2 } ], options_with_tag ]
-          [ 'add', [ { id:1 }, { id: 2 }, { id: 3 } ], options_with_tag ]
+          [ 'add', [ { id:1 }, { id: 2 }, { id: 3 } ], options_with_tag_no_more ]
         ]
     
     describe 'Input / Output Transactions()', ->
@@ -679,11 +714,13 @@ describe 'Transactions test suite:', ->
         
         keys = Object.keys input.transactions[ tid ]
         
-        expect( keys ).to.be.eql [ keys[ 0 ], '_' ]
+        k = if keys[ 0 ] == '_' then keys[ 1 ] else keys[ 0 ]
+        
+        expect( keys.length ).to.be.eql 2
         
         expect( input.transactions[ tid ]._ ).to.be.eql { count: 1, terminated_count: 0, tagged: true }
         
-        expect( input.transactions[ tid ][ keys[ 0 ] ] ).to.be.eql { source: output_1, position: 0 }
+        expect( input.transactions[ tid ][ k ] ).to.be.eql { source: output_1, position: 0 }
       
       it 'output_1 should have one input', ->
         expect( Object.keys output_1.transactions ).to.be.eql [ tid ]
@@ -697,7 +734,10 @@ describe 'Transactions test suite:', ->
       it 'input transactions should have one transaction waiting for another output to terminate', ->
         expect( input.transactions[ tid ]._ ).to.be.eql { count: 0, terminated_count: 1, tagged: true }
         
-        expect( input.transactions[ tid ][ keys[ 0 ] ] ).to.be null
+        keys = Object.keys input.transactions[ tid ]
+        k = if keys[ 0 ] == '_' then keys[ 1 ] else keys[ 0 ]
+        
+        expect( input.transactions[ tid ][ k ] ).to.be null
       
       it 'output_1 should have zero inputs', ->
         expect( Object.keys output_1.transactions ).to.be.eql []
@@ -711,10 +751,21 @@ describe 'Transactions test suite:', ->
       it 'input transactions should show ongoing progress of transaction from output_2', ->
         keys = Object.keys input.transactions[ tid ]
         
-        expect( keys ).to.be.eql [ keys[ 0 ], keys[ 1 ], '_' ]
+        _i = keys.indexOf( '_' );
+        
+        switch _i
+          when 0 then _1 = 1; _2 = 2
+          when 1 then _1 = 0; _2 = 1
+          when 2 then _1 = 0; _2 = 1
+        
+        _1 = keys[ _1 ]
+        _2 = keys[ _2 ]
+        
+        expect( keys.length ).to.be.eql 3
+        
         expect( input.transactions[ tid ]._ ).to.be.eql { count: 1, terminated_count: 1, tagged: true }
-        expect( input.transactions[ tid ][ keys[ 0 ] ] ).to.be null
-        expect( input.transactions[ tid ][ keys[ 1 ] ] ).to.be.eql { source: output_2, position: 0 }
+        expect( input.transactions[ tid ][ _1 ] ).to.be null
+        expect( input.transactions[ tid ][ _2 ] ).to.be.eql { source: output_2, position: 0 }
       
       it 'output_2 should have one input', ->
         expect( Object.keys output_2.transactions ).to.be.eql [ tid ]
