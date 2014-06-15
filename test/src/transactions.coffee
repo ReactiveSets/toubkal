@@ -505,24 +505,10 @@ describe 'Transactions test suite:', ->
           removed_length: 2
         }
       
-      it 'should increase added_length to 3 after t.__emit_add( [ { id:4 }, { id: 5 } ] )', ->
+      it 'should close the transaction after t.__emit_add( [ { id:4 }, { id: 5 } ] )', ->
         t.__emit_add( [ { id: 4 }, { id: 5 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
-          name          : 'output'
-          tid           : tid
-          count         : 0
-          source_more   : false
-          need_close    : true
-          closed        : false
-          added_length  : 3
-          removed_length: 2
-        }
-      
-      it 'ending the transaction should emit operations', ->
-        t.end()
-        
-        expect( t.toJSON() ).to.be.eql {
           name          : 'output'
           tid           : tid
           count         : 0
@@ -649,22 +635,8 @@ describe 'Transactions test suite:', ->
           removed_length: 0
         }
       
-      it 'should increase removed_length to 2 after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
+      it 'should close the transaction after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
         t.__emit_remove( [ { id:1 }, { id: 2 } ] )
-        
-        expect( t.toJSON()    ).to.be.eql {
-          name          : 'output'
-          tid           : tid
-          count         : 0
-          source_more   : false
-          need_close    : false
-          closed        : false
-          added_length  : 3
-          removed_length: 2
-        }
-      
-      it 'ending the transaction should emit operations', ->
-        t.end()
         
         expect( t.toJSON()    ).to.be.eql {
           name          : 'output'
@@ -677,6 +649,7 @@ describe 'Transactions test suite:', ->
           removed_length: 0
         }
         
+      it 'should have output two operations', ->
         expect( output._operations ).to.be.eql [
           [ 'remove', [ { id:1 }, { id: 2 } ], options_with_tag ]
           [ 'add', [ { id:1 }, { id: 2 }, { id: 3 } ], options_with_tag_no_more ]
