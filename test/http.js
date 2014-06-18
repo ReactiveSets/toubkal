@@ -296,6 +296,8 @@ var html_tests = xs
   
   .watch_directories()
   
+  .trace( 'watch_directory test' )
+  
   .filter( [ { type: 'file', extension: 'html' } ] )
 ;
 
@@ -461,7 +463,7 @@ xs.union( [
   .set()
 ;
 
-setInterval( function() {
+false && setInterval( function() {
   source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 );
 

@@ -1,7 +1,7 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *566 tests*
+[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *568 tests*
 
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
@@ -74,7 +74,7 @@ XS is already very reliable thanks to its comprehensive test suite and is curren
 
 Some features are still work in progress and some APIs are subject to changes meaning that XS should be considered Alpha at this time.
 
-XS should provide a functionally-rich framework by version 0.6 in July 2014 including reasonably complete documentation
+XS should provide a functionally-rich framework by version 0.6 in September 2014 including reasonably complete documentation
 extracted from the code where it currently stands, and reasonably stable API.
 
 ### Why yet-another JavaScript Web Application Framework?
@@ -467,7 +467,7 @@ We plan on extracting and completing this documentation to provide the following
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 566 automated tests for the XS core pipelets that run after every
+We have curently developped 568 automated tests for the XS core pipelets that run after every
 commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6 since
 Travis had an issue with it around January 2014. Version 0.11 is not officially supported
 because ui tests using zombie cannot pass at this time.
@@ -503,7 +503,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd ConnectedSets
 # ./run_tests.sh
 Full test results are in test.out
--> passed 566 of 566 tests (4196ms)
+-> passed 568 of 568 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -845,7 +845,7 @@ node server.js
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 566 automated tests
+- 568 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
