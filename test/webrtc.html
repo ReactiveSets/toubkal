@@ -53,7 +53,9 @@
       ;
       
       function DOM( container, options ) {
-        options = Set.call( this, [], options )._options;
+        Set.call( this, [], options );
+        
+        options = this._options;
         
         de&&ug( 'dom(), container: ' + container + ', options: ' + log.s( options) );
         
@@ -188,7 +190,9 @@
         user_media_singleton = this;
         
         // ToDo: set key
-        options = Set.call( this, [], options )._options;
+        Set.call( this, [], options );
+        
+        options = this._options;
         
         var get_user_media
           = this._get_user_media 
@@ -287,7 +291,7 @@
       if ( ! RTCPeerConnection ) throw new Error( 'Browser does not support WebRTC' );
       
       function RTC_Calls( options ) {
-        return Set.call( this, [], options );
+        Set.call( this, [], options );
       }
       
       Set.Build( 'rtc_calls', RTC_Calls, function( Super ) {
