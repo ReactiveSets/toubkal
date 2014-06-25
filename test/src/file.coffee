@@ -42,27 +42,27 @@ describe 'file', ->
     modules = xs
       .set( [
         { id: 1, name: 'node-uuid/uuid.js' }
-        { id: 2, name: 'not_an_existing_module' }
       ], { key: [ 'id', 'name' ] } )
     
-    resolved = modules
+    resolve = modules
       .require_resolve()
+    
+    resolved = resolve
       .trace( 'uuid.js' )
-      .set()
+      .greedy()
     
     it 'should resolve node-uuid/uuid.js', ( done ) ->
       resolved._fetch_all ( values ) -> check done, () ->
-        uuid = values[ 0 ]
+        expect( values.length ).to.be.eql 1
         
-        expect( uuid.name ).to.be.eql 'node-uuid/uuid.js'
-        expect( uuid.path.length ).to.be.above 10
+        uuid = values[ 0 ]
+        name = uuid.name
+        path = uuid.path.replace( /\\/g, '/' )
+        
+        expect( name ).to.be.eql 'node-uuid/uuid.js'
+        expect( path.substr( path.length - name.length ) ).to.be.eql name
         expect( uuid.uri ).to.be.eql '/node_modules/node-uuid/uuid.js'
     
-    it 'should have only one resolved module', ( done ) ->
-      resolved._fetch_all ( values ) -> check done, () ->
-        expect( values.length ).to.be.eql 1
-        expect( resolved._key ).to.be.eql [ 'id', 'name' ]
-        
     it 'should allow to remove a module', ( done ) ->
       modules._remove [ { id: 1, name: 'node-uuid/uuid.js' } ]
       

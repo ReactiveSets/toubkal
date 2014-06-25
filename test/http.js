@@ -463,7 +463,7 @@ xs.union( [
   .set()
 ;
 
-true && setInterval( function() {
+false && setInterval( function() {
   source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 );
 
