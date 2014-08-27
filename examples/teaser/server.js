@@ -91,7 +91,7 @@ var all_min_js = xs.union([xs_dependencies, xs
 // Start socket servers on all http servers using socket.io
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
-var database = xs.configuration( { filepath: 'database.json' } ); // * The dataflow store of all database transactions
+var database = xs.configuration( { filepath: 'sales.json' } ); // * The dataflow store of all database transactions
 
 var sales = database.set_flow( 'sales' ); // Dataflow of sales
 
