@@ -1,0 +1,39 @@
+/* table.css */
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#sales_table {
+  margin: 25px;
+}
+
+#sales_table table {
+  min-width: 30%;
+  border-collapse: collapse;
+  color: #768399;
+}
+
+#sales_table th {
+  border-bottom: 2px solid #f3f5f6;
+  padding: 5px;
+  color: #768399;
+}
+
+#sales_table tbody tr:nth-child( odd ) {
+  background-color: #f9fafa;
+}
+
+#sales_table tbody tr:hover {
+  background-color: #F9FAD7;
+  color: #000;
+}
+
+#sales_table td {
+  font-size: 15px;
+  padding: 2px 10px;
+  border: 1px solid #f3f5f6;
+}
+
+#sales_table td:hover {
+}
