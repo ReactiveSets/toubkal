@@ -58,7 +58,10 @@ var all_min_js = xs.union( [ xs_dependencies, xs
 servers.http_listen( all_min_js );
 
 // Other static assets
-xs.set( [ { path: 'index.html' } ] )
+xs.set( [
+    { path: 'index.html' },
+    { path: 'table.css'  }
+  ] )
   
   .watch()                 // Retrieves file content with realtime updates
   
