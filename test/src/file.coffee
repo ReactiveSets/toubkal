@@ -49,7 +49,6 @@ describe 'file', ->
     
     resolved = resolve
       .trace( 'uuid.js' )
-      .greedy()
     
     it 'should resolve node-uuid/uuid.js', ( done ) ->
       resolved._fetch_all ( values ) -> check done, () ->
