@@ -1,7 +1,7 @@
 {
-  "name": "excess",
+  "name": "toubkal",
   
-  "version": "0.2.6",
+  "version": "0.2.7",
   
   "description": "High-Performances Reactive Web Application Framework",
   
@@ -66,14 +66,12 @@
   },
   
   "keywords": [
-    "dataflow",
     "reactive",
-    "database",
-    "reactive database",
-    "green software"
+    "dataflow",
+    "database"
   ],
   
-  "author": "ConnectedSets",
+  "author": "Reactive Sets",
   
   "license": "AGPLv3"
 }
