@@ -1,4 +1,4 @@
-# Connected Sets
+# Toubkal
 **High-Performances Reactive Web Application Framework**
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal) *567 tests*
@@ -30,7 +30,7 @@ xs.socket_io_server()
 
 ```sales_table``` is updated reactively in realtime whenever sales are updated on the server.
 
-```xs.socket_io_server()``` connects the client to Connected Sets socket.io server.
+```xs.socket_io_server()``` connects the client to Toubkal socket.io server.
 
 ```flow( 'sales' )``` declares that the ```sales``` dataflow is needed from the server.
 
@@ -67,43 +67,43 @@ improving client responsiveness, battery life and user experience.
 
 #### What does this mean?
 
-The Connected Sets program above is expressed in one third the words required to express
+The Toubkal program above is expressed in one third the words required to express
 the problem in plain english replacing thousands of lines of complex and error-prone code.
 
-Connected Sets programs have no *loops*, and no *ifs*, dramatically reducing the
+Toubkal programs have no *loops*, and no *ifs*, dramatically reducing the
 likelyhood of bugs and hence improving productivity by orders of magnitude. Under the
-hood, Connected Sets provides all the optimized and comprehensively tested *loops* and
+hood, Toubkal provides all the optimized and comprehensively tested *loops* and
 *ifs* you will ever need.
 
 These same Occam's razor declarative techniques can be applied on the server side
 delivering a full stack scallable and secure framework with highest performances
 featuring reactive database and fine-grained authorization model.
 
-The bottom line is that Connected Sets allows you to write the minimum amount of code
+The bottom line is that Toubkal allows you to write the minimum amount of code
 while resulting in the highest performance reactive applications you could only dream
 of writing liberating your creativity and allowing you to finaly beat large teams of
 developpers.
 
 ## Introduction
-Connected Sets (**XS** in short, pronounced **excess**) is a high-productivity,
-high-performances, scalable, reactive web application framework aiming at massively
-improving productivity, reducing servers' environmental footprint, and increasing mobile
-clients battery life by making an optimal use of server, network and client resources.
+Toubkal is a high-productivity, high-performances, scalable, reactive web application
+framework aiming at massively improving productivity, reducing servers' environmental
+footprint, and increasing mobile clients battery life by making an optimal use of server,
+network and client resources.
 
 ### Development Stage
-XS is already very reliable thanks to its comprehensive test suite and is currently used
-to deliver a production web application featuring reactive photo albums for a 3D
-modeling and rending company.
+Toubkal is already very reliable thanks to its comprehensive test suite and is
+currently used to deliver a production web application featuring reactive photo albums
+for a 3D image modeling and rendering company.
 
 Some features are still work in progress and some APIs are subject to changes meaning
-that XS should be considered Alpha at this time.
+that Toubkal should be considered Alpha at this time.
 
-XS should provide a functionally-rich framework by version 0.6 in March 2015 including
-reasonably complete documentation extracted from the code where it currently stands,
-and reasonably stable API.
+Toubkal should provide a functionally-rich framework by version 0.6 in March 2015
+including reasonably complete documentation extracted from the code where it currently
+stands, and reasonably stable API.
 
 ### Our Team
-Connected Sets is developped by a team of experienced and passionate back-end and
+Toubkal is developped by a team of experienced and passionate back-end and
 front-end developpers.
 
 We are well founded, not looking for additional founding, with well enough resources
@@ -151,7 +151,7 @@ while increasing environemental footprints.
 The bottom-line is that we want to be in better business faster, with less cash, and a
 lower environemental footprint that current technologies allow.
 
-Connected Sets addresses all of these issues thanks to its unique **Subscribe / Push**
+Toubkal addresses all of these issues thanks to its unique **Subscribe / Push**
 reactive dataflow model that works accross web browsers and nodejs servers, as well as
 just-in-time code generators and other optimizations.
 
@@ -172,7 +172,7 @@ authorizations by stating that you should use third-party libraries or plugins t
 with it, all of which have shortcomming and usually will not fit the complexity of any
 real-world application let alone provide acceptable performances at scale.
 
-Connected Sets provides a simple yet highly-efficient dataflow authorization model and
+Toubkal provides a simple yet highly-efficient dataflow authorization model and
 system architecture that delivers **Reactive UI updates on authorization changes** at
 scale.
 
@@ -193,7 +193,7 @@ company today able to achieve that without throwing millions of dollars at the p
 and/or not struggling with bugs, bottlenecks and hard-to-work-around architecture
 limitations.
 
-The only thing you need to know to understand XS programs is about **XS Pipelets**.
+The only thing you need to know to understand Toubkal programs is about **Toubkal Pipelets**.
 
 ```javascript
 xs.upstream_pipelet( parameter, ... )
@@ -216,14 +216,14 @@ connected
 - Is optimized to process large amounts for data events reactively
 - Can be composed with other pipelets to provide a new pipelet
 
-An XS program is a JavaScript program where one can mix imperative-style programming
-with XS declarative-style programming.
+A Toubkal program is a JavaScript program where one can mix imperative-style programming
+with Toubkal declarative-style programming.
 
 The following provides an example of a non-trivial, high-performance, data server with
 reactive updates on everything including authorization changes, in 60 lines of code,
 comments included:
 ```javascript
-var xs = require( 'excess' ); // Loads XS core pipelets, returns xs head pipelet
+var xs = require( 'excess' ); // Loads Toubkal core pipelets, returns xs head pipelet
 
 require( 'excess/lib/server/file.js' ); // Loads file server pipelets
 require( 'excess/lib/server/http.js' ); // Loads http server pipelets
@@ -280,23 +280,23 @@ function client( source ) { // source refers to the output of the database here
 }
 ```
 
-Connected Sets' unique **Subscribe / Push** reactive dataflow model allows to solve the
-**how** so that you don't have to deal with it.
+Toubkal's **Subscribe / Push** reactive model allows to solve the **how** so that you
+don't have to deal with it.
 
 To make it easier, the API describes **what** you want in **plain JavaScript** without
 requiring a graphical UI to glue hard-coded and hard-to-comprehend xml or json "nodes"
 and "links" together as many other dataflow libraries require.
 
-XS reactive dataflow model provides higher level abstractions handling under the hood
-both subscribe dataflows and information push dataflows that allow to move the least
-amount of information possible between clients and servers reactively.
+Toubkal reactive dataflow model provides higher level abstractions handling under the
+hood both subscribe dataflows and information push dataflows that allow to move the
+least amount of information possible between clients and servers reactively.
 
-### XS Subscribe / Push Dataflow Model
+### Toubkal Subscribe / Push Dataflow Model
 
-The following describes implementation details implemented at XS low level. Application
-Architects do not need do program anything for this to happen as it is entirely hidden by
-XS pipelets. Understanding of the underlying model helps understand why XS is so
-efficient and how it scales.
+The following describes implementation details implemented at Toubkal's low level.
+Application Architects do not need do program anything for this to happen as it is
+entirely hidden by Toubkal pipelets. Understanding of the underlying model helps understand
+why Toubkal is so efficient and how it scales.
 
 Dataflow libraries usually implement one of two models:
 - push: all data is pushed downstream as it happens, allowing realtime updates
@@ -314,13 +314,13 @@ requestAnimationFrame() to prevent over-updating the DOM between refreshes.
 result in the transmission of large amounts of unused data, usually introducing
 unacceptable latency and bandwidth charges.
 
-Connected Sets implements a more sophisticated **Subscribe / Push** model where
+Toubkal implements a more sophisticated **Subscribe / Push** model where
 downstream pipelets subscribe to the subset of data they are interested in and
-subsequently receive all updates in a push fashion only for that subset. This allows XS
-to move the least amount of data between clients and servers while remaining realtime
-with the lowest possible latency.
+subsequently receive all updates in a push fashion only for that subset. This allows
+Toubkal to move the least amount of data between clients and servers while remaining
+realtime with the lowest possible latency.
 
-XS stateless pipelets also use a lazy model where they will not subscribe to anything
+Toubkal stateless pipelets also use a lazy model where they will not subscribe to anything
 from upstream unless initial data is fetched by a downstream stateful pipelet. This again
 allows to transmit only what is really used by the application at any given time.
 
@@ -329,13 +329,13 @@ upstream dataflow. Because the query is itself a dataflow, the subcription can c
 over time.
 
 When tens of thousands of downstream pipelets subscribe to a single pipelet using
-different queries, XS provides a query tree that routes data events very efficiently
+different queries, Toubkal provides a query tree that routes data events very efficiently
 in O( 1 ) time (i.e. that does not depend on the number of connected clients) therefore
 providing a more scalable solution within a single server. Sending actual data to n
 clients out of N connected clients is O( n ) so actual performances depends on the
 application (i.e. whether n << N or not).
 
-A network of Connected Sets servers can be arranged in a tree-like fashion to provide
+A network of Toubkal servers can be arranged in a tree-like fashion to provide
 unlimited size query trees, e.g. to dispatch data to millions of simultaneous clients.
 Each server subscribes to its upstream server the subset of data it dispatches to
 downstream servers and clients. This allows efficient and low-latency routing thanks
@@ -343,7 +343,7 @@ in part to the high performances of each individual server query tree.
 
 #### Data Events, Operations, Stateless Sets and Pipelets
 
-Internally, Connected Sets dataflows represent the evolution of data sets over time where
+Internally, Toubkal dataflows represent the evolution of data sets over time where
 each event modifies a set. These dataflows are therefore reactive sets change flows.
 
 Each event carries an opperation name such as *add* or *remove* and an array of values
@@ -374,7 +374,7 @@ Stateful pipelets are implemented thanks to the stateful set() pipelet that is t
 used as a base pipelet for all stateful pipelets.
 
 Also, much like the TCP protocol, stateful pipelets are found at the edges of a
-Connected Sets network of stateless pipelets.
+Toubkal network of stateless pipelets.
 
 #### Horizontal Distribution
 
@@ -394,9 +394,9 @@ analysis and reporting over virtually unlimited size datasets.
 
 #### Loops, Just-In-Time Code Generation
 
-XS data events contain arrays of values which are typically processed in loops. In a
+Toubkal data events contain arrays of values which are typically processed in loops. In a
 traditional programming environement, one typically writes code that processes values in
-loops. With Connected Sets, architects do not write loops because these are absracted
+loops. With Toubkal, architects do not write loops because these are absracted
 away as sets processed by pipelets.
 
 This greatly simplifies programming while removing the likelihood for common programming
@@ -407,15 +407,11 @@ performances only available to compiled languages such as C or C++. Unrolling ne
 loops provide maximum performance while in turn allowing JavaScript JIT compilers to
 generate code that may be executed optimally in microprocessors' pipelines.
 
-#### XS Pipelet Programming
+#### Toubkal Pipelet Programming
 
-At the lower level, XS **Pipelets** use a JavaScript functional programming model
+At the lower level, Toubkal **Pipelets** use a JavaScript functional programming model
 eliminating the typical callback hell of assynchronous request-response programming
 models.
-
-Unlike the promises model, XS exceptions and errors may be carried-out out-of-band
-through global dataflows that can be processed, for error recovery, end-user feedback,
-and logging.
 
 Error dataflows originating on clients can easily be routed to servers to allow
 proactive debugging of errors while in production, and effective service quality
@@ -428,7 +424,7 @@ very hard to debug.
 
 ### Service Architecture
 
-With Connected Sets, services are typically composed of three different services:
+With Toubkal, services are typically composed of three different services:
 
 - A stateful network of persistent database pipelets
 - A stateless network of event dispatchers, acting as a marshalled multicasting network
@@ -443,25 +439,26 @@ distributed.
 A company could run multiple services through a single network of stateless event
 dispatchers, acting as web service aggregator.
 
-The different nodes of an XS network communicate using the XS protocol that provides the
-Subscribe / Push service over a reliable transport (such as Sockets, WebSockets, ...) but
-not necessarily guarantying the order of packets. So XS could also work over a protocol
-that would only guaranty the delivery of packets.
+The different nodes of a Toubkal network communicate using the Toubkal protocol that
+provides the Subscribe / Push service over a reliable transport (such as Sockets,
+WebSockets, ...) but not necessarily guarantying the order of packets. So Toubkal could
+also work over a protocol that would only guaranty the delivery of packets.
 
-The XS protocol therefore provides a much higher level alternative to existing web
+The Toubkal protocol therefore provides a much higher level alternative to existing web
 services protocols such as SOAP and REST, allowing to build efficiently complex real-time
-applications with no additional code.
+applications with no additional code and much less documentation since only application
+dataflows need to be documented.
 
 ### Realtime Data Portability, Business Opportunities
 
 A network of services sharing the same event dispatcher network enables to effectively
-separate **XS Data Providers** from **XS Application Providers** increasing business
-opportunities arising from the portability of reactive dataflows updated in real-time
-and as authorized by end-users.
+separate **Toubkal Data Providers** from **Toubkal Application Providers** increasing
+business opportunities arising from the portability of reactive dataflows updated in
+real-time and as authorized by end-users.
 
-Within an XS network, end-users no longer need to duplicate their personal data endlessly
-and updates are propagated to all applications in realtime putting an end to today's
-world of out-of-date data between services.
+Within a Toubkal network, end-users no longer need to duplicate their personal data
+endlessly and updates are propagated to all applications in realtime putting an end
+to today's world of out-of-date data between services.
 
 People will now expose their data, using a variety of services to view, edit, and publish
 their data to other people.
@@ -469,7 +466,7 @@ their data to other people.
 Using only stateless pipelets, this architecture will reach internet-scale very
 efficiently, delivering a Marshalled Subscribe / Push multicasting data exchange
 for services to share data among many service providers, while representing a business
-opportunity for **XS Network Providers** much like today's CDNs but for marshalled
+opportunity for **Toubkal Network Providers** much like today's CDNs but for marshalled
 dynamic real-time content solving caching issues thanks to the immutability of data
 events.
 
@@ -477,43 +474,43 @@ To participate in this network, service providers only need to publish dataflows
 subscribe to third-party dataflows.
 
 End-users may use these services to backup their own data either on owned servers or
-using third-party XS Data Providers.
+using third-party Toubkal Data Providers.
 
-End-Users control access to their own data through XS Authorization reactive dataflows
-providing additional business opportunities for **XS Authorization Management Providers**
-helping end-users manage authorizations for all their data accross all their XS
+End-Users control access to their own data through Toubkal Authorization dataflows
+providing additional business opportunities for **Toubkal Authorization Management Providers**
+helping end-users manage authorizations for all their data accross all their Toubkal
 Applications.
 
-Monetization of dataflows and applications can be controlled through XS reactive
-authorizations by **XS Monetization Providers**.
+Monetization of dataflows and applications can be controlled through Toubkal reactive
+authorizations by **Toubkal Monetization Providers**.
 
-Disruptive new business opportunities arrising from **XS Realtime Data Portability**
+Disruptive new business opportunities arrising from **Toubkal Realtime Data Portability**
 will prove much stronger than the current closed, data-within-application model,
 resulting in more data and more services available to more users and businesses.
 
 ### Ecosystem
 
-XS backend runs on **Node.js** providing a scalable database, web server, validation,
+Toubkal backend runs on **Node.js** providing a scalable database, web server, validation,
 and authorizations.
 
-On the frontend, XS provides reactive controlers and views driven by reactive dataflows.
+On the frontend, Toubkal provides reactive controlers and views driven by reactive dataflows.
 
-XS can optionally be coupled with any other framework but we recommend using reactive
+Toubkal can optionally be coupled with any other framework but we recommend using reactive
 libraries such as **AngularJS**, **Ember**, **Bacon.js**, **React**, which model is
 closer to XS.
 
 For responsive layouts, we recommand **Bootstrap** that we use it for our reactive
 Carousel and Photo Albums.
 
-For DOM manipulation one can use any library, or none at all, as XS core has no
+For DOM manipulation one can use any library, or none at all, as Toubkal core has no
 dependencies.
 
-XS can either be used to gradually improve existing applications on the back-end or
+Toubkal can either be used to gradually improve existing applications on the back-end or
 front-end, or as a full-stack framework.
 
 #### Integrated database and model
 
-XS features a chardable document database with joins, aggregates, filters and
+Toubkal features a chardable document database with joins, aggregates, filters and
 transactions with eventual consistency allowing both normalized and denormalized
 schemes.
 
@@ -527,7 +524,7 @@ The source code for this demonstration site is in
 
 ### Documentation
 
-This readme provides an introduction to Connected Sets.
+This readme provides an introduction to Toubkal.
 
 The bulk of the documentation is currently embedded in the code of ```lib/pipelet.js```
 and other sources for the core as well as individual pipelets' sources.
@@ -542,9 +539,9 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 567 automated tests for the XS core pipelets that run after
-every commit on Travis CI under node versions 0.8, 0.10. We no longer test version 0.6
-since Travis had an issue with it around January 2014. Version 0.11 is not officially
+We have curently developped 567 automated tests for the Toubkal core pipelets that run
+after every commit on Travis CI under node versions 0.8, 0.10. We no longer test version
+0.6 since Travis had an issue with it around January 2014. Version 0.11 is not officially
 supported because ui tests using zombie cannot pass at this time.
 
 Our continuous integration process also requires that before each commit the developper
@@ -559,7 +556,7 @@ each time we increment the minor version. If you need more updates just let us k
 
 ### Contributions
 
-Contributions are welcome but difficult at this time because XS is still in alpha,
+Contributions are welcome but difficult at this time because Toubkal is still in alpha,
 APIs may still change, and low-level documentation is incomplete requiring a lot of
 support on our part. We however welcome full-time contributors disiring to join
 our team.
@@ -607,7 +604,7 @@ time .less files. The same could be done to compile coffee script or use any oth
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Connected Sets - Aggregate Sales by Year and Employee</title>
+    <title>Toubkal - Aggregate Sales by Year and Employee</title>
     
     <link rel="stylesheet" href="all.css" />
     
