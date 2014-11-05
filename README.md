@@ -1,7 +1,7 @@
 # Connected Sets
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ConnectedSets/ConnectedSets.png?branch=master)](https://travis-ci.org/ConnectedSets/ConnectedSets) *567 tests*
+[![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal) *567 tests*
 
 [![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
 
@@ -13,7 +13,7 @@ for the year 2014, from a source ```sales``` dataflow coming from a ```socket.io
 pulling the minimum amount of data from the server and updating the table as soon as some
 data is available from the server
 (for witch the complete working code including http server is available at
-[examples/teaser](https://github.com/ConnectedSets/ConnectedSets/tree/master/examples/teaser)):
+[examples/teaser](https://github.com/ReactiveSets/toubkal/tree/master/examples/teaser)):
 
 #### client.js
 
@@ -523,7 +523,7 @@ schemes.
 A [demonstration and beta test site is available here](http://www.castorcad.com/).
 
 The source code for this demonstration site is in
-[the GitHub repository ConnectedSets / demo](https://github.com/ConnectedSets/demo).
+[the GitHub repository ReactiveSets / demo](https://github.com/ReactiveSets/demo).
 
 ### Documentation
 
@@ -536,8 +536,8 @@ We plan on extracting and completing this documentation to provide the following
 manuals:
 
 - A Tutorial
-- ConnectedSets Application Architect Manual
-- ConnectedSets Pipelet Developper's Guide
+- Toubkal Application Architect Manual
+- Toubkal Pipelet Developper's Guide
 - A Reference Manual for all available pipelets by module
 
 ### Automated Tests, Continuous Integration
@@ -580,9 +580,9 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # npm install expect.js
 # npm install mocha-unfunk-reporter
 #
-# git clone https://github.com/ConnectedSets/ConnectedSets.git
+# git clone https://github.com/ReactiveSets/toubkal.git
 #
-# cd ConnectedSets
+# cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
 -> passed 567 of 567 tests (4196ms)

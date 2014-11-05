@@ -63,13 +63,13 @@ describe 'Load Images test suite:', ->
     this.timeout 15000
     
     images_source._add [
-      { title: 'Villa Marrakech 1' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/011.jpg' }
-      { title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/02.jpg' }
-      { title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/03.jpg' }
-      { title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/04.jpg' }
-      { title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/05.jpg' }
-      { title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/06.jpg' }
-      { title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/07.jpg' }
+      { title: 'Villa Marrakech 1' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/011.jpg' }
+      { title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/02.jpg' }
+      { title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/03.jpg' }
+      { title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/04.jpg' }
+      { title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/05.jpg' }
+      { title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/06.jpg' }
+      { title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/07.jpg' }
     ]
     
     expect( images._loading_count ).to.be 2
@@ -79,12 +79,12 @@ describe 'Load Images test suite:', ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
-          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/02.jpg' }
-          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/03.jpg' }
-          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/04.jpg' }
-          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/05.jpg' }
-          { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/06.jpg' }
-          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/07.jpg' }
+          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/02.jpg' }
+          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/03.jpg' }
+          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/04.jpg' }
+          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/05.jpg' }
+          { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/06.jpg' }
+          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/07.jpg' }
         ]
 
     , this, true )
@@ -116,8 +116,8 @@ describe 'Load Images test suite:', ->
     images._loading_max = 1
 
     images_source._add [
-      { title: 'Villa Marrakech 8', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/08.jpg' }
-      { title: 'Villa Marrakech 9', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/09.jpg' }
+      { title: 'Villa Marrakech 8', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/08.jpg' }
+      { title: 'Villa Marrakech 9', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/09.jpg' }
     ]
     
     expect( images._loading_count ).to.be 1
@@ -127,14 +127,14 @@ describe 'Load Images test suite:', ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
-          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/02.jpg' }
-          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/03.jpg' }
-          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/04.jpg' }
-          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/05.jpg' }
-          { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/06.jpg' }
-          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/07.jpg' }
-          { id: 8 , title: 'Villa Marrakech 8' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/08.jpg' }
-          { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/09.jpg' }
+          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/02.jpg' }
+          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/03.jpg' }
+          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/04.jpg' }
+          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/05.jpg' }
+          { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/06.jpg' }
+          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/07.jpg' }
+          { id: 8 , title: 'Villa Marrakech 8' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/08.jpg' }
+          { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/09.jpg' }
         ]
 
     , this, true )
@@ -161,19 +161,19 @@ describe 'Load Images test suite:', ->
 
   it 'after images_source._remove( objects ), expect images._fetch_all() to be equal to result', ->
     images_source._remove [
-      { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/06.jpg' }
-      { id: 8 , title: 'Villa Marrakech 8' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/08.jpg' }
+      { id: 6 , title: 'Villa Marrakech 6' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/06.jpg' }
+      { id: 8 , title: 'Villa Marrakech 8' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/08.jpg' }
     ]
     
     values = images._fetch_all().sort ( a, b ) -> a.id > b.id
     
     expect( values ).to.be.eql [
-      { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/02.jpg' }
-      { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/03.jpg' }
-      { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/04.jpg' }
-      { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/05.jpg' }
-      { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/07.jpg' }
-      { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/09.jpg' }
+      { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/02.jpg' }
+      { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/03.jpg' }
+      { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/04.jpg' }
+      { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/05.jpg' }
+      { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/07.jpg' }
+      { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/09.jpg' }
     ]
   
   it 'should have removed 2 images from the DOM', ->
@@ -193,20 +193,20 @@ describe 'Load Images test suite:', ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
-          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/02.jpg' }
-          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/03.jpg' }
-          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/04.jpg' }
-          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/05.jpg' }
-          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/07.jpg' }
-          { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/10.jpg' }
+          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/02.jpg' }
+          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/03.jpg' }
+          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/04.jpg' }
+          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/05.jpg' }
+          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/07.jpg' }
+          { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/10.jpg' }
         ]
       
     , this, true )
     
     images_source._update [
       [
-        { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/09.jpg' }
-        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/10.jpg' }
+        { id: 9 , title: 'Villa Marrakech 9' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/09.jpg' }
+        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/10.jpg' }
       ]
     ]
     
@@ -218,21 +218,21 @@ describe 'Load Images test suite:', ->
         values.sort ( a, b ) -> a.id > b.id
 
         expect( values ).to.be.eql [
-          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/02.jpg' }
-          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/03.jpg' }
-          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/04.jpg' }
-          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/05.jpg' }
-          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/07.jpg' }
-          { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/10.jpg' }
-          { id: 10, title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/11.jpg' }
-          { id: 11, title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/12.jpg' }
+          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/02.jpg' }
+          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/03.jpg' }
+          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/04.jpg' }
+          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/05.jpg' }
+          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/07.jpg' }
+          { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/10.jpg' }
+          { id: 10, title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/11.jpg' }
+          { id: 11, title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/12.jpg' }
         ]
 
     , this, true )
     
     images_source._add [
-      { title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/11.jpg' }
-      { title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/12.jpg' }
+      { title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/11.jpg' }
+      { title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/12.jpg' }
     ]
   
   it 'after images_source._update( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
@@ -243,22 +243,22 @@ describe 'Load Images test suite:', ->
         values.sort ( a, b ) -> a.id > b.id
  
         expect( values ).to.be.eql [
-          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/02.jpg' }
-          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/03.jpg' }
-          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/04.jpg' }
-          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/05.jpg' }
-          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ConnectedSets/demo/master/images/07.jpg' }
-          { id: 9 , title: 'Villa Marrakech 13', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/13.jpg' }
-          { id: 10, title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/11.jpg' }
-          { id: 11, title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/12.jpg' }
+          { id: 2 , title: 'Villa Marrakech 2' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/02.jpg' }
+          { id: 3 , title: 'Villa Marrakech 3' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/03.jpg' }
+          { id: 4 , title: 'Villa Marrakech 4' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/04.jpg' }
+          { id: 5 , title: 'Villa Marrakech 5' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/05.jpg' }
+          { id: 7 , title: 'Villa Marrakech 7' , uri: 'https://raw.github.com/ReactiveSets/demo/master/images/07.jpg' }
+          { id: 9 , title: 'Villa Marrakech 13', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/13.jpg' }
+          { id: 10, title: 'Villa Marrakech 11', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/11.jpg' }
+          { id: 11, title: 'Villa Marrakech 12', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/12.jpg' }
         ]
         
     , this, true )
     
     images_source._update [
       [
-        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/10.jpg' }
-        { id: 9 , title: 'Villa Marrakech 13', uri: 'https://raw.github.com/ConnectedSets/demo/master/images/13.jpg' }
+        { id: 9 , title: 'Villa Marrakech 10', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/10.jpg' }
+        { id: 9 , title: 'Villa Marrakech 13', uri: 'https://raw.github.com/ReactiveSets/demo/master/images/13.jpg' }
       ]
     ]
     
