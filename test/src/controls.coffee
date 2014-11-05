@@ -1,7 +1,7 @@
 ###
     xs_controls.coffee
 
-    Copyright (C) 2013, 2014, Connected Sets
+    Copyright (C) 2013, 2014, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
