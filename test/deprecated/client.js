@@ -18,8 +18,8 @@ try{
   l8.client = true;
 }
 
-var XS = require( "excess/lib/xs.js" ).XS;
-require( "excess/lib/proxy.js" );
+var XS = require( "toubkal/lib/xs.js" ).XS;
+require( "toubkal/lib/proxy.js" );
 var xs = XS.fluid;
 
 // The Dude subscribe to the daily mirror

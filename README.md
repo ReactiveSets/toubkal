@@ -3,7 +3,7 @@
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal) *567 tests*
 
-[![NPM version](https://badge.fury.io/js/excess.png)](http://badge.fury.io/js/excess) *npm install excess*
+[![NPM version](https://badge.fury.io/js/toubkal.png)](http://badge.fury.io/js/toubkal) *npm install toubkal*
 
 *Liberating your Creativity, while fighting Climate Change*
 
@@ -223,11 +223,11 @@ The following provides an example of a non-trivial, high-performance, data serve
 reactive updates on everything including authorization changes, in 60 lines of code,
 comments included:
 ```javascript
-var xs = require( 'excess' ); // Loads Toubkal core pipelets, returns xs head pipelet
+var xs = require( 'toubkal' ); // Loads Toubkal core pipelets, returns xs head pipelet
 
-require( 'excess/lib/server/file.js' ); // Loads file server pipelets
-require( 'excess/lib/server/http.js' ); // Loads http server pipelets
-require( 'excess/lib/server/socket_io_clients.js' ); // Loads socket.io server pipelets
+require( 'toubkal/lib/server/file.js' ); // Loads file server pipelets
+require( 'toubkal/lib/server/http.js' ); // Loads http server pipelets
+require( 'toubkal/lib/server/socket_io_clients.js' ); // Loads socket.io server pipelets
 
 var database = xs.file_json_store( 'data_store.json' ); // * Input/Output dataflows to/from datastore, one-line, no external database required
 
@@ -565,7 +565,7 @@ our team.
 
 From npm, latest release:
 ```bash
-# npm install excess
+# npm install toubkal
 ```
 
 Some image manipulation pipelets require ImageMagick that [you can download here](http://www.imagemagick.org/script/binary-releases.php.).
@@ -671,7 +671,7 @@ function client() {
 #### server.js
 
 ```javascript
-var xs = require( 'excess' );
+var xs = require( 'toubkal' );
 
 var servers = xs
   .set( [ // Define http servers
@@ -686,19 +686,19 @@ var servers = xs
 var all_min_js = xs
   .set( [ // Define the minimum set of javascript files required to serve this client application
     { name: 'node-uuid/uuid.js'                 },
-    { name: 'excess/lib/xs.js'                  },
-    { name: 'excess/lib/code.js'                },
-    { name: 'excess/lib/query.js'               },
-    { name: 'excess/lib/transactions.js'        },
-    { name: 'excess/lib/pipelet.js'             },
-    { name: 'excess/lib/filter.js'              },
-    { name: 'excess/lib/join.js'                },
-    { name: 'excess/lib/aggregate.js'           },
-    { name: 'excess/lib/order.js'               },
-    { name: 'excess/lib/selector.js'            },
-    { name: 'excess/lib/table.js'               },
-    { name: 'excess/lib/socket_io_crossover.js' },
-    { name: 'excess/lib/socket_io_server.js'    }
+    { name: 'toubkal/lib/xs.js'                  },
+    { name: 'toubkal/lib/code.js'                },
+    { name: 'toubkal/lib/query.js'               },
+    { name: 'toubkal/lib/transactions.js'        },
+    { name: 'toubkal/lib/pipelet.js'             },
+    { name: 'toubkal/lib/filter.js'              },
+    { name: 'toubkal/lib/join.js'                },
+    { name: 'toubkal/lib/aggregate.js'           },
+    { name: 'toubkal/lib/order.js'               },
+    { name: 'toubkal/lib/selector.js'            },
+    { name: 'toubkal/lib/table.js'               },
+    { name: 'toubkal/lib/socket_io_crossover.js' },
+    { name: 'toubkal/lib/socket_io_server.js'    }
   ] )
   
   .auto_increment() // Keeps track of files load order by adding an id attribute starting at 1
@@ -706,7 +706,7 @@ var all_min_js = xs
   .require_resolve()            // Resolves node module names to file paths
   
   .union( xs.set( [             // Add other javascript assets
-    { path: 'client.js', id: 15 } // client code must be loaded after excess
+    { path: 'client.js', id: 15 } // client code must be loaded after toubkal
   ] ) )
   
   .watch()                      // Retrieves files content with realtime updates

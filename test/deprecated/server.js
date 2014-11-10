@@ -13,9 +13,9 @@
 // http, with connection hopefully upgraded to websocket thanks to socketIo.
 
 
-var xs = require( "excess/lib/xs.js" ).XS;
-require( "excess/lib/proxy.js");
-require( "excess/lib/tracer.js");
+var xs = require( "toubkal/lib/xs.js" ).XS;
+require( "toubkal/lib/proxy.js");
+require( "toubkal/lib/tracer.js");
 var fluid = xs.fluid;
 var log   = xs.log;
 var l8    = fluid.l8;

@@ -3,11 +3,11 @@
 //
 // 2013/10/30 by JHR
 
-var xs = require( "excess/lib/xs.js" ).XS;
-  require( "excess/lib/fluid.js"     );
-  require( "excess/lib/pipelet.js"   );
-  require( "excess/lib/tracer.js"    );
-  require( "excess/lib/persist.js"   );
+var xs = require( "toubkal/lib/xs.js" ).XS;
+  require( "toubkal/lib/fluid.js"     );
+  require( "toubkal/lib/pipelet.js"   );
+  require( "toubkal/lib/tracer.js"    );
+  require( "toubkal/lib/persist.js"   );
 var l8    = require( 'l8/lib/l8.js'  );
 var log   = xs.log;
 var fluid = xs.fluid; 
