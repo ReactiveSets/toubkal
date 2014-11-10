@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # -------------
 
 utils = require( './tests_utils.js' ) if require?
@@ -27,11 +27,11 @@ expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 log    = this.log    || utils.log
-xs     = this.xs     || utils.xs
+rs     = this.rs     || utils.rs
 
-XS      = xs.XS
-extend  = XS.extend
-uuid_v4 = XS.uuid_v4
+RS      = rs.RS
+extend  = RS.extend
+uuid_v4 = RS.uuid_v4
 
 slice = Array.prototype.slice
 
@@ -51,9 +51,9 @@ check_set_content = ( done, source, values ) ->
 if require?
   require '../../lib/transactions.js'
 
-Pipelet = XS.Pipelet
-Greedy  = XS.Greedy
-Set     = XS.Set
+Pipelet = RS.Pipelet
+Greedy  = RS.Greedy
+Set     = RS.Set
 
 # ----------------------------------------------------------------------------------------------
 # Some constants
@@ -66,7 +66,7 @@ valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 # -----------------------
 
 describe 'Transactions test suite:', ->
-  describe 'XS.uuid_v4():', ->
+  describe 'RS.uuid_v4():', ->
     # Generate 10 random uuid v4 to verify that they al match
     v4_0 = uuid_v4()
     v4_1 = uuid_v4()
@@ -91,15 +91,15 @@ describe 'Transactions test suite:', ->
       expect( v4_8 ).to.match( valid_uuid_v4 ) and
       expect( v4_9 ).to.match( valid_uuid_v4 )
   
-  # XS.uuid_v4()
+  # RS.uuid_v4()
   
-  describe 'XS.Event_Emitter(): ', ->
-    emitter = new XS.Event_Emitter()
+  describe 'RS.Event_Emitter(): ', ->
+    emitter = new RS.Event_Emitter()
     data = null
     complete = null
     
     it 'should be an Event_Emitter', ->
-      expect( emitter ).to.be.a XS.Event_Emitter
+      expect( emitter ).to.be.a RS.Event_Emitter
     
     it 'should allow to emit a "data" event with no exception', ->
       expect( emitter.emit( 'data', {} ) ).to.be emitter
@@ -135,10 +135,10 @@ describe 'Transactions test suite:', ->
       expect( data ).to.be.eql [ { a: 1 } ]
       expect( complete ).to.be.eql [ { _t: { more: false } } ]
     
-  # XS.Event_Emitter()
+  # RS.Event_Emitter()
   
-  describe 'XS.Options.forward():', ->
-    options_forward = XS.Options.forward
+  describe 'RS.Options.forward():', ->
+    options_forward = RS.Options.forward
     uuid = uuid_v4()
     
     it 'should be a function with one parameter', ->
@@ -184,21 +184,21 @@ describe 'Transactions test suite:', ->
     it 'should return { _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
       more = { _t: { more: 0, id: uuid } }
       
-      expect( XS.options_forward( more ) ).to.be.eql {
+      expect( RS.options_forward( more ) ).to.be.eql {
         _t: { id: uuid }
       }
     
     it 'should return { _t: { id: uuid } } with options { _t: { id: uuid } }', ->
       more = { _t : { id: uuid } }
       
-      expect( XS.options_forward( more ) ).to.be.eql {
+      expect( RS.options_forward( more ) ).to.be.eql {
         _t: { id: uuid }
       }
   # options_forward()
 
-  describe 'XS.Transactions() and XS.Transaction():', ->
-    Transaction  = XS.Transaction
-    Transactions = XS.Transactions
+  describe 'RS.Transactions() and RS.Transaction():', ->
+    Transaction  = RS.Transaction
+    Transactions = RS.Transactions
     
     describe 'Transaction with no options or pipelet', ->
       t = new Transaction 4
@@ -656,10 +656,10 @@ describe 'Transactions test suite:', ->
         ]
     
     describe 'Input / Output Transactions()', ->
-      input = new XS.Input_Transactions().set_tag_branches 'source', 2
+      input = new RS.Input_Transactions().set_tag_branches 'source', 2
       
-      output_1 = new XS.Output_Transactions()
-      output_2 = new XS.Output_Transactions()
+      output_1 = new RS.Output_Transactions()
+      output_2 = new RS.Output_Transactions()
       
       tid = uuid_v4()
       
@@ -756,4 +756,4 @@ describe 'Transactions test suite:', ->
         expect( Object.keys output_2.transactions ).to.be.eql []
       
       
-  # XS.Transactions() and XS.Transaction()
+  # RS.Transactions() and RS.Transaction()

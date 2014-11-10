@@ -1,5 +1,5 @@
 ###
-    xs_form.coffee
+    form.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # ----------------------------------------------------------------------------------------------
 
 Browser = require( 'zombie' )
@@ -30,12 +30,12 @@ expect  = this.expect || utils.expect
 check   = this.check  || utils.check
 
 # ----------------------------------------------------------------------------------------------
-# xs Form() unit test suite
+# rs Form() unit test suite
 # ----------------------------------------------------------------------------------------------
 
 describe 'Form() Test Suite', ->
   before ( done ) ->
-    browser.visit 'http://localhost:8080/test/xs_form.html', done
+    browser.visit 'http://localhost:8080/test/rs_form.html', done
   
   it 'body element should have a "form" element', ->
     expect( browser.queryAll( 'form' ).length ).to.be 1

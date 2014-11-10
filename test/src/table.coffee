@@ -1,5 +1,5 @@
 ###
-    xs_table_tests.coffee
+    rs_table_tests.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -54,11 +54,11 @@ from_HTML_to_object = ( node ) ->
   return { columns: columns, data: data }
 
 # ----------------------------------------------------------------------------------------------
-# xs table unit test suite
+# rs table unit test suite
 # ------------------------
 
 # include modules
-XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
+RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
 expect = if require? then ( require 'expect.js' ) else this.expect
 
 if require?
@@ -69,12 +69,12 @@ if require?
   require '../../lib/aggregate.js'
   require '../../lib/table.js'
 
-xs = XS.xs
+rs = RS.rs
 
-columns   = xs.set( [ { id: "id", label: "ID" }, { id: "title", label: "Title" }, { id: "author", label: "Author" } ], { name: "Columns Set" } ).order( [ { id: "label" } ] )
-organizer = xs.set [ { id: "title" } ], { name: "Organizer: by title ascending" }
+columns   = rs.set( [ { id: "id", label: "ID" }, { id: "title", label: "Title" }, { id: "author", label: "Author" } ], { name: "Columns Set" } ).order( [ { id: "label" } ] )
+organizer = rs.set [ { id: "title" } ], { name: "Organizer: by title ascending" }
 
-books = xs.set [
+books = rs.set [
   { id: 1, title: "A Tale of Two Cities"             , author: "Charles Dickens" , sales: 200, year: 1859, language: "English" }
   { id: 2, title: "The Lord of the Rings"            , author: "J. R. R. Tolkien", sales: 150, year: 1955, language: "English" }
   { id: 3, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"      , sales:  13            , language: "English" }

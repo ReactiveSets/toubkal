@@ -1,5 +1,5 @@
 ###
-    xs_controls.coffee
+    controls.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # ----------------------------------------------------------------------------------------------
 
 Browser = require( 'zombie' )
@@ -30,13 +30,13 @@ expect  = this.expect || utils.expect
 check   = this.check  || utils.check
 
 # ----------------------------------------------------------------------------------------------
-# xs URL unit test suite
+# rs URL unit test suite
 # ----------------------------------------------------------------------------------------------
 
 describe 'Controls Test Suite', ->
   describe 'Checkbox():', ->
     before ( done ) ->
-      browser.visit 'http://localhost:8080/test/xs_controls.html', done
+      browser.visit 'http://localhost:8080/test/rs_controls.html', done
     
     it 'charts should be empty', ( done ) ->
       browser.window.charts._fetch_all ( values ) -> check done, ->
@@ -114,7 +114,7 @@ describe 'Controls Test Suite', ->
   
   describe 'Drop_Down():', ->
     before ( done ) ->
-      browser.visit 'http://localhost:8080/test/xs_controls.html', done
+      browser.visit 'http://localhost:8080/test/rs_controls.html', done
     
     it 'countries should be empty', ( done ) ->
       browser.window.countries._fetch_all ( values ) -> check done, ->
@@ -180,7 +180,7 @@ describe 'Controls Test Suite', ->
   
   describe 'Radio():', ->
     before ( done ) ->
-      browser.visit 'http://localhost:8080/test/xs_controls.html', done
+      browser.visit 'http://localhost:8080/test/rs_controls.html', done
     
     it 'religions should be empty', ( done ) ->
       browser.window.religions._fetch_all ( values ) -> check done, ->
@@ -263,7 +263,7 @@ describe 'Controls Test Suite', ->
   
   describe 'Checkbox_Group()', ->
     before ( done ) ->
-      browser.visit 'http://localhost:8080/test/xs_controls.html', done
+      browser.visit 'http://localhost:8080/test/rs_controls.html', done
     
     it 'hobbies should be empty', ( done ) ->
       browser.window.hobbies._fetch_all ( values ) -> check done, ->

@@ -18,7 +18,7 @@ data is available from the server
 #### client.js
 
 ```javascript
-xs.socket_io_server()
+rs.socket_io_server()
   .flow  ( 'sales' )
   .filter( [ { year: 2014 } ] )
   .order ( [ { id: 'date' } ] )
@@ -30,7 +30,7 @@ xs.socket_io_server()
 
 ```sales_table``` is updated reactively in realtime whenever sales are updated on the server.
 
-```xs.socket_io_server()``` connects the client to Toubkal socket.io server.
+```rs.socket_io_server()``` connects the client to Toubkal socket.io server.
 
 ```flow( 'sales' )``` declares that the ```sales``` dataflow is needed from the server.
 
@@ -52,7 +52,7 @@ are reactively added or removed in realtime without any addtitional programing r
 using the following declarative code:
 
 ```javascript
-var sales_columns = xs
+var sales_columns = rs
   .socket_io_server()
   .flow( 'sales_columns' )
 ;
@@ -196,7 +196,7 @@ limitations.
 The only thing you need to know to understand Toubkal programs is about **Toubkal Pipelets**.
 
 ```javascript
-xs.upstream_pipelet( parameter, ... )
+rs.upstream_pipelet( parameter, ... )
   .a_pipelet( ... )
   .downstream_pipelet( ... )
 ;
@@ -223,17 +223,17 @@ The following provides an example of a non-trivial, high-performance, data serve
 reactive updates on everything including authorization changes, in 60 lines of code,
 comments included:
 ```javascript
-var xs = require( 'toubkal' ); // Loads Toubkal core pipelets, returns xs head pipelet
+var rs = require( 'toubkal' ); // Loads Toubkal core pipelets, returns rs head pipelet
 
 require( 'toubkal/lib/server/file.js' ); // Loads file server pipelets
 require( 'toubkal/lib/server/http.js' ); // Loads http server pipelets
 require( 'toubkal/lib/server/socket_io_clients.js' ); // Loads socket.io server pipelets
 
-var database = xs.file_json_store( 'data_store.json' ); // * Input/Output dataflows to/from datastore, one-line, no external database required
+var database = rs.file_json_store( 'data_store.json' ); // * Input/Output dataflows to/from datastore, one-line, no external database required
 
 var users = database.flow( 'users' ); // Dataflow of users' credentials:
 
-var clients = xs
+var clients = rs
   // Define a set of web servers
   .set( [ 
     { ip_address: '0.0.0.0', port: 80 },                         // http://example.com/
@@ -497,7 +497,7 @@ On the frontend, Toubkal provides reactive controlers and views driven by reacti
 
 Toubkal can optionally be coupled with any other framework but we recommend using reactive
 libraries such as **AngularJS**, **Ember**, **Bacon.js**, **React**, which model is
-closer to XS.
+closer to RS.
 
 For responsive layouts, we recommand **Bootstrap** that we use it for our reactive
 Carousel and Photo Albums.
@@ -627,8 +627,8 @@ time .less files. The same could be done to compile coffee script or use any oth
 "use strict";
 
 function client() {
-  var xs      = XS.xs                // the start object for XS fluent interface
-    , extend  = XS.extend            // used to merge employees and sales
+  var rs      = RS.rs                // the start object for RS fluent interface
+    , extend  = RS.extend            // used to merge employees and sales
     , sales   = [ { id: 'sales' } ]  // Aggregate sales measures
     , by_year = [ { id: 'year'  } ]  // Aggregate dimensions
     
@@ -643,7 +643,7 @@ function client() {
     ]
   ;
   
-  var server = xs.socket_io_server(); // exchange dataflows with server using socket.io
+  var server = rs.socket_io_server(); // exchange dataflows with server using socket.io
   
   // Get employees from server
   var employees = server.flow( 'employees' ); // filter values which "flow" attribute equals 'employee'
@@ -671,9 +671,9 @@ function client() {
 #### server.js
 
 ```javascript
-var xs = require( 'toubkal' );
+var rs = require( 'toubkal' );
 
-var servers = xs
+var servers = rs
   .set( [ // Define http servers
     { port:80, ip_address: '0.0.0.0' } // this application has only one server
     { port:443, ip_address: '0.0.0.0', key: 'key string', cert: 'cert string' }
@@ -683,10 +683,10 @@ var servers = xs
 ;
 
 // Merge and mimify client javascript assets in realtime
-var all_min_js = xs
+var all_min_js = rs
   .set( [ // Define the minimum set of javascript files required to serve this client application
     { name: 'node-uuid/uuid.js'                 },
-    { name: 'toubkal/lib/xs.js'                  },
+    { name: 'toubkal/lib/rs.js'                  },
     { name: 'toubkal/lib/code.js'                },
     { name: 'toubkal/lib/query.js'               },
     { name: 'toubkal/lib/transactions.js'        },
@@ -705,7 +705,7 @@ var all_min_js = xs
   
   .require_resolve()            // Resolves node module names to file paths
   
-  .union( xs.set( [             // Add other javascript assets
+  .union( rs.set( [             // Add other javascript assets
     { path: 'client.js', id: 15 } // client code must be loaded after toubkal
   ] ) )
   
@@ -720,7 +720,7 @@ var all_min_js = xs
 servers.http_listen( all_min_js );
 
 // Other static assets
-xs.set( [
+rs.set( [
     { path: 'html' },
     { path: 'css'  }
   ] )
@@ -737,9 +737,9 @@ xs.set( [
 // Start socket servers on all http servers using socket.io
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
-xs.union( [
-    xs.configuration( { filepath: 'sales.json'    , flow: 'sales'     } ), // The dataflow store of all sales
-    xs.configuration( { filepath: 'employees.json', flow: 'employees' } )  // The dataflow store of all employees
+rs.union( [
+    rs.configuration( { filepath: 'sales.json'    , flow: 'sales'     } ), // The dataflow store of all sales
+    rs.configuration( { filepath: 'employees.json', flow: 'employees' } )  // The dataflow store of all employees
   ] )
   
   // Serve realtime content to all socket.io clients
@@ -807,9 +807,9 @@ node server.js > server.out
 - Internationalization
 - Packaging:
   - Finalize module pattern
-  - Split This repository into xs_core, xs_server, xs_client, xs_socket_io, xs_bootstrap, ... repositories
-  - Implement xs package manager
-  - Implement xs automatic pipelet patching
+  - Split This repository into toubkal, rs_server, rs_client, rs_socket_io, rs_bootstrap, ... repositories
+  - Implement rs package manager
+  - Implement rs automatic pipelet patching
 - Develop additional tests, goal is at least 650 automated tests
 
 ### Version 0.4.0 - Persistance - ETA November 2014
@@ -938,7 +938,7 @@ node server.js > server.out
     - Manages state
     - Defaults remains stateless (i.e. uses altered upstream state)
   
-  - XS.Options object defined methods for manipulating operations' options:
+  - RS.Options object defined methods for manipulating operations' options:
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 

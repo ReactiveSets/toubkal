@@ -1,5 +1,5 @@
 ###
-    xs_load_images_tests.coffee
+    rs_load_images_tests.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -34,25 +34,25 @@ check = ( done, test ) ->
 
 
 # include modules
-XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
+RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
 expect = if require? then ( require 'expect.js' ) else this.expect
 
 if require?
   require '../../lib/load_images.js'
 
-xs = XS.xs
+rs = RS.rs
 
 describe 'Load Images test suite:', ->
-  images_source = xs
+  images_source = rs
     .set( [], { name: 'images_source' } )
     .auto_increment( { name: 'images_source_auto_increment' } )
   
   images = images_source
     .load_images( { name: 'images', loading_max: 2, display: 'visible' } )
   
-  node = document.getElementById( 'xs_load_images' )
+  node = document.getElementById( 'rs_load_images' )
   
-  it 'should have created xs_preoloaded_images div', ->
+  it 'should have created rs_preoloaded_images div', ->
     expect( node ).to.be.ok()
     expect( node.nodeName ).to.be 'DIV'
   

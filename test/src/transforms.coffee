@@ -1,5 +1,5 @@
 ###
-    xs_transforms.coffee
+    transforms.coffee
     
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # -------------
 
 utils  = require( './tests_utils.js' ) if require?
@@ -27,7 +27,7 @@ utils  = require( './tests_utils.js' ) if require?
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
-xs     = this.xs     || utils.xs
+rs     = this.rs     || utils.rs
 
 if require?
   require '../../lib/filter.js'
@@ -39,7 +39,7 @@ if require?
 
 describe 'transforms', ->
   describe 'attribute_to_value():', ->
-    source = xs
+    source = rs
       .set [
         { id: 1, content: { adjective: 'strong' } }
         { id: 2, content: { adjective: 'weak'   } }
@@ -71,7 +71,7 @@ describe 'transforms', ->
       { adjective: 'weak'   }
     ]
     
-    source = xs.set( adjectives, { key: [ 'adjective' ] } )
+    source = rs.set( adjectives, { key: [ 'adjective' ] } )
     
     containers = null
     
@@ -88,7 +88,7 @@ describe 'transforms', ->
         ]
     
     it 'should embed adjectives in content attribute and add defaults attributes', ( done ) ->
-      source = xs.set( adjectives, { key: [ 'adjective' ] } )
+      source = rs.set( adjectives, { key: [ 'adjective' ] } )
       
       containers = source
         .value_to_attribute( { defaults: { flow: 'adjective' } } )
@@ -100,7 +100,7 @@ describe 'transforms', ->
           ]
   
   describe 'attribute_to_values()', ->
-    source = xs.set( [
+    source = rs.set( [
       {
         id: 1
         

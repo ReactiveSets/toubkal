@@ -1,5 +1,5 @@
 ###
-    xs_core.coffee
+    query.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # -------------
 
 utils = require( './tests_utils.js' ) if require?
@@ -27,11 +27,11 @@ expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 log    = this.log    || utils.log
-xs     = this.xs     || utils.xs
+rs     = this.rs     || utils.rs
 
-XS      = xs.XS
-extend  = XS.extend
-uuid_v4 = XS.uuid_v4
+RS      = rs.RS
+extend  = RS.extend
+uuid_v4 = RS.uuid_v4
 
 slice = Array.prototype.slice
 
@@ -51,8 +51,8 @@ check_set_content = ( done, source, values ) ->
 if require?
   require '../../lib/code.js'
 
-Pipelet = XS.Pipelet
-Set     = XS.Set
+Pipelet = RS.Pipelet
+Set     = RS.Set
 
 # ----------------------------------------------------------------------------------------------
 # Some constants
@@ -61,10 +61,10 @@ Set     = XS.Set
 valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 
 # ----------------------------------------------------------------------------------------------
-# xs unit test suite
+# rs unit test suite
 # ------------------
 
-Query = XS.Query
+Query = RS.Query
 
 describe 'Query & Query_Tree test suite:', ->
   describe 'Query.Error()', ->
@@ -1189,7 +1189,7 @@ describe 'Query & Query_Tree test suite:', ->
     
     
   describe 'Query_Tree()', ->
-    tree = new XS.Query_Tree()
+    tree = new RS.Query_Tree()
     
     Input = Pipelet.Input
     
@@ -1499,14 +1499,14 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    output = new XS.Pipelet()._output
+    output = new RS.Pipelet()._output
     
     tree = output.tree
     
-    subscriber_1 = xs.set( [], { name: 'subscriber_1' } )
-    subscriber_2 = xs.set( [], { name: 'subscriber_2' } )
-    subscriber_3 = xs.set( [], { name: 'subscriber_3' } )
-    subscriber_4 = xs.set( [], { name: 'subscriber_4' } )
+    subscriber_1 = rs.set( [], { name: 'subscriber_1' } )
+    subscriber_2 = rs.set( [], { name: 'subscriber_2' } )
+    subscriber_3 = rs.set( [], { name: 'subscriber_3' } )
+    subscriber_4 = rs.set( [], { name: 'subscriber_4' } )
     
     tree.add [ { flow: 'user', id: 123 } ], subscriber_1._input
     

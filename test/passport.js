@@ -1,6 +1,6 @@
 // passport.js
 
-var xs  = require( '..'  )
+var rs  = require( '..'  )
   
   , logger        = require(     'morgan'      )
   , cookie_parser = require(  'cookie-parser'  )
@@ -11,30 +11,30 @@ var xs  = require( '..'  )
 
 require( '../lib/server/passport.js' );
 
-var XS  = xs.XS
-  , log = XS.log
+var RS  = rs.RS
+  , log = RS.log
   , de  = true
   
-  , extend = XS.extend
+  , extend = RS.extend
 ;
 
 function ug( message ) { log( 'passport, ' + message ) }
 
 module.exports = function( express, session_options, application, base_route ) {
-  XS.notifications = xs.set();
+  RS.notifications = rs.set();
   
-  var input                 = xs.pass_through()
+  var input                 = rs.pass_through()
     
     , user_profile          = input.flow( 'user_profile'          ).set()
     , user_provider_profile = input.flow( 'user_provider_profile' ).set()
     , user_provider_email   = input.flow( 'user_provider_email'   ).set( [], { key: [ 'user_id', 'provider_id' ] } )
     
-    , output                = xs.union( [ user_profile, user_provider_profile, user_provider_email ] )
+    , output                = rs.union( [ user_profile, user_provider_profile, user_provider_email ] )
     
-    , users_database        = xs.encapsulate( input, output )
+    , users_database        = rs.encapsulate( input, output )
   ;
   
-  xs
+  rs
     .passport_strategies( users_database )
     
     .passport( users_database )

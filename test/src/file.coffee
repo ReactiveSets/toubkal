@@ -1,5 +1,5 @@
 ###
-    xs_file.coffee
+    file.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # -------------
 
 utils  = require( './tests_utils.js' ) if require?
@@ -27,7 +27,7 @@ utils  = require( './tests_utils.js' ) if require?
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
-xs     = this.xs     || utils.xs
+rs     = this.rs     || utils.rs
 
 if require?
   require '../../lib/filter.js'
@@ -39,7 +39,7 @@ if require?
 
 describe 'file', ->
   describe 'require_resolve():', ->
-    modules = xs
+    modules = rs
       .set( [
         { id: 1, name: 'node-uuid/uuid.js' }
       ], { key: [ 'id', 'name' ] } )
@@ -70,7 +70,7 @@ describe 'file', ->
   
   describe 'configuration():', ->
     it 'should read a confirugation file in fixtures/config.json', ( done ) ->
-      configuration = xs
+      configuration = rs
       
         .configuration( {
           filepath      : '../fixtures/file/config.json'
@@ -110,7 +110,7 @@ describe 'file', ->
           ]
   
   describe 'watch_directories():', ->
-    directories_source = xs
+    directories_source = rs
       .set( [
           { path: 'directories' }
           { path: 'directories' }
@@ -305,7 +305,7 @@ describe 'file', ->
       expect( Object.keys( entries._directories ) ).to.be.eql []
 
     it 'from_empty_directory_path should emit three entries with no leading "/"', ( done ) ->
-      from_empty_directory_path = xs
+      from_empty_directory_path = rs
         .set( [ { path: '' } ], { key: [ 'path' ] } )
         
         .watch_directories( { base_directory: 'test/fixtures/file/directories', name: 'from_empty_directory_path' } )

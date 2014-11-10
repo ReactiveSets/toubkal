@@ -1,5 +1,5 @@
 ###
-    xs_ui.tests.coffee
+    ui_tests.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -23,17 +23,17 @@
 # include modules
 # ---------------
 expect = if require? then ( require 'expect.js' ) else this.expect
-XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
+RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
 
-xs = XS.xs
+rs = RS.rs
 
-columns = xs.set( [
+columns = rs.set( [
   { id: "id"    , label: "ID"     }
   { id: "title" , label: "Title"  }
   { id: "author", label: "Author" }
 ] ).order( [ { id: 'id' } ] )
 
-books = xs.set( [
+books = rs.set( [
   { id: 1, title: "A Tale of Two Cities"             , author: "Charles Dickens" , sales: 200, year: 1859, language: "English" }
   { id: 2, title: "The Lord of the Rings"            , author: "J. R. R. Tolkien", sales: 150, year: 1955, language: "English" }
   { id: 3, title: "Charlie and the Chocolate Factory", author: "Roald Dahl"      , sales:  13            , language: "English" }
@@ -249,7 +249,7 @@ describe 'UI Tests', ->
     organizer = [ { id: "label" } ]
     
     describe 'Checkbox():', ->
-      chart          = xs.order organizer
+      chart          = rs.order organizer
       checkbox_chart = chart.checkbox( checkbox_node ).set()
       input          = checkbox_node.childNodes[ 0 ]
       label          = checkbox_node.childNodes[ 1 ]
@@ -337,7 +337,7 @@ describe 'UI Tests', ->
         expect( input.disabled ).to.be false
       
     describe 'Checkbox_Group():', ->
-      hobbies = xs.set(
+      hobbies = rs.set(
         [
           { id: 1, label: "Photography"            , selected: true }
           { id: 2, label: "Fishing"                                 }
@@ -411,7 +411,7 @@ describe 'UI Tests', ->
         expect( checkbox_list[ 5 ].checked ).to.be true
       
     describe 'Radio():', ->
-      religions = xs.set(
+      religions = rs.set(
         [
           { id: 1, label: "Islam"       , selected: true }
           { id: 2, label: "Christianity"                 }
@@ -476,7 +476,7 @@ describe 'UI Tests', ->
         expect( radio_list[ 4 ].checked ).to.be true
     
     describe 'Drop_Down():', ->
-      countries = xs.set(
+      countries = rs.set(
         [
           { id: 1, label: "USA"        }
           { id: 2, label: "Morocco"    }

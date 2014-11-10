@@ -1,5 +1,5 @@
 ###
-    xs_ui.coffee
+    ui.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -22,7 +22,6 @@
 # require modules tests
 # ---------------------
 
-require( './xs_url.js'      )
-require( './xs_controls.js' )
-require( './xs_form.js'     )
-
+require( './url.js'      )
+require( './controls.js' )
+require( './form.js'     )

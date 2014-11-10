@@ -7,7 +7,7 @@
     
     <title>Playing with WebRTC</title>
     
-    <script src="../lib/xs-min.js"></script>
+    <script src="../lib/rs-min.js"></script>
     
     <script src="/socket.io/socket.io.js"></script>
   </head>
@@ -27,12 +27,12 @@
     </table>
     
     <script>
-      var xs       = XS.xs
-        , extend   = XS.extend
-        , extend_2 = XS.extend_2
-        , Pipelet  = XS.Pipelet
-        , Set      = XS.Set
-        , log      = XS.log
+      var rs       = RS.rs
+        , extend   = RS.extend
+        , extend_2 = RS.extend_2
+        , Pipelet  = RS.Pipelet
+        , Set      = RS.Set
+        , log      = RS.log
         , _
         
         , de = true
@@ -428,7 +428,7 @@
               // caller_video.style.opacity = 1;
             };
             
-            caller_channel = peer.createDataChannel( 'xs_channel', { reliable: false } );
+            caller_channel = peer.createDataChannel( 'rs_channel', { reliable: false } );
             
             caller_channel.onmessage = function( event ) {
               de&&ug( 'channel ' + caller_channel.label + ', caller received data: ' + event.data );
@@ -452,7 +452,7 @@
         };
       } );
       
-      var user_media = xs
+      var user_media = rs
         .set( [ { id: 'caller' } ] ) // start user_media and define id for html5 video
         .user_media( { constraints: constraints } )
       ;
@@ -465,12 +465,12 @@
         .rtc_calls()
       ;
       
-      var videos = xs.union( [ user_media/* , peers*/ ] )
+      var videos = rs.union( [ user_media/* , peers*/ ] )
         .html5_video( '#videos' )
         //.dom( '#videos' )
       ;
       
-      //xs.socket_io_server()
+      //rs.socket_io_server()
         //.filter( [ { flow: 'webrtc' } ]
         // .rtc_signalling( videos )
         // .socket_io_server()

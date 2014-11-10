@@ -1,5 +1,5 @@
 ###
-    xs_core.coffee
+    core.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # -------------
 
 utils = require( './tests_utils.js' ) if require?
@@ -27,10 +27,10 @@ expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 log    = this.log    || utils.log
-xs     = this.xs     || utils.xs
+rs     = this.rs     || utils.rs
 
-XS      = xs.XS
-extend  = XS.extend
+RS      = rs.RS
+extend  = RS.extend
 
 slice = Array.prototype.slice
 
@@ -55,19 +55,19 @@ if require?
   require '../../lib/join.js'
   require '../../lib/json.js'
 
-Pipelet = XS.Pipelet
-Greedy  = XS.Greedy
-Set     = XS.Set
+Pipelet = RS.Pipelet
+Greedy  = RS.Greedy
+Set     = RS.Set
 
 # ----------------------------------------------------------------------------------------------
-# xs unit test suite
+# rs unit test suite
 # ------------------
 
-describe 'XS test suite:', ->
-  it 'XS should be defined:', ->
-    expect( XS ).to.exist
+describe 'RS test suite:', ->
+  it 'RS should be defined:', ->
+    expect( RS ).to.exist
 
-  describe 'XS.extend():', ->
+  describe 'RS.extend():', ->
     it 'should be a function', ->
       expect( extend ).to.be.a 'function'
     
@@ -141,16 +141,16 @@ describe 'XS test suite:', ->
 
       expect( result ).to.be.eql( o3 ) and expect( result ).to.not.be o3
 
-  # XS.extend()
+  # RS.extend()
   
-  describe 'XS.extend_2():', ->
-    extend_2 = XS.extend_2
+  describe 'RS.extend_2():', ->
+    extend_2 = RS.extend_2
     
     it 'should be a function', ->
       expect( extend_2 ).to.be.a 'function'
 
-    it 'should not be XS.extend()', ->
-      expect( extend_2 ).to.not.be XS.extend
+    it 'should not be RS.extend()', ->
+      expect( extend_2 ).to.not.be RS.extend
     
     o1 = 
       id: 1
@@ -214,10 +214,10 @@ describe 'XS test suite:', ->
 
       expect( f ).to.throwException()
 
-  # XS.extend_2()
+  # RS.extend_2()
   
-  describe 'XS.subclass():', ->
-    subclass = XS.subclass
+  describe 'RS.subclass():', ->
+    subclass = RS.subclass
     
     it 'subclass() should be a function', ->
       expect( subclass ).to.be.a 'function'
@@ -244,8 +244,8 @@ describe 'XS test suite:', ->
     it 'a should not be an instance of Snake', ->
       expect( a ).to.not.be.a Snake
     
-  describe 'XS.Code():', ->
-    f = code = new XS.Code( 'Code Test' )
+  describe 'RS.Code():', ->
+    f = code = new RS.Code( 'Code Test' )
       ._function( 'f', null, [] )
         .add( 'var i' )
         ._for( 'i = -1', ' ++i < 10' )
@@ -266,7 +266,7 @@ describe 'XS test suite:', ->
     
     test = 'a[ ++i ] === n'
     
-    g = code = new XS.Code( 'Test unfolded while' )
+    g = code = new RS.Code( 'Test unfolded while' )
       ._function( 'g', null, [ 'n' ] )
         ._var( [ 'a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1' ] )
         .unrolled_while( 'if ( ' + test, '|| ' + test, ') return i' )
@@ -294,7 +294,7 @@ describe 'XS test suite:', ->
     
     source = new Pipelet()
     lazy   = new Pipelet()
-    greedy = xs.greedy()
+    greedy = rs.greedy()
     
     lazy._add_source source
     greedy._input._add_source source._output
@@ -316,14 +316,14 @@ describe 'XS test suite:', ->
       }
     
     it 'should have fetched content into a set through a stateless pipelet', ->
-      s = xs.set( values ).pass_through().set()
+      s = rs.set( values ).pass_through().set()
       
       expect( s.a ).to.be.eql values
     
     it 'should have fetched content into a set even if stateless pipelet is pluged last into upstream pipelet', ->
-      s = xs.set( values )
+      s = rs.set( values )
       
-      p = xs.pass_through()
+      p = rs.pass_through()
       
       s1 = p.set()
       
@@ -331,22 +331,22 @@ describe 'XS test suite:', ->
       
       expect( s1.a ).to.be.eql values
       
-  describe 'XS.Set():', ->
-    set = xs.set();
+  describe 'RS.Set():', ->
+    set = rs.set();
     
     it 'set should be a Set', ->
-      expect( set ).to.be.a XS.Set
+      expect( set ).to.be.a RS.Set
     
     it 'should throw an exception if trying to initialize a set with an Object not instance of Array', ->
-      expect( () -> xs.set( {} ) ).to.throwException()
+      expect( () -> rs.set( {} ) ).to.throwException()
       
-    cities = xs.set [
+    cities = rs.set [
       { id: 1, name: "Marrakech"    , country: "Morocco"                      }
       { id: 2, name: "Mountain View", country: "USA"    , state: "California" }
       { id: 3, name: "Paris"        , country: "France"                       }
     ]
     
-    delayed_set = xs
+    delayed_set = rs
       .set( [ { id:1, value: 'delayed' } ] )
       .delay( 100 )
       .trace( 'Delayed Set' )
@@ -355,7 +355,7 @@ describe 'XS test suite:', ->
     
     #delayed_set = delayed_set.filter( () -> true ).set()
     
-    cars = xs
+    cars = rs
       .set( [
             { id: 1, brand: "Mercedes", model: "C Class" }
             { id: 2, brand: "Mercedes", model: "S Class" }
@@ -366,7 +366,7 @@ describe 'XS test suite:', ->
       .set_flow( 'car' )
       .set()
     
-    employee = xs.set [
+    employee = rs.set [
       { id:  1, name: "Stephen C. Cox" , salary: "$3000", customer_id: "222", order_id: "1222" }
       { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
       { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
@@ -514,7 +514,7 @@ describe 'XS test suite:', ->
       cities_in_usa = cities.filter( is_in_usa ).set()
       
       it 'cities_in_usa should be a Pipelet', ->
-        expect( cities_in_usa ).to.be.an XS.Pipelet
+        expect( cities_in_usa ).to.be.an RS.Pipelet
       
       it 'cities_in_usa should only contain cities in USA', ( done ) ->
         cities_in_usa._fetch_all ( values ) -> check done, ->
@@ -640,7 +640,7 @@ describe 'XS test suite:', ->
           ]
     
     describe 'flow() static queries', ->
-      multiflow = xs.set [
+      multiflow = rs.set [
         { flow: "user", id: 1 }
         { flow: "user", id: 2 }
         { flow: "user", id: 3 }
@@ -731,14 +731,14 @@ describe 'XS test suite:', ->
         ]
       
     describe 'filter() from dynamic countries query:', ->
-      countries = xs.set [
+      countries = rs.set [
         { country: 'USA' }
       ], { key: [ 'country' ] }
       
       cities_from_countries = cities.filter( countries ).trace( 'cities from countries' ).set( [] )
       
       it 'cities_from_countries should be a Pipelet', ->
-        expect( cities_from_countries ).to.be.an XS.Pipelet
+        expect( cities_from_countries ).to.be.an RS.Pipelet
       
       it 'cities_from_countries should only contain cities in USA', ( done ) ->
         cities_from_countries._fetch_all ( values ) -> check done, ->
@@ -961,7 +961,7 @@ describe 'XS test suite:', ->
           ]
       
     describe 'order():', ->
-      books = xs.set [
+      books = rs.set [
         { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
         { id: 2, title: "The Lord of the Rings", author: "J. R. R. Tolkien", year: 1955 }
         { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
@@ -969,7 +969,7 @@ describe 'XS test suite:', ->
         { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
       ], { name: 'books' }
       
-      organizer = xs.set [ { id: "year" } ], { name: 'by_year' }
+      organizer = rs.set [ { id: "year" } ], { name: 'by_year' }
       
       by_ascending_author  = ( a, b ) ->
         if ( a = a.author ) == ( b = b.author ) then return 0
@@ -993,7 +993,7 @@ describe 'XS test suite:', ->
       
       by_descending_year_delay = 100
       
-      by_descending_year = xs
+      by_descending_year = rs
         .set( [ { id: "year", descending: true } ], { name: 'by_descending_year' } )
         .trace( 'By Descending Year Organizer, before delay' )
         .delay( by_descending_year_delay )
@@ -1539,8 +1539,8 @@ describe 'XS test suite:', ->
               { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: 1927 }
             ]
 
-  describe 'xs.aggregate() and Pipelet.Compose():', ->
-    books_sales = xs.set [
+  describe 'rs.aggregate() and Pipelet.Compose():', ->
+    books_sales = rs.set [
       { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year: 1859 }
       { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year: 1955 }
       { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        80, year: 2003 }
@@ -1559,9 +1559,9 @@ describe 'XS test suite:', ->
       { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13             }
     ]
     
-    sales  = xs.set [ { id: "sales"  } ]
-    by_author = xs.set [ { id: "author" } ]
-    by_year   = xs.set [ { id: "year"   } ]
+    sales  = rs.set [ { id: "sales"  } ]
+    by_author = rs.set [ { id: "author" } ]
+    by_year   = rs.set [ { id: "year"   } ]
     
     books_sales_by_author = books_sales.aggregate( sales, by_author ).order( by_author ).ordered()
     books_sales_by_year   = books_sales.aggregate( sales, by_year ).order( by_year ).ordered()
@@ -1696,8 +1696,8 @@ describe 'XS test suite:', ->
           { sales:        23, year: 2008, _count: 1 }
         ]
 
-  describe 'xs.join() authors, books, and books_sales:', ->
-    authors = xs.set [
+  describe 'rs.join() authors, books, and books_sales:', ->
+    authors = rs.set [
       { id:  1, name: "Charles Dickens"         }
       { id:  2, name: "J. R. R. Tolkien"        }
       { id:  3, name: "Dan Brown"               }
@@ -1714,7 +1714,7 @@ describe 'XS test suite:', ->
       # { id: 14, name: "Roald Dahl"              }
     ], { name: 'authors' }
     
-    books = xs.set [
+    books = rs.set [
       { id:  1, title: "A Tale of Two Cities"                    , author_id:  1 }
       { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
       { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
@@ -1744,7 +1744,7 @@ describe 'XS test suite:', ->
       { left: true, name: 'books_with_authors' }
     ).set()
     
-    books_sales = xs.set [
+    books_sales = rs.set [
       { book_id:  1, sales:       200, year: 1859 }
       { book_id:  2, sales:       150, year: 1955 }
       { book_id:  3, sales:        80, year: 2003 }
@@ -1767,7 +1767,7 @@ describe 'XS test suite:', ->
       books_with_authors._fetch_all ( values ) -> check done, ->
         found = true
         
-        result = xs.set [
+        result = rs.set [
           { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
           { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
           { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
@@ -1807,7 +1807,7 @@ describe 'XS test suite:', ->
       books_with_authors._fetch_all ( values ) -> check done, () ->
         found = true
         
-        result = xs.set [
+        result = rs.set [
           { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
           { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
           { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }

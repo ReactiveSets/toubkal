@@ -1,5 +1,5 @@
 ###
-    xs_json.coffee
+    json.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # -------------
 
 utils = require( './tests_utils.js' ) if require?
@@ -27,11 +27,11 @@ expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 log    = this.log    || utils.log
-xs     = this.xs     || utils.xs
+rs     = this.rs     || utils.rs
 
-XS      = xs.XS
-extend  = XS.extend
-uuid_v4 = XS.uuid_v4
+RS      = rs.RS
+extend  = RS.extend
+uuid_v4 = RS.uuid_v4
 
 slice = Array.prototype.slice
 
@@ -51,11 +51,11 @@ check_set_content = ( done, source, values ) ->
 if require?
   require '../../lib/json.js'
 
-Pipelet = XS.Pipelet
-Set     = XS.Set
+Pipelet = RS.Pipelet
+Set     = RS.Set
 
 # ----------------------------------------------------------------------------------------------
-# xs json test suite
+# rs json test suite
 # ------------------
 
 describe 'json.js', ->
@@ -65,7 +65,7 @@ describe 'json.js', ->
     { operation: "add", content: { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        } }
   ]
   
-  book_operations = xs.set books
+  book_operations = rs.set books
   
   books_stringified = book_operations.json_stringify()
   

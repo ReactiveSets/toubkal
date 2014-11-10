@@ -1,5 +1,5 @@
 ###
-    xs_control_tests.coffee
+    control_tests.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,11 +19,11 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs control unit test suite
+# rs control unit test suite
 # ------------------------
 
 # include modules
-XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
+RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
 expect = if require? then ( require 'expect.js' ) else this.expect
 
 if require?
@@ -35,21 +35,21 @@ if require?
   require '../../lib/table.js'
   require '../../lib/control.js'
 
-xs = XS.xs
+rs = RS.rs
 
 organizer       = [ { id: "label" } ]
 options         = { label: "Charts" }
 
-checkbox_source = xs.order organizer, { name: "Checkbox Source" }
+checkbox_source = rs.order organizer, { name: "Checkbox Source" }
 checkbox        = checkbox_source.checkbox( document.getElementById( "checkbox_control" ), {} ).set()
 
-checkbox_group_source = xs.order organizer, { name: "Checkbox Group Source" }
+checkbox_group_source = rs.order organizer, { name: "Checkbox Group Source" }
 checkbox_group  = checkbox_group_source.checkbox_group( document.getElementById( "checkbox_group_control" ) ).set()
 
-radio_source = xs.order organizer, { name: "Radio Source" }
+radio_source = rs.order organizer, { name: "Radio Source" }
 radio        = radio_source.radio( document.getElementById( "radio_control" ) ).set()
 
-drop_down_source = xs.order organizer, { name: "Drop Down Source" }
+drop_down_source = rs.order organizer, { name: "Drop Down Source" }
 drop_down        = drop_down_source.drop_down( document.getElementById( "drop_down_control" ) ).set()
 
 describe 'Checkbox():', ->

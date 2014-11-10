@@ -1,4 +1,4 @@
 #!node
 "use strict";
 
-require( '../lib/server/configuration.js' ).XS.xs.configuration();
+require( '../lib/server/configuration.js' ).RS.rs.configuration();

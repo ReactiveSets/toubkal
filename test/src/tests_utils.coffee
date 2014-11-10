@@ -52,15 +52,15 @@ check = this.check = ( done, test ) ->
     done e
 
 # ----------------------------------------------------------------------------------------------
-# xs
+# rs
 # --
 
-xs = this.xs = this.xs || require( '../../lib/pipelet.js' )
+rs = this.rs = this.rs || require( '../../lib/pipelet.js' )
 
-XS = xs.XS
-log = XS.log
+RS = rs.RS
+log = RS.log
 
 log.newline_before = true;
 
 this.log = ( message ) ->
-  log( 'xs tests, ' + message )
+  log( 'rs tests, ' + message )

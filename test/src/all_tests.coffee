@@ -1,5 +1,5 @@
 ###
-    xs_all_tests.coffee
+    all_tests.coffee
     
     Copyright (C) 2013, 2014, Reactive Sets
     
@@ -37,5 +37,5 @@ try
 
 fs = require 'fs'
 
-require './passport.js' if fs.existsSync '~/config.xs.json'
+require './passport.js' if fs.existsSync '~/config.rs.json'
 

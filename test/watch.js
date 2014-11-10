@@ -1,9 +1,9 @@
 // watch.js
 
-var xs      = require( '../lib/pipelet.js' )
-  , XS      = xs.XS
-  , log     = XS.log
-  , extend  = XS.extend
+var rs      = require( '../lib/pipelet.js' )
+  , RS      = rs.RS
+  , log     = RS.log
+  , extend  = RS.extend
 ;
 
 require( '../lib/filter.js' );
@@ -11,7 +11,7 @@ require( '../lib/server/http.js' );
 require( '../lib/server/socket_io_clients.js' );
 require( '../lib/server/file.js' );
 
-var entries = xs
+var entries = rs
   .set( [
       { path: 'test' },
       { path: 'test' },

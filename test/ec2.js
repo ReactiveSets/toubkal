@@ -20,10 +20,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var XS     = require( '../lib/server/aws.js' ).XS 
-  , xs     = XS.xs
-  , extend = XS.extend
-  , log    = XS.log
+var RS     = require( '../lib/server/aws.js' ).RS 
+  , rs     = RS.rs
+  , extend = RS.extend
+  , log    = RS.log
 ;
 
 require( '../lib/filter.js' );
@@ -33,19 +33,19 @@ require( '../lib/join.js' );
 require( '../lib/last.js' );
 
 var de = true, ug = function( message ) {
-  log( 'xs tests, ' + message )
+  log( 'rs tests, ' + message )
 }
 
 de&&ug( 'start ec2.js' );
 
-var ami_types = xs.set( [
+var ami_types = rs.set( [
   { type: 0, description: 'instance-store'        },
   { type: 1, description: 'EBS boot'              },
   { type: 2, description: 'HVM (cluster compute)' }
 ], { key: [ 'type' ] } );
 
 // Ubuntu AMIs, source http://alestic.com/
-var ubuntu_amis = xs
+var ubuntu_amis = rs
   .set( [
     // Region us-east-1
     { id: 'ami-b8d147d1', version: '12.10', type: 0, region: 'us-east-1' },
@@ -100,7 +100,7 @@ var AMI_regions = ubuntu_amis
   .trace( 'AMI Regions' );
 ;
 
-var regions = xs
+var regions = rs
   .ec2( '../aws-credentials.json' )
   .ec2_regions()
   .join( AMI_regions, [

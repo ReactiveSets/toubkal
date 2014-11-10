@@ -7,11 +7,11 @@
     
     <script src="javascript/es5.js"></script>
 
-    <title>XS Control</title>
+    <title>RS Control</title>
     
     <script src="../node_modules/node-uuid/uuid.js"></script>
     
-    <script src="../lib/xs.js"></script>
+    <script src="../lib/rs.js"></script>
     <script src="../lib/code.js"></script>
     <script src="../lib/pipelet.js"></script>
     <script src="../lib/filter.js"></script>
@@ -47,12 +47,12 @@
     
     
     <script type="text/javascript" charset="utf-8">
-      var xs = XS.xs
-        , organizer = xs.set( [ { id: 'label' } ], { name: 'by label' } )
+      var rs = RS.rs
+        , organizer = rs.set( [ { id: 'label' } ], { name: 'by label' } )
       ;
             
       // Charts Checkbox
-      xs.set( [
+      rs.set( [
           { id: false, label: "No Chart" },
           { id: true , label: "Chart"    }
         ] )
@@ -63,7 +63,7 @@
       ;
       
       // Hobbies Checkbox Group
-      xs.set( [
+      rs.set( [
           { id: 1, label: "Photography"             },
           { id: 2, label: "Fishing"                 },
           { id: 3, label: "Playing Computer Games"  },
@@ -80,7 +80,7 @@
       ;
       
       // Religions Radio button
-      xs.set( [
+      rs.set( [
           { id: 1, label: "Islam"        },
           { id: 2, label: "Christianity" },
           { id: 3, label: "Judaism"      },
@@ -97,7 +97,7 @@
       ;
       
       // Countries Drop-Down
-      xs.set( [
+      rs.set( [
           { id: 1, label: "USA"        },
           { id: 2, label: "Morocco"    },
           { id: 3, label: "France"     },
@@ -113,12 +113,12 @@
       ;
       
       // The following unobvious composition of two orders with a checkbox_group could be part of control.js
-      XS.Compose( 'ordered_checkbox_group', function( source, order, element, options ) {
+      RS.Compose( 'ordered_checkbox_group', function( source, order, element, options ) {
         return source.order( order ).checkbox_group( element ).order( order );
       } );
       
       // Table Books with columns as Checkbox Group and Drop Down Organizer
-      var source = xs.set( [
+      var source = rs.set( [
             { id: "id"      , label: "ID"      , order: 0                  },
             { id: "title"   , label: "Title"   , order: 1, selected: true                  },
             { id: "author"  , label: "Author"  , order: 2, selected: true                  },
@@ -133,7 +133,7 @@
         , order   = source.order( [ { id: "label" } ] ).drop_down( document.getElementById( "order" ) )
       ;
       
-      xs.set( [
+      rs.set( [
           { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year:      1859, language: "English" },
           { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year:      1955, language: "English" },
           { id:  3, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13                 , language: "English" },

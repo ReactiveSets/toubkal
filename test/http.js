@@ -21,10 +21,10 @@
 */
 "use strict";
 
-var xs      = require( '..' )
-  , XS      = xs.XS
-  , log     = XS.log
-  , extend  = XS.extend
+var rs      = require( '..' )
+  , RS      = rs.RS
+  , log     = RS.log
+  , extend  = RS.extend
 ;
 
 require( '../lib/filter.js' );
@@ -38,14 +38,14 @@ require( '../lib/server/file.js' );
 var de = true;
   
 function ug( m ) {
-  log( "xs tests http, " + m );
+  log( "rs tests http, " + m );
 } // ug()
 
  
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
-var http_servers = xs
+var http_servers = rs
   .set( [
     { ip_address: '0.0.0.0' },
     { port: 8080 },
@@ -69,7 +69,7 @@ var express            = require( 'express' )
   , uid2               = require( 'uid2' )
   , session_store      = new session.MemoryStore()
   , application        = express()
-  , session_options    = { key: 'xs_sid', secret: 'fudge', store: session_store }
+  , session_options    = { key: 'rs_sid', secret: 'fudge', store: session_store }
   , parseSignedCookies = require( 'cookie-parser/lib/parse.js' ).signedCookies
   // Make a handler that does not receive the next() parameter, because errors will be
   // handled by express
@@ -97,32 +97,32 @@ function get_session( request, fn ) {
     de&&ug( 'get_session(), signed cookie parsed: ' + log.s( cookie ) );
   }
   
-  var xs_sid = request.signedCookies[ session_options.key ];
+  var rs_sid = request.signedCookies[ session_options.key ];
   
-  de&&ug( 'get_session(), xs_sid: ' + xs_sid );
+  de&&ug( 'get_session(), rs_sid: ' + rs_sid );
   
-  session_store.get( xs_sid, function( error, _session ) {
+  session_store.get( rs_sid, function( error, _session ) {
     if ( error ) {
       de&&ug( 'get_session(), error getting session from store: ' + error );
     } else if ( _session ) {
       de&&ug( 'get_session(), create session in request' );
       
-      request.sessionID = xs_sid;
+      request.sessionID = rs_sid;
       request.sessionStore = session_store;
       
       _session = session_store.createSession( request, _session );
     } else {
       de&&ug( 'get_session(), no session, create empty session' );
       
-      if ( ! xs_sid ) {
-        xs_sid = uid2( 24 );
+      if ( ! rs_sid ) {
+        rs_sid = uid2( 24 );
         
-        de&&ug( 'get_session(), no xs_sid, generate: ' + xs_sid );
+        de&&ug( 'get_session(), no rs_sid, generate: ' + rs_sid );
         
         // ToDo: Need to setup cookie on response.end that needs to be captured in socket.io handshake, cannot be done here
       }
       
-      request.sessionID = xs_sid;
+      request.sessionID = rs_sid;
       request.sessionStore = session_store;
       
       _session = new session.Session( request );
@@ -149,23 +149,23 @@ require( './passport.js' )( express, session_options, application, passport_rout
 require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
 
-// XS Dependencies
-var xs_dependencies = xs
+// RS Dependencies
+var rs_dependencies = rs
   .set( [
     { name: 'node-uuid/uuid.js'          },
   ] )
   .require_resolve()
 ;
 
-// lib/xs-min.js
-var xs_min = xs
-  .union( [ xs_dependencies, xs.set( [
+// lib/rs-min.js
+var rs_min = rs
+  .union( [ rs_dependencies, rs.set( [
     // IE compatibility
     { path: 'test/javascript/es5.js'       },
     { path: 'test/javascript/json2.js'     },
     
-    // xs core
-    { path: 'lib/xs.js'                    },
+    // rs core
+    { path: 'lib/rs.js'                    },
     { path: 'lib/code.js'                  },
     //{ path: 'lib/trace_domain.js'          },
     { path: 'lib/query.js'                 },
@@ -176,17 +176,17 @@ var xs_min = xs
     { path: 'lib/aggregate.js'             },
     { path: 'lib/join.js'                  },
     
-    // xs utilities
+    // rs utilities
     { path: 'lib/json.js'                  },
     { path: 'lib/uri.js'                   },
     { path: 'lib/events.js'                },
     { path: 'lib/transforms.js'            },
     
-    // xs socket.io
+    // rs socket.io
     { path: 'lib/socket_io_crossover.js'   },
     { path: 'lib/socket_io_server.js'      },
     
-    // xs client
+    // rs client
     { path: 'lib/selector.js'                },
     { path: 'lib/client/animation_frames.js' },
     { path: 'lib/client/url.js'              },
@@ -208,16 +208,16 @@ var xs_min = xs
   // Maintain up-to-date file contents in order
   .order( [ { id: 'id' } ] )
   
-  // Update minified xs-min.js and source map in realtime  
-  .uglify( 'lib/xs-min.js', { warnings: false } )
+  // Update minified rs-min.js and source map in realtime  
+  .uglify( 'lib/rs-min.js', { warnings: false } )
 ;
 
-// Listen when lib/xs-min.js is ready
-http_servers.http_listen( xs_min );
+// Listen when lib/rs-min.js is ready
+http_servers.http_listen( rs_min );
 
-var xs_core_min = xs
-  .union( [ xs_dependencies, xs.set( [
-    { path: 'lib/xs.js'                    },
+var toubkal_min = rs
+  .union( [ rs_dependencies, rs.set( [
+    { path: 'lib/rs.js'                    },
     { path: 'lib/code.js'                  },
     { path: 'lib/query.js'                 },
     { path: 'lib/transactions.js'          },
@@ -228,13 +228,13 @@ var xs_core_min = xs
     { path: 'lib/join.js'                  },
     { path: 'lib/last.js'             }
   ] ) ] )
-  .auto_increment( { name: 'xs core' } )
+  .auto_increment( { name: 'rs core' } )
   .watch()
   .order( [ { id: 'id' } ] )
-  .uglify( 'lib/xs_core-min.js', { warnings: false } )
+  .uglify( 'lib/toubkal-min.js', { warnings: false } )
 ;
 
-var xs_ui_min = xs
+var rs_ui_min = rs
   .set( [
     { path: 'lib/selector.js'                },
     { path: 'lib/uri.js'                     },
@@ -252,17 +252,17 @@ var xs_ui_min = xs
     { path: 'lib/form.js'                    }
   ] )
   
-  .auto_increment( { name: 'xs ui' } )
+  .auto_increment( { name: 'rs ui' } )
   
   .watch()
   
   .order( [ { id: 'id' } ] )
   
-  .uglify( 'lib/xs_ui-min.js', { warnings: false } )
+  .uglify( 'lib/rs_ui-min.js', { warnings: false } )
 ;
 
-var pipelet_min = xs.set( [
-    { id: 1, path: 'lib/xs.js'           },
+var pipelet_min = rs.set( [
+    { id: 1, path: 'lib/rs.js'           },
     { id: 2, path: 'lib/code.js'         },
     { id: 3, path: 'lib/query.js'        },
     { id: 4, path: 'lib/transactions.js' },
@@ -272,13 +272,13 @@ var pipelet_min = xs.set( [
   .uglify( 'lib/pipelet-min.js', { warnings: false } )
 ;
 
-var mocha_css = xs
+var mocha_css = rs
   .set( [ { name: 'mocha/mocha.css' } ] )
   .require_resolve()
   .watch()
 ;
 
-var mocha_expect = xs.set( [
+var mocha_expect = rs.set( [
     { name: 'mocha/mocha.js' },
     { name: 'expect.js'      }
   ] )
@@ -291,7 +291,7 @@ var mocha_expect = xs.set( [
 ;
 
 // HTML test pages
-var html_tests = xs  
+var html_tests = rs  
   .set( [ { path: 'test' } ] )
   
   .watch_directories()
@@ -302,7 +302,7 @@ var html_tests = xs
 ;
 
 // JavaScript test files
-var javascript_files = xs
+var javascript_files = rs
   .set( [ { path: 'test/javascript' } ] )  
   
   .watch_directories()
@@ -311,7 +311,7 @@ var javascript_files = xs
 ;
 
 // CSS and images for tests
-var css_tests = xs
+var css_tests = rs
   .set( [ { path: 'test/css' }, { path: 'test/css/images' } ] )
   
   .watch_directories()
@@ -319,14 +319,14 @@ var css_tests = xs
   .filter( [ { type: 'file' } ] )
 ;
 
-var tests = xs
+var tests = rs
   .union( [ html_tests, javascript_files, css_tests ] )
   
   .watch( { base_directory: __dirname + '/..' } )
 ;
 
 
-var coffee_files = xs
+var coffee_files = rs
   .set( [ { path: 'test/src' } ] )
   
   .watch_directories()
@@ -339,7 +339,7 @@ var coffee_source = coffee_files
 ;
 
 
-var test_lib = xs
+var test_lib = rs
   .set( [ { path: 'test/lib' } ] )
   
   .watch_directories()
@@ -376,11 +376,11 @@ var source_maps = test_lib
 // Serve assets to http servers
 tests.serve( http_servers, { routes: '/test' } );
 
-xs.union( [ mocha_expect, compiled_coffee, source_maps, coffee_source ] )
+rs.union( [ mocha_expect, compiled_coffee, source_maps, coffee_source ] )
   .serve( http_servers, { routes: '/test' } ) // ToDo: test serve() with default route ('/') does not work
 ;
 
-xs.union( [ mocha_css, mocha_expect ] )
+rs.union( [ mocha_css, mocha_expect ] )
   .serve( http_servers, { routes: '/node_modules' } )
 ;
 
@@ -388,20 +388,20 @@ pipelet_min.serve( http_servers, { routes: '/lib' } );
 
 // The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
-// xs.union( [ xs_core_min, xs_ui_min, xs_min ] )
-xs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
+// rs.union( [ toubkal_min, rs_ui_min, rs_min ] )
+rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
   ._input
-  ._insert_source_union()     // adding a union as the source of xs.serve() input
-  ._add_source( xs_core_min ) // now adding sources to that union
-  ._add_source( xs_ui_min   )
-  ._add_source( xs_min      )
+  ._insert_source_union()     // adding a union as the source of rs.serve() input
+  ._add_source( toubkal_min ) // now adding sources to that union
+  ._add_source( rs_ui_min   )
+  ._add_source( rs_min      )
 ;
 
 // Socket.io Server tests
 var clients = http_servers.socket_io_clients( { remove_timeout: 10 } );
 
-var source_set = xs.set( [ {}, {}, {}, {} ] ).auto_increment()
-  , source_1 = xs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
+var source_set = rs.set( [ {}, {}, {}, {} ] ).auto_increment()
+  , source_1 = rs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
 ;
 
 // ToDo: add authorizations test
@@ -445,9 +445,9 @@ function client( source, options ) {
   return { input: input, output: output };
 } // client()
 
-var client_filter = xs.set( [ { flow: 'client_set', id: 1 }, { flow: 'client_set', id: 3 } ] );
+var client_filter = rs.set( [ { flow: 'client_set', id: 1 }, { flow: 'client_set', id: 3 } ] );
 
-xs.union( [
+rs.union( [
     source_set.set_flow( 'source' ),
     source_1.set_flow( 'source_1' )
   ] )

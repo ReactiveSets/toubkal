@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
 
-    <title>XS Gallery Tests</title>
+    <title>RS Gallery Tests</title>
     
     <script src="javascript/jquery-1.10.2.min.js"></script>
 
@@ -13,19 +13,19 @@
     
     <script type="text/javascript" charset="utf-8" src="/socket.io/socket.io.js"></script>
     
-    <script src="../lib/xs-min.js"></script>
+    <script src="../lib/rs-min.js"></script>
     
     <style>
-      .xs-photo-matrix div {
+      .rs-photo-matrix div {
         display: inline-block;
         padding: 5px;
       }
       
-      .xs-photo-matrix img {
+      .rs-photo-matrix img {
         cursor: pointer;
       }
       
-      .xs-photo-matrix div img.active {
+      .rs-photo-matrix div img.active {
         border: 2px solid #4f9fcf;
       }
     </style>
@@ -40,7 +40,7 @@
       var carousel   = document.getElementById(  'carousel'  )
         , thumbnails = document.getElementById( 'thumbnails' )
         
-        , images = XS.xs
+        , images = RS.rs
           .socket_io_server()
           .to_uri()
           .trace( 'bootstrap photo album, images received' )

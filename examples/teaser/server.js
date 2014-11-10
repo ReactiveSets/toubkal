@@ -18,9 +18,9 @@
 
 "use strict";
 
-var xs      = require( '../../' )
-  , XS      = xs.XS
-  , extend  = XS.extend
+var rs      = require( '../../' )
+  , RS      = rs.RS
+  , extend  = RS.extend
 ;
 
 require( '../../lib/filter.js' );
@@ -30,7 +30,7 @@ require( '../../lib/server/file.js' );
 require( '../../lib/server/uglify.js' );
 require( '../../lib/order.js' );
 
-var servers = xs
+var servers = rs
   .set( [ // Define http servers
     { port: '8080', ip_address: '127.0.0.1' } // this application has only one server
   ] )
@@ -38,16 +38,16 @@ var servers = xs
   .http_servers() // start http servers
 ;
 
-var xs_dependencies = xs
+var rs_dependencies = rs
   .set( [ { name: 'node-uuid/uuid.js' } ] )
   
   .require_resolve()
 ;
 
 // Merge and mimify client javascript assets in realtime
-var all_min_js = xs.union( [ xs_dependencies, xs
+var all_min_js = rs.union( [ rs_dependencies, rs
   .set( [ // Define the minimum set of javascript files required to serve this client application
-    { path: '../../lib/xs.js'                  },
+    { path: '../../lib/rs.js'                  },
     { path: '../../lib/code.js'                },
     { path: '../../lib/query.js'               },
     { path: '../../lib/transactions.js'        },
@@ -76,7 +76,7 @@ var all_min_js = xs.union( [ xs_dependencies, xs
 servers.http_listen( all_min_js );
 
 // Other static assets
-xs.set( [
+rs.set( [
     { path: 'index.html' },
     { path: 'table.css'  }
   ] )
@@ -91,7 +91,7 @@ xs.set( [
 // Start socket servers on all http servers using socket.io
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
-var sales = xs
+var sales = rs
   .configuration( { filepath: 'sales.json', flow: 'sales' } ) // The sales dataflow 
   
   .alter( function( sale ) {

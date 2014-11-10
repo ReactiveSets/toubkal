@@ -21,10 +21,10 @@
 */
 "use strict";
 
-var XS = require( '../lib/server/http.js' ).XS
-  , xs         = XS.xs
-  , log        = XS.log
-  , extend     = XS.extend
+var RS = require( '../lib/server/http.js' ).RS
+  , rs         = RS.rs
+  , log        = RS.log
+  , extend     = RS.extend
 ;
 
 require( '../lib/server/socket_io_clients.js' );
@@ -36,13 +36,13 @@ require( '../lib/server/file.js' );
 var de = true;
   
 function ug( m ) {
-  log( "xs images processing tests, " + m );
+  log( "rs images processing tests, " + m );
 } // ug()
   
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
-var servers = xs.set( [
+var servers = rs.set( [
     { id: 1, ip_address: '0.0.0.0', port: 8012 },
     // { port: 8043, key: '', cert: '' }, // https server usimg key and cert
   ] )
@@ -56,7 +56,7 @@ require( '../lib/server/uglify.js' );
 require( '../lib/order.js' );
 require( '../lib/thumbnails.js' );
 
-var xs_min = xs
+var rs_min = rs
   // Define JavaScript Assets to minify
   .set( [
     // IE8- compatibility
@@ -66,19 +66,19 @@ var xs_min = xs
     // Third-party client libraries
     { name: 'test/javascript/uuid.js'      },
     
-    // xs core
-    { name: 'lib/xs.js'                    },
+    // rs core
+    { name: 'lib/rs.js'                    },
     { name: 'lib/code.js'                  },
     { name: 'lib/pipelet.js'               },
     { name: 'lib/filter.js'                },
     { name: 'lib/order.js'                 },
     { name: 'lib/events.js'                },
     
-    // xs socket.io
+    // rs socket.io
     { name: 'lib/socket_io_crossover.js'   },
     { name: 'lib/socket_io_server.js'      },
     
-    // xs client
+    // rs client
     { name: 'lib/uri.js'                   },
     { name: 'lib/selector.js'              },
     { name: 'lib/load_images.js'           },
@@ -93,11 +93,11 @@ var xs_min = xs
   // Maintain up-to-date file contents in order
   .order( [ { id: 'id' } ] )
   
-  // Update minified xs-min.js and source map in realtime  
-  .uglify( 'lib/xs-min.js', { warnings: false } )
+  // Update minified rs-min.js and source map in realtime  
+  .uglify( 'lib/rs-min.js', { warnings: false } )
 ;
 
-var images = xs
+var images = rs
   .set( [
     { name: 'test/images/14.jpg' },
     { name: 'test/images/15.jpg' },
@@ -113,7 +113,7 @@ var thumbnails = images
   .set_flow( 'gallery_thumbnails' )
 ;
 
-xs.set( [
+rs.set( [
     { name: 'test/bootstrap_photo_album.html'            },
     { name: 'test/javascript/jquery-1.10.2.min.js'       },
     { name: 'test/javascript/jquery-1.10.2.min.map'      },
@@ -123,7 +123,7 @@ xs.set( [
   ] )
   .union( [ images, thumbnails ] )
   .watch( { base_directory: __dirname + '/..' } )
-  .union( [ xs_min ] )
+  .union( [ rs_min ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 

@@ -19,7 +19,7 @@
 "use strict";
 
 function client() {
-  var xs = XS.xs
+  var rs = RS.rs
     
     // Define table displayed columns
     , columns = [
@@ -28,10 +28,10 @@ function client() {
         { id: 'quantity', label: 'Quantity' }  // Third column
       ]
       
-    , $ = XS.$ // from selector.js
+    , $ = RS.$ // from selector.js
   ;
   
-  xs.socket_io_server()                      // exchange dataflows with server using socket.io
+  rs.socket_io_server()                      // exchange dataflows with server using socket.io
     
     .flow( 'sales' )                         // Select sales dataflow
     

@@ -1,5 +1,5 @@
 ###
-    xs_url_tests.coffee
+    url.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,7 +19,7 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # ----------------------------------------------------------------------------------------------
 
 Browser = require( 'zombie' )
@@ -28,27 +28,27 @@ utils   = require( './tests_utils.js' )
 browser = new Browser( { debug: true } )
 expect  = this.expect || utils.expect
 check   = this.check  || utils.check
-xs      = this.xs     || utils.xs
+rs      = this.rs     || utils.rs
 that    = this
 
 # ----------------------------------------------------------------------------------------------
-# xs URL unit test suite
+# rs URL unit test suite
 # ----------------------------------------------------------------------------------------------
 
 describe 'URL Test', ->
   before ( done ) ->
-    browser.visit 'http://localhost:8080/test/xs_ui.html', done
+    browser.visit 'http://localhost:8080/test/ui.html', done
   
   it '', ( done ) ->
     url = browser.window.url_with_no_options
     
     url._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [ {
-        href    : 'http://localhost:8080/test/xs_ui.html'
+        href    : 'http://localhost:8080/test/ui.html'
         slashes : true
         protocol: 'http:'
         host    : 'localhost:8080'
         hostname: 'localhost'
         port    : '8080'
-        pathname: '/test/xs_ui.html'
+        pathname: '/test/ui.html'
       } ]

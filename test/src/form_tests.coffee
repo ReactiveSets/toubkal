@@ -1,5 +1,5 @@
 ###
-    xs_control_tests.coffee
+    control_tests.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -19,11 +19,11 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# xs control unit test suite
+# rs control unit test suite
 # ------------------------
 
 # include modules
-XS = if require? then ( require '../../lib/xs.js' ).XS else this.XS
+RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
 
 if require?
   require '../../lib/code.js'
@@ -34,9 +34,9 @@ if require?
   require '../../lib/table.js'
   require '../../lib/form.js'
 
-xs = XS.xs
+rs = RS.rs
 
-organizer = xs.set( [ id: 'label' ] )
+organizer = rs.set( [ id: 'label' ] )
 
 validate_name = ( value, field ) ->
   r = { valid: true, message: 'Valide' }
@@ -45,14 +45,14 @@ validate_name = ( value, field ) ->
   
   return r
 
-fields = xs
+fields = rs
   .set(
     [
       { id: 'flow', type: 'hidden', value: 'user_profile' }
       
       { id: 'id'   , type: 'hidden', value: { type: 'UUID' } }
       
-      { id: 'gender', type: 'radio', label: 'Gender', mandatory: true, value: xs.set( [
+      { id: 'gender', type: 'radio', label: 'Gender', mandatory: true, value: rs.set( [
           { id: 0, label: 'Female', selected: true }
           { id: 1, label: 'Male' }
         ] ).order( organizer )
@@ -66,7 +66,7 @@ fields = xs
       
       { id: 'address', type: 'text_area', label: 'Address', cols: 30, rows: 5, mandatory: true }
       
-      { id: 'country', type: 'drop_down', label: 'Country', mandatory: true, value: xs.set( [
+      { id: 'country', type: 'drop_down', label: 'Country', mandatory: true, value: rs.set( [
           { id: 1, label: "USA"        }
           { id: 2, label: "Morocco"    }
           { id: 3, label: "France"     }
@@ -77,7 +77,7 @@ fields = xs
         ] ).order( organizer )
       }
       
-      { id: 'hobby', type: 'checkbox', label: 'Hobbies', value: xs.set( [
+      { id: 'hobby', type: 'checkbox', label: 'Hobbies', value: rs.set( [
           { id: 1, label: "Photography"            , selected: true }
           { id: 2, label: "Fishing"                                 }
           { id: 3, label: "Playing Computer Games"                  }
@@ -94,5 +94,5 @@ fields = xs
   
   .order( [ { id: 'order' } ] )
 
-xs.form( document.getElementById( 'form' ), 'user_profile', fields )
+rs.form( document.getElementById( 'form' ), 'user_profile', fields )
   .socket_io_server()

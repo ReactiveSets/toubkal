@@ -1,5 +1,5 @@
 ###
-    xs_sketchfab_tests.coffee
+    sketchfab.coffee
 
     Copyright (C) 2013, 2014, Reactive Sets
 
@@ -21,7 +21,7 @@
 mocha.setup 'bdd' if typeof mocha isnt 'undefined'
 
 # ----------------------------------------------------------------------------------------------
-# xs test utils
+# rs test utils
 # ----------------------------------------------------------------------------------------------
 
 check = ( done, test ) ->
@@ -37,16 +37,16 @@ check = ( done, test ) ->
 # Require tested modules
 # ----------------------------------------------------------------------------------------------
 
-xs     = ( require '../../lib/pipelet.js' ).XS.xs
+rs     = ( require '../../lib/pipelet.js' ).RS.rs
 expect = require 'expect.js'
 
 require '../../lib/server/sketchfab.js'
 
 # ----------------------------------------------------------------------------------------------
-# xs Sketchfab Get Models unit test suite
+# rs Sketchfab Get Models unit test suite
 # ----------------------------------------------------------------------------------------------
 
-model_ids = xs.set( [] )
+model_ids = rs.set( [] )
 
 sketchfab_models = model_ids.sketchfab_get_models()
 

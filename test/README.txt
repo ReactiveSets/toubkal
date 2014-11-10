@@ -1,4 +1,4 @@
-XS Test Suite
+RS Test Suite
 
 Description
 
@@ -24,17 +24,17 @@ Coffee-script
 Mocha Unfunk Reporter
 ~/node_modules $ npm install mocha-unfunk-reporter
 
-Example: test if XS is a function
+Example: test if RS is a function
 
 First we have to import the Chai library and enabling the BDD syntax
 
-XS   = require '../lib/xs.js' if require?
+RS   = require '../lib/rs.js' if require?
 chai = require 'chai' if require?
 chai?.should()
 
-describe 'XS test suite:', ->
+describe 'RS test suite:', ->
   it 'xDs should be a function', ->
-    XS.should.be.a 'function'
+    RS.should.be.a 'function'
 
 To run this test, open a command prompt and cd to the project folder, then run this command:
 
@@ -47,7 +47,7 @@ You should get errors that look like this:
 
   × 1 of 8 tests failed:
 
-  1) XS test suite: XS.extend() test suite: o2 should be deep equal to _o2:
+  1) RS test suite: RS.extend() test suite: o2 should be deep equal to _o2:
      expected { email: 'knassik@gmail.com' } to not deeply equal { email: 'knassik@gmail.com' }
 
 You can also compile the CoffeeScript file and generate the javascript by runing:
