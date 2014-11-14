@@ -236,7 +236,7 @@ describe 'Controls Test Suite', ->
       browser.window.religions._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [ { id: 5, label: 'Hinduism', selected: true } ]
     
-    it 'radio container should contain 6 radio inputs, and radio with label "Hinduism" should be checked', ->
+    it 'radio container should contain 5 radio inputs, and radio with label "Hinduism" should be checked', ->
       expect( browser.queryAll( '#religions input' ).length ).to.be 5
       expect( browser.queryAll( '#religions input' )[ 2 ].checked ).to.be true
     

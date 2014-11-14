@@ -1,7 +1,7 @@
 /*
     init_tests.js
 
-    Copyright (C) 2013, 2014, Connected Sets
+    Copyright (C) 2013, 2014, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,7 @@
 */
 
 ( function( exports ) {
-var xs = exports.XS.xs
+var rs = exports.RS.rs
   
   , $body           = document.body
   , $checkbox       = document.createElement( 'div' )
@@ -30,11 +30,11 @@ var xs = exports.XS.xs
   
   , organizer       = [ { id: 'label' } ]
   
-  , charts_source    = xs.order( organizer )
-  , countries_source = xs.order( organizer )
-  , religions_source = xs.order( organizer )
-  , hobbies_source   = xs.order( organizer )
-  , form_fields      = xs
+  , charts_source    = rs.order( organizer )
+  , countries_source = rs.order( organizer )
+  , religions_source = rs.order( organizer )
+  , hobbies_source   = rs.order( organizer )
+  , form_fields      = rs
       .set( [
           { order: 0, id: 'flow'   , type: 'hidden'   , value: 'user_profile' }
         , { order: 1, id: 'id'     , type: 'hidden'   , value: { type: 'UUID' } }
@@ -87,7 +87,7 @@ exports.charts    = charts_source.checkbox( $checkbox, { label: 'Charts', contro
 exports.countries = countries_source.drop_down( $drop_down );
 exports.religions = religions_source.radio( $radio );
 exports.hobbies   = hobbies_source.checkbox_group( $checkbox_group );
-exports.form      = xs.form( $form, 'user_profile', form_fields, {} );
+exports.form      = rs.form( $form, 'user_profile', form_fields, {} );
 
 exports.charts_source    = charts_source;
 exports.countries_source = countries_source;
@@ -95,5 +95,17 @@ exports.religions_source = religions_source;
 exports.hobbies_source   = hobbies_source;
 
 exports.form_fields      = form_fields;
+
+exports.url_with_no_options = rs
+  .url_events()
+  .url_parse ()
+  .last      ()
+;
+
+exports.url_with_query_string = rs
+  .url_events()
+  .url_parse ( { parse_query_string : true } )
+  .last      ()
+;
 
 } ) ( this );

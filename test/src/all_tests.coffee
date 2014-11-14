@@ -33,7 +33,7 @@ require './file.js'
 
 try
   require.resolve 'zombie'
-#  require './ui.js'       
+  require './ui.js'       
 
 fs = require 'fs'
 
