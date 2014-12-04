@@ -952,6 +952,7 @@ serve_http_servers()      | Bind http event handlers to HTTP_Router()
 passport()                | Passport authentication
 passport_strategies()     | Manage Passport strategies
 greedy()                  | A non-lazy stateless pipelet
+make_base_directories()   | Create base directories for a dataset of file paths
 
 Other Classes && methods  | Short Description
 --------------------------|------------------------------------------------
