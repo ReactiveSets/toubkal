@@ -1,8 +1,9 @@
+   
 
 ### HISTORY
 
 * 2014-09-03:
-  * Displaying a reactive <table> which DOM container id is sales_table, ordered by date, for the year 2014, from a source sales dataflow coming from a socket.io server, pulling the minimum amount of data from the server and updating the table as soon as some data is available from the server.
+  * Displaying a reactive table which DOM container id is sales_table, ordered by date, for the year 2014, from a source sales dataflow coming from a socket.io server, pulling the minimum amount of data from the server and updating the table as soon as some data is available from the server.
 
 ### AUTHORS
 
