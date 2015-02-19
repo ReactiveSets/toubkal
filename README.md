@@ -98,7 +98,7 @@ for a 3D image modeling and rendering company.
 Some features are still work in progress and some APIs are subject to changes meaning
 that Toubkal should be considered Alpha at this time.
 
-Toubkal should provide a functionally-rich framework by version 0.6 in March 2015
+Toubkal should provide a functionally-rich framework by version 0.6
 including reasonably complete documentation extracted from the code where it currently
 stands, and reasonably stable API.
 
@@ -762,7 +762,7 @@ node server.js > server.out
 
 ## Roadmap / Releases
 
-### Version 0.9.0 - Finalize API - ETA December 2015
+### Version 0.9.0 - Finalize API
 
 #### Main Goals:
 
@@ -772,7 +772,7 @@ node server.js > server.out
 - Develop additional tests, goal is at least 1100 automated tests
 - Improve documentation and tutorial
 
-### Version 0.8.0 - P2P Dataflows - ETA September 2015
+### Version 0.8.0 - P2P Dataflows
 
 #### Main Goals:
 
@@ -780,7 +780,7 @@ node server.js > server.out
 - Implement Peer-To-Peer dataflows using WebRTC
 - Develop additional tests, goal is at least 1000 automated tests
 
-### Version 0.7.0 - Charding - ETA June 2015
+### Version 0.7.0 - Charding
 
 #### Main Goals:
 
@@ -788,7 +788,7 @@ node server.js > server.out
 - Develop additional tests, goal is at least 900 automated tests
 - Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
 
-### Version 0.6.0 - Packaging / First Beta - ETA March 2015
+### Version 0.6.0 - Packaging / First Beta
 
 #### Main Goals:
 
@@ -799,7 +799,7 @@ node server.js > server.out
 - Build Website, featuring documentation and tutorial
 - Session Strorage Dataflow
 
-### Version 0.5.0 - Web Application Framework / Packaging - ETA January 2015
+### Version 0.5.0 - Web Application Framework / Packaging
 
 #### Main Goals:
 
@@ -812,7 +812,7 @@ node server.js > server.out
   - Implement rs automatic pipelet patching
 - Develop additional tests, goal is at least 650 automated tests
 
-### Version 0.4.0 - Persistance - ETA November 2014
+### Version 0.4.0 - Persistance
 
 #### Main Goals:
 
@@ -836,7 +836,7 @@ node server.js > server.out
   - Prevents useless duplication of fetch and query updates on all upstream union branches
   - Routes fetch and update queries based on downstream query
 
-### Version 0.3.0 - Complex Queries, Authentication && Authorizations, API Refactoring - ETA September 2014
+### Version 0.3.0 - Complex Queries, Authentication && Authorizations, API Refactoring
 
 #### Remaining Goals:
 
