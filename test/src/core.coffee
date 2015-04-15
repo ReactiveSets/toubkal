@@ -297,7 +297,7 @@ describe 'RS test suite:', ->
     greedy = rs.greedy()
     
     lazy._add_source source
-    greedy._input._add_source source._output
+    greedy._input.add_source source._output
     
     it 'source should have lazy and greedy inputs as outputs', ->
       expect( source._output.destinations ).to.be.eql [ lazy._input, greedy._input ]
