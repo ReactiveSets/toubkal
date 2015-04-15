@@ -540,8 +540,9 @@ manuals:
 ### Automated Tests, Continuous Integration
 
 We have curently developped 567 automated tests for the Toubkal core pipelets that run
-after every commit on Travis CI under node versions 0.10 and 0.12. We no longer test version
-0.6 and 0.8 since Travis seems to have issues with these.
+after every commit on Travis CI under node version 0.10. We no longer test version
+0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
+tested for a problem with the zombie headless test framework.
 
 Our continuous integration process also requires that before each commit the developper
 runs these tests so travis usually passes all tests. In the event that a test does not
