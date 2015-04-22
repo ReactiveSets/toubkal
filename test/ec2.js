@@ -90,7 +90,7 @@ var ubuntu_amis = rs
   ], { no_null: true, no_undefined: true } )
   
   .trace( 'ubuntu amis' )
-  ._on( 'complete', function() { exit() } )
+  ._output.on( 'complete', function() { exit() } )
 ;
 
 var AMI_regions = ubuntu_amis
@@ -122,7 +122,7 @@ var zones = regions
   
   .trace( 'Availability Zones' )
   
-  ._on( 'complete', function() {
+  ._output.on( 'complete', function() {
     this._fetch_all( function( zones ) {
       console.log( 'Received all us Availability Zones: '
         + zones.map( function( z ) { return z.ZoneName } ).join( ', ' )
@@ -222,7 +222,7 @@ var spot_prices_stats = zones
   
   .trace( 'Average Cost per Hour by AvailabilityZone and InstanceType' )
   
-  ._on( 'complete', function() {
+  ._output.on( 'complete', function() {
     de&&ug( 'complete after all is done' )
     
     this._fetch_all( function( prices ) {

@@ -78,7 +78,7 @@ describe 'file', ->
           key           : [ 'module' ]
         } )
       
-      configuration._on 'complete', () ->
+      configuration._output.on 'complete', () ->
         configuration._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             {
@@ -310,7 +310,7 @@ describe 'file', ->
         
         .watch_directories( { base_directory: 'test/fixtures/file/directories', name: 'from_empty_directory_path' } )
       
-      from_empty_directory_path._on 'complete' , () ->
+      from_empty_directory_path._output.on 'complete' , () ->
         from_empty_directory_path._fetch_all ( values ) -> check done, () ->
           expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
             {

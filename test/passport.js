@@ -39,7 +39,7 @@ module.exports = function( express, session_options, application, base_route ) {
     
     .passport( users_database )
     
-    ._on( 'middleware', app_config )
+    ._output.on( 'middleware', app_config )
   ;
   
   function app_config( passport, passport_routes ) {

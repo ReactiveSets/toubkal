@@ -74,7 +74,7 @@ describe 'Load Images test suite:', ->
     
     expect( images._loading_count ).to.be 2
     
-    images._on( 'complete', ->
+    images._output.on( 'complete', ->
       images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
@@ -122,7 +122,7 @@ describe 'Load Images test suite:', ->
     
     expect( images._loading_count ).to.be 1
 
-    images._on( 'complete', ->
+    images._output.on( 'complete', ->
       images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
@@ -188,7 +188,7 @@ describe 'Load Images test suite:', ->
   it 'after images_source._update( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 5000
     
-    images._on( 'complete', ->
+    images._output.on( 'complete', ->
       images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
@@ -213,7 +213,7 @@ describe 'Load Images test suite:', ->
   it 'after images_source._add( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 5000
     
-    images._on( 'complete', ->
+    images._output.on( 'complete', ->
       images._fetch_all ( values ) -> check done, ->
         values.sort ( a, b ) -> a.id > b.id
 
@@ -238,7 +238,7 @@ describe 'Load Images test suite:', ->
   it 'after images_source._update( objects ), expect images._fetch_all() to be equal to result', ( done ) ->
     this.timeout 5000
     
-    images._on( 'complete', ->
+    images._output.on( 'complete', ->
       images._fetch_all ( values ) -> check done, () ->
         values.sort ( a, b ) -> a.id > b.id
  

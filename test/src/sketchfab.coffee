@@ -63,7 +63,7 @@ describe 'sketchfab_get_models()', ->
       { id: '24f7d8d1b135462ab662d11b9df37704' }
     ]
     
-    sketchfab_models._on( 'complete', ->
+    sketchfab_models._output.on( 'complete', ->
       sketchfab_models._fetch_all ( values ) -> check done, ->
         expect( values.length ).to.be 1
         expect( values ).to.be.eql [
@@ -95,7 +95,7 @@ describe 'sketchfab_get_models()', ->
       { id      : '2226002e030c4517bc0136f325b9fa15' }
     ]
     
-    sketchfab_models._on( 'complete', ->
+    sketchfab_models._output.on( 'complete', ->
       sketchfab_models._fetch_all ( values ) -> check done, ->
         expect( values.length ).to.be 3
         expect( values ).to.be.eql [
@@ -199,7 +199,7 @@ describe 'sketchfab_get_models()', ->
     
     model_ids._update [ [ { id: '24f7d8d1b135462ab662d11b9df37704' }, { id: '0ddc7728083e4f79bd87c96a54860a81' } ] ]
     
-    sketchfab_models._on( 'complete', ->
+    sketchfab_models._output.on( 'complete', ->
       sketchfab_models._fetch_all ( values ) -> check done, ->
         expect( values.length ).to.be 2
         expect( values ).to.be.eql [

@@ -105,7 +105,7 @@ describe 'Transactions test suite:', ->
       expect( emitter.emit( 'data', {} ) ).to.be emitter
     
     it 'should allow to set a "data" event listener', ->
-      emitter._on "data", () -> data = slice.call( arguments, 0 )
+      emitter.on "data", () -> data = slice.call( arguments, 0 )
       
       expect( Object.keys emitter._events ).to.be.eql [ "data" ]
       expect( emitter._events.data.length ).to.be 1
@@ -115,7 +115,7 @@ describe 'Transactions test suite:', ->
       expect( data ).to.be.eql [ { a: 1 } ]
     
     it 'should allow to set a "complete" listener once', ->
-      emitter._once "complete", () -> complete = slice.call( arguments, 0 )
+      emitter.once "complete", () -> complete = slice.call( arguments, 0 )
       
       expect( Object.keys emitter._events ).to.be.eql [ "data", "complete" ]
       expect( emitter._events.complete.length ).to.be 1
