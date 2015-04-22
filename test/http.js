@@ -391,7 +391,7 @@ pipelet_min.serve( http_servers, { routes: '/lib' } );
 // rs.union( [ toubkal_min, rs_ui_min, rs_min ] )
 rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
   ._input
-  ._insert_source_union()     // adding a union as the source of rs.serve() input
+  .insert_source_union()     // adding a union as the source of rs.serve() input
   ._add_source( toubkal_min ) // now adding sources to that union
   ._add_source( rs_ui_min   )
   ._add_source( rs_min      )
