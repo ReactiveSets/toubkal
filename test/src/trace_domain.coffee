@@ -59,17 +59,17 @@ describe 'Trace Domain', ->
     check done, () ->
       expect( trace ).to.be.a( "function" )
       
-  it 'have a value of 5', ->
-    expect( trace.valueOf() ).to.be 5
+  it 'have a value of 6', ->
+    expect( trace.valueOf() ).to.be 6
 
-  it 'should be >= 5', ->
-    expect( trace >= 5 ).to.be true
+  it 'should be > 5', ->
+    expect( trace > 5 ).to.be true
 
-  it 'should not be >= 6', ->
-    expect( trace >= 6 ).to.be false
+  it 'should not be > 6', ->
+    expect( trace > 6 ).to.be false
 
   it 'should return true when invoked at level 3 and not set _trace yet', ->
-    expect( trace >= 3 && trace( 3 ) ).to.be true
+    expect( trace > 3 && trace( 3 ) ).to.be true
     expect( _trace ).to.be null
 
   it 'should succeed when invoked with object with _get_name() method', ->
@@ -113,7 +113,7 @@ describe 'Trace Domain', ->
     
     expect( trace.valueOf() ).to.be 0
     
-  it 'should allow to add query expressions using trace.query_add(), setting trace level to 4', ->
+  it 'should allow to add query expression using trace.query_add(), setting sup trace level to 4', ->
     trace.query_add [
       {
         flow           : "trace"
@@ -124,9 +124,10 @@ describe 'Trace Domain', ->
       }
     ]
     
-    expect( trace.valueOf() ).to.be 3
+    expect( trace.valueOf() ).to.be 4
     
-    trace.query_add [      
+  it 'should ignore query expressions added using trace.query_add() to the wrong flow or realm', ->
+    trace.query_add [
       {
         flow           : "not a trace"
         _realm         : "my test trace domain"
@@ -142,13 +143,22 @@ describe 'Trace Domain', ->
         _name          : "an instance"
         _method        : "_add"
       }
-      
+    ]
+    
+    expect( trace.valueOf() ).to.be 4
+    
+  it 'should allow to add query expressions using trace.query_add(), setting sup trace level to 5', ->
+    trace.query_add [
       {
         _level         : [ "<=", 4 ]
         _name          : "another instance"
         _method        : "_add"
       }
-      
+    ]
+    
+    expect( trace.valueOf() ).to.be 5
+    
+    trace.query_add [
       {
         _name          : "an instance"
         _level         : 4
@@ -164,20 +174,20 @@ describe 'Trace Domain', ->
       }
     ]
     
-    expect( trace.valueOf() ).to.be 4
+    expect( trace.valueOf() ).to.be 5
   
   it 'should not allow trace to progress at level 5', ->
-    expect( trace >= 5 ).to.be false
+    expect( trace > 5 ).to.be false
   
   it 'should allow trace to progress at level 4', ->
-    expect( trace >= 4 && trace 4 ).to.be true
+    expect( trace > 4 && trace 4 ).to.be true
   
   it 'should not allow trace to further progress for "that instance"', ->
     expect( trace "that instance" ).to.be false
     expect( _trace ).to.be null
   
   it 'should allow traces at level 4 for method "_add" to "another instance"', ->
-    expect( trace >= 4 && trace 4, "another instance" ).to.be true
+    expect( trace > 4 && trace 4, "another instance" ).to.be true
     expect( _trace ).to.be null
     expect( trace( "_add" ) ).to.be true
     expect( _trace ).to.be null
@@ -193,7 +203,7 @@ describe 'Trace Domain', ->
     }
   
   it 'should allow that trace on method _remove for "an instance" at level 4', ->
-    expect( trace >= 4 && trace 4, "an instance", "_remove", { a: 1 } ).to.be true
+    expect( trace > 4 && trace 4, "an instance", "_remove", { a: 1 } ).to.be true
     
     check_trace {
       flow           : "trace"
@@ -205,13 +215,13 @@ describe 'Trace Domain', ->
     }
   
   it 'should allow trace to progress for "another instance" at level 4', ->
-    expect( trace >= 4 && trace 4, "another instance" ).to.be true
+    expect( trace > 4 && trace 4, "another instance" ).to.be true
   
   it 'should not allow trace to further progress on method _remove', ->
     expect( trace "_remove" ).to.be false
   
   it 'should allow that trace on method _remove for "another instance" at level 3', ->
-    expect( trace >= 3 && trace 3, "another instance", "_remove", { a: 1 } ).to.be true
+    expect( trace > 3 && trace 3, "another instance", "_remove", { a: 1 } ).to.be true
     
     check_trace {
       flow           : "trace"
@@ -223,13 +233,13 @@ describe 'Trace Domain', ->
     }
   
   it 'should allow trace to progress for "some instance" at level 3', ->
-    expect( trace >= 3 && trace 3, "some instance" ).to.be true
+    expect( trace > 3 && trace 3, "some instance" ).to.be true
   
   it 'should not allow trace to further progress with method "_add"', ->
     expect( trace "_add" ).to.be false
   
   it 'should allow a trace on method _remove for "some instance" at level 3', ->
-    expect( trace >= 3 && trace 3, "some instance", "_remove", { a: 1 } ).to.be true
+    expect( trace > 3 && trace 3, "some instance", "_remove", { a: 1 } ).to.be true
     
     check_trace {
       flow           : "trace"
@@ -253,7 +263,7 @@ describe 'Trace Domain', ->
     }
     
   it 'should allow that trace on method "_clear" for "some instance" at level 1', ->
-    expect( trace >= 1 && trace 1, "some instance", "_clear", { a: 1 } ).to.be true
+    expect( trace > 1 && trace 1, "some instance", "_clear", { a: 1 } ).to.be true
     
     check_trace {
       flow           : "trace"
@@ -275,7 +285,7 @@ describe 'Trace Domain', ->
       }
     ]
     
-    expect( trace.valueOf() ).to.be 4
+    expect( trace.valueOf() ).to.be 5
   
   it 'should allow to remove the trace query for method "_add" at level <= 4 to "another instance"', ->
     trace.query_remove [
@@ -286,13 +296,13 @@ describe 'Trace Domain', ->
       }
     ]
     
-    expect( trace >= 4 && trace 4 ).to.be true
+    expect( trace > 4 && trace 4 ).to.be true
     expect( trace "another instance" ).to.be false
     
-    expect( trace >= 3 && trace 3, "another instance" ).to.be true
+    expect( trace > 3 && trace 3, "another instance" ).to.be true
     expect( trace "_add" ).to.be false
     
-    expect( trace >= 3 && trace 3, "another instance", "_remove" ).to.be true
+    expect( trace > 3 && trace 3, "another instance", "_remove" ).to.be true
     expect( trace "!!! this is an error" ).to.be true
     
     check_trace {
@@ -315,7 +325,7 @@ describe 'Trace Domain', ->
       }
     ]
     
-    expect( trace >= 4 && trace 4, "an instance", "_add", "Warning" ).to.be true
+    expect( trace > 4 && trace 4, "an instance", "_add", "Warning" ).to.be true
     
     check_trace {
       flow           : "trace"
@@ -333,10 +343,10 @@ describe 'Trace Domain', ->
       }
     ]
     
-    expect( trace >= 2 && trace 2, "some instance" ).to.be true
+    expect( trace > 2 && trace 2, "some instance" ).to.be true
     expect( trace "_add" ).to.be false
     
-    expect( trace >= 3 && trace 3, "some instance", "_remove", "Error" ).to.be true
+    expect( trace > 3 && trace 3, "some instance", "_remove", "Error" ).to.be true
 
     check_trace {
       flow           : "trace"
@@ -355,11 +365,11 @@ describe 'Trace Domain', ->
       }
     ]
 
-    expect( trace.valueOf() ).to.be 3
-    expect( trace >= 3 && trace 3, "some instance" ).to.be true
+    expect( trace.valueOf() ).to.be 4
+    expect( trace > 3 && trace 3, "some instance" ).to.be true
     expect( trace "_add" ).to.be false
     
-    expect( trace >= 3 && trace 3, "some instance", "_remove" ).to.be true
+    expect( trace > 3 && trace 3, "some instance", "_remove" ).to.be true
     
     expect( trace "Another Error" ).to.be true
     
@@ -378,9 +388,10 @@ describe 'Trace Domain', ->
         _method        : "_remove"
         _level         : 3
       }
+      
+      # {}
     ]
     
     expect( trace.valueOf() ).to.be 0
-    expect( trace >= 0 ).to.be true
-    expect( trace >= 1 ).to.be false
+    expect( trace > 0 ).to.be false
     expect( trace 1 ).to.be false

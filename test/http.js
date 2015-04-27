@@ -164,6 +164,9 @@ var rs_min = rs
     { path: 'test/javascript/es5.js'       },
     { path: 'test/javascript/json2.js'     },
     
+    // traces
+    { path: 'lib/trace_domain.js'          },
+    
     // rs core
     { path: 'lib/rs.js'                    },
     { path: 'lib/code.js'                  },
@@ -217,6 +220,7 @@ http_servers.http_listen( rs_min );
 
 var toubkal_min = rs
   .union( [ rs_dependencies, rs.set( [
+    { path: 'lib/trace_domain.js'          },
     { path: 'lib/rs.js'                    },
     { path: 'lib/code.js'                  },
     { path: 'lib/query.js'                 },
@@ -262,6 +266,7 @@ var rs_ui_min = rs
 ;
 
 var pipelet_min = rs.set( [
+    { id: 1, path: 'lib/trace_domain.js' },
     { id: 1, path: 'lib/rs.js'           },
     { id: 2, path: 'lib/code.js'         },
     { id: 3, path: 'lib/query.js'        },
@@ -463,7 +468,7 @@ rs.union( [
   .set()
 ;
 
-false && setInterval( function() {
+1 && setInterval( function() {
   source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
 } , 10000 );
 

@@ -1,7 +1,7 @@
 # Toubkal
 **High-Performances Reactive Web Application Framework**
 
-[![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal) *567 tests*
+[![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal) *569 tests*
 
 [![NPM version](https://badge.fury.io/js/toubkal.png)](http://badge.fury.io/js/toubkal) *npm install toubkal*
 
@@ -539,7 +539,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 567 automated tests for the Toubkal core pipelets that run
+We have curently developped 569 automated tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -582,7 +582,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 567 of 567 tests (4196ms)
+-> passed 569 of 569 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -942,7 +942,7 @@ node server.js > server.out
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 567 automated tests
+- 569 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
