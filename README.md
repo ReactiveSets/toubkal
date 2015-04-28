@@ -685,7 +685,8 @@ var servers = rs
 // Merge and mimify client javascript assets in realtime
 var all_min_js = rs
   .set( [ // Define the minimum set of javascript files required to serve this client application
-    { name: 'node-uuid/uuid.js'                 },
+    { name: 'node-uuid/uuid.js'                  },
+    { name: 'toubkal/lib/trace_domain.js'        },
     { name: 'toubkal/lib/rs.js'                  },
     { name: 'toubkal/lib/code.js'                },
     { name: 'toubkal/lib/query.js'               },

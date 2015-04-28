@@ -66,6 +66,9 @@ var rs_min = rs
     // Third-party client libraries
     { name: 'test/javascript/uuid.js'      },
     
+    // traces
+    { name: 'lib/trace_domain.js'          },
+    
     // rs core
     { name: 'lib/rs.js'                    },
     { name: 'lib/code.js'                  },
