@@ -67,7 +67,7 @@ var rs_min = rs
     { name: 'test/javascript/uuid.js'      },
     
     // traces
-    { name: 'lib/trace_domain.js'          },
+    { name: 'lib/lazy_logger.js'           },
     
     // rs core
     { name: 'lib/rs.js'                    },

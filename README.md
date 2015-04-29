@@ -57,7 +57,6 @@ var sales_columns = rs
   .flow( 'sales_columns' )
 ;
 ```
-
 The above code automatically shares the same socket.io connection with the previous code,
 reducing resource usage on both clients and servers while only pulling from the server
 the additional ```sales_columns``` dataflow.
@@ -79,16 +78,14 @@ These same Occam's razor declarative techniques can be applied on the server sid
 delivering a full stack scallable and secure framework with highest performances
 featuring reactive database and fine-grained authorization model.
 
-The bottom line is that Toubkal allows you to write the minimum amount of code
-while resulting in the highest performance reactive applications you could only dream
-of writing liberating your creativity and allowing you to finaly beat large teams of
-developpers.
+The bottom line is that Toubkal allows you to write with less code higher performance
+reactive applications, liberating your creativity.
 
 ## Introduction
 Toubkal is a high-productivity, high-performances, scalable, reactive web application
-framework aiming at massively improving productivity, reducing servers' environmental
-footprint, and increasing mobile clients battery life by making an optimal use of server,
-network and client resources.
+framework aiming at improving productivity, reducing servers' environmental footprint,
+and increasing mobile clients battery life by making an optimal use of server, network
+and client resources.
 
 ### Development Stage
 Toubkal is already very reliable thanks to its comprehensive test suite and is
@@ -98,19 +95,19 @@ for a 3D image modeling and rendering company.
 Some features are still work in progress and some APIs are subject to changes meaning
 that Toubkal should be considered Alpha at this time.
 
-Toubkal should provide a functionally-rich framework by version 0.6
-including reasonably complete documentation extracted from the code where it currently
-stands, and reasonably stable API.
+Toubkal should provide a functionally-rich framework by version 0.6 including reasonably
+complete documentation extracted from the code where it currently stands, and reasonably
+stable API.
 
 ### Our Team
 Toubkal is developped by a team of experienced and passionate back-end and
 front-end developpers.
 
-We are well founded, not looking for additional founding, with well enough resources
-to complete this project.
+We are well founded, not looking for additional founding, with enough resources to
+complete this project.
 
-If you are an experienced functional javascript programmer, understand the power of
-reactive dataflow programming and are would like to join our team, contact us.
+If you are an experienced javascript programmer, understand the power of reactive
+programming and would like to join our team, contact us.
 
 ### Why yet-another JavaScript Web Application Framework?
 The short answer is because we are not satisfied with the productivity, performances,
@@ -145,11 +142,8 @@ clients, and **drain mobile batteries** faster than anyone desires
 networks
 
 We also want to keep **good performances at scale**. Most frameworks either do-not-scale
-or scale with much lower per-server performances further increasing the need for cash
-while increasing environemental footprints.
-
-The bottom-line is that we want to be in better business faster, with less cash, and a
-lower environemental footprint that current technologies allow.
+or scale with lower per-server performances further increasing the need for cash while
+increasing environemental footprints.
 
 Toubkal addresses all of these issues thanks to its unique **Subscribe / Push**
 reactive dataflow model that works accross web browsers and nodejs servers, as well as
@@ -172,9 +166,8 @@ authorizations by stating that you should use third-party libraries or plugins t
 with it, all of which have shortcomming and usually will not fit the complexity of any
 real-world application let alone provide acceptable performances at scale.
 
-Toubkal provides a simple yet highly-efficient dataflow authorization model and
-system architecture that delivers **Reactive UI updates on authorization changes** at
-scale.
+Toubkal provides a simple yet efficient dataflow authorization model and system
+architecture that delivers **Reactive UI updates on authorization changes** at scale.
 
 Now, you might consider that you don't need this, that end-users can refresh their page
 on authorization changes. But the reality is that we can do this because we provide a
@@ -185,13 +178,12 @@ piece of code that forgot to test a role in a corner-case.
 #### How do you improve Productivity?
 
 By allowing you to describe **what** you want in a declarative style, instead of
-**how-the-hell** this could ever be accomplished.
+**how** this could ever be accomplished.
 
-Figuring-out **how** this should a) work securely, b) scale and c) have best possible
-performances as stated above, is hard, really hard. So hard that there is not a single
-company today able to achieve that without throwing millions of dollars at the problem,
-and/or not struggling with bugs, bottlenecks and hard-to-work-around architecture
-limitations.
+Figuring-out **how** this should a) work securely, b) scale and c) have best performances
+as stated above, is hard, really hard. So hard that today the only way to achieve this is
+throwing millions of dollars at the problem, and/or struggling with bugs, bottlenecks
+and hard-to-work-around architecture limitations.
 
 The only thing you need to know to understand Toubkal programs is about **Toubkal Pipelets**.
 
@@ -203,7 +195,7 @@ rs.upstream_pipelet( parameter, ... )
 ```
 
 A pipelet is implemented as a JavaScript function() that:
-- Maintains a dataset state, e.g. in memory, mass storage, the DOM, or virtually
+- Maintains a dataset state, e.g. in memory, mass storage, the DOM, or virtually (stateless)
 - Subscribes to data events from **upstream** pipelets
 - Reacts to events emitted by upstream pipelets
 - Processes these upstream events to update the state of its dataset
@@ -298,7 +290,7 @@ Application Architects do not need do program anything for this to happen as it 
 entirely hidden by Toubkal pipelets. Understanding of the underlying model helps understand
 why Toubkal is so efficient and how it scales.
 
-Dataflow libraries usually implement one of two models:
+Most dataflow libraries usually implement one of two models:
 - push: all data is pushed downstream as it happens, allowing realtime updates
 - pull: data is pulled upstream when needed, allowing lazy programming, pulling only what
 is required, when required
@@ -314,11 +306,10 @@ requestAnimationFrame() to prevent over-updating the DOM between refreshes.
 result in the transmission of large amounts of unused data, usually introducing
 unacceptable latency and bandwidth charges.
 
-Toubkal implements a more sophisticated **Subscribe / Push** model where
-downstream pipelets subscribe to the subset of data they are interested in and
-subsequently receive all updates in a push fashion only for that subset. This allows
-Toubkal to move the least amount of data between clients and servers while remaining
-realtime with the lowest possible latency.
+Toubkal implements a **Subscribe / Push** model where downstream pipelets subscribe to
+the subset of data they are interested in and subsequently receive all updates in a push
+fashion only for that subset. This allows Toubkal to move less data between clients and
+servers while remaining realtime with lower latency.
 
 Toubkal stateless pipelets also use a lazy model where they will not subscribe to anything
 from upstream unless initial data is fetched by a downstream stateful pipelet. This again
@@ -350,10 +341,10 @@ Each event carries an opperation name such as *add* or *remove* and an array of 
 to add to, or remove from, a set.
 
 **Stateless** pipelets process values which are not materialized either in memory or
-other storagem their state is vitual.
+other storage, their state is vitual.
 
 Stateless pipelets process data events independently of all other events and values in
-the set allowing very fast operations and lowest memory footprints.
+the set allowing faster operations and lower memory footprints.
 
 Stateless pipelets can therefore process events out of order, much like Internet Protocol
 packets can be routed through various paths within the Internet and may arrive at their
@@ -378,7 +369,7 @@ Toubkal network of stateless pipelets.
 
 #### Horizontal Distribution
 
-Allowing out-of-order data events is a key feature of Conneceted Sets which greatly eases
+Allowing out-of-order data events is a key feature of Reactive Sets which greatly eases
 horizontal distribution of workloads and charding, because no synchronization is needed
 between chards that may be processed in parallel either over a number of threads,
 processes, or servers in a true share-nothing architecture.
@@ -386,8 +377,8 @@ processes, or servers in a true share-nothing architecture.
 #### Incremental Processing
 
 Incremental sets processing allows to split large sets into optimal chunks of data
-rendering data to end-users' interface with low-latency, dramatically improving end-user
-experience. Data events update sets in real-time, on both clients and servers.
+rendering data to end-users' interface with low-latency, improving end-user experience.
+Data events update sets in real-time, on both clients and servers.
 
 Incremental aggregates allow to deliver realtime OLAP cubes suitable for realtime data
 analysis and reporting over virtually unlimited size datasets.
@@ -396,8 +387,8 @@ analysis and reporting over virtually unlimited size datasets.
 
 Toubkal data events contain arrays of values which are typically processed in loops. In a
 traditional programming environement, one typically writes code that processes values in
-loops. With Toubkal, architects do not write loops because these are absracted
-away as sets processed by pipelets.
+loops. With Toubkal, architects do not write loops because these are absracted away as sets
+processed by pipelets.
 
 This greatly simplifies programming while removing the likelihood for common programming
 errors.
@@ -407,13 +398,13 @@ performances only available to compiled languages such as C or C++. Unrolling ne
 loops provide maximum performance while in turn allowing JavaScript JIT compilers to
 generate code that may be executed optimally in microprocessors' pipelines.
 
-#### Toubkal Pipelet Programming
+#### Toubkal Low-Level Pipelet Programming
 
 At the lower level, Toubkal **Pipelets** use a JavaScript functional programming model
 eliminating the typical callback hell of assynchronous request-response programming
 models.
 
-Error dataflows originating on clients can easily be routed to servers to allow
+Error and log dataflows originating on clients can easily be routed to servers to allow
 proactive debugging of errors while in production, and effective service quality
 monitoring.
 
@@ -421,6 +412,16 @@ Transactions allow to group related operations over time and allow synhronizatio
 of concurrent dataflows. This synchronization becomes implicit at the architect
 level removing the possibility of race condition errors that have been traditionaly
 very hard to debug.
+
+Developping stateless pipelets is straightforward, requiring to write a simple and
+simple transform function very much akin pure function programming. Stateless Pipelets
+API takes care of everything else, managing add, remove, fetch functions as well as
+transactions.
+
+Developping stateful pipelets remains complex and we are working to improve Toubkal's
+low-level Stateful API to improve productivity. Managing state requires to implement
+both add and remove functions, a fetch function to return initial state, and properly
+handle transactions and out-of-order operations.
 
 ### Service Architecture
 
@@ -444,9 +445,9 @@ provides the Subscribe / Push service over a reliable transport (such as Sockets
 WebSockets, ...) but not necessarily guarantying the order of packets. So Toubkal could
 also work over a protocol that would only guaranty the delivery of packets.
 
-The Toubkal protocol therefore provides a much higher level alternative to existing web
+The Toubkal protocol therefore provides a higher level alternative to existing web
 services protocols such as SOAP and REST, allowing to build efficiently complex real-time
-applications with no additional code and much less documentation since only application
+applications with no additional code and less documentation since only application
 dataflows need to be documented.
 
 ### Realtime Data Portability, Business Opportunities
@@ -485,8 +486,8 @@ Monetization of dataflows and applications can be controlled through Toubkal rea
 authorizations by **Toubkal Monetization Providers**.
 
 Disruptive new business opportunities arrising from **Toubkal Realtime Data Portability**
-will prove much stronger than the current closed, data-within-application model,
-resulting in more data and more services available to more users and businesses.
+will prove stronger than the current closed, data-within-application model, resulting in
+more data and more services available to more users and businesses.
 
 ### Ecosystem
 
@@ -510,11 +511,11 @@ front-end, or as a full-stack framework.
 
 #### Integrated database and model
 
+*Persistance will be implemented in version 0.4 and charding in version 0.7.
+
 Toubkal features a chardable document database with joins, aggregates, filters and
 transactions with eventual consistency allowing both normalized and denormalized
 schemes.
-
-*Persistance will be implemented in version 0.4 and charding in version 0.7.
 
 ### Demonstration Site
 A [demonstration and beta test site is available here](http://www.castorcad.com/).
@@ -549,7 +550,7 @@ runs these tests so travis usually passes all tests. In the event that a test do
 pass the top priority is to fix the test before anything else.
 
 We also do manual testing on the following web browsers: Chrome (latest), Firefox
-(latest), IE 8, 9, and 10 but enventually plan on dropping support for IE8.
+(latest), IE 9, 10, and 11.
 
 We publish to npm regularily, typically when we want to update the demonstration site or
 each time we increment the minor version. If you need more updates just let us know.
@@ -558,8 +559,7 @@ each time we increment the minor version. If you need more updates just let us k
 
 Contributions are welcome but difficult at this time because Toubkal is still in alpha,
 APIs may still change, and low-level documentation is incomplete requiring a lot of
-support on our part. We however welcome full-time contributors disiring to join
-our team.
+support on our part. We however welcome contributors disiring to join our team.
 
 ## Installation
 
@@ -686,7 +686,7 @@ var servers = rs
 var all_min_js = rs
   .set( [ // Define the minimum set of javascript files required to serve this client application
     { name: 'node-uuid/uuid.js'                  },
-    { name: 'toubkal/lib/trace_domain.js'        },
+    { name: 'toubkal/lib/lazy_logger.js'         },
     { name: 'toubkal/lib/rs.js'                  },
     { name: 'toubkal/lib/code.js'                },
     { name: 'toubkal/lib/query.js'               },
@@ -826,7 +826,8 @@ node server.js > server.out
   
 - Develop additional tests, goal is at least 600 automated tests
 
-- Implement websocket_clients() and websocket_server() pipelets as an alternative to socket_io equivalents.
+- Implement websocket_clients() and websocket_server() pipelets as a faster alternative
+  to socket_io equivalents.
 
 - Query Tree else()
   - Emits data events not routed to any other destination input
@@ -849,7 +850,7 @@ node server.js > server.out
 
 - Dropbox file sharing for photo albums (developped and tested in demo repository)
 
-- Out-of-band fetchable global 'trace' dataflow for: exceptions, errors, and debug information
+- Out-of-band fetchable global lazy log dataflow for: exceptions, errors, and debug information
 
 - Intergrate Safe Complex Query expressions into Query and Query_Tree
 
@@ -859,9 +860,9 @@ node server.js > server.out
   - Bug with routing algorythm for / route
   - Fix updates
 
-- Teaser example
-
 ##### Features already developped:
+
+- Teaser example
 
 - Authentication with Passport
   - Provider credentials from configuration
@@ -958,7 +959,7 @@ make_base_directories()   | Create base directories for a dataset of file paths
 Other Classes && methods  | Short Description
 --------------------------|------------------------------------------------
 HTTP_Router               | Efficiently route HTTP requests using base URLs
-Trace_Domain              | Dymamic traces controlled by queries using '<=' operator
+Lazy_Logger               | Logger controlled by queries using '<=' operator
 Query_Error               | Custom Error class for Queries
 Query.Evaluation_Context  | Evaluation context for complex query expressions
 Query.evaluate()          | Query class method to evaluate complex query expressions
@@ -1014,7 +1015,7 @@ value_to_attribute()      | Sets value as an attribute and add other default att
 #### Features:
 
 - Push reactive dataflow model with lazy evaluation of stateless pipelets
-- Core Database engine with order / aggregates / join / union, and much more
+- Core Database engine with order / aggregates / join / union, and more
 - Automated tests
 - Dataflows between clients and server using socket.io
 - DOM Tables w/ realtime updates

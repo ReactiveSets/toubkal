@@ -165,12 +165,11 @@ var rs_min = rs
     { path: 'test/javascript/json2.js'     },
     
     // traces
-    { path: 'lib/trace_domain.js'          },
+    { path: 'lib/lazy_logger.js'           },
     
     // rs core
     { path: 'lib/rs.js'                    },
     { path: 'lib/code.js'                  },
-    //{ path: 'lib/trace_domain.js'          },
     { path: 'lib/query.js'                 },
     { path: 'lib/transactions.js'          },
     { path: 'lib/pipelet.js'               },
@@ -220,7 +219,7 @@ http_servers.http_listen( rs_min );
 
 var toubkal_min = rs
   .union( [ rs_dependencies, rs.set( [
-    { path: 'lib/trace_domain.js'          },
+    { path: 'lib/lazy_logger.js'           },
     { path: 'lib/rs.js'                    },
     { path: 'lib/code.js'                  },
     { path: 'lib/query.js'                 },
@@ -266,7 +265,7 @@ var rs_ui_min = rs
 ;
 
 var pipelet_min = rs.set( [
-    { id: 1, path: 'lib/trace_domain.js' },
+    { id: 1, path: 'lib/lazy_logger.js'  },
     { id: 1, path: 'lib/rs.js'           },
     { id: 2, path: 'lib/code.js'         },
     { id: 3, path: 'lib/query.js'        },

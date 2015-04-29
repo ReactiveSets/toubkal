@@ -23,7 +23,7 @@
 # ---------------------
 
 require './clone_tests.js'
-require './trace_domain.js'
+require './lazy_logger.js'
 require './query.js'
 require './transactions.js'
 require './core.js'
