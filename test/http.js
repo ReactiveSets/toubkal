@@ -27,10 +27,12 @@ var rs      = require( '..' )
   , extend  = RS.extend
 ;
 
-require( '../lib/filter.js' );
-require( '../lib/server/http.js' );
-require( '../lib/server/socket_io_clients.js' );
-require( '../lib/server/file.js' );
+require( 'toubkal/lib/filter.js' );
+require( 'toubkal/lib/server/http.js' );
+require( 'toubkal/lib/server/socket_io_clients.js' );
+require( 'toubkal/lib/server/file.js' );
+
+var client_assets = require( 'toubkal/lib/client/client_assets.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
@@ -146,134 +148,38 @@ require( './passport.js' )( express, session_options, application, passport_rout
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
 */
-require( '../lib/server/uglify.js' );
-require( '../lib/order.js' );
+require( 'toubkal/lib/server/uglify.js' );
+require( 'toubkal/lib/order.js' );
 
-// RS Dependencies
-var rs_dependencies = rs
-  .set( [
-    { name: 'node-uuid/uuid.js'          },
-  ] )
-  .require_resolve()
-;
+// lib/toubkal-min.js
+var toubkal_min = client_assets.toubkal_min;
 
-// lib/rs-min.js
-var rs_min = rs
-  .union( [ rs_dependencies, rs.set( [
-    // IE compatibility
-    { path: 'test/javascript/es5.js'       },
-    { path: 'test/javascript/json2.js'     },
-    
-    // traces
-    { path: 'lib/lazy_logger.js'           },
-    
-    // rs core
-    { path: 'lib/rs.js'                    },
-    { path: 'lib/code.js'                  },
-    { path: 'lib/query.js'                 },
-    { path: 'lib/transactions.js'          },
-    { path: 'lib/pipelet.js'               },
-    { path: 'lib/filter.js'                },
-    { path: 'lib/order.js'                 },
-    { path: 'lib/aggregate.js'             },
-    { path: 'lib/join.js'                  },
-    
-    // rs utilities
-    { path: 'lib/json.js'                  },
-    { path: 'lib/uri.js'                   },
-    { path: 'lib/events.js'                },
-    { path: 'lib/transforms.js'            },
-    
-    // rs socket.io
-    { path: 'lib/socket_io_crossover.js'   },
-    { path: 'lib/socket_io_server.js'      },
-    
-    // rs client
-    { path: 'lib/selector.js'                },
-    { path: 'lib/client/animation_frames.js' },
-    { path: 'lib/client/url.js'              },
-    { path: 'lib/table.js'                   },
-    { path: 'lib/control.js'                 },
-    { path: 'lib/form.js'                    },
-    { path: 'lib/load_images.js'             },
-    
-    // bootstrap
-    { path: 'lib/bootstrap_carousel.js'    },
-    { path: 'lib/bootstrap_photo_album.js' },
-  ] ) ] )
-  
-  .auto_increment( { name: 'javascript assets' } ) // will auto-increment the id attribute starting at 1
-  
-  // Update file contents in realtime
-  .watch()
-  
-  // Maintain up-to-date file contents in order
-  .order( [ { id: 'id' } ] )
-  
-  // Update minified rs-min.js and source map in realtime  
-  .uglify( 'lib/rs-min.js', { warnings: false } )
-;
+// Listen when lib/toubkal-min.js is ready
+http_servers.http_listen( toubkal_min );
 
-// Listen when lib/rs-min.js is ready
-http_servers.http_listen( rs_min );
-
-var toubkal_min = rs
-  .union( [ rs_dependencies, rs.set( [
-    { path: 'lib/lazy_logger.js'           },
-    { path: 'lib/rs.js'                    },
-    { path: 'lib/code.js'                  },
-    { path: 'lib/query.js'                 },
-    { path: 'lib/transactions.js'          },
-    { path: 'lib/pipelet.js'               },
-    { path: 'lib/filter.js'                },
-    { path: 'lib/order.js'                 },
-    { path: 'lib/aggregate.js'             },
-    { path: 'lib/join.js'                  },
-    { path: 'lib/last.js'             }
-  ] ) ] )
-  .auto_increment( { name: 'rs core' } )
-  .watch()
-  .order( [ { id: 'id' } ] )
-  .uglify( 'lib/toubkal-min.js', { warnings: false } )
-;
-
-var rs_ui_min = rs
-  .set( [
-    { path: 'lib/selector.js'                },
-    { path: 'lib/uri.js'                     },
-    { path: 'lib/events.js'                  },
-    
-    { path: 'lib/client/animation_frames.js' },
-    { path: 'lib/load_images.js'             },
-    
-    { path: 'lib/bootstrap_photo_album.js'   },
-    { path: 'lib/bootstrap_carousel.js'      },
-    
-    { path: 'lib/client/url.js'              },
-    { path: 'lib/table.js'                   },
-    { path: 'lib/control.js'                 },
-    { path: 'lib/form.js'                    }
+var toubkal_core_min = rs.union( [
+    client_assets.npm_dependencies,
+    client_assets.core
   ] )
   
-  .auto_increment( { name: 'rs ui' } )
+  .auto_increment( { name: 'toubkal core' } )
+  .watch()
+  .order( [ { id: 'id' } ] )
+  .uglify( 'lib/toubkal-core-min.js', { warnings: false } )
+;
+
+var toubkal_ui_min = rs.union( [
+    client_assets.ui,
+    client_assets.bootstrap
+  ] )
+  
+  .auto_increment( { name: 'toubkal ui' } )
   
   .watch()
   
   .order( [ { id: 'id' } ] )
   
-  .uglify( 'lib/rs_ui-min.js', { warnings: false } )
-;
-
-var pipelet_min = rs.set( [
-    { id: 1, path: 'lib/lazy_logger.js'  },
-    { id: 1, path: 'lib/rs.js'           },
-    { id: 2, path: 'lib/code.js'         },
-    { id: 3, path: 'lib/query.js'        },
-    { id: 4, path: 'lib/transactions.js' },
-    { id: 1, path: 'lib/pipelet.js'      }
-  ] )
-  .watch()
-  .uglify( 'lib/pipelet-min.js', { warnings: false } )
+  .uglify( 'lib/toubkal_ui-min.js', { warnings: false } )
 ;
 
 var mocha_css = rs
@@ -388,17 +294,15 @@ rs.union( [ mocha_css, mocha_expect ] )
   .serve( http_servers, { routes: '/node_modules' } )
 ;
 
-pipelet_min.serve( http_servers, { routes: '/lib' } );
-
 // The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
-// rs.union( [ toubkal_min, rs_ui_min, rs_min ] )
+// rs.union( [ toubkal_core_min, toubkal_ui_min, toubkal_min ] )
 rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
   ._input
   .insert_source_union()     // adding a union as the source of rs.serve() input
-  ._add_source( toubkal_min ) // now adding sources to that union
-  ._add_source( rs_ui_min   )
-  ._add_source( rs_min      )
+  ._add_source( toubkal_core_min ) // now adding sources to that union
+  ._add_source( toubkal_ui_min )
+  ._add_source( toubkal_min )
 ;
 
 // Socket.io Server tests

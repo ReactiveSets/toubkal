@@ -54,7 +54,7 @@
   },
   
   "scripts": {
-    "postinstall": "ln -s ../. node_modules/excess || true",
+    "postinstall": "ln -s ../. node_modules/toubkal || true",
     "pretest"    : "sh test/bin/pre_test.sh",
     "posttest"   : "sh test/bin/post_test.sh",
     "test"       : "sh test/bin/tests.sh"

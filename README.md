@@ -682,43 +682,13 @@ var servers = rs
   .http_servers() // start http servers
 ;
 
-// Merge and mimify client javascript assets in realtime
-var all_min_js = rs
-  .set( [ // Define the minimum set of javascript files required to serve this client application
-    { name: 'node-uuid/uuid.js'                  },
-    { name: 'toubkal/lib/lazy_logger.js'         },
-    { name: 'toubkal/lib/rs.js'                  },
-    { name: 'toubkal/lib/code.js'                },
-    { name: 'toubkal/lib/query.js'               },
-    { name: 'toubkal/lib/transactions.js'        },
-    { name: 'toubkal/lib/pipelet.js'             },
-    { name: 'toubkal/lib/filter.js'              },
-    { name: 'toubkal/lib/join.js'                },
-    { name: 'toubkal/lib/aggregate.js'           },
-    { name: 'toubkal/lib/order.js'               },
-    { name: 'toubkal/lib/selector.js'            },
-    { name: 'toubkal/lib/table.js'               },
-    { name: 'toubkal/lib/socket_io_crossover.js' },
-    { name: 'toubkal/lib/socket_io_server.js'    }
-  ] )
-  
-  .auto_increment() // Keeps track of files load order by adding an id attribute starting at 1
-  
-  .require_resolve()            // Resolves node module names to file paths
-  
-  .union( rs.set( [             // Add other javascript assets
-    { path: 'client.js', id: 15 } // client code must be loaded after toubkal
-  ] ) )
-  
-  .watch()                      // Retrieves files content with realtime updates
-  
-  .order( [ { id: 'id' } ] )    // Order files by auto_increment order before minifying
-  
-  .uglify( 'all-min.js' )       // Minify in realtime using uglify-js and provide "all-min.map" source map
+// Get a dataflow for a minified lib/toubkal-min.js with source map and source files
+var client_assets = require( 'toubkal/lib/client/client_assets' )
+  , toubkal_min = client_assets.toubkal_min
 ;
 
-// Listen on server when all-min.js is ready (when minification is complete)
-servers.http_listen( all_min_js );
+// Listen on server when toubkal-min.js is ready (when minification is complete)
+servers.http_listen( toubkal_min );
 
 // Other static assets
 rs.set( [
@@ -728,10 +698,14 @@ rs.set( [
   
   .watch_directories()     // Retrrieves files list with realtime updates (watching html and css directories)
   
+  .union( rs.set( [
+    { path: 'client.js' }
+  ] )
+  
   .watch()                 // Retrieves file content with realtime updates
   
-  .union( [ all-min.js ] ) // Add minified assets
-
+  .union( [ toubkal_min ] ) // Add minified assets
+  
   .serve( servers )        // Deliver up-to-date compiled and mimified assets to clients
 ;
 
@@ -958,6 +932,7 @@ make_base_directories()   | Create base directories for a dataset of file paths
 
 Other Classes && methods  | Short Description
 --------------------------|------------------------------------------------
+Client assets             | Sets to ease assembly of minified files for clients
 HTTP_Router               | Efficiently route HTTP requests using base URLs
 Lazy_Logger               | Logger controlled by queries using '<=' operator
 Query_Error               | Custom Error class for Queries

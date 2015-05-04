@@ -21,29 +21,25 @@
 */
 "use strict";
 
-var RS = require( '../lib/server/http.js' ).RS
-  , rs         = RS.rs
+var rs = require( 'toubkal/lib/server/http.js' )
+  , RS         = rs.RS
   , log        = RS.log
-  , extend     = RS.extend
 ;
 
-require( '../lib/server/socket_io_clients.js' );
-require( '../lib/server/file.js' );
+require( 'toubkal/lib/server/socket_io_clients.js' );
+require( 'toubkal/lib/server/file.js' );
+require( 'toubkal/lib/thumbnails.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
 */
-var de = true;
-  
-function ug( m ) {
-  log( "rs images processing tests, " + m );
-} // ug()
-  
+var de = true, ug = log.bind( null, 'images_processing.js tests' );
+
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
 var servers = rs.set( [
-    { id: 1, ip_address: '0.0.0.0', port: 8012 },
+    { id: 1, ip_address: '0.0.0.0', port: 8012 }
     // { port: 8043, key: '', cert: '' }, // https server usimg key and cert
   ] )
   .http_servers()
@@ -52,53 +48,11 @@ var servers = rs.set( [
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
 */
-require( '../lib/server/uglify.js' );
-require( '../lib/order.js' );
-require( '../lib/thumbnails.js' );
-
-var rs_min = rs
-  // Define JavaScript Assets to minify
-  .set( [
-    // IE8- compatibility
-    { name: 'test/javascript/es5.js'       },
-    { name: 'test/javascript/json2.js'     },
-    
-    // Third-party client libraries
-    { name: 'test/javascript/uuid.js'      },
-    
-    // traces
-    { name: 'lib/lazy_logger.js'           },
-    
-    // rs core
-    { name: 'lib/rs.js'                    },
-    { name: 'lib/code.js'                  },
-    { name: 'lib/pipelet.js'               },
-    { name: 'lib/filter.js'                },
-    { name: 'lib/order.js'                 },
-    { name: 'lib/events.js'                },
-    
-    // rs socket.io
-    { name: 'lib/socket_io_crossover.js'   },
-    { name: 'lib/socket_io_server.js'      },
-    
-    // rs client
-    { name: 'lib/uri.js'                   },
-    { name: 'lib/selector.js'              },
-    { name: 'lib/load_images.js'           },
-    { name: 'lib/bootstrap_carousel.js'    },
-    { name: 'lib/bootstrap_photo_album.js' }
-  ], { name: 'javascript assets' } )
-  .auto_increment() // will auto-increment the id attribute starting at 1
-  
-  // Update file contents in realtime
-  .watch()
-  
-  // Maintain up-to-date file contents in order
-  .order( [ { id: 'id' } ] )
-  
-  // Update minified rs-min.js and source map in realtime  
-  .uglify( 'lib/rs-min.js', { warnings: false } )
+var assets = require( 'toubkal/lib/client/client_assets.js' )
+  , toubkal_min = assets.toubkal_min
 ;
+
+servers.http_listen( toubkal_min );
 
 var images = rs
   .set( [
@@ -126,7 +80,7 @@ rs.set( [
   ] )
   .union( [ images, thumbnails ] )
   .watch( { base_directory: __dirname + '/..' } )
-  .union( [ rs_min ] )
+  .union( [ toubkal_min ] )
   .serve( servers, { hostname: [ 'localhost', '127.0.0.1' ] } )
 ;
 

@@ -1,7 +1,7 @@
 /*  server.js
 
-    Copyright (C) 2013, 2014, Reactive Sets
-
+    Copyright (C) 2013-2015, Reactive Sets
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
     published by the Free Software Foundation, either version 3 of the
@@ -18,17 +18,14 @@
 
 "use strict";
 
-var rs      = require( '../../' )
-  , RS      = rs.RS
-  , extend  = RS.extend
-;
+var rs = require( 'toubkal' );
 
-require( '../../lib/filter.js' );
-require( '../../lib/server/http.js' );
-require( '../../lib/server/socket_io_clients.js' );
-require( '../../lib/server/file.js' );
-require( '../../lib/server/uglify.js' );
-require( '../../lib/order.js' );
+require( 'toubkal/lib/filter.js' );
+require( 'toubkal/lib/server/http.js' );
+require( 'toubkal/lib/server/socket_io_clients.js' );
+require( 'toubkal/lib/server/file.js' );
+require( 'toubkal/lib/server/uglify.js' );
+require( 'toubkal/lib/order.js' );
 
 var servers = rs
   .set( [ // Define http servers
@@ -38,30 +35,18 @@ var servers = rs
   .http_servers() // start http servers
 ;
 
-var rs_dependencies = rs
-  .set( [ { name: 'node-uuid/uuid.js' } ] )
-  
-  .require_resolve()
-;
+var assets = require( 'toubkal/lib/client/client_assets' );
 
-// Merge and mimify client javascript assets in realtime
-var all_min_js = rs.union( [ rs_dependencies, rs
-  .set( [ // Define the minimum set of javascript files required to serve this client application
-    { path: '../../lib/rs.js'                  },
-    { path: '../../lib/code.js'                },
-    { path: '../../lib/query.js'               },
-    { path: '../../lib/transactions.js'        },
-    { path: '../../lib/pipelet.js'             },
-    { path: '../../lib/filter.js'              },
-    { path: '../../lib/join.js'                },
-    { path: '../../lib/aggregate.js'           },
-    { path: '../../lib/order.js'               },
-    { path: '../../lib/selector.js'            },
-    { path: '../../lib/table.js'               },
-    { path: '../../lib/socket_io_crossover.js' },
-    { path: '../../lib/socket_io_server.js'    },
-    { path: 'client.js'                        }
-  ] ) ] )
+// Merge and mimify all client javascript assets in realtime
+var all_min_js = rs
+  .union( [
+    assets.npm_dependencies,
+    assets.core,
+    assets.socket_io,
+    assets.ui,
+    
+    rs.set( [ { path: 'client.js' } ] )
+  ] )
   
   .auto_increment() // Keeps track of files load order by adding an id attribute starting at 1
   
