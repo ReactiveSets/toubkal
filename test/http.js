@@ -202,7 +202,10 @@ var mocha_expect = rs.set( [
 
 // HTML test pages
 var html_tests = rs  
-  .set( [ { path: 'test' } ] )
+  .set( [
+    { path: 'test' },
+    { path: 'test/manual' }
+   ] )
   
   .watch_directories()
   
