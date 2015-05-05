@@ -1,7 +1,7 @@
 {
   "name": "toubkal",
   
-  "version": "0.2.7",
+  "version": "0.2.8",
   
   "description": "High-Performances Reactive Web Application Framework",
   
@@ -62,13 +62,12 @@
   
   "repository": {
     "type": "git",
-    "url":  "git://github.com/ConnectedSets/ConnectedSets.git"
+    "url":  "git://github.com/ReactiveSets/toubkal.git"
   },
   
   "keywords": [
     "reactive",
-    "dataflow",
-    "database"
+    "dataflow"
   ],
   
   "author": "Reactive Sets",
