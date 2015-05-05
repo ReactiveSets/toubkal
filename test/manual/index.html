@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" href="/node_modules/mocha/mocha.css" />
+    
+    <title>All Toubkal Automated Tests</title>
+    
+    <script src="/lib/toubkal-min.js"></script>
+    
+    <script src="/test/javascript/mocha_expect-min.js"></script>
+    
+    <script src="/test/lib/tests_utils.js"  ></script>
+    <script src="/test/lib/clone_tests.js"  ></script>
+    <script src="/test/lib/lazy_logger.js"  ></script>
+    <script src="/test/lib/query.js"        ></script>
+    <script src="/test/lib/event_emitter.js"></script>
+    <script src="/test/lib/transactions.js" ></script>
+    <script src="/test/lib/core.js"         ></script>
+    <script src="/test/lib/json.js"         ></script>
+    <script src="/test/lib/transforms.js"   ></script>
+    
+    <script>
+      window.onload = function() {
+        mocha.run()
+      };
+    </script>
+  </head>
+  
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>

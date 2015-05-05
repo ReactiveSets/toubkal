@@ -22,38 +22,19 @@
 # rs test utils
 # -------------
 
-utils = require( './tests_utils.js' ) if require?
-expect = this.expect || utils.expect
-clone  = this.clone  || utils.clone
-check  = this.check  || utils.check
-log    = this.log    || utils.log
-rs     = this.rs     || utils.rs
-
+utils   = require( './tests_utils.js' ) if require?
+expect  = this.expect || utils.expect
+clone   = this.clone  || utils.clone
+rs      = this.rs     || utils.rs
 RS      = rs.RS
-extend  = RS.extend
 uuid_v4 = RS.uuid_v4
+slice   = Array.prototype.slice
 
-slice = Array.prototype.slice
-
-# ----------------------------------------------------------------------------------------------
-# Check sorted pipelet content
-# ----------------------------
-
-check_set_content = ( done, source, values ) ->
-  source._fetch_all ( _values ) ->
-    check done, () ->
-      expect( _values.sort ( a, b ) -> a.id - b.id ).to.be.eql values
-  
 # ----------------------------------------------------------------------------------------------
 # Require tested modules
 # ----------------------
 
-if require?
-  require '../../lib/transactions.js'
-
-Pipelet = RS.Pipelet
-Greedy  = RS.Greedy
-Set     = RS.Set
+require '../../lib/transactions.js' if require?
 
 # ----------------------------------------------------------------------------------------------
 # Some constants
@@ -92,50 +73,6 @@ describe 'Transactions test suite:', ->
       expect( v4_9 ).to.match( valid_uuid_v4 )
   
   # RS.uuid_v4()
-  
-  describe 'RS.Event_Emitter(): ', ->
-    emitter = new RS.Event_Emitter()
-    data = null
-    complete = null
-    
-    it 'should be an Event_Emitter', ->
-      expect( emitter ).to.be.a RS.Event_Emitter
-    
-    it 'should allow to emit a "data" event with no exception', ->
-      expect( emitter.emit( 'data', {} ) ).to.be emitter
-    
-    it 'should allow to set a "data" event listener', ->
-      emitter.on "data", () -> data = slice.call( arguments, 0 )
-      
-      expect( Object.keys emitter._events ).to.be.eql [ "data" ]
-      expect( emitter._events.data.length ).to.be 1
-    
-    it 'should allow to emit a "data" event that sends values to the listener', ->
-      expect( emitter.emit( 'data', { a: 1 } ) ).to.be emitter
-      expect( data ).to.be.eql [ { a: 1 } ]
-    
-    it 'should allow to set a "complete" listener once', ->
-      emitter.once "complete", () -> complete = slice.call( arguments, 0 )
-      
-      expect( Object.keys emitter._events ).to.be.eql [ "data", "complete" ]
-      expect( emitter._events.complete.length ).to.be 1
-    
-    it 'should allow to emit the "complete" event', ->
-      expect( emitter._emit_event( "complete", [ { _t: { more: false } } ] ) ).to.be emitter
-      expect( data ).to.be.eql [ { a: 1 } ]
-      expect( complete ).to.be.eql [ { _t: { more: false } } ]
-    
-    it 'should then remove the listener on the "complete" event', ->
-      expect( Object.keys emitter._events ).to.be.eql [ "data", "complete" ]
-      expect( emitter._events.complete.length ).to.be 0
-      expect( emitter._events.data.length ).to.be 1
-    
-    it 'should then allow to emit the "complete" event with calling the complete listener', ->
-      expect( emitter._emit_event( "complete", [ { id: 1 } ] ) ).to.be emitter
-      expect( data ).to.be.eql [ { a: 1 } ]
-      expect( complete ).to.be.eql [ { _t: { more: false } } ]
-    
-  # RS.Event_Emitter()
   
   describe 'RS.Options.forward():', ->
     options_forward = RS.Options.forward

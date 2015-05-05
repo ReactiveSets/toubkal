@@ -27,7 +27,7 @@ utils = require( './tests_utils.js' ) if require?
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
-log    = console.log
+log    = this.log    || utils.log
 
 # ----------------------------------------------------------------------------------------------
 # Require tested modules

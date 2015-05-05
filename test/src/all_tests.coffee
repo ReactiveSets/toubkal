@@ -25,6 +25,7 @@
 require './clone_tests.js'
 require './lazy_logger.js'
 require './query.js'
+require './event_emitter.js'
 require './transactions.js'
 require './core.js'
 require './json.js'
@@ -33,9 +34,8 @@ require './file.js'
 
 try
   require.resolve 'zombie'
-  require './ui.js'       
+  require './ui.js'
 
 fs = require 'fs'
 
 require './passport.js' if fs.existsSync '~/config.rs.json'
-
