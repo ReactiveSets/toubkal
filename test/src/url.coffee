@@ -50,5 +50,5 @@ describe 'URL Test', ->
         host    : 'localhost:8080'
         hostname: 'localhost'
         port    : '8080'
-        pathname: '/test/rs_url.html'
+        pathname: '/test/automated/rs_url.html'
       } ]
