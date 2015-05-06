@@ -28,12 +28,12 @@ Example: test if RS is a function
 
 First we have to import the Chai library and enabling the BDD syntax
 
-RS   = require '../lib/rs.js' if require?
+RS   = require '/lib/toubkal-min.js' if require?
 chai = require 'chai' if require?
 chai?.should()
 
 describe 'RS test suite:', ->
-  it 'xDs should be a function', ->
+  it 'RS should be a function', ->
     RS.should.be.a 'function'
 
 To run this test, open a command prompt and cd to the project folder, then run this command:

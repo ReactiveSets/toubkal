@@ -35,7 +35,7 @@ check   = this.check  || utils.check
 
 describe 'Form() Test Suite', ->
   before ( done ) ->
-    browser.visit 'http://localhost:8080/test/rs_form.html', done
+    browser.visit 'http://localhost:8080/test/automated/rs_form.html', done
   
   it 'body element should have a "form" element', ->
     expect( browser.queryAll( 'form' ).length ).to.be 1

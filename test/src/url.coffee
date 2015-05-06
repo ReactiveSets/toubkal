@@ -37,14 +37,14 @@ that    = this
 
 describe 'URL Test', ->
   before ( done ) ->
-    browser.visit 'http://localhost:8080/test/rs_url.html', done
+    browser.visit 'http://localhost:8080/test/automated/rs_url.html', done
   
   it 'url_with_no_options() should contain atributes : href, slashes, protocole, host, hostname, port and pathname', ( done ) ->
     url = browser.window.url_with_no_options
     
     url._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [ {
-        href    : 'http://localhost:8080/test/rs_url.html'
+        href    : 'http://localhost:8080/test/automated/rs_url.html'
         slashes : true
         protocol: 'http:'
         host    : 'localhost:8080'

@@ -3,11 +3,11 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <link rel="stylesheet" media="all" type="text/css" href="css/table.css" />
+    <link rel="stylesheet" media="all" type="text/css" href="/test/css/table.css" />
     
     <title>Table Controls Tests</title>
     
-    <script src="../lib/toubkal-min.js"></script>
+    <script src="/lib/toubkal-min.js"></script>
   </head>
   
   <body>
@@ -35,6 +35,7 @@
     
     <script type="text/javascript" charset="utf-8">
       var rs = RS.rs
+        , Compose = RS.Pipelet.Compose
         , organizer = rs.set( [ { id: 'label' } ], { name: 'by label' } )
       ;
             
@@ -100,7 +101,7 @@
       ;
       
       // The following unobvious composition of two orders with a checkbox_group could be part of control.js
-      RS.Compose( 'ordered_checkbox_group', function( source, order, element, options ) {
+      Compose( 'ordered_checkbox_group', function( source, order, element, options ) {
         return source.order( order ).checkbox_group( element ).order( order );
       } );
       
