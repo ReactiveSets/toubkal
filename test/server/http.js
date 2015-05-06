@@ -21,7 +21,7 @@
 */
 "use strict";
 
-var rs      = require( '..' )
+var rs      = require( 'toubkal' )
   , RS      = rs.RS
   , log     = RS.log
   , extend  = RS.extend
@@ -42,7 +42,6 @@ var de = true;
 function ug( m ) {
   log( "rs tests http, " + m );
 } // ug()
-
  
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
@@ -204,14 +203,18 @@ var mocha_expect = rs.set( [
 var html_tests = rs  
   .set( [
     { path: 'test' },
-    { path: 'test/manual' }
+    { path: 'test/manual' },
+    { path: 'test/automated' }
    ] )
   
   .watch_directories()
   
   .trace( 'watch_directory test' )
   
-  .filter( [ { type: 'file', extension: 'html' } ] )
+  .filter( [
+    { type: 'file', extension: 'html' },
+    { type: 'file', extension: 'js'   }
+  ] )
 ;
 
 // JavaScript test files
@@ -235,7 +238,7 @@ var css_tests = rs
 var tests = rs
   .union( [ html_tests, javascript_files, css_tests ] )
   
-  .watch( { base_directory: __dirname + '/..' } )
+  .watch( { base_directory: __dirname + '/../..' } )
 ;
 
 
@@ -248,9 +251,8 @@ var coffee_files = rs
 ;
 
 var coffee_source = coffee_files
-  .watch( { base_directory: __dirname + '/..' } )
+  .watch( { base_directory: __dirname + '/../..' } )
 ;
-
 
 var test_lib = rs
   .set( [ { path: 'test/lib' } ] )
@@ -261,7 +263,7 @@ var test_lib = rs
 var compiled_coffee = test_lib
   .filter( [ { type: 'file', extension: 'js' } ] )
   
-  .watch( { base_directory: __dirname + '/..' } )
+  .watch( { base_directory: __dirname + '/../..' } )
   
   .alter( function( v ) {
     // Fix Coffee-script sourceMappingURL
@@ -274,14 +276,14 @@ var compiled_coffee = test_lib
 var source_maps = test_lib
   .filter( [ { type: 'file', extension: 'map' } ] )
   
-  .watch( { base_directory: __dirname + '/..' } )
+  .watch( { base_directory: __dirname + '/../..' } )
   
   .alter( function( v ) {
     // Fix Coffee-script source map
     v.content = v.content
       .replace( /"sourceRoot": ".."/, '"sourceRoot": ""' )
-      .replace( /test\\\\/, '' )
-      .replace( /test[\/]/, '' )
+    //  .replace( /test\\\\/, '' )
+    //  .replace( /test[\/]/, '' )
     ;
   } )
 ;

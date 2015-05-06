@@ -1,6 +1,6 @@
 // passport.js
 
-var rs  = require( '..'  )
+var rs  = require( 'toubkal' )
   
   , logger        = require(     'morgan'      )
   , cookie_parser = require(  'cookie-parser'  )
@@ -9,7 +9,7 @@ var rs  = require( '..'  )
   
 ;
 
-require( '../lib/server/passport.js' );
+require( 'toubkal/lib/server/passport.js' );
 
 var RS  = rs.RS
   , log = RS.log
