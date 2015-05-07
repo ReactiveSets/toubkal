@@ -60,7 +60,5 @@ rs = this.rs = this.rs || require( '../../lib/pipelet.js' )
 RS = rs.RS
 log = RS.log
 
-log.newline_before = true;
-
 this.log = ( message ) ->
   log( 'rs tests, ' + message )
