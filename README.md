@@ -1,4 +1,6 @@
 # Toubkal
+
+[![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 **High-Performances Reactive Web Application Framework**
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal) *569 tests*
