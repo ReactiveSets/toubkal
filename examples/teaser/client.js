@@ -39,7 +39,7 @@
   
   rs.socket_io_server()                      // exchange dataflows with server using socket.io
     
-    .flow( 'sales' )                         // Select sales dataflow
+    .flow( 'teaser/sales' )                  // Select sales dataflow
     
     .filter( [ { year: 2014 } ] )            // Only pull sales for the year 2014
     
