@@ -55,7 +55,7 @@ rs.set( [
     { path: 'client.js'  }
   ] )
   
-  .watch()                 // Retrieves file content with realtime updates
+  .watch( { base_directory: __dirname } ) // Retrieves file content with realtime updates
   
   .union( [ toubkal_min ] )
   
@@ -66,7 +66,7 @@ rs.set( [
 var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
 
 var sales = rs
-  .configuration( { filepath: 'sales.json', flow: 'sales' } ) // The sales dataflow 
+  .configuration( { filepath: 'sales.json', flow: 'sales', base_directory: __dirname } ) // The sales dataflow 
   
   .alter( function( sale ) {
     sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
