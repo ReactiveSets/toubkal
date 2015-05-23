@@ -74,7 +74,6 @@ module.exports = function( servers ) {
     }, { no_clone: true } )
     
     .trace( 'database tables' )
-    .set( [] ) //, { key: [ 'path' ] } )
   ;
   
   var database = rs.dispatch( tables, function( source, options ) {
