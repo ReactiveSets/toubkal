@@ -60,31 +60,35 @@ module.exports = function( servers ) {
   */
   var tables = entries
     .filter( [ { extension: 'json' } ] )
+    
+    .alter( function( table ) {
+      var path = table.path
+        , flow = path.split( '.' )
+      ;
+      
+      flow.pop(); // remove 'json' extension
+      
+      flow = flow.join( '.' ); // e.g. datasets/sales
+      
+      return { flow: 'flow', 'name': flow, 'path': path };
+    }, { no_clone: true } )
+    
     .trace( 'database tables' )
     .set( [] ) //, { key: [ 'path' ] } )
   ;
   
   var database = rs.dispatch( tables, function( source, options ) {
-    var path = this.path
-      , flow = path.split( '.' ) 
-    ;
-    
-    flow.pop(); // remove 'json' extension
-    
-    flow = flow.join( '.' ); // e.g. datasets/sales
-    
-    var configuration = { 'filepath': path, 'flow': flow, 'base_directory': __dirname  };
-    
-    de&&ug( 'database table', configuration );
+    var flow = this.name;
     
     return source
       .filter( [ { 'flow': flow } ] )
-      .configuration( configuration )
+      .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
     ;
   } );
   
   // Serve database to socket.io clients
-  database
+  rs.union( [ database, tables ] )
+  
     .dispatch( servers.socket_io_clients(), function( source, options ) {
       return this.socket._add_source( source );
     } )

@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic|Oswald&subset=latin,latin-ext"/>
     <link href="css/base.css"  type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
     
-    <script src="lib/toubkal-min.js"></script>
+    <script src="/lib/toubkal-min.js"></script>
     
     <script src="/socket.io/socket.io.js"></script>
     
@@ -44,6 +44,12 @@
             return React.createElement( 'li', { key: path }, link );
           }
         }, { component_name: 'examples menu' } )
+      ;
+      
+      rs.socket_io_server()
+        .filter( [ { 'flow': 'flow' } ] )
+        .trace( 'flow' )
+        .greedy()
       ;
     </script>
   </body>
