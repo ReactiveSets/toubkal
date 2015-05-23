@@ -46,6 +46,7 @@ module.exports = function( servers ) {
       { extension: 'html' },
       { extension: 'css'  },
       { extension: 'js'   },
+      { extension: 'json' }
     ] )
     .watch( { base_directory: __dirname } )
     .union( [ toubkal_min ] )
@@ -78,7 +79,7 @@ module.exports = function( servers ) {
     
     return source
       .filter( [ { 'flow': flow } ] )
-      .configuration( { 'filepath': path, 'flow': flow, 'base_directory': __dirname  } )
+      .configuration( configuration )
     ;
   } );
   
