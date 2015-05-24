@@ -13,10 +13,30 @@
   </head>
   
   <body>
-    <h3>Sales ordered by date, updated in realtime with any sales' database update</h3>
+    <h2>
+      Sales ordered by date, updated in realtime
+    </h2>
+    
+    <p>
+      Displaying a reactive table which DOM container id is sales_table,
+      ordered by date, for the years 2013 and 2014, from a source sales dataflow
+      coming from a socket.io server, pulling the minimum amount of data from the
+      server and updating the table as soon as some data is available from the
+      server (complete working code including http server available in examples/teaser)
+    </p>
     
     <div id="sales_table"></div>
     
     <script src="client.js"></script>
+    
+    <p>
+      See the code bellow, then play with it and see results live on Codepen:
+    </p>
+    
+    <p data-height="400" data-theme-id="0" data-slug-hash="LVbPJB" data-default-tab="js" data-user="uiteoi" class='codepen'>
+      See the Pen <a href='http://codepen.io/uiteoi/pen/LVbPJB/'>LVbPJB</a> by Jean Vincent
+      (<a href='http://codepen.io/uiteoi'>@uiteoi</a>) on <a href='http://codepen.io'>CodePen</a>.
+    </p>
+    <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
   </body>
 </html>
