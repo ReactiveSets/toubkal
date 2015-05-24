@@ -25,28 +25,34 @@
 ;!function() {
   "use strict";
   
-  var rs = RS.rs
-    
-    // Define table displayed columns
-    , columns = [
-        { id: 'date'    , label: 'Date'     }, // First column
-        { id: 'item'    , label: 'Item'     }, // Second column
-        { id: 'quantity', label: 'Quantity' }  // Third column
-      ]
-      
-    , $ = RS.$ // from selector.js
-  ;
+  // Define columns to display in table
+  var columns = [
+    { id: 'date'    , label: 'Date'     }, // First column
+    { id: 'item'    , label: 'Item'     }, // Second column
+    { id: 'quantity', label: 'Quantity' }  // Third column
+  ];
   
-  rs.socket_io_server()                      // exchange dataflows with server using socket.io
+  // Use the global object rs, to start a dataflow
+  rs
+    // Connect to socket.io server to exchange dataflows
+    .socket_io_server()
     
-    .flow( 'teaser/sales' )                  // Select sales dataflow
+    // Pull teaser/sales dataflow
+    .flow( 'teaser/sales' )
     
-    .filter( [ { year: 2014 } ] )            // Only pull sales for the year 2014
+    // Limit pulled sales to some years
+    .filter( [
+      { year: 2014 },
+      { year: 2013 }
+    ] )
     
-    .order ( [ { id: 'date'   } ] )          // Order by date
+    // Order sales by date
+    .order ( [ { id: 'date'   } ] )
     
-    .trace( 'ordered sales' )                // Display pulled sales in console.log
+    // Log sales to console.log()
+    .trace( 'ordered sales' )
     
-    .table( $( '#sales_table' ), columns )   // Display table
+    // Display table in #sales_table div
+    .table( RS.$( '#sales_table' ), columns )
   ;
 }();
