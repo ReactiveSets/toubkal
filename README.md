@@ -13,7 +13,7 @@
 *Liberating your Creativity, while fighting Climate Change*
 
 ## Teaser
-Displaying a reactive ```\<table\>``` which DOM container is ```#sales_table```, ordered by date,
+Displaying a reactive ```<table>``` which DOM container is ```#sales_table```, ordered by date,
 for the years 2013 & 2014, from a source ```sales``` dataflow coming from a ```socket.io``` server,
 pulling the minimum amount of data from the server and updating the table as soon as some
 data is available from the server
