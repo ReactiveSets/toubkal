@@ -13,19 +13,21 @@
 *Liberating your Creativity, while fighting Climate Change*
 
 ## Teaser
-Displaying a reactive \<table\> which DOM container id is ```sales_table```, ordered by date,
-for the year 2014, from a source ```sales``` dataflow coming from a ```socket.io``` server,
+Displaying a reactive ```\<table\>``` which DOM container is ```#sales_table```, ordered by date,
+for the years 2013 & 2014, from a source ```sales``` dataflow coming from a ```socket.io``` server,
 pulling the minimum amount of data from the server and updating the table as soon as some
 data is available from the server
-(for witch the complete working code including http server is available at
+(complete working code including http server is available at
 [examples/teaser](https://github.com/ReactiveSets/toubkal/tree/master/examples/teaser)):
+
+See it live at [Toubkal Teaser](http://toubkal.rocks/teaser/index.html)
 
 #### client.js
 
 ```javascript
 rs.socket_io_server()
   .flow  ( 'sales' )
-  .filter( [ { year: 2014 } ] )
+  .filter( [ { year: 2013 }, { year: 2014 } ] )
   .order ( [ { id: 'date' } ] )
   .table ( $( '#sales_table' ), sales_columns )
 ;
@@ -39,7 +41,7 @@ rs.socket_io_server()
 
 ```flow( 'sales' )``` declares that the ```sales``` dataflow is needed from the server.
 
-```[ { year: 2014 } ]``` is a filter *query*, it controls how much sales data will be
+```[ { year: 2013 }, { year: 2014 } ]``` is a filter *query*, it controls how much sales data will be
 pulled from the server therefore reducing both bandwidth usage and latency.
 
 Latency is further reduced by displaying the table as soon as the first sales come
@@ -51,7 +53,7 @@ minimum amount of data from the server.
 ```[ { id: 'date' } ]``` is an *organizer*, it can also be a dataflow dynamically
 updated by DOM controls, or any other application source.
 
-The ```sales_columns``` dataflow controls table's columns. When it is updated, columns
+The ```sales_columns``` dataflow controls table's columns. When updated, columns
 are reactively added or removed in realtime without any addtitional programing required.
 ```sales_columns``` can be defined in the client or also come from the socket.io server
 using the following declarative code:
@@ -77,9 +79,9 @@ the problem in plain english replacing thousands of lines of complex and error-p
 Toubkal programs have no *loops*, and no *ifs*, dramatically reducing the
 likelyhood of bugs and hence improving productivity by orders of magnitude. Under the
 hood, Toubkal provides all the optimized and comprehensively tested *loops* and
-*ifs* you will ever need.
+*ifs* you need.
 
-These same Occam's razor declarative techniques can be applied on the server side
+These same declarative techniques are applied on the server side
 delivering a full stack scallable and secure framework with highest performances
 featuring reactive database and fine-grained authorization model.
 
