@@ -22,10 +22,9 @@
 
 # include modules
 # ---------------
-expect = if require? then ( require 'expect.js' ) else this.expect
-RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
-
-rs = RS.rs
+expect = this.expect || require 'expect.js'
+rs = this.rs || require '../../lib/core/pipelet.js'
+RS = rs.RS
 
 columns = rs.set( [
   { id: "id"    , label: "ID"     }

@@ -48,12 +48,12 @@ check_set_content = ( done, source, values ) ->
 # ----------------------
 
 if require?
-  require '../../lib/code.js'
-  require '../../lib/filter.js'
-  require '../../lib/order.js'
-  require '../../lib/aggregate.js'
-  require '../../lib/join.js'
-  require '../../lib/json.js'
+  require '../../lib/util/code.js'
+  require '../../lib/core/filter.js'
+  require '../../lib/core/order.js'
+  require '../../lib/core/aggregate.js'
+  require '../../lib/core/join.js'
+  require '../../lib/core/json.js'
 
 Pipelet = RS.Pipelet
 Greedy  = RS.Greedy

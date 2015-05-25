@@ -1,4 +1,8 @@
 #!node
 "use strict";
 
-require( '../lib/server/configuration.js' ).RS.rs.configuration();
+var rs = require( '../../lib/core/filter.js' );
+
+require( '../../lib/server/file.js' );
+
+rs.configuration();

@@ -37,7 +37,7 @@ check = ( done, test ) ->
 # Require tested modules
 # ----------------------------------------------------------------------------------------------
 
-rs     = ( require '../../lib/pipelet.js' ).RS.rs
+rs     = require '../../lib/core/pipelet.js'
 expect = require 'expect.js'
 
 require '../../lib/server/sketchfab.js'

@@ -21,18 +21,17 @@
 */
 "use strict";
 
-var rs      = require( 'toubkal' )
+var rs      = require( 'toubkal/lib/core/filter.js' )
   , RS      = rs.RS
   , log     = RS.log
   , extend  = RS.extend
 ;
 
-require( 'toubkal/lib/filter.js' );
-require( 'toubkal/lib/server/http.js' );
-require( 'toubkal/lib/server/socket_io_clients.js' );
 require( 'toubkal/lib/server/file.js' );
+require( 'toubkal/lib/server/http.js' );
+require( 'toubkal/lib/socket_io/socket_io_clients.js' );
 
-var client_assets = require( 'toubkal/lib/client/client_assets.js' );
+var client_assets = require( 'toubkal/lib/server/client_assets.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
@@ -148,10 +147,10 @@ require( './passport.js' )( express, session_options, application, passport_rout
    Load and Serve Assets
 */
 require( 'toubkal/lib/server/uglify.js' );
-require( 'toubkal/lib/order.js' );
+require( 'toubkal/lib/core/order.js' );
 
 // lib/toubkal-min.js
-var toubkal_min = client_assets.toubkal_min;
+var toubkal_min = client_assets.toubkal_min();
 
 // Listen when lib/toubkal-min.js is ready
 http_servers.http_listen( toubkal_min );

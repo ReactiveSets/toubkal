@@ -32,15 +32,14 @@ check = ( done, test ) ->
   catch e
     done e
 
-
 # include modules
-RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
-expect = if require? then ( require 'expect.js' ) else this.expect
+rs = this.rs || require '../../lib/core/pipelet.js'
+RS = rs.RS
+
+expect = this.expect || require 'expect.js'
 
 if require?
-  require '../../lib/load_images.js'
-
-rs = RS.rs
+  require '../../lib/client/load_images.js'
 
 describe 'Load Images test suite:', ->
   images_source = rs

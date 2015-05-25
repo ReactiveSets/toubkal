@@ -1,15 +1,14 @@
 // watch.js
 
-var rs      = require( '../lib/pipelet.js' )
+var rs      = require( '../../lib/core/filter.js' )
   , RS      = rs.RS
   , log     = RS.log
   , extend  = RS.extend
 ;
 
-require( '../lib/filter.js' );
-require( '../lib/server/http.js' );
-require( '../lib/server/socket_io_clients.js' );
-require( '../lib/server/file.js' );
+require( '../../lib/server/file.js' );
+require( '../../lib/server/http.js' );
+require( '../../lib/socket_io/socket_io_clients.js' );
 
 var entries = rs
   .set( [

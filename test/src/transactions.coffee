@@ -34,7 +34,7 @@ slice   = Array.prototype.slice
 # Require tested modules
 # ----------------------
 
-require '../../lib/transactions.js' if require?
+require '../../lib/core/transactions.js' if require?
 
 # ----------------------------------------------------------------------------------------------
 # Some constants

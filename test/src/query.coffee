@@ -32,6 +32,8 @@ rs     = this.rs     || utils.rs
 RS      = rs.RS
 extend  = RS.extend
 uuid_v4 = RS.uuid_v4
+Pipelet = RS.Pipelet
+Set     = RS.Set
 
 slice = Array.prototype.slice
 
@@ -44,16 +46,6 @@ check_set_content = ( done, source, values ) ->
     check done, () ->
       expect( _values.sort ( a, b ) -> a.id - b.id ).to.be.eql values
   
-# ----------------------------------------------------------------------------------------------
-# Require tested modules
-# ----------------------
-
-if require?
-  require '../../lib/code.js'
-
-Pipelet = RS.Pipelet
-Set     = RS.Set
-
 # ----------------------------------------------------------------------------------------------
 # Some constants
 # --------------

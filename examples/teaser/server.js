@@ -27,12 +27,11 @@
 
 var rs = require( 'toubkal' );
 
-require( 'toubkal/lib/filter.js' );
-require( 'toubkal/lib/server/http.js' );
-require( 'toubkal/lib/server/socket_io_clients.js' );
+require( 'toubkal/lib/core/order.js' );
 require( 'toubkal/lib/server/file.js' );
 require( 'toubkal/lib/server/uglify.js' );
-require( 'toubkal/lib/order.js' );
+require( 'toubkal/lib/server/http.js' );
+require( 'toubkal/lib/socket_io/socket_io_clients.js' );
 
 var servers = rs
   .set( [ // Define http servers
@@ -43,7 +42,7 @@ var servers = rs
 ;
 
 // Merge and mimify all toubkal client javascript assets in realtime
-var toubkal_min = require( 'toubkal/lib/client/client_assets' ).toubkal_min;
+var toubkal_min = require( 'toubkal/lib/server/client_assets' ).toubkal_min();
 
 // Listen when toubkal-min.js is ready
 servers.http_listen( toubkal_min );

@@ -33,7 +33,7 @@ log    = this.log    || utils.log
 # Require tested modules
 # ----------------------
 
-Lazy_Logger = this.Lazy_Logger || require '../../lib/lazy_logger.js'
+Lazy_Logger = this.Lazy_Logger || require '../../lib/util/lazy_logger.js'
 
 # ----------------------------------------------------------------------------------------------
 # Lazy Logger test suite

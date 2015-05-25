@@ -32,7 +32,7 @@ slice  = Array.prototype.slice
 # Require tested modules
 # ----------------------
 
-require '../../lib/event_emitter.js' if require?
+require '../../lib/util/event_emitter.js' if require?
 
 # ----------------------------------------------------------------------------------------------
 # Transactions test suite

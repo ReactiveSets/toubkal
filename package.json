@@ -1,11 +1,11 @@
 {
   "name": "toubkal",
   
-  "version": "0.2.10",
+  "version": "0.2.11",
   
   "description": "High-Performances Reactive Web Application Framework",
   
-  "main": "lib/pipelet.js",
+  "main": "lib/core/filter.js",
   
   "files": [
     "lib",

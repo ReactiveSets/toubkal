@@ -58,18 +58,17 @@ from_HTML_to_object = ( node ) ->
 # ------------------------
 
 # include modules
-RS = if require? then ( require '../../lib/rs.js' ).RS else this.RS
-expect = if require? then ( require 'expect.js' ) else this.expect
+rs = this.rs || require '../../lib/core/pipelet.js'
+RS = rs.RS
+
+expect = this.expect || require 'expect.js'
 
 if require?
-  require '../../lib/code.js'
-  require '../../lib/pipelet.js'
-  require '../../lib/filter.js'
-  require '../../lib/order.js'
-  require '../../lib/aggregate.js'
-  require '../../lib/table.js'
-
-rs = RS.rs
+  require '../../lib/util/code.js'
+  require '../../lib/core/filter.js'
+  require '../../lib/core/order.js'
+  require '../../lib/core/aggregate.js'
+  require '../../lib/client/table.js'
 
 columns   = rs.set( [ { id: "id", label: "ID" }, { id: "title", label: "Title" }, { id: "author", label: "Author" } ], { name: "Columns Set" } ).order( [ { id: "label" } ] )
 organizer = rs.set [ { id: "title" } ], { name: "Organizer: by title ascending" }

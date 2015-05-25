@@ -24,7 +24,7 @@
 
 mocha.setup 'bdd' if typeof mocha isnt 'undefined'
 
-expect = this.expect = if require? then ( require 'expect.js' ) else this.expect
+expect = this.expect = this.expect || require 'expect.js'
 
 # ----------------------------------------------------------------------------------------------
 # deep clone of object
@@ -55,10 +55,10 @@ check = this.check = ( done, test ) ->
 # rs
 # --
 
-rs = this.rs = this.rs || require( '../../lib/pipelet.js' )
+rs = this.rs = this.rs || require( '../../lib/core/pipelet.js' )
 
 RS = rs.RS
 log = RS.log
 
 this.log = ( message ) ->
-  log( 'rs tests, ' + message )
+  log( 'tests,', message )

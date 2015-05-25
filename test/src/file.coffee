@@ -30,7 +30,7 @@ check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
 
 if require?
-  require '../../lib/filter.js'
+  require '../../lib/core/filter.js'
   require '../../lib/server/file.js'
 
 # ----------------------------------------------------------------------------------------------

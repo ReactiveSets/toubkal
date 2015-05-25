@@ -7,9 +7,8 @@ module.exports = function( servers ) {
   
   var rs = require( 'toubkal' );
   
-  require( 'toubkal/lib/server/socket_io_clients.js' );
-  require( 'toubkal/lib/server/file.js'              );
-  require( 'toubkal/lib/filter.js'                   );
+  require( 'toubkal/lib/server/file.js'                 );
+  require( 'toubkal/lib/socket_io/socket_io_clients.js' );
   
   /* ------------------------------------------------------------------------------------
      de&&ug()
@@ -19,8 +18,8 @@ module.exports = function( servers ) {
   /* ------------------------------------------------------------------------------------
      Build toubkal-min.js then listen on servers
   */
-  var assets = require( 'toubkal/lib/client/client_assets.js' )
-    , toubkal_min = assets.toubkal_min
+  var assets = require( 'toubkal/lib/server/client_assets.js' )
+    , toubkal_min = assets.toubkal_min()
   ;
   
   // Listen when lib/toubkal-min.js is ready

@@ -21,14 +21,15 @@
 */
 "use strict";
 
-var rs = require( 'toubkal/lib/server/http.js' )
+var rs = require( 'toubkal/lib/core/filter.js' )
   , RS         = rs.RS
   , log        = RS.log
 ;
 
-require( 'toubkal/lib/server/socket_io_clients.js' );
 require( 'toubkal/lib/server/file.js' );
-require( 'toubkal/lib/thumbnails.js' );
+require( 'toubkal/lib/server/thumbnails.js' );
+require( 'toubkal/lib/server/http.js' );
+require( 'toubkal/lib/socket_io/socket_io_clients.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
@@ -48,18 +49,18 @@ var servers = rs.set( [
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
 */
-var assets = require( 'toubkal/lib/client/client_assets.js' )
-  , toubkal_min = assets.toubkal_min
+var assets = require( 'toubkal/lib/server/client_assets.js' )
+  , toubkal_min = assets.toubkal_min()
 ;
 
 servers.http_listen( toubkal_min );
 
 var images = rs
   .set( [
-    { name: 'test/images/14.jpg' },
-    { name: 'test/images/15.jpg' },
-    { name: 'test/images/16.jpg' },
-    { name: 'test/images/17.jpg' }
+    { path: 'test/images/14.jpg' },
+    { path: 'test/images/15.jpg' },
+    { path: 'test/images/16.jpg' },
+    { path: 'test/images/17.jpg' }
   ] )
   .set_flow( 'gallery_images' )
   .auto_increment()
@@ -71,12 +72,12 @@ var thumbnails = images
 ;
 
 rs.set( [
-    { name: 'test/bootstrap_photo_album.html'            },
-    { name: 'test/javascript/jquery-1.10.2.min.js'       },
-    { name: 'test/javascript/jquery-1.10.2.min.map'      },
-    { name: 'test/javascript/jquery.mobile-1.3.2.min.js' },
-    { name: 'test/bootstrap/css/bootstrap.css'           },
-    { name: 'test/bootstrap/js/bootstrap.js'             }
+    { path: 'test/bootstrap_photo_album.html'            },
+    { path: 'test/javascript/jquery-1.10.2.min.js'       },
+    { path: 'test/javascript/jquery-1.10.2.min.map'      },
+    { path: 'test/javascript/jquery.mobile-1.3.2.min.js' },
+    { path: 'test/bootstrap/css/bootstrap.css'           },
+    { path: 'test/bootstrap/js/bootstrap.js'             }
   ] )
   .union( [ images, thumbnails ] )
   .watch( { base_directory: __dirname + '/..' } )

@@ -20,21 +20,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var RS     = require( '../lib/server/aws.js' ).RS 
-  , rs     = RS.rs
+var rs     = require( '../../lib/core/filter.js' )
+  , RS     = rs.RS
   , extend = RS.extend
   , log    = RS.log
 ;
 
-require( '../lib/filter.js' );
-require( '../lib/watchdog.js' );
-require( '../lib/aggregate.js' );
-require( '../lib/join.js' );
-require( '../lib/last.js' );
+require( '../../lib/core/watchdog.js' );
+require( '../../lib/core/aggregate.js' );
+require( '../../lib/core/join.js' );
+require( '../../lib/core/last.js' );
+require( '../../lib/server/aws.js' )
 
-var de = true, ug = function( message ) {
-  log( 'rs tests, ' + message )
-}
+var de = true, ug = log.bind( null, 'ec2 tests' );
 
 de&&ug( 'start ec2.js' );
 
@@ -90,7 +88,11 @@ var ubuntu_amis = rs
   ], { no_null: true, no_undefined: true } )
   
   .trace( 'ubuntu amis' )
-  ._output.on( 'complete', function() { exit() } )
+;
+
+ubuntu_amis
+  ._output
+  .on( 'complete', function() { exit() } )
 ;
 
 var AMI_regions = ubuntu_amis
@@ -121,15 +123,20 @@ var zones = regions
   .set() // testing output of availability zones
   
   .trace( 'Availability Zones' )
-  
-  ._output.on( 'complete', function() {
+;
+
+zones
+  ._output
+  .on( 'complete', function() {
     this._fetch_all( function( zones ) {
       console.log( 'Received all us Availability Zones: '
         + zones.map( function( z ) { return z.ZoneName } ).join( ', ' )
       )
     } );
   } )
-  
+;
+
+zones = zones
   .filter( function( zone ) { return zone.State == 'available' } )
 ;
 

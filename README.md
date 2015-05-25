@@ -226,7 +226,7 @@ var rs = require( 'toubkal' ); // Loads Toubkal core pipelets, returns rs head p
 
 require( 'toubkal/lib/server/file.js' ); // Loads file server pipelets
 require( 'toubkal/lib/server/http.js' ); // Loads http server pipelets
-require( 'toubkal/lib/server/socket_io_clients.js' ); // Loads socket.io server pipelets
+require( 'toubkal/lib/socket_io/socket_io_clients.js' ); // Loads socket.io server pipelets
 
 var database = rs.file_json_store( 'data_store.json' ); // * Input/Output dataflows to/from datastore, one-line, no external database required
 
@@ -690,8 +690,8 @@ var servers = rs
 ;
 
 // Get a dataflow for a minified lib/toubkal-min.js with source map and source files
-var client_assets = require( 'toubkal/lib/client/client_assets' )
-  , toubkal_min = client_assets.toubkal_min
+var client_assets = require( 'toubkal/lib/server/client_assets' )
+  , toubkal_min = client_assets.toubkal_min()
 ;
 
 // Listen on server when toubkal-min.js is ready (when minification is complete)
