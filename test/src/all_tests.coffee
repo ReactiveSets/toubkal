@@ -31,6 +31,7 @@ require './core.js'
 require './json.js'
 require './transforms.js'
 require './file.js'
+require './html_parse.js'
 
 try
   require.resolve 'zombie'
