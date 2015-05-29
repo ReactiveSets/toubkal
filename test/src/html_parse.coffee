@@ -45,18 +45,20 @@ describe 'html_parse():', ->
       expect( values ).to.be.empty
   
   it '( <p></p> ).html_parse() shouldn\'t have parents, children, attributes and siblings', ( done ) ->
-    source._add [ { content: '<p></p>' } ]
+    source
+      ._remove [ { id: 1 } ]
+      ._add    [ { content: '<p></p>' } ]
     
     tree._fetch_all ( values ) -> check done, () ->
-      e = values[ 0 ][ 0 ]
+      dom = values[ 0 ].dom
       
-      expect( e.type     ).to.be 'tag'
-      expect( e.name     ).to.be 'p'
-      expect( e.parent   ).to.be null
-      expect( e.children ).to.be.empty
-      expect( e.attribs  ).to.be.empty
-      expect( e.next     ).to.be null
-      expect( e.prev     ).to.be null
+      expect( dom[ 0 ].type     ).to.be 'tag'
+      expect( dom[ 0 ].name     ).to.be 'p'
+      expect( dom[ 0 ].parent   ).to.be null
+      expect( dom[ 0 ].children ).to.be.empty
+      expect( dom[ 0 ].attribs  ).to.be.empty
+      expect( dom[ 0 ].next     ).to.be null
+      expect( dom[ 0 ].prev     ).to.be null
   
   it '( <p id:myID class:my-class></p> ) should have attributes id="myID" and class="my-class"', ( done ) ->
     source
@@ -64,9 +66,9 @@ describe 'html_parse():', ->
       ._add    [ { content: '<p id="myID" class="my-class"></p>' } ]
     
     tree._fetch_all ( values ) -> check done, () ->
-      e = values[ 0 ][ 0 ]
+      dom = values[ 0 ].dom
       
-      expect( e.attribs  ).to.be.eql { id: 'myID', class: 'my-class' }
+      expect( dom[ 0 ].attribs  ).to.be.eql { id: 'myID', class: 'my-class' }
   
   it '( <ul><li>first</li><li>last</li></ul> ) should have 2 children', ( done ) ->
     source
@@ -74,13 +76,13 @@ describe 'html_parse():', ->
       ._add    [ { content: '<ul><li>first</li><li>last</li></ul>' } ]
     
     tree._fetch_all ( values ) -> check done, () ->
-      e = values[ 0 ][ 0 ]
+      dom = values[ 0 ].dom
       
-      expect( e.children.length  ).to.be 2
+      expect( dom[ 0 ].children.length  ).to.be 2
   
   it 'first child should text content "first"', ( done ) ->
     tree._fetch_all ( values ) -> check done, () ->
-      e = values[ 0 ][ 0 ].children[ 0 ].children[ 0 ]
+      elem = values[ 0 ].dom[ 0 ].children[ 0 ].children[ 0 ]
       
-      expect( e.type  ).to.be 'text'
-      expect( e.data  ).to.be 'first'
+      expect( elem.type  ).to.be 'text'
+      expect( elem.data  ).to.be 'first'
