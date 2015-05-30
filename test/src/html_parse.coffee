@@ -45,9 +45,7 @@ describe 'html_parse():', ->
       expect( values ).to.be.empty
   
   it '( <p></p> ).html_parse() shouldn\'t have parents, children, attributes and siblings', ( done ) ->
-    source
-      ._remove [ { id: 1 } ]
-      ._add    [ { content: '<p></p>' } ]
+    source._add [ { content: '<p></p>' } ]
     
     tree._fetch_all ( values ) -> check done, () ->
       dom = values[ 0 ].dom
