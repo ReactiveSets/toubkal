@@ -28,8 +28,8 @@ Example: test if RS is a function
 
 First we have to import the Chai library and enabling the BDD syntax
 
-RS   = require '/lib/toubkal-min.js' if require?
-chai = require 'chai' if require?
+RS   = require '/lib/toubkal-min.js' unless this.rs?
+chai = require 'chai' if unless this.chai?
 chai?.should()
 
 describe 'RS test suite:', ->

@@ -23,17 +23,16 @@
 # ------------------------
 
 # include modules
-rs = this.rs || require '../../lib/core/pipelet.js'
+rs = this.rs
 
-RS = rs.RS
-
-if require?
-  require '../../lib/util/code.js'
-  require '../../lib/core/filter.js'
+unless rs?
+  rs = require '../../lib/core/filter.js'
   require '../../lib/core/order.js'
   require '../../lib/core/aggregate.js'
   require '../../lib/client/table.js'
   require '../../lib/client/form.js'
+
+RS = rs.RS
 
 organizer = rs.set( [ id: 'label' ] )
 

@@ -55,7 +55,7 @@ check = this.check = ( done, test ) ->
 # rs
 # --
 
-rs = this.rs = this.rs || require( '../../lib/core/pipelet.js' )
+rs = this.rs = this.rs || require '../../lib/core/pipelet.js'
 
 RS = rs.RS
 log = RS.log

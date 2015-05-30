@@ -22,19 +22,20 @@
 # rs test utils
 # -------------
 
-utils   = require( './tests_utils.js' ) if require?
+utils   = require( './tests_utils.js' ) unless this.expect?
+
 expect  = this.expect || utils.expect
 clone   = this.clone  || utils.clone
 rs      = this.rs     || utils.rs
 RS      = rs.RS
-uuid_v4 = RS.uuid_v4
+uuid_v4 = RS.uuid.v4
 slice   = Array.prototype.slice
 
 # ----------------------------------------------------------------------------------------------
 # Require tested modules
 # ----------------------
 
-require '../../lib/core/transactions.js' if require?
+require '../../lib/core/transactions.js' unless RS.Transactions?
 
 # ----------------------------------------------------------------------------------------------
 # Some constants
@@ -47,7 +48,7 @@ valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 # -----------------------
 
 describe 'Transactions test suite:', ->
-  describe 'RS.uuid_v4():', ->
+  describe 'RS.uuid.v4():', ->
     # Generate 10 random uuid v4 to verify that they al match
     v4_0 = uuid_v4()
     v4_1 = uuid_v4()
@@ -74,8 +75,8 @@ describe 'Transactions test suite:', ->
   
   # RS.uuid_v4()
   
-  describe 'RS.Options.forward():', ->
-    options_forward = RS.Options.forward
+  describe 'RS.Transactions.Options.forward():', ->
+    options_forward = RS.Transactions.Options.forward
     uuid = uuid_v4()
     
     it 'should be a function with one parameter', ->
@@ -121,21 +122,21 @@ describe 'Transactions test suite:', ->
     it 'should return { _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
       more = { _t: { more: 0, id: uuid } }
       
-      expect( RS.options_forward( more ) ).to.be.eql {
+      expect( options_forward( more ) ).to.be.eql {
         _t: { id: uuid }
       }
     
     it 'should return { _t: { id: uuid } } with options { _t: { id: uuid } }', ->
       more = { _t : { id: uuid } }
       
-      expect( RS.options_forward( more ) ).to.be.eql {
+      expect( options_forward( more ) ).to.be.eql {
         _t: { id: uuid }
       }
   # options_forward()
 
   describe 'RS.Transactions() and RS.Transaction():', ->
-    Transaction  = RS.Transaction
     Transactions = RS.Transactions
+    Transaction  = Transactions.Transaction
     start_count = Transaction.count
     
     describe 'Transaction with no options or pipelet', ->
@@ -617,10 +618,10 @@ describe 'Transactions test suite:', ->
         ]
     
     describe 'Input / Output Transactions()', ->
-      input = new RS.Input_Transactions().set_tag_branches 'source', 2
+      input = new RS.Transactions.Input_Transactions().set_tag_branches 'source', 2
       
-      output_1 = new RS.Output_Transactions()
-      output_2 = new RS.Output_Transactions()
+      output_1 = new RS.Transactions.Output_Transactions()
+      output_2 = new RS.Transactions.Output_Transactions()
       
       tid = uuid_v4()
       

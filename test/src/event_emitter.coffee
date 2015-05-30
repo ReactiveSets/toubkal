@@ -22,7 +22,8 @@
 # rs test utils
 # -------------
 
-utils  = require( './tests_utils.js' ) if require?
+utils  = require( './tests_utils.js' ) unless this.expect?
+
 expect = this.expect || utils.expect
 rs     = this.rs     || utils.rs
 RS     = rs.RS
@@ -32,7 +33,7 @@ slice  = Array.prototype.slice
 # Require tested modules
 # ----------------------
 
-require '../../lib/util/event_emitter.js' if require?
+require '../../lib/util/event_emitter.js' unless RS.Event_Emitter?
 
 # ----------------------------------------------------------------------------------------------
 # Transactions test suite

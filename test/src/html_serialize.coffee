@@ -22,14 +22,14 @@
 # rs test utils
 # -------------
 
-utils  = require( './tests_utils.js' ) if require?
+utils  = require( './tests_utils.js' ) unless this.expect?
 
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
 
-if require?
+unless rs.html_serialize?
   require '../../lib/html/html_parse.js'
   require '../../lib/html/html_serialize.js'
 

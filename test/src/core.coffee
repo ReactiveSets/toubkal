@@ -22,15 +22,12 @@
 # rs test utils
 # -------------
 
-utils = require( './tests_utils.js' ) if require?
+utils  = require( './tests_utils.js' ) unless this.expect
+
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 log    = this.log    || utils.log
-rs     = this.rs     || utils.rs
-
-RS      = rs.RS
-extend  = RS.extend
 
 slice = Array.prototype.slice
 
@@ -42,19 +39,22 @@ check_set_content = ( done, source, values ) ->
   source._fetch_all ( _values ) ->
     check done, () ->
       expect( _values.sort ( a, b ) -> a.id - b.id ).to.be.eql values
-  
+
 # ----------------------------------------------------------------------------------------------
 # Require tested modules
 # ----------------------
+rs = this.rs
 
-if require?
-  require '../../lib/util/code.js'
-  require '../../lib/core/filter.js'
+unless rs?
+  rs = require '../../lib/core/filter.js'
   require '../../lib/core/order.js'
   require '../../lib/core/aggregate.js'
   require '../../lib/core/join.js'
   require '../../lib/core/json.js'
 
+RS      = rs.RS
+extend  = RS.extend
+Code    = RS.Code
 Pipelet = RS.Pipelet
 Greedy  = RS.Greedy
 Set     = RS.Set
@@ -144,7 +144,7 @@ describe 'RS test suite:', ->
   # RS.extend()
   
   describe 'RS.extend_2():', ->
-    extend_2 = RS.extend_2
+    extend_2 = RS.extend._2
     
     it 'should be a function', ->
       expect( extend_2 ).to.be.a 'function'
@@ -244,8 +244,8 @@ describe 'RS test suite:', ->
     it 'a should not be an instance of Snake', ->
       expect( a ).to.not.be.a Snake
     
-  describe 'RS.Code():', ->
-    f = code = new RS.Code( 'Code Test' )
+  describe 'Code():', ->
+    f = code = new Code( 'Code Test' )
       ._function( 'f', null, [] )
         .add( 'var i' )
         ._for( 'i = -1', ' ++i < 10' )
@@ -266,7 +266,7 @@ describe 'RS test suite:', ->
     
     test = 'a[ ++i ] === n'
     
-    g = code = new RS.Code( 'Test unfolded while' )
+    g = code = new Code( 'Test unfolded while' )
       ._function( 'g', null, [ 'n' ] )
         ._var( [ 'a = [ 34, 65, 98, 8, 52, 10, 21, 13, 1, 90, 14 ]', 'l = a.length', 'i = -1' ] )
         .unrolled_while( 'if ( ' + test, '|| ' + test, ') return i' )

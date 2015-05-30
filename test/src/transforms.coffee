@@ -22,16 +22,15 @@
 # rs test utils
 # -------------
 
-utils  = require( './tests_utils.js' ) if require?
+unless this.expect?
+  utils  = require './tests_utils.js'
+  require '../../lib/core/filter.js'
+  require '../../lib/core/transforms.js'
 
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
-
-if require?
-  require '../../lib/core/filter.js'
-  require '../../lib/core/transforms.js'
 
 # ----------------------------------------------------------------------------------------------
 # Test File pipelets

@@ -63,8 +63,7 @@ RS = rs.RS
 
 expect = this.expect || require 'expect.js'
 
-if require?
-  require '../../lib/util/code.js'
+unless rs.table?
   require '../../lib/core/filter.js'
   require '../../lib/core/order.js'
   require '../../lib/core/aggregate.js'

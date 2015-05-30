@@ -37,7 +37,7 @@
       var carousel   = document.getElementById(  'carousel'  )
         , thumbnails = document.getElementById( 'thumbnails' )
         
-        , images = RS.rs
+        , images = rs
           .socket_io_server()
           .to_uri()
           .trace( 'bootstrap photo album, images received' )

@@ -22,7 +22,8 @@
 # rs test utils
 # -------------
 
-utils = require( './tests_utils.js' ) if require?
+utils = require( './tests_utils.js' ) unless this.expect?
+
 expect = this.expect || utils.expect
 clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
@@ -56,7 +57,7 @@ valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 # rs unit test suite
 # ------------------
 
-Query = RS.Query
+Query = RS.Query || require 'toubkal/lib/core/query.js'
 
 describe 'Query & Query_Tree test suite:', ->
   describe 'Query.Error()', ->
@@ -1181,7 +1182,7 @@ describe 'Query & Query_Tree test suite:', ->
     
     
   describe 'Query_Tree()', ->
-    tree = new RS.Query_Tree()
+    tree = new Query.Tree()
     
     Input = Pipelet.Input
     

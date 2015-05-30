@@ -38,7 +38,7 @@ RS = rs.RS
 
 expect = this.expect || require 'expect.js'
 
-if require?
+unless rs.load_images?
   require '../../lib/client/load_images.js'
 
 describe 'Load Images test suite:', ->

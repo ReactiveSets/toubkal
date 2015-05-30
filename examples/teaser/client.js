@@ -53,6 +53,6 @@
     .trace( 'ordered sales' )
     
     // Display table in #sales_table div
-    .table( RS.$( '#sales_table' ), columns )
+    .table( rs.RS.$( '#sales_table' ), columns )
   ;
 }();

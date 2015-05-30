@@ -23,18 +23,18 @@
 # ------------------------
 
 # include modules
-rs = this.rs || require '../../lib/core/pipelet.js'
-RS = rs.RS
+rs = this.rs
 
 expect = this.expect || require 'expect.js'
 
-if require?
-  require '../../lib/util/code.js'
-  require '../../lib/core/filter.js'
+unless rs?
+  rs = require '../../lib/core/filter.js'
   require '../../lib/core/order.js'
   require '../../lib/core/aggregate.js'
   require '../../lib/client/table.js'
   require '../../lib/client/control.js'
+
+RS = rs.RS
 
 organizer       = [ { id: "label" } ]
 options         = { label: "Charts" }
