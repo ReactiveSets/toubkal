@@ -19,9 +19,7 @@
 */
 
 ( function( exports ) {
-var rs = exports.RS.rs
-  
-  , $body           = document.body
+var $body           = document.body
   , $checkbox       = document.createElement( 'div' )
   , $drop_down      = document.createElement( 'div' )
   , $radio          = document.createElement( 'div' )
