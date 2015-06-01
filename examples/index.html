@@ -31,7 +31,7 @@
     
     <script>
       rs.socket_io_server()
-        .filter( [ { 'flow': 'examples' } ] )
+        .flow( 'examples' )
         
         .react( rs.RS.$( '#examples' ), function() {
           return React.createElement( 'ul', null, this.state.values.map( create_item ) );
@@ -47,8 +47,8 @@
       ;
       
       rs.socket_io_server()
-        .filter( [ { 'flow': 'flow' } ] )
-        .trace( 'flow' )
+        .flow( '/table' )
+        .trace( 'table' )
         .greedy()
       ;
     </script>

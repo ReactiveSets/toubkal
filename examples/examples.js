@@ -69,7 +69,7 @@ module.exports = function( servers ) {
       
       flow = flow.join( '.' ); // e.g. datasets/sales
       
-      return { flow: 'flow', 'name': flow, 'path': path };
+      return { flow: '/table', 'name': flow, 'path': path };
     }, { no_clone: true } )
     
     .trace( 'database tables' )
@@ -79,7 +79,7 @@ module.exports = function( servers ) {
     var flow = this.name;
     
     return source
-      .filter( [ { 'flow': flow } ] )
+      .flow( flow )
       .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
     ;
   } );
