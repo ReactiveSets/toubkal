@@ -10,12 +10,12 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic|Oswald&subset=latin,latin-ext"/>
     <link href="css/base.css"  type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
     
+    <!-- React version 0.13.2 -->
+    <script src="https://fb.me/react-0.13.2.js" type="text/javascript"></script>
+    
     <script src="/lib/toubkal-min.js"></script>
     
     <script src="/socket.io/socket.io.js"></script>
-    
-    <!-- React version 0.13.2 -->
-    <script src="https://fb.me/react-0.13.2.js" type="text/javascript"></script>
     
     <!-- jQuery version 1.11.3  -->
     <script src="https://code.jquery.com/jquery-1.11.3.min.js" type="text/javascript"></script>
@@ -33,7 +33,7 @@
       rs.socket_io_server()
         .filter( [ { 'flow': 'examples' } ] )
         
-        .toubkal_react( rs.RS.$( '#examples' ), function() {
+        .react( rs.RS.$( '#examples' ), function() {
           return React.createElement( 'ul', null, this.state.values.map( create_item ) );
           
           function create_item( example ) {
