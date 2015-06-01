@@ -34,6 +34,6 @@ var servers = require( 'toubkal/lib/server/http.js' )
   .http_servers()
 ;
 
-require( './examples.js' )( servers.virtual_http_servers( [ 'locahost', '127.0.0.1', '192.168.1.10', '192.168.0.22' ] ) );
+require( './examples.js' )( servers.virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.1.10', '192.168.0.22' ] ) );
 
 module.export = servers;
