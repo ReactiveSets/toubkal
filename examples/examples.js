@@ -5,7 +5,12 @@
 module.exports = function( servers ) {
   'use strict';
   
-  var rs = require( 'toubkal' );
+  var rs  = require( 'toubkal' )
+    , RS  = rs.RS
+    , log = RS.log
+    , de  = true
+    , ug  = log.bind( null, 'examples' )
+  ;
   
   require( 'toubkal/lib/server/file.js'                 );
   require( 'toubkal/lib/socket_io/socket_io_clients.js' );
@@ -98,5 +103,21 @@ module.exports = function( servers ) {
   var clients = rs.encapsulate( clients_input, clients_output );
   
   // Require examples' data processors
-  require( './teaser/data' )( database, clients );
+  var data_processors = entries
+    .filter( [ { extension: 'js', depth: 2 } ] )
+    
+    .filter( function( file ) {
+      return file.path.split( '/' ).pop() == 'data.js';
+    } )
+    
+    .trace( 'data processors' )
+  ;
+  
+  rs.dispatch( data_processors, function() {
+    var data_processor = './' + this.path;
+    
+    de&&ug( 'require data processor:', data_processor );
+    
+    require( data_processor )( database, clients );
+  } );
 } // module.exports
