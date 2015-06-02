@@ -1,9 +1,9 @@
-/*  client.js
+/*  data.js
 
     The MIT License (MIT)
-
+    
     Copyright (c) 2013-2015, Reactive Sets
-
+    
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
     in the Software without restriction, including without limitation the rights
@@ -20,39 +20,20 @@
     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+    SOFTWARE.    
 */
-;!function() {
-  "use strict";
+module.exports = function( database, clients ) {
+  'use strict';
   
-  // Define columns to display in table
-  var columns = [
-    { id: 'date'    , label: 'Date'     }, // First column
-    { id: 'item'    , label: 'Item'     }, // Second column
-    { id: 'quantity', label: 'Quantity' }  // Third column
-  ];
-  
-  // Use the global object rs, to start a dataflow
-  rs
-    // Connect to socket.io server to exchange dataflows
-    .socket_io_server()
+  database
+    .flow( 'teaser/sales' )
     
-    // Pull teaser/sales dataflow
-    .flow( 'teaser/sales_year' )
+    .alter( function( sale ) {
+      sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
+      
+      sale.flow = 'teaser/sales_year';
+    } )
     
-    // Limit pulled sales to some years
-    .filter( [
-      { year: 2014 },
-      { year: 2013 }
-    ] )
-    
-    // Order sales by date
-    .order ( [ { id: 'date'   } ] )
-    
-    // Log sales to console.log()
-    .trace( 'ordered sales' )
-    
-    // Display table in #sales_table div
-    .table( rs.RS.$( '#sales_table' ), columns )
+    ._add_destination( clients )
   ;
-}();
+};

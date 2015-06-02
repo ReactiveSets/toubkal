@@ -85,10 +85,18 @@ module.exports = function( servers ) {
   } );
   
   // Serve database to socket.io clients
-  rs.union( [ database, tables ] )
+  var clients_input = rs.union( [ database, tables ] );
   
-    .dispatch( servers.socket_io_clients(), function( source, options ) {
-      return this.socket._add_source( source );
-    } )
+  var clients_output = clients_input
+     .dispatch( servers.socket_io_clients(), function( source, options ) {
+       
+       return this.socket._add_source( source );
+     } )
   ;
+  
+  // Make encapsulated dataflow for data processors
+  var clients = rs.encapsulate( clients_input, clients_output );
+  
+  // Require examples' data processors
+  require( './teaser/data' )( database, clients );
 } // module.exports
