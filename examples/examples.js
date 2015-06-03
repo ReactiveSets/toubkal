@@ -81,13 +81,10 @@ module.exports = function( servers ) {
   ;
   
   var database = rs.dispatch( tables, function( source, options ) {
-    var flow = this.name;
-    
     return source
-      .flow( flow )
-      .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
+      .configuration( { 'filepath': this.path, 'flow': this.name, 'base_directory': __dirname  } )
     ;
-  } );
+  }, { single: true } );
   
   // Serve database to socket.io clients
   var clients_input = rs.union( [ database, tables ] );
@@ -96,7 +93,7 @@ module.exports = function( servers ) {
      .dispatch( servers.socket_io_clients(), function( source, options ) {
        
        return this.socket._add_source( source );
-     } )
+     }, { single: true } )
   ;
   
   // Make encapsulated dataflow for data processors
