@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    
+    <link href="table.css" type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
+    
+    <title>Toubkal - teaser</title>
+    
+    <script src="/lib/toubkal-min.js"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  
+  <body>
+    <h2>
+      Connected users ordered by last name, updated in realtime
+    </h2>
+    
+    <p>
+      Displaying a reactive table which DOM container id is connected_users_table,
+      alphabetically ordred by last name, for connected users, from a users dataflow
+      coming from a socket.io server, pulling the minimum amount of data from the
+      server and updating the table as soon as any user is online or offline.
+      
+    </p>
+    
+    <div id="connected_users_table"></div>
+    
+    <script src="connected_users.js"></script>
+    
+    <p>
+      Working code including http server available on
+        <a href="https://github.com/ReactiveSets/toubkal/tree/master/examples/">
+          github in examples
+        </a>
+      .
+      
+      <br/><br/>
+      
+ </body>
+</html>
