@@ -184,7 +184,7 @@ piece of code that forgot to test a role in a corner-case.
 
 #### How do you improve Productivity?
 
-By allowing you to describe **what** you want in a declarative style, instead of
+By allowing you to describe **what** you need in a declarative style, instead of
 **how** this could ever be accomplished.
 
 Figuring-out **how** this should a) work securely, b) scale and c) have best performances
@@ -201,19 +201,15 @@ rs.upstream_pipelet( parameter, ... )
 ;
 ```
 
-A pipelet is implemented as a JavaScript function() that:
-- Maintains a dataset state, e.g. in memory, mass storage, the DOM, or virtually (stateless)
-- Subscribes to data events from **upstream** pipelets
-- Reacts to events emitted by upstream pipelets
-- Processes these upstream events to update the state of its dataset
-- Emits events to **downstream** pipelets
-- Has no side effects on other pipelets upstream or downstream
-- Has a name that describes what it provides or does
-- Is syntactically connected to upstream and downstream pipelets using the JavaScript '.'
-operator, or as parameters when there is more than one upstream or downstream pipelet
-connected
-- Is optimized to process large amounts for data events reactively
-- Can be composed with other pipelets to provide a new pipelet
+A pipelet is a **factory function** which instances:
+- Maintain a **dataset** state, in memory, mass storage, the DOM, or virtually (stateless)
+- **Subscribe to** data change events from **upstream** pipelets
+- **React** to upstream events to update their dataset
+- **Emit** change events to **downstream** pipelets
+- Have **no side effects** on other pipelets upstream or downstream
+- Are **piped** to upstream and downstream pipelets using the **'.' operator**
+- May be connected to additional upstream pipelets using parameters
+- Can be composed with other pipelets to provide new pipelets
 
 A Toubkal program is a JavaScript program where one can mix imperative-style programming
 with Toubkal declarative-style programming.
