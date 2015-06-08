@@ -22,7 +22,7 @@
   },
   
   "dependencies": {
-    "undefine"    : "0.2.4",
+    "undefine"    : "0.2.5",
     "node-uuid"   : "1.4.1",
     "socket.io"   : "0.9.16",
     "uglify-js"   : "2.4.13",
