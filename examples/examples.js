@@ -90,10 +90,10 @@ module.exports = function( servers ) {
   var clients_input = rs.union( [ database, tables ] );
   
   var clients_output = clients_input
-     .dispatch( servers.socket_io_clients(), function( source, options ) {
-       
-       return this.socket._add_source( source );
-     }, { single: true } )
+    .dispatch( servers.socket_io_clients(), function( source, options ) {
+    
+      return this.socket._add_source( source );
+    }, { single: true } )
   ;
   
   // Make encapsulated dataflow for data processors
