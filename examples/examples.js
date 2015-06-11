@@ -25,6 +25,7 @@ module.exports = function( servers ) {
   */
   var assets = require( 'toubkal/lib/server/client_assets.js' )
     , toubkal_min = assets.toubkal_min()
+    , react_js = assets.react.watch()
   ;
   
   // Listen when lib/toubkal-min.js is ready
@@ -53,7 +54,7 @@ module.exports = function( servers ) {
       { extension: 'json' }
     ] )
     .watch( { base_directory: __dirname } )
-    .union( [ toubkal_min ] )
+    .union( [ toubkal_min, react_js ] )
   ;
   
   // Serve assets to http servers
