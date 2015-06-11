@@ -360,6 +360,7 @@ describe 'RS test suite:', ->
             { id: 1, brand: "Mercedes", model: "C Class" }
             { id: 2, brand: "Mercedes", model: "S Class" }
             { id: 3, brand: "BMW"     , model: "M Serie" }
+            { flow: 'error', error: 'not found' }
           ]
           { key: [ "id", "model" ] }
       )
@@ -390,6 +391,7 @@ describe 'RS test suite:', ->
           { flow: "car", id: 1, brand: "Mercedes", model: "C Class" }
           { flow: "car", id: 2, brand: "Mercedes", model: "S Class" }
           { flow: "car", id: 3, brand: "BMW"     , model: "M Serie" }
+          { flow: 'error', error: 'not found' }
         ]
     
     describe 'add():', ->
