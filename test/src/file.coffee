@@ -82,29 +82,31 @@ describe 'file', ->
           expect( values ).to.be.eql [
             {
               flow: "configuration"
-              module: "nodemailer"
+              id: "nodemailer"
               transport: "sendmail"
               transport_options: {}
             }
             
             {
               flow: "configuration"
-              pipelet: "passport_strategy"
-              name: "twitter"
-              credentials: {
-                key: "***"
-                secret: "---"
-              }
-            }
-            
-            {
-              flow: "configuration"
-              pipelet: "passport_strategy"
-              name: "facebook"
-              credentials: {
-                key: "***"
-                secret: "---"
-              }
+              "id": "passport_strategy"
+              "strategies": [
+                {
+                  "id": "twitter"
+                  "credentials": {
+                    "key": "***"
+                    "secret": "---"
+                  }
+                }
+                
+                {
+                  "id": "facebook"
+                  "credentials": {
+                    "key": "***"
+                    "secret": "---"
+                  }
+                }
+              ]
             }
           ]
   

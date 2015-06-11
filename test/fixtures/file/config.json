@@ -1,26 +1,29 @@
 [
   {
-    "module": "nodemailer",
+    "id": "nodemailer",
     "transport": "sendmail",
     "transport_options": {
     }
   },
   
   {
-    "pipelet": "passport_strategy",
-    "name": "twitter",
-    "credentials": {
-      "key": "***",
-      "secret": "---"
-    }
-  },
-  
-  {
-    "pipelet": "passport_strategy",
-    "name": "facebook",
-    "credentials": {
-      "key": "***",
-      "secret": "---"
-    }
+    "id": "passport_strategy",
+    "strategies": [
+      {
+        "id": "twitter",
+        "credentials": {
+          "key": "***",
+          "secret": "---"
+        }
+      },
+      
+      {
+        "id": "facebook",
+        "credentials": {
+          "key": "***",
+          "secret": "---"
+        }
+      }
+    ]
   }
 ]
