@@ -154,7 +154,7 @@ describe 'Transactions test suite:', ->
       it 't.toJSON() should return a representation of the new transaction', ->
         expect( t.toJSON() ).to.be.eql {
           number        : start_count + 1
-          name          : ''
+          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : undefined
           count         : 4
           source_more   : false
@@ -167,7 +167,7 @@ describe 'Transactions test suite:', ->
       it 'after t.next(), count should be 3', ->
         expect( t.next().toJSON() ).to.be.eql {
           number        : start_count + 1
-          name          : ''
+          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : undefined
           count         : 3
           source_more   : false
@@ -195,7 +195,7 @@ describe 'Transactions test suite:', ->
       it 'need_close should be true', ->
         expect( t.toJSON() ).to.be.eql {
           number        : start_count + 1
-          name          : ''
+          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
           count         : 3
           source_more   : false
@@ -215,7 +215,7 @@ describe 'Transactions test suite:', ->
       it 'should decrease count to 1 and set added_length to 2 after t.__emit_add( [{}{}] )', ->
         expect( t.__emit_add( [{},{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
-          name          : ''
+          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
           count         : 1
           source_more   : false
@@ -228,7 +228,7 @@ describe 'Transactions test suite:', ->
       it 'should decrease count to zero and set removed_length to 1 after t.__emit_remove( [{}] )', ->
         expect( t.__emit_remove( [{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
-          name          : ''
+          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : false
@@ -250,7 +250,7 @@ describe 'Transactions test suite:', ->
       it 'should no longer need close but it should now be closed', ->
         expect( t.toJSON() ).to.be.eql {
           number        : start_count + 1
-          name          : ''
+          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : false
@@ -269,7 +269,7 @@ describe 'Transactions test suite:', ->
       it 'should not change the state of the transaction', ->
         expect( t.toJSON() ).to.be.eql {
           number        : start_count + 1
-          name          : ''
+          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : false
@@ -310,7 +310,7 @@ describe 'Transactions test suite:', ->
         expect( t.is_closed() ).to.be false
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 4
           source_more   : true
@@ -329,7 +329,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 3
           source_more   : true
@@ -344,7 +344,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 2
           source_more   : true
@@ -359,7 +359,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 1
           source_more   : true
@@ -374,7 +374,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : true
@@ -394,7 +394,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : true
@@ -409,7 +409,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON() ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : true
@@ -435,7 +435,7 @@ describe 'Transactions test suite:', ->
       it 'should have increased transaction\'s operations count by 2', ->
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 2
           source_more   : false
@@ -450,7 +450,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 1
           source_more   : false
@@ -465,7 +465,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : false
@@ -485,6 +485,7 @@ describe 'Transactions test suite:', ->
     describe 'Transactions()..get_transaction() with a fork tag', ->
       transactions = new Transactions()
       
+      # Create pseudo output pipelet
       output = {
         _operations: []
         
@@ -514,7 +515,7 @@ describe 'Transactions test suite:', ->
         expect( t.fork        ).to.be 'fork_tag'
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
           tid           : tid
           count         : 2
           source_more   : true
@@ -529,7 +530,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
           tid           : tid
           count         : 1
           source_more   : true
@@ -544,7 +545,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : true
@@ -564,7 +565,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : true
@@ -586,7 +587,7 @@ describe 'Transactions test suite:', ->
       it 'should have increased transaction\'s operations count by 1', ->
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
           tid           : tid
           count         : 1
           source_more   : false
@@ -601,7 +602,7 @@ describe 'Transactions test suite:', ->
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
-          name          : 'output'
+          name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : false
