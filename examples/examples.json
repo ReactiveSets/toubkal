@@ -1,4 +1,4 @@
 [
   { "id": 1, "title": "Teaser - Reactive sales table ordered by date", "path": "/teaser/index.html" },
-  { "id": 2, "title": "Reactive Users' Table using Facebook React Pipelet", "path": "/react/index.html" }
+  { "id": 2, "title": "Reactive Users' Table using Facebook React Pipelet", "path": "/react_table/index.html" }
 ]
