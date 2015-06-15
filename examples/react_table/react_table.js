@@ -33,7 +33,7 @@
   rs
     .socket_io_server()
     
-    .flow( 'react/persons' )
+    .flow( 'react_table/persons' )
     
     .react_table( document.querySelector( '#react-table' ), columns, { class_name: 'table table-condensed' } )
   ;
