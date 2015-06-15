@@ -4,7 +4,7 @@
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*580 automated tests*
+*606 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -543,7 +543,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 580 automated tests for the Toubkal core pipelets that run
+We have curently developped 606 automated tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -585,7 +585,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 580 of 580 tests (4196ms)
+-> passed 606 of 606 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -941,7 +941,7 @@ node server.js > server.out
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 580 automated tests
+- 606 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
@@ -979,8 +979,12 @@ Controllet.Output         | Output plug for controllets
 Union.Input               | Input plug for Union (allows many sources)
 Union.Output              | Output plug for Union
 Set.Output                | Output plug for Set
+IO_Transactions           | Base class for Input_Transactions and Output_Transactions
 Input_Transactions        | Concurrent Transactions Synchronization at Inputs
 Output_Transactions       | Concurrent Transactions Synchronization at Outputs
+IO_Transaction            | Base class for Input_Transaction and Output_Transaction
+Input_Transaction         | Manage an input transaction
+Output_Transaction        | Manage an output transaction
 
 ### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
 
