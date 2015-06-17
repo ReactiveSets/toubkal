@@ -818,5 +818,26 @@ describe 'Transactions test suite:', ->
         more = clone more_origin
         
         o = output_1_transactions.get_concurrent_options( input_transactions, more )
-              
+        
+        it 'get_options( input_transactions, more ) should return more', ->
+          expect( o ).to.be more
+          expect( more ).to.be.eql more_origin
+        
+        it 'output_1_transactions should have one output transaction', ->
+          expect( output_1_transactions.count ).to.be 1
+
+        it 'this output transaction should be an Output_Transaction', ->
+          output_1_transaction = output_1_transactions.get_from_tid tid
+          
+          expect( output_1_transaction ).to.be.a Output_Transaction
+        
+        it 'should have one input transactions countrerpart', ->
+          expect( output_1_transaction.count ).to.be 1
+        
+        it 'should have input_transactions as a counterpart', ->
+          expect( output_1_transaction.get input_transactions ).to.be input_transactions
+        
+        it 'output_1_transactions.get_terminated_input_transactions( no_more ) should return input_transactions', ->
+          expect( output_1_transactions.get_terminated_input_transactions( no_more ) ).to.be.eql [ input_transactions ]
+        
   # RS.Transactions() and RS.Transaction()
