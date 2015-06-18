@@ -661,7 +661,7 @@ describe 'Transactions test suite:', ->
         more_origin._t.more = true
         more = clone more_origin
         
-        o = output_1_transactions.get_concurrent_options( input_transactions, more )
+        o = output_1_transactions.get_options( input_transactions, more )
         
         it 'output_1_transactions concurrent options should be returned unaltered (more)', ->
           expect( o ).to.be more
@@ -708,7 +708,7 @@ describe 'Transactions test suite:', ->
           expect( output_1_transaction.get input_transactions ).to.be.eql input_transactions
         
         it 'concurent options should have more even after sending no more', ->
-          o = output_1_transactions.get_concurrent_options input_transactions, no_more
+          o = output_1_transactions.get_options input_transactions, no_more
           
           expect( o ).to.be.eql more
           expect( more ).to.eql more_origin
@@ -738,7 +738,7 @@ describe 'Transactions test suite:', ->
           expect( output_1_transactions.get_from_tid tid ).to.be undefined
         
         it 'output_2_transactions concurrent options (more) should be returned unaltered', ->
-          o = output_2_transactions.get_concurrent_options( input_transactions, more )
+          o = output_2_transactions.get_options( input_transactions, more )
           
           expect( o ).to.be more
           expect( more ).to.eql more_origin
@@ -779,7 +779,7 @@ describe 'Transactions test suite:', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options for output_2_transactions should have no more after sending no more', ->
-          o = output_2_transactions.get_concurrent_options input_transactions, no_more
+          o = output_2_transactions.get_options input_transactions, no_more
           
           expect( o ).to.be no_more
           expect( no_more ).to.eql no_more_origin
@@ -817,7 +817,7 @@ describe 'Transactions test suite:', ->
         more_origin._t.more = true
         more = clone more_origin
         
-        o = output_1_transactions.get_concurrent_options( input_transactions, more )
+        o = output_1_transactions.get_options( input_transactions, more )
         
         it 'get_options( input_transactions, more ) should return more', ->
           expect( o ).to.be more
