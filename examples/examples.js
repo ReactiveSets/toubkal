@@ -34,16 +34,13 @@ module.exports = function( servers ) {
   /* ------------------------------------------------------------------------------------
      Watch all directories from here
   */
-  var path = require( 'path' );
-  
   var directories = rs.set( [ { path: '' } ] ).union()
     , entries     = directories
         .watch_directories( { base_directory: __dirname } )
         
         .filter( function ignore_temporary_files( entry ) {
-          // ToDo: watch_directory should provide basename to allow for protable filename extraction from path
-          return entry.extension.slice( -1 ) != '~'
-            && path.basename( entry.path ).substring( 0, 2 ) != '.#'
+          return entry.extension.slice( -1 )  != '~'
+              && entry.base.substring( 0, 2 ) != '.#'
           ;
         } )
   ;
