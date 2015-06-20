@@ -837,7 +837,26 @@ describe 'Transactions test suite:', ->
         it 'should have input_transactions as a counterpart', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
-        it 'output_1_transactions.get_terminated_input_transactions( no_more ) should return input_transactions', ->
+        it 'input_transactions should have one input transaction', ->
+          expect( input_transactions.count ).to.be 1
+          
+        it 'should be an Input_Transaction', ->
+          input_transaction = input_transactions.get_from_tid tid
+          
+          expect( input_transaction ).to.be.a Input_Transaction
+        
+        it 'should have output_1_transactions as a counterpart', ->
+          expect( input_transaction.get output_1_transactions ).to.be output_1_transactions
+        
+        it 'output_1_transactions.get_terminated_input_transactions( no_more ) should return [ input_transactions ]', ->
           expect( output_1_transactions.get_terminated_input_transactions( no_more ) ).to.be.eql [ input_transactions ]
+          expect( no_more ).to.be.eql no_more_origin
+        
+        it 'output_1_transactions should have no output transactions', ->
+          expect( output_1_transactions.count ).to.be 0
+        
+        it 'input_transactions should have no input transactions', ->
+          expect( input_transactions.count ).to.be 0
+        
         
   # RS.Transactions() and RS.Transaction()
