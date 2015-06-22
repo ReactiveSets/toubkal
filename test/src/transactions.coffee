@@ -647,7 +647,7 @@ describe 'Transactions test suite:', ->
         
         no_more_origin = {
           _t: {
-            tid: tid
+            id: tid
             forks: [
               'top'
               'source'
@@ -810,7 +810,7 @@ describe 'Transactions test suite:', ->
         
         tid = uuid_v4()
         
-        no_more_origin = { _t: { tid: tid } }
+        no_more_origin = { _t: { id: tid } }
         no_more = clone no_more_origin
         
         more_origin = clone no_more
