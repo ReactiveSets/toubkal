@@ -25,7 +25,6 @@
 utils  = require( './tests_utils.js' ) unless this.expect
 
 expect = this.expect || utils.expect
-clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 log    = this.log    || utils.log
 
@@ -54,6 +53,7 @@ unless rs?
 
 RS      = rs.RS
 extend  = RS.extend
+clone   = extend.clone
 Code    = RS.Code
 Pipelet = RS.Pipelet
 Greedy  = RS.Greedy

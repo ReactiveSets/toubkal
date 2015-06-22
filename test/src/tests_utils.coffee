@@ -27,19 +27,6 @@ mocha.setup 'bdd' if typeof mocha isnt 'undefined'
 expect = this.expect = this.expect || require 'expect.js'
 
 # ----------------------------------------------------------------------------------------------
-# deep clone of object
-# --------------------
-
-clone = this.clone = ( o ) ->
-  return o if typeof o isnt 'object' or o is null
-
-  r = if o instanceof Array then [] else {}
-
-  r[ p ] = clone o[ p ] for p of o when o.hasOwnProperty p
-
-  return r
-
-# ----------------------------------------------------------------------------------------------
 # Asynchrnous tests exception catcher
 # -----------------------------------
 

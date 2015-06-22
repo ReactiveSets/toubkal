@@ -25,8 +25,20 @@
 utils = require( './tests_utils.js' ) unless this.expect?
 
 expect = this.expect || utils.expect
-clone  = this.clone  || utils.clone
+# clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
+
+# ----------------------------------------------------------------------------------------------
+# Require tested modules
+# ----------------------
+rs = this.rs
+
+unless rs?
+  rs = require '../../lib/core/pipelet.js'
+
+RS      = rs.RS
+extend  = RS.extend
+clone   = extend.clone
 
 # ----------------------------------------------------------------------------------------------
 # Test utils test suite
