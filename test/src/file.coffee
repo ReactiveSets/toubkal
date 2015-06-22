@@ -74,7 +74,6 @@ describe 'file', ->
         .configuration( {
           filepath      : '../fixtures/file/config.json'
           base_directory: __dirname
-          key           : [ 'module' ]
         } )
       
       configuration._output.on 'complete', () ->
