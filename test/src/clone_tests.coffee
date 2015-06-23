@@ -45,21 +45,71 @@ clone   = extend.clone
 
 describe 'Test utilities', ->
   describe 'clone():', ->
+    # ToDo: use value_equals() because mocha eql() does not handle NaN properly
+    
     foo =
       id: 10
-      array: [ 1, 2, "a", "b", 3, { x: 10, y: undefined, z: null } ]
-      obj:
-        coordinate: 1
-        label: "Coordinate"
-        values: [ 24, null, undefined ]
+      array: [
+        0
+        1
+        2
+        true
+        false
+        "a"
+        "b"
+        3
+        undefined
+        null
+        # NaN
+        Infinity
+        +Infinity
+        -Infinity
+        {}
+        []
+        ""
+        
+        {
+          a: 0
+          b: 1
+          c: 2
+          d: true
+          e: false
+          f: "a"
+          g: "b"
+          h: 3
+          i: undefined
+          j: null
+          # not_a_number: NaN
+          infinity: Infinity
+          plus_infinity: +Infinity
+          minus_infinity: -Infinity
+          empty_object: {}
+          empty_array: []
+          empty_string: ''
+        }
+      ]
 
     bar = clone foo
-
+    safe_bar = extend.safe_object_clone foo
+    fast_bar = extend.fast_object_clone foo
+    
     it 'should deep clone foo into bar', ->
       expect( bar ).to.be.eql foo
 
-    it 'should not return self', ->
+    it 'should not be the same object foo', ->
       expect( bar ).to.not.be foo
+
+    it 'should safely deep clone foo into safe_bar', ->
+      expect( safe_bar ).to.be.eql foo
+
+    it 'safe_bar should not be the same object foo', ->
+      expect( safe_bar ).to.not.be foo
+
+    it 'should fast deep clone foo into fast_bar', ->
+      expect( fast_bar ).to.be.eql foo
+
+    it 'fast_bar should not be the same object foo', ->
+      expect( fast_bar ).to.not.be foo
 
   describe 'Aynchronous test check()', ->
     it 'should succeed in 50 ms', ( done ) ->
