@@ -25,7 +25,6 @@
 utils = require( './tests_utils.js' ) unless this.expect?
 
 expect = this.expect || utils.expect
-# clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 
 # ----------------------------------------------------------------------------------------------

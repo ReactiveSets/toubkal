@@ -25,9 +25,9 @@
 utils  = require './tests_utils.js'
 
 expect = this.expect || utils.expect
-clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
+clone  = rs.RS.extend.clone
 
 require '../../lib/core/filter.js'
 require '../../lib/server/file.js'

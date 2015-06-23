@@ -28,9 +28,9 @@ unless this.expect?
   require '../../lib/core/transforms.js'
 
 expect = this.expect || utils.expect
-clone  = this.clone  || utils.clone
 check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
+clone  = rs.RS.extend.clone
 
 # ----------------------------------------------------------------------------------------------
 # Test File pipelets

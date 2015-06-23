@@ -25,10 +25,10 @@
 utils   = require( './tests_utils.js' ) unless this.expect?
 
 expect  = this.expect || utils.expect
-clone   = this.clone  || utils.clone
 rs      = this.rs     || utils.rs
 RS      = rs.RS
 uuid_v4 = RS.uuid.v4
+clone   = RS.extend.clone
 slice   = Array.prototype.slice
 
 # ----------------------------------------------------------------------------------------------
