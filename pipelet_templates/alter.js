@@ -18,7 +18,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Do not change the following line, it allows to work in the browser and Node.js
+/*
+   The following line allows the module to be loaded universally in the browser and Node.js
+   For browser-only modules it can be reduced to: this.undefine
+   For Node.js-only modules it can be reduced to: require( 'undefine' )( module, require )
+*/
 ( this.undefine || require( 'undefine' )( module, require ) )
 
 /*
@@ -29,13 +33,15 @@
 ()
 
 /*
-   AMD define( id, dependencies?, factory )
+   AMD define call signature: ( id, dependencies?, factory )
    
-   - id is mandatory and must be this filename without the js extension
+   - id is mandatory and MUST be this filename without 'js' extension
    - dependencies is an optional Array of strings for each dependency
    - factory is a function defining this module
    
    More information on AMD define: https://github.com/amdjs/amdjs-api/wiki/AMD
+   
+   For more information and other options, check https://www.npmjs.com/package/undefine
 */
 ( 'square', [ 'toubkal', './square' ], function( rs, square ) {
   'use strict';
