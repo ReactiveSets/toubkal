@@ -37,22 +37,22 @@ value_equals = require '../../lib/util/value_equals.js'
 # -----------------------
 
 describe 'Comparing values using value_equals()', ->
-  describe 'NaN', ->
-    it 'NaN should equal NaN', ->
-      expect( value_equals( NaN, NaN ) ).to.be true
+  describe 'undefined', ->
+    it 'undefined should equal undefined', ->
+      expect( value_equals( undefined, undefined ) ).to.be true
       
-    it 'new Number( NaN ) should equal new Number( NaN )', ->
-      expect( value_equals( new Number( NaN ), new Number( NaN ) ) ).to.be true
+    it 'undefined should not equal null', ->
+      expect( value_equals( undefined, null ) ).to.be false
       
-    it 'NaN should equal new Number( NaN )', ->
-      expect( value_equals( NaN, new Number( NaN ) ) ).to.be true
-    
-    it 'NaN should not equal 0', ->
-      expect( value_equals( NaN, 0 ) ).to.be false
-
-    it 'NaN should not equal undefined', ->
-      expect( value_equals( NaN, undefined ) ).to.be false
-
+    it 'undefined should not equal 0', ->
+      expect( value_equals( undefined, 0 ) ).to.be false
+      
+    it 'undefined should not equal ""', ->
+      expect( value_equals( undefined, '' ) ).to.be false
+      
+    it 'undefined should not equal false', ->
+      expect( value_equals( undefined, false ) ).to.be false
+      
   describe 'null', ->
     it 'null should equal null', ->
       expect( value_equals( null, null ) ).to.be true
@@ -66,53 +66,98 @@ describe 'Comparing values using value_equals()', ->
     it 'null should not equal ""', ->
       expect( value_equals( null, '' ) ).to.be false
       
-  describe 'undefined', ->
-    it 'undefined should equal undefined', ->
-      expect( value_equals( undefined, undefined ) ).to.be true
-      
-    it 'undefined should not equal 0', ->
-      expect( value_equals( undefined, 0 ) ).to.be false
-      
-    it 'undefined should not equal ""', ->
-      expect( value_equals( undefined, '' ) ).to.be false
+    it 'null should not equal false', ->
+      expect( value_equals( null, false ) ).to.be false
       
   describe 'Numbers', ->
-    it '0 should equal 0', ->
-      expect( value_equals( 0, 0 ) ).to.be true
-      
-    it 'new Number( 0 ) should equal new Number( 0 )', ->
-      expect( value_equals( new Number( 0 ), new Number( 0 ) ) ).to.be true
-      
-    it '0 should equal new Number( 0 )', ->
-      expect( value_equals( 0, new Number( 0 ) ) ).to.be true
-      
-    it '1 should equal 1', ->
-      expect( value_equals( 1, 1 ) ).to.be true
-      
-    it 'new Number( 1 ) should equal new Number( 1 )', ->
-      expect( value_equals( new Number( 1 ), new Number( 1 ) ) ).to.be true
-      
-    it '1 should equal new Number( 1 )', ->
-      expect( value_equals( 1, new Number( 1 ) ) ).to.be true
-      
-    it '0 should not equal 1', ->
-      expect( value_equals( 0, 1 ) ).to.be false
-      
-    it '0 should not equal "0"', ->
-      expect( value_equals( 0, "0" ) ).to.be false
-      
-    it '0 should not equal ""', ->
-      expect( value_equals( 0, "" ) ).to.be false
-      
-    it '0 should not equal false', ->
-      expect( value_equals( 0, false ) ).to.be false
-      
-    it '1 should not equal "1"', ->
-      expect( value_equals( 1, "1" ) ).to.be false
-      
-    it '1 should not equal true', ->
-      expect( value_equals( 1, true ) ).to.be false
-      
+    describe 'NaN', ->
+      it 'NaN should equal NaN', ->
+        expect( value_equals( NaN, NaN ) ).to.be true
+        
+      it 'new Number( NaN ) should equal new Number( NaN )', ->
+        expect( value_equals( new Number( NaN ), new Number( NaN ) ) ).to.be true
+        
+      it 'NaN should equal new Number( NaN )', ->
+        expect( value_equals( NaN, new Number( NaN ) ) ).to.be true
+        
+      it 'NaN should not equal 0', ->
+        expect( value_equals( NaN, 0 ) ).to.be false
+        
+      it 'NaN should not equal undefined', ->
+        expect( value_equals( NaN, undefined ) ).to.be false
+        
+    describe '0 and -0', ->
+      it '0 should equal 0', ->
+        expect( value_equals( 0, 0 ) ).to.be true
+        
+      it '0 should not equal -0', ->
+        expect( value_equals( 0, -0 ) ).to.be false
+        
+      it '-0 should equal -0', ->
+        expect( value_equals( -0, -0 ) ).to.be true
+        
+      it 'new Number( 0 ) should equal new Number( 0 )', ->
+        expect( value_equals( new Number( 0 ), new Number( 0 ) ) ).to.be true
+        
+      it 'new Number( -0 ) should equal new Number( -0 )', ->
+        expect( value_equals( new Number( -0 ), new Number( -0 ) ) ).to.be true
+        
+      it 'new Number( 0 ) should not equal new Number( -0 )', ->
+        expect( value_equals( new Number( 0 ), new Number( -0 ) ) ).to.be false
+        
+      it '0 should equal new Number( 0 )', ->
+        expect( value_equals( 0, new Number( 0 ) ) ).to.be true
+        
+      it '0 should not equal new Number( -0 )', ->
+        expect( value_equals( 0, new Number( -0 ) ) ).to.be false
+        
+      it '0 should not equal new Number( -0 )', ->
+        expect( value_equals( 0, new Number( -0 ) ) ).to.be false
+        
+      it '0 should not equal 1', ->
+        expect( value_equals( 0, 1 ) ).to.be false
+        
+      it '0 should not equal "0"', ->
+        expect( value_equals( 0, "0" ) ).to.be false
+        
+      it '0 should not equal ""', ->
+        expect( value_equals( 0, "" ) ).to.be false
+        
+      it '0 should not equal false', ->
+        expect( value_equals( 0, false ) ).to.be false
+        
+    describe 'Infinity and -Infinity', ->
+      it 'Infinity should equal Infinity', ->
+        expect( value_equals( Infinity, Infinity ) ).to.be true
+        
+      it 'Infinity should equal new Number( Infinity )', ->
+        expect( value_equals( Infinity, new Number( Infinity ) ) ).to.be true
+        
+      it 'new Number( Infinity = should equal new Number( Infinity )', ->
+        expect( value_equals( new Number( Infinity ), new Number( Infinity ) ) ).to.be true
+        
+      it '-Infinity should equal -Infinity', ->
+        expect( value_equals( -Infinity, -Infinity ) ).to.be true
+        
+      it '-Infinity should not equal Infinity', ->
+        expect( value_equals( -Infinity, Infinity ) ).to.be false
+        
+    describe 'Other numbers', ->
+      it '1 should equal 1', ->
+        expect( value_equals( 1, 1 ) ).to.be true
+        
+      it 'new Number( 1 ) should equal new Number( 1 )', ->
+        expect( value_equals( new Number( 1 ), new Number( 1 ) ) ).to.be true
+        
+      it '1 should equal new Number( 1 )', ->
+        expect( value_equals( 1, new Number( 1 ) ) ).to.be true
+        
+      it '1 should not equal "1"', ->
+        expect( value_equals( 1, "1" ) ).to.be false
+        
+      it '1 should not equal true', ->
+        expect( value_equals( 1, true ) ).to.be false
+        
   describe 'Strings', ->
     it '"" should equal ""', ->
       expect( value_equals( "", "" ) ).to.be true
@@ -216,6 +261,12 @@ describe 'Comparing values using value_equals()', ->
     it '[ 2, [] ] should not equal [ 2 ]', ->
       expect( value_equals( [ 2, [] ], [ 2 ] ) ).to.be false
       
+    it '[ 0 ] should not equal [ -0 ]', ->
+      expect( value_equals( [ 0 ], [ -0 ] ) ).to.be false
+      
+    it '[ 0 ] should equal [ 0 ]', ->
+      expect( value_equals( [ 0 ], [ 0 ] ) ).to.be true
+      
     it '[ 2, [] ] should not equal [ 2, [ 2 ] ]', ->
       expect( value_equals( [ 2, [] ], [ 2, [ 2 ] ] ) ).to.be false
       
@@ -228,6 +279,12 @@ describe 'Comparing values using value_equals()', ->
       
     it '{ a: 1 } should not equal { b: 1 }', ->
       expect( value_equals( { a: 1 }, { b: 1 } ) ).to.be false
+      
+    it '{ a: 0 } should equal { a: 0 }', ->
+      expect( value_equals( { a: 0 }, { a: 0 } ) ).to.be true
+      
+    it '{ a: 0 } should not equal { a: -0 }', ->
+      expect( value_equals( { a: 0 }, { a: -0 } ) ).to.be false
       
     it '{ a: 1 } should not equal { a: 1, b: 1 }', ->
       expect( value_equals( { a: 1 }, { a: 1, b: 1 } ) ).to.be false
