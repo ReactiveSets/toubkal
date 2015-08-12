@@ -111,9 +111,6 @@ describe 'Comparing values using value_equals()', ->
       it '0 should not equal new Number( -0 )', ->
         expect( value_equals( 0, new Number( -0 ) ) ).to.be false
         
-      it '0 should not equal new Number( -0 )', ->
-        expect( value_equals( 0, new Number( -0 ) ) ).to.be false
-        
       it '0 should not equal 1', ->
         expect( value_equals( 0, 1 ) ).to.be false
         
@@ -309,6 +306,15 @@ describe 'Comparing values using value_equals()', ->
       
     it '{ a: 1, b: 2 } should equal { b: 2, a: 1 } (properties order is irrelevent)', ->
       expect( value_equals( { a: 1, b: 2 }, { b: 2, a: 1 } ) ).to.be true
+      
+    it '{ a: 1, b: 2 } should not equal { b: 2, a: 1 } when properties order is checked', ->
+      expect( value_equals( { a: 1, b: 2 }, { b: 2, a: 1 }, true ) ).to.be false
+      
+    it '{ a: 1, b: 2 } should not equal { a: 1, b: 2, c: 3 } when properties order is checked', ->
+      expect( value_equals( { a: 1, b: 2 }, { a: 1, b: 2, c: 3 }, true ) ).to.be false
+      
+    it '{ a: 1, b: 2 } should not equal { a: 1, b: 2 } when properties order is checked', ->
+      expect( value_equals( { a: 1, b: 2 }, { a: 1, b: 2 }, true ) ).to.be true
       
     it '{ a: 1, b: {} } should equal { a: 1, b: {} }', ->
       expect( value_equals( { a: 1, b: {} }, { a: 1, b: {} } ) ).to.be true
