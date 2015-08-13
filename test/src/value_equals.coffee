@@ -211,6 +211,20 @@ describe 'Comparing values using value_equals()', ->
     it 'false should not equal null', ->
       expect( value_equals( false, null ) ).to.be false
       
+  describe 'Date Objects', ->
+    a = new Date( 1234567891234 )
+    b = new Date( 1234567891234 )
+    c = new Date( 1234567891235 )
+
+    it 'two equal Dates should be equal', ->
+      expect( value_equals( a, b ) ).to.be true
+      
+    it 'two unequal Dates should not be equal', ->
+      expect( value_equals( a, c ) ).to.be false
+      
+    it 'a Date should not equal its value', ->
+      expect( value_equals( a, a.valueOf() ) ).to.be false
+      
   describe 'Regular Expressions', ->
     it '/./ should equal /./', ->
       expect( value_equals( /./, /./ ) ).to.be true
@@ -239,7 +253,7 @@ describe 'Comparing values using value_equals()', ->
     it '/test/m should not equal /test/m', ->
       expect( value_equals( /test/m, /test/m ) ).to.be true
       
-  describe 'Arrays', ->
+  describe 'Acyclic Arrays', ->
     it '[] should equal []', ->
       expect( value_equals( [], [] ) ).to.be true
       
@@ -267,7 +281,7 @@ describe 'Comparing values using value_equals()', ->
     it '[ 2, [] ] should not equal [ 2, [ 2 ] ]', ->
       expect( value_equals( [ 2, [] ], [ 2, [ 2 ] ] ) ).to.be false
       
-  describe 'Objects', ->
+  describe 'Acyclic Objects', ->
     it '{} should equal {}', ->
       expect( value_equals( {}, {} ) ).to.be true
       
@@ -325,4 +339,61 @@ describe 'Comparing values using value_equals()', ->
     it '{ a: 1, b: { c: [ {}, 1, "" ] } } should not equal { a: 1, b: { c: [ {}, 1, "", true ] } }', ->
       expect( value_equals( { a: 1, b: { c: [ {}, 1, "" ] } }, { a: 1, b: { c: [ {}, 1, "", true ] } } ) ).to.be false
       
- 
+  describe 'Cyclic Arrays and Objects', ->
+    a = [ 1, 2, 3, a_1 = { a: 1 }, a_2 = [ 5, 6 ], a_3 = { test: true } ]
+    b = [ 1, 2, 3, b_1 = { a: 1 }, b_2 = [ 5, 6 ], b_3 = { test: true } ]
+    
+    it 'Non-cyclic arrays with nested objects and array should be equal', ->
+      expect( value_equals a, b ).to.be true
+      
+    it 'Adding a cycle in a should throw when comparing without option check cycles', ->
+      a[ 10 ] = a;
+      
+      expect( value_equals a, b ).to.throwException
+      
+    it 'Comparing with check cycles should return false', ->
+      expect( value_equals a, b, false, true ).to.be false
+      
+    it 'Adding a different cycle in b should compare to false', ->
+      b[ 10 ] = b_1;
+      
+      expect( value_equals a, b, false, true ).to.be false
+      
+    it 'Adding the same cycle in b should compare to true', ->
+      b[ 10 ] = b;
+      
+      expect( value_equals a, b, false, true ).to.be true
+      
+    it 'Adding additional cycle in nested object, different in b compare to false', ->
+      a_1.b = a
+      b_1.b = b_1
+      
+      expect( value_equals a, b, false, true ).to.be false
+      
+    it 'Adding the same additional cycle in nested object should compare to true', ->
+      b_1.b = b
+      
+      expect( value_equals a, b, false, true ).to.be true
+      
+    it 'Adding different cycles in nested Array, with similar values should compare to false', ->
+      a_2[ 2 ] = [ 5, 6, a_2 ]
+      b_2[ 2 ] = b_2
+      
+      expect( value_equals a, b, false, true ).to.be false
+      
+    it 'Fixing cycle in nested Array, should now compare to true', ->
+      b_2[ 2 ] = [ 5, 6, b_2 ]
+      
+      expect( value_equals a, b, false, true ).to.be true
+      
+    it 'Adding different cycles in nested Object, with similar values should compare to false', ->
+      a_3.c = { test: true, c: a_3 }
+      b_3.c = b_3
+      
+      expect( value_equals a, b, false, true ).to.be false
+      
+    it 'Fixing cycle in nested Object, should now compare to true', ->
+      b_3.c = { test: true, c: b_3 }
+      
+      expect( value_equals a, b, false, true ).to.be true
+
