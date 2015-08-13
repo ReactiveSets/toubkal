@@ -634,7 +634,7 @@ describe 'Transactions test suite:', ->
         output_1 = new RS.Loggable 'output_1'
         output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' ).set_tag_branches 'source', 2
+        input_transactions = new Input_Transactions( input, 'input' ).set_tag( 'source' ).set_branches( 2 )
         
         output_1_transactions = new Output_Transactions output_1, 'output_1'
         output_2_transactions = new Output_Transactions output_2, 'output_2'
@@ -799,7 +799,7 @@ describe 'Transactions test suite:', ->
         output_1 = new RS.Loggable 'output_1'
         output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' ).set_tag_branches 'source', 2
+        input_transactions = new Input_Transactions( input, 'input' ).set_tag( 'source' ).set_branches( 2 )
         
         output_1_transactions = new Output_Transactions output_1, 'output_1'
         output_2_transactions = new Output_Transactions output_2, 'output_2'
