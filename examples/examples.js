@@ -97,11 +97,14 @@ module.exports = function( servers ) {
   }, { single: true } );
   
   // Serve database to socket.io clients
-  var clients_input = rs.union( [ database, tables ] );
+  // ToDo: add option to dispatch() to use a union() as dispatcher instead of passthrough()
+  // ToDo: or maybe, make path_through() a union() so that it becomes a controllet
+  // ToDo: or just deprecate path_through() altogether
+  var clients_input = rs.union( [ database, tables ], { name: 'clients_input' } );
   
   var clients_output = clients_input
     .dispatch( servers.socket_io_clients(), function( source, options ) {
-    
+      
       return this.socket._add_source( source );
     }, { single: true } )
   ;
