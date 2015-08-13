@@ -16,16 +16,3 @@ find *sh *.json *.md *.txt .travis.yml lib test bin \
 | sort -n
 
 exit 0
-
-# Previous method:
-wc -l \
-  lib/*js \
-  lib/server/*js \
-  lib/client/*js \
-  test/README.txt test/*html test/*.js \
-  test/src/*coffee \
-  test/bin/*sh \
-  test/css/*css \
-  test/fixtures/file/config.json \
-  *sh *.json *.md *.txt .travis.yml bin/uuid_v4 \
-| sort -n
