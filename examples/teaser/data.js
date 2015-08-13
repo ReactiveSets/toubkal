@@ -32,7 +32,9 @@ module.exports = function( database, clients ) {
       sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
       
       sale.flow = 'teaser/sales_year';
-    } )
+    }, { name: 'alter teaser/sales_year' } )
+    
+    .trace( 'teaser/sales_year' )
     
     ._add_destination( clients )
   ;
