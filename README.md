@@ -4,7 +4,7 @@
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*606 automated tests*
+*727 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -514,24 +514,18 @@ front-end, or as a full-stack framework.
 
 #### Integrated database and model
 
-*Persistance will be implemented in version 0.4 and charding in version 0.7.
+Persistance is being implemented in version 0.3 while charding will be in version 0.7.
 
 Toubkal features a chardable document database with joins, aggregates, filters and
 transactions with eventual consistency allowing both normalized and denormalized
 schemes.
 
-### Demonstration Site
-A [demonstration and beta test site is available here](http://www.castorcad.com/).
-
-The source code for this demonstration site is in
-[the GitHub repository ReactiveSets / demo](https://github.com/ReactiveSets/demo).
-
 ### Documentation
 
 This readme provides an introduction to Toubkal.
 
-The bulk of the documentation is currently embedded in the code of ```lib/pipelet.js```
-and other sources for the core as well as individual pipelets' sources.
+The bulk of the core documentation is currently embedded in the code of ```lib/pipelet.js```
+and other sources for other pipelets.
 
 We plan on extracting and completing this documentation to provide the following
 manuals:
@@ -543,7 +537,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 606 automated tests for the Toubkal core pipelets that run
+We have curently developped 727 automated tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -585,7 +579,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 606 of 606 tests (4196ms)
+-> passed 727 of 727 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -765,14 +759,17 @@ node server.js > server.out
 - Horizontal distribution / Charding using websocket dispatcher
 - Develop additional tests, goal is at least 900 automated tests
 - Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
+- Implement websocket_clients() and websocket_server() pipelets as a faster alternative
+  to socket_io equivalents.
 
 ### Version 0.6.0 - Packaging / First Beta
 
+This will be the first Beta version with a reasonably stable API
+
 #### Main Goals:
 
-- This is the first Beta version with a reasonably stable API:
-  - Implement as many ToDo as possible
-  - Develop additional tests, goal is at least 800 automated tests
+- Implement as many ToDo as possible
+- Develop additional tests, goal is at least 1200 automated tests
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
 - Session Strorage Dataflow
@@ -788,22 +785,21 @@ node server.js > server.out
   - Split This repository into toubkal, rs_server, rs_client, rs_socket_io, rs_bootstrap, ... repositories
   - Implement rs package manager
   - Implement rs automatic pipelet patching
-- Develop additional tests, goal is at least 650 automated tests
+- Develop additional tests, goal is at least 1000 automated tests
 
-### Version 0.4.0 - Persistance
+### Version 0.4.0 - Versionned Persistance
+
+This version introduces the capability to keep historical values of objects persisted and cached.
 
 #### Main Goals:
 
-- Persistance
-  - Refactor fetch() to provide operations instead of adds, enables versionning
+- Versionned persistance, i.e. 
+  - Refactor fetch() to provide adds, removes, updates operations instead of adds, enables versionning
   - Dataflows Meta Data for key, and query indexes definition
   - Operations log
   - Query cache
   
-- Develop additional tests, goal is at least 600 automated tests
-
-- Implement websocket_clients() and websocket_server() pipelets as a faster alternative
-  to socket_io equivalents.
+- Develop additional tests, goal is at least 900 automated tests
 
 - Query Tree else()
   - Emits data events not routed to any other destination input
@@ -814,15 +810,57 @@ node server.js > server.out
   - Prevents useless duplication of fetch and query updates on all upstream union branches
   - Routes fetch and update queries based on downstream query
 
-### Version 0.3.0 - Complex Queries, Authentication && Authorizations, API Refactoring
+### Version 0.3.0 - Complex Queries, Authentication && Authorizations, Basic Persistance
+
+This version is the first version allowing to build complex streaming applications.
+
+ETA: December 12th 2015, 3 years anniversary of project debut
 
 #### Remaining Goals:
 
 - Dynamic Authorizations Query Dataflow from user id
 - Multi-provider Sign-in Widget
 - Refactor / stabilize pipelet API
+- Object persistance, i.e. does not keep older version of objects' values
 
 ##### Work in progress:
+
+- Error handling through 'error' dataflow
+  - Error values have the following attributes:
+    - flow (String): the string 'error'
+    - code (String): the error code
+    - message (String): an optional error message
+    - operation (String): 'add' or 'remove', the operation that caused the error
+    - error_flow (String): the flow for which the error occured
+    - sender (String): an identification of the sender of the operation to allow
+      routing back to sender. Sender's valued comes from operations option 'sender'
+    - values (Array of Objects): the values for which the error occured
+  
+  - Allows downstream pipelets to handle errors by reverting failed operations:
+    - a failed add is reverted by remove
+    - a failed remove is reverted by add
+    - errors can be routed back to sender using filters for the flow and sender attributes
+
+  - Error dataflow is handled specifically by some core pipelets:
+    - set_flow() does not alter the flow attribute when set to 'error'
+    - unique_set() forwards incomming errors to underlying set
+  
+  - ToDo:
+    - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
+    - provide pipelet to revert errors
+    - filter may route errors based on error values
+    - alter may alter error values 
+
+- MySQL read/write dataflows pipelets:
+  - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:
+    - mysql_connections(): manages MySQL connections
+    
+    - mysql_read(): statelessly read MySQL table:
+      - Builds SELECT .. WHERE from downstream query
+    
+    - mysql_write(): statelessly writes (DELETE and INSERT) to MySQL table
+    
+    - configuration(): to retrieve MySQL user credentials, removing credentials from code
 
 - Dropbox file sharing for photo albums (developped and tested in demo repository)
 
@@ -858,6 +896,10 @@ node server.js > server.out
     - using html_serialize() to rebuild modified html to server
 
 ##### Features already developped:
+
+- Operations Optimizer:
+  - waits for transactions to complete to emit operations
+  - on transaction completion, emits optimized operations, i.e. the minimum set of adds, removes and updates
 
 - Teaser example
 
@@ -941,10 +983,11 @@ node server.js > server.out
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 606 automated tests
+- 727 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
+mysql()                   | In toubkal_mysql repository, provides read/write dataflows to/from MySQL tables
 operations_optimizer()    | On complete, remove unnecessary adds, removes, updates
 html_serialize()          | Serialize DOM tree generated by html_parse()
 html_parse()              | Parse html content to htmlparser2 DOM tree
@@ -960,6 +1003,7 @@ make_base_directories()   | Create base directories for a dataset of file paths
 
 Other Classes && methods  | Short Description
 --------------------------|------------------------------------------------
+value_equals()            | Allows comparison of any types of values, including deeply nested objects and arrays
 undefine()                | Universal module loader for node and the browser, exported as own npm module
 Lap_Timer                 | Helps calulate time difference between events, used by loggers
 Console_Logger            | Logger to console.log() with timestamps and lap lines 
