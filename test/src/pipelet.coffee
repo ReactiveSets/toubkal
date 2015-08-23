@@ -42,45 +42,78 @@ Pipelet = RS.Pipelet
 # pipelet test suite
 # ------------------
 
-describe 'Pipelets', ->
-  describe 'Pipelet Connections', ->
+describe 'Pipelet', ->
+  describe 'Lazy and Greedy Pipelet Connections', ->
     values = [ { id: 1 }, { id: 2 } ]
     
     source = new Pipelet()
     lazy   = new Pipelet()
     greedy = rs.greedy()
     
-    lazy._add_source source
-    greedy._input.add_source source._output
+    describe 'add_source()', ->
+      it 'Adding as "source" as a source to "lazy", "source" should have "lazy" input as desintations', ->
+        lazy._add_source source
+        
+        expect( source._output.destinations ).to.be.eql [ lazy._input ]
+      
+      it '"lazy" should have "source._output" as its input source', ->
+        expect( lazy._input.source ).to.be source._output
+      
+      it 'after adding "greedy", "source" should now have "lazy" and "greedy" inputs as destinations', ->
+        greedy._input.add_source source._output
+        
+        expect( source._output.destinations ).to.be.eql [ lazy._input, greedy._input ]
+      
+      it '"greedy" should have "source._output" as its input source', ->
+        expect( greedy._input.source ).to.be source._output
+      
+      it '"source" query tree should have "greedy" as the only subscriber in its top node', ->
+        expect( source._output.tree.top ).to.be.eql {
+          branches   : {}
+          keys       : []
+          subscribers: [ greedy._input ]
+        }
     
-    it 'source should have lazy and greedy inputs as outputs', ->
-      expect( source._output.destinations ).to.be.eql [ lazy._input, greedy._input ]
+      it 'Trying to add "source" as a source of "lazy" a second time should throw', ->
+        expect( () -> lazy._add_source source ).to.throwException()
+      
+      it 'Trying to add "source" as a source of "greedy" a second time should throw', ->
+        expect( () -> greedy._input.add_source source._output ).to.throwException()
+      
+      it 'Trying to add "lazy" as a source of "greedy" should throw', ->
+        expect( () -> greedy._add_source lazy ).to.throwException()
+      
+    describe 'remove_source()', ->
+      it 'After removing "source" as a source of "lazy", "source" should have only "greedy" as a destination', ->
+        lazy._remove_source source
+        
+        expect( source._output.destinations ).to.be.eql [ greedy._input ]
+      
+      it 'Trying to remove "source" as a source of "lazy" a second time should throw', ->
+        expect( () -> lazy._remove_source source ).to.throwException()
+      
+      it 'After removing "source" as a source of "greedy", "source" should no-longer have destinations', ->
+        greedy._input.remove_source source._output
+        
+        expect( source._output.destinations ).to.be.eql []
+      
+      it 'Trying to remove "source" as a source of "greedy" a second time should throw', ->
+        expect( () -> greedy._remove_source source ).to.throwException()
+      
+    describe 'Connections through the dot "." operator', ->
+      it 'should have fetched content into a set through a stateless pipelet', ->
+        s = rs.set( values ).pass_through().set()
+        
+        expect( s.a ).to.be.eql values
     
-    it 'lazy should have source._output as its input', ->
-      expect( lazy._input.source ).to.be source._output
-      
-    it 'greedy should have source._output as its input', ->
-      expect( greedy._input.source ).to.be source._output
-      
-    it 'source query tree should have greedy as a subscriber in its top node', ->
-      expect( source._output.tree.top ).to.be.eql {
-        branches   : {}
-        keys       : []
-        subscribers: [ greedy._input ]
-      }
-    
-    it 'should have fetched content into a set through a stateless pipelet', ->
-      s = rs.set( values ).pass_through().set()
-      
-      expect( s.a ).to.be.eql values
-    
-    it 'should have fetched content into a set even if stateless pipelet is pluged last into upstream pipelet', ->
-      s = rs.set( values )
-      
-      p = rs.pass_through()
-      
-      s1 = p.set()
-      
-      s._output.add_destination( p._input )
-      
-      expect( s1.a ).to.be.eql values
+    describe 'add_destination()', ->
+      it 'should have fetched content into a set even if stateless pipelet is pluged last into upstream pipelet', ->
+        s = rs.set( values )
+        
+        p = rs.pass_through()
+        
+        s1 = p.set()
+        
+        s._output.add_destination( p._input )
+        
+        expect( s1.a ).to.be.eql values
