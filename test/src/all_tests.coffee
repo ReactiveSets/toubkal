@@ -22,13 +22,26 @@
 # require modules tests
 # ---------------------
 
+# utils
 require './clone_tests.js'
 require './value_equals.js'
 require './lazy_logger.js'
 require './query.js'
 require './event_emitter.js'
 require './transactions.js'
-require './core.js'
+require './extend.js'
+require './subclass.js'
+require './code.js'
+
+# core
+require './RS.js'
+require './pipelet.js'
+require './set.js'
+require './filter.js'
+require './order.js'
+require './aggregate.js'
+require './join.js'
+
 require './json.js'
 require './transforms.js'
 require './file.js'
