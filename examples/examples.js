@@ -124,6 +124,8 @@ module.exports = function( servers ) {
   ;
   
   rs.dispatch( data_processors, function() {
+    // ToDo: cleanup required when removing a data processor, need to disconnect data from database and clients
+    
     var data_processor = './' + this.path;
     
     de&&ug( 'require data processor:', data_processor );
