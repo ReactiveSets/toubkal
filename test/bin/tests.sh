@@ -27,6 +27,7 @@ if [ $test = "all" ]; then
   
   test=test/lib/all_tests.js
 else
+  coffee --map --output test/lib --compile test/src/tests_utils.coffee
   coffee --map --output test/lib --compile test/src/$test.coffee
   
   test=test/lib/$test.js
