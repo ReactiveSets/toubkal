@@ -23,7 +23,7 @@
 # ---------------------
 
 # utils
-require './clone_tests.js'
+require './clone.js'
 require './value_equals.js'
 require './lazy_logger.js'
 require './query.js'
