@@ -4,7 +4,7 @@
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*727 automated tests*
+*755 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -218,11 +218,7 @@ The following provides an example of a non-trivial, high-performance, data serve
 reactive updates on everything including authorization changes, in 60 lines of code,
 comments included:
 ```javascript
-var rs = require( 'toubkal' ); // Loads Toubkal core pipelets, returns rs head pipelet
-
-require( 'toubkal/lib/server/file.js' ); // Loads file server pipelets
-require( 'toubkal/lib/server/http.js' ); // Loads http server pipelets
-require( 'toubkal/lib/socket_io/socket_io_clients.js' ); // Loads socket.io server pipelets
+var rs = require( 'toubkal' ); // Loads Toubkal core and server pipelets, returns rs head pipelet
 
 var database = rs.file_json_store( 'data_store.json' ); // * Input/Output dataflows to/from datastore, one-line, no external database required
 
@@ -537,7 +533,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 727 automated tests for the Toubkal core pipelets that run
+We have curently developped 755 automated tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -579,7 +575,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 727 of 727 tests (4196ms)
+-> passed 755 of 755 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -983,7 +979,7 @@ ETA: December 12th 2015, 3 years anniversary of project debut
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 727 automated tests
+- 755 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
