@@ -24,12 +24,11 @@
 
 utils  = require './tests_utils.js'
 
-expect = this.expect || utils.expect
-check  = this.check  || utils.check
-rs     = this.rs     || utils.rs
+expect = utils.expect
+check  = utils.check
+rs     = utils.rs
 clone  = rs.RS.extend.clone
 
-require '../../lib/core/filter.js'
 require '../../lib/server/file.js'
 
 # ----------------------------------------------------------------------------------------------

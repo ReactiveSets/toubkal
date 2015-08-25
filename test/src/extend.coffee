@@ -30,10 +30,7 @@ check  = this.check  || utils.check
 # ----------------------------------------------------------------------------------------------
 # Require tested modules
 # ----------------------
-extend = this.rs && this.rs.RS.extend
-
-unless extend?
-  extend = require '../../lib/util/extend.js'
+extend = this.rs && this.rs.RS.extend || require '../../lib/util/extend.js'
 
 clone = extend.clone
 

@@ -22,15 +22,15 @@
 # Setup mocha BDD, load expect
 # ----------------------------
 
-mocha.setup 'bdd' if typeof mocha isnt 'undefined'
+this.mocha && mocha.setup 'bdd'
 
-expect = this.expect = this.expect || require 'expect.js'
+this.expect = this.expect || require 'expect.js'
 
 # ----------------------------------------------------------------------------------------------
 # Asynchrnous tests exception catcher
 # -----------------------------------
 
-check = this.check = ( done, test ) ->
+this.check = ( done, test ) ->
   try
     test()
     
@@ -39,13 +39,9 @@ check = this.check = ( done, test ) ->
     done e
 
 # ----------------------------------------------------------------------------------------------
-# rs
-# --
+# rs and log
+# ----------
 
-rs = this.rs = this.rs || require '../../lib/core/pipelet.js'
+this.rs = this.rs || require '../../lib/core.js'
 
-RS = rs.RS
-log = RS.log
-
-this.log = ( message ) ->
-  log( 'tests,', message )
+this.log = this.rs.RS.log.bind( null, 'tests,' )

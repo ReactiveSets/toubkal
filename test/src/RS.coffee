@@ -25,14 +25,8 @@
 utils  = require( './tests_utils.js' ) unless this.expect
 
 expect = this.expect || utils.expect
-
-# ----------------------------------------------------------------------------------------------
-# Require tested modules
-# ----------------------
-RS = this.rs && this.rs.RS
-
-unless RS?
-  RS = require '../../lib/core/RS.js'
+rs     = this.rs     || utils.rs
+RS     = rs.RS
 
 # ----------------------------------------------------------------------------------------------
 # RS test suite

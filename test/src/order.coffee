@@ -27,14 +27,7 @@ utils  = require( './tests_utils.js' ) unless this.expect
 expect = this.expect || utils.expect
 check  = this.check  || utils.check
 log    = this.log    || utils.log
-
-# ----------------------------------------------------------------------------------------------
-# Require tested modules
-# ----------------------
-rs = this.rs
-
-unless rs?
-  rs = require '../../lib/core/order.js'
+rs     = this.rs     || utils.rs
 
 # ----------------------------------------------------------------------------------------------
 # order test suite

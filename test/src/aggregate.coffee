@@ -27,15 +27,7 @@ utils  = require( './tests_utils.js' ) unless this.expect
 expect = this.expect || utils.expect
 check  = this.check  || utils.check
 
-# ----------------------------------------------------------------------------------------------
-# Require tested modules
-# ----------------------
-rs = this.rs
-
-unless rs?
-  rs = require '../../lib/core/aggregate.js'
-  require '../../lib/core/order.js'
-  require '../../lib/core/filter.js'
+rs = this.rs || require '../../lib/core.js'
 
 Pipelet = rs.RS.Pipelet
 

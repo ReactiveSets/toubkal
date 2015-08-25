@@ -1,7 +1,7 @@
 ###
-    control_tests.coffee
+    form_tests.coffee
 
-    Copyright (C) 2013, 2014, Reactive Sets
+    Copyright (C) 2013-2015, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -19,20 +19,10 @@
 ###
 
 # ----------------------------------------------------------------------------------------------
-# rs control unit test suite
-# ------------------------
+# Create a form dataflow connected to socket_io_server
+# ----------------------------------------------------
 
-# include modules
 rs = this.rs
-
-unless rs?
-  rs = require '../../lib/core/filter.js'
-  require '../../lib/core/order.js'
-  require '../../lib/core/aggregate.js'
-  require '../../lib/client/table.js'
-  require '../../lib/client/form.js'
-
-RS = rs.RS
 
 organizer = rs.set( [ id: 'label' ] )
 

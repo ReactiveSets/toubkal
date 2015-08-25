@@ -26,6 +26,10 @@ utils  = require( './tests_utils.js' ) unless this.expect
 
 expect = this.expect || utils.expect
 check  = this.check  || utils.check
+rs     = this.rs     || utils.rs
+
+RS      = rs.RS
+Pipelet = RS.Pipelet
 
 # ----------------------------------------------------------------------------------------------
 # Check sorted pipelet content
@@ -35,17 +39,6 @@ check_set_content = ( done, source, values ) ->
   source._fetch_all ( _values ) ->
     check done, () ->
       expect( _values.sort ( a, b ) -> a.id - b.id ).to.be.eql values
-
-# ----------------------------------------------------------------------------------------------
-# Require tested modules
-# ----------------------
-rs = this.rs
-
-unless rs?
-  rs = require '../../lib/core/filter.js'
-
-RS      = rs.RS
-Pipelet = RS.Pipelet
 
 # ----------------------------------------------------------------------------------------------
 # filter test suite

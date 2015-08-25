@@ -27,13 +27,7 @@ utils  = require( './tests_utils.js' ) unless this.expect
 expect = this.expect || utils.expect
 check  = this.check  || utils.check
 
-# ----------------------------------------------------------------------------------------------
-# Require tested modules
-# ----------------------
-subclass = this.rs && this.rs.RS.subclass
-
-unless subclass?
-  subclass = require '../../lib/util/subclass.js'
+subclass = this.rs && this.rs.RS.subclass || require '../../lib/util/subclass.js'
 
 # ----------------------------------------------------------------------------------------------
 # subclass test suite

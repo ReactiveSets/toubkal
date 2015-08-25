@@ -1,7 +1,7 @@
 ###
-    clone_tests.coffee
+    clone.coffee
 
-    Copyright (C) 2013, 2014, Reactive Sets
+    Copyright (C) 2013-2015, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -30,13 +30,8 @@ check  = this.check  || utils.check
 # ----------------------------------------------------------------------------------------------
 # Require tested modules
 # ----------------------
-rs = this.rs
+extend = this.rs && this.rs.RS.extend || require '../../lib/util/extend.js'
 
-unless rs?
-  rs = require '../../lib/core/pipelet.js'
-
-RS      = rs.RS
-extend  = RS.extend
 clone   = extend.clone
 
 # ----------------------------------------------------------------------------------------------

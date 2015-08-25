@@ -40,7 +40,7 @@ check = ( done, test ) ->
 rs     = require '../../lib/core/pipelet.js'
 expect = require 'expect.js'
 
-require '../../lib/server/sketchfab.js'
+require '../../lib/sketchfab/sketchfab.js'
 
 # ----------------------------------------------------------------------------------------------
 # rs Sketchfab Get Models unit test suite

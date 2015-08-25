@@ -28,9 +28,7 @@ rs = this.rs
 expect = this.expect || require 'expect.js'
 
 unless rs?
-  rs = require '../../lib/core/filter.js'
-  require '../../lib/core/order.js'
-  require '../../lib/core/aggregate.js'
+  rs = require '../../lib/core.js'
   require '../../lib/client/table.js'
   require '../../lib/client/control.js'
 
