@@ -1,7 +1,7 @@
 {
   "name": "toubkal",
   
-  "version": "0.2.11",
+  "version": "0.2.12",
   
   "description": "High-Performances Reactive Web Application Framework",
   
@@ -25,7 +25,7 @@
     "undefine"    : "0.2.6",
     "node-uuid"   : "1.4.1",
     "socket.io"   : "0.9.16",
-    "uglify-js"   : "2.4.13",
+    "uglify-js"   : "2.4.24",
     "mime"        : "1.2.11",
     "aws-sdk"     : "2.0.0-rc13",
     "nodemailer"  : "0.6.3",
