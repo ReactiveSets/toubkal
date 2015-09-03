@@ -35,6 +35,209 @@ Pipelet = RS.Pipelet
 # ------------------
 
 describe 'Pipelet', ->
+  describe 'set_default_options()', ->
+    set_default_options = Pipelet.set_default_options
+    
+    source = {}
+    
+    source_path = {
+      _key: [ 'path' ]
+    }
+    
+    f = ( p, options ) ->
+    
+    f.default_options = {
+      test: true
+    }
+    
+    defaults = {
+      other: 'other'
+    }
+    
+    it 'should return parameters with all default options set', ->
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source, arguments, defaults ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'id' ]
+              test: true
+              other: 'other'
+            }
+          ]
+      )( 'p1' )
+    
+    it 'should use source _key if provided', ->
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+              test: true
+              other: 'other'
+            }
+          ]
+      )( 'p1' )
+    
+    it 'should work if no defaults are provided', ->
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+              test: true
+            }
+          ]
+      )( 'p1' )
+    
+    it 'should work pipelet defaults options is null', ->
+      f.default_options = null
+      
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+            }
+          ]
+      )( 'p1' )
+    
+    it 'should work pipelet defaults options is provided by a function', ->
+      f.default_options = ( p1, options ) -> { p1: 'test ' + p1 }
+      
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+              p1: 'test p1'
+            }
+          ]
+      )( 'p1' )
+    
+    it 'should throw if pipelet defaults options is not a function or an object', ->
+      f.default_options = true
+      
+      ( ( p1, options ) ->
+          expect( () -> set_default_options( f, source_path, arguments ) ).to.throwException()
+      )( 'p1' )
+    
+    it 'should extend options when provided by caller', ->
+      f.default_options = ( p1, options ) -> { p1: 'test ' + p1 }
+      
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+              p1: 'test p1'
+              from_caller: 1
+            }
+          ]
+      )( 'p1', { from_caller: 1 } )
+    
+    it 'caller options should supercede pipelet default options', ->
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+              p1: 'from caller'
+            }
+          ]
+      )( 'p1', { p1: 'from caller' } )
+    
+    it 'caller options should supercede other default options', ->
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+              p1: 'test p1'
+              other: 'from caller'
+            }
+          ]
+      )( 'p1', { other: 'from caller' } )
+    
+    it 'caller key option should supercede default key', ->
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'node-id', 'id' ]
+              p1: 'test p1'
+              other: 'other'
+            }
+          ]
+      )( 'p1', { key: [ 'node-id', 'id' ] } )
+    
+    it 'defaults key option should supercede default key', ->
+      defaults.key = [ 'uuid' ]
+      
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+            'p1'
+            {
+              key: [ 'uuid' ]
+              p1: 'test p1'
+              other: 'other'
+            }
+          ]
+      )( 'p1' )
+    
+    it 'pipelet default options key option should supercede default key', ->
+      f.default_options = ( p1, options ) -> { p1: 'test ' + p1, key: [ p1 ] }
+      
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+            'path'
+            {
+              key: [ 'path' ]
+              p1: 'test path'
+              other: 'other'
+            }
+          ]
+      )( 'path' )
+    
+    it 'should throw if options parameter is not an object', ->
+      ( ( p1, options ) ->
+          parameters = arguments
+          
+          expect( () -> set_default_options( f, source_path, parameters, defaults ) ).to.throwException()
+      )( 'path', 'not an object' )
+    
+    it 'should throw if too many parameters are provided', ->
+      ( ( p1, options ) ->
+          parameters = arguments
+          
+          expect( () -> set_default_options( f, source_path, parameters, defaults ) ).to.throwException()
+      )( 'path', {}, {} )
+    
+    it 'should accept null options', ->
+      ( ( p1, options ) ->
+          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+            'path'
+            {
+              key: [ 'path' ]
+              p1: 'test path'
+              other: 'other'
+            }
+          ]
+      )( 'path', null )
+    
+    it 'should allow no parameter', ->
+      ( ( p1, options ) ->
+          delete f.default_options;
+          
+          parameters = set_default_options( f, source_path, arguments, defaults )
+          
+          expect( parameters ).to.be.an Array
+          expect( parameters[ 0 ] ).to.be.eql undefined
+          expect( parameters[ 1 ] ).to.be.eql {
+            key: [ 'uuid' ]
+            other: 'other'
+          }
+      )()
+    
   describe 'Lazy and Greedy Pipelet Connections', ->
     values = [ { id: 1 }, { id: 2 } ]
     
