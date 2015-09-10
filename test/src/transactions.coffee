@@ -49,6 +49,8 @@ IO_Transactions     = Transactions.IO_Transactions
 Input_Transaction   = Transactions.Input_Transaction
 Output_Transaction  = Transactions.Output_Transaction
 
+Options             = Transactions.Options
+
 # ----------------------------------------------------------------------------------------------
 # Some constants
 # --------------
@@ -87,65 +89,106 @@ describe 'Transactions test suite:', ->
   
   # RS.uuid_v4()
   
-  describe 'RS.Transactions.Options.forward():', ->
-    options_forward = RS.Transactions.Options.forward
-    uuid = uuid_v4()
-    
-    it 'should be a function with one parameter', ->
-      expect( options_forward ).to.be.a( 'function' ) &&
-      expect( options_forward.length ).to.be.eql 1
-    
-    it 'should return {} when called with no source options', ->
-      expect( options_forward() ).to.be.eql {}
-    
-    it 'should return {} with options { a: 1, b: {}, _t: { more: false } }', ->
-      expect( options_forward { a: 1, b: {}, _t: { more: false } } ).to.be.eql {}
-    
-    it 'should return {} with options { a: 1; b: {} }', ->
-      expect( options_forward { a: 1, b: {} } ).to.be.eql {}
-    
-    it 'should return {} with options { a: 1, _t: { more: "" } }', ->
-      expect( options_forward { a: 1, _t: { more: "" } } ).to.be.eql {}
-    
-    it 'should throw an exception for missing transaction id with options { a: 1, _t: { more: true } }', ->
-      expect( () -> options_forward { a: 1, b: {}, _t: { more: true } } ).to.throwException()
+  describe 'Options', ->
+    describe 'Options.forward()', ->
+      options_forward = Options.forward
+      uuid = uuid_v4()
+      
+      it 'should be a function with one parameter', ->
+        expect( options_forward ).to.be.a( 'function' ) &&
+        expect( options_forward.length ).to.be.eql 1
+      
+      it 'should return {} when called with no source options', ->
+        expect( options_forward() ).to.be.eql {}
+      
+      it 'should return {} with options { a: 1, b: {}, _t: { more: false } }', ->
+        expect( options_forward { a: 1, b: {}, _t: { more: false } } ).to.be.eql {}
+      
+      it 'should return {} with options { a: 1; b: {} }', ->
+        expect( options_forward { a: 1, b: {} } ).to.be.eql {}
+      
+      it 'should return {} with options { a: 1, _t: { more: "" } }', ->
+        expect( options_forward { a: 1, _t: { more: "" } } ).to.be.eql {}
+      
+      it 'should throw an exception for missing transaction id with options { a: 1, _t: { more: true } }', ->
+        expect( () -> options_forward { a: 1, b: {}, _t: { more: true } } ).to.throwException()
 
-    it 'should return { _t: { more: true, id: uuid } } with options { a: 1, _t: { more: true, id: uuid } }', ->
-      more = { a: 1, _t: { more: true, id: uuid } }
+      it 'should return { _t: { more: true, id: uuid } } with options { a: 1, _t: { more: true, id: uuid } }', ->
+        more = { a: 1, _t: { more: true, id: uuid } }
+        
+        expect( options_forward more ).to.be.eql {
+          _t: { more: true, id: uuid }
+        }
       
-      expect( options_forward more ).to.be.eql {
-        _t: { more: true, id: uuid }
-      }
+      it 'should return { _t: { id: uuid } } with options { _t: { more: false, id: uuid } )', ->
+        more = { _t: { more: false, id: uuid } }
+        
+        expect( options_forward more ).to.be.eql {
+          _t: { id: uuid }
+        }
+        
+      it 'should return { _t: { more: true, id: uuid } } with options { _t: { more: 1, id: uuid } }', ->
+        more = { _t: { more: 1, id: uuid } }
+        
+        expect( options_forward more ).to.be.eql {
+          _t: { more: true, id: uuid }
+        }
+        
+      it 'should return { _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
+        more = { _t: { more: 0, id: uuid } }
+        
+        expect( options_forward( more ) ).to.be.eql {
+          _t: { id: uuid }
+        }
+      
+      it 'should return { _t: { id: uuid } } with options { _t: { id: uuid } }', ->
+        more = { _t : { id: uuid } }
+        
+        expect( options_forward( more ) ).to.be.eql {
+          _t: { id: uuid }
+        }
+    # options_forward()
     
-    it 'should return { _t: { id: uuid } } with options { _t: { more: false, id: uuid } )', ->
-      more = { _t: { more: false, id: uuid } }
+    describe 'Options.has_more( options )', ->
+      has_more = Options.has_more
       
-      expect( options_forward more ).to.be.eql {
-        _t: { id: uuid }
-      }
+      it 'should return falsy if options is undefined', ->
+        expect( !!has_more() ).to.be false
       
-    it 'should return { _t: { more: true, id: uuid } } with options { _t: { more: 1, id: uuid } }', ->
-      more = { _t: { more: 1, id: uuid } }
+      it 'should return falsy if options has no transaction', ->
+        expect( !!has_more( {} ) ).to.be false
       
-      expect( options_forward more ).to.be.eql {
-        _t: { more: true, id: uuid }
-      }
+      it 'should return falsy if options has a transaction with more not true', ->
+        expect( !!has_more( { _t: {} } ) ).to.be false
       
-    it 'should return { _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
-      more = { _t: { more: 0, id: uuid } }
+      it 'should return true if options has a transaction with more set to true', ->
+        expect( has_more( { _t: { more: true } } ) ).to.be true
       
-      expect( options_forward( more ) ).to.be.eql {
-        _t: { id: uuid }
-      }
+    describe 'Options.last_fork_tag( options )', ->
+      last_fork_tag = Options.last_fork_tag
     
-    it 'should return { _t: { id: uuid } } with options { _t: { id: uuid } }', ->
-      more = { _t : { id: uuid } }
+      it 'should return undefined if options is undefined', ->
+        expect( last_fork_tag() ).to.be undefined
       
-      expect( options_forward( more ) ).to.be.eql {
-        _t: { id: uuid }
-      }
-  # options_forward()
-
+      it 'should return undefined if options has no transaction', ->
+        expect( last_fork_tag( {} ) ).to.be undefined
+      
+      it 'should return undefined if options has a transaction but no forks', ->
+        expect( last_fork_tag( { _t: {} } ) ).to.be undefined
+      
+      it 'should return 0 if options has a transaction with empty forks', ->
+        expect( last_fork_tag( { _t: { forks: [] } } ) ).to.be 0
+      
+      it 'should return fork tag if options has a transaction with a fork tag', ->
+        fork_tag = 'a tag';
+        
+        expect( last_fork_tag( { _t: { forks: [ fork_tag ] } } ) ).to.be fork_tag
+      
+      it 'should return last fork tag if options has a transaction with more than one fork tag', ->
+        fork_tag = 'a tag';
+        
+        expect( last_fork_tag( { _t: { forks: [ '', '', fork_tag ] } } ) ).to.be fork_tag
+      
   describe 'RS.Transactions() and RS.Transaction():', ->
     start_count = Transaction.count
     
