@@ -61,8 +61,8 @@ valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 # Transactions test suite
 # -----------------------
 
-describe 'Transactions test suite:', ->
-  describe 'RS.uuid.v4():', ->
+describe 'Transactions test suite', ->
+  describe 'RS.uuid.v4()', ->
     # Generate 10 random uuid v4 to verify that they al match
     v4_0 = uuid_v4()
     v4_1 = uuid_v4()
@@ -90,7 +90,7 @@ describe 'Transactions test suite:', ->
   # RS.uuid_v4()
   
   describe 'Options', ->
-    describe 'Options.forward()', ->
+    describe 'Options.forward( more )', ->
       options_forward = Options.forward
       uuid = uuid_v4()
       
@@ -147,7 +147,7 @@ describe 'Transactions test suite:', ->
         expect( options_forward( more ) ).to.be.eql {
           _t: { id: uuid }
         }
-    # options_forward()
+    # options_forward( more )
     
     describe 'Options.has_more( options )', ->
       has_more = Options.has_more
@@ -163,7 +163,8 @@ describe 'Transactions test suite:', ->
       
       it 'should return true if options has a transaction with more set to true', ->
         expect( has_more( { _t: { more: true } } ) ).to.be true
-      
+    # has_more( options )
+    
     describe 'Options.last_fork_tag( options )', ->
       last_fork_tag = Options.last_fork_tag
     
@@ -188,8 +189,209 @@ describe 'Transactions test suite:', ->
         fork_tag = 'a tag';
         
         expect( last_fork_tag( { _t: { forks: [ '', '', fork_tag ] } } ) ).to.be fork_tag
-      
-  describe 'RS.Transactions() and RS.Transaction():', ->
+     # last_fork_tag( options )
+     
+     describe 'Options.add_fork_tag( options, tag )', ->
+       add_fork_tag = Options.add_fork_tag
+       options = null
+       
+       it 'add_fork_tag() should be a function', ->
+         expect( add_fork_tag ).to.be.a Function
+       
+       describe 'With undefined options', ->
+
+         it 'should return an options object', ->
+           options = add_fork_tag( null, 'a tag' )
+           
+           expect( typeof( options ) ).to.be.eql 'object'
+         
+         it 'should have a transaction object', ->
+           expect( typeof( options._t ) ).to.be.eql 'object'
+         
+         it 'should have a valid uuid for id', ->
+           expect( options._t.id ).to.match( valid_uuid_v4 )
+         
+         it 'should have more undefined', ->
+           expect( options._t.more ).to.be undefined
+           
+         it 'should have a forks Array', ->
+           expect( options._t.forks ).to.be.an Array
+         
+         it 'should have a single fork tag', ->
+           expect( options._t.forks ).to.be.eql [ 'a tag' ]
+       
+       describe 'With an options object with no transaction', ->
+         input_options = {}
+         
+         it 'should return another options object', ->
+           options = add_fork_tag( input_options, 'a tag' )
+           
+           expect( options ).to.not.be input_options
+           
+           expect( typeof( options ) ).to.be.eql 'object'
+         
+         it 'should have a transaction object', ->
+           expect( typeof( options._t ) ).to.be.eql 'object'
+         
+         it 'should have a valid uuid for id', ->
+           expect( options._t.id ).to.match( valid_uuid_v4 )
+         
+         it 'should have more undefined', ->
+           expect( options._t.more ).to.be undefined
+         
+         it 'should have a forks Array', ->
+           expect( options._t.forks ).to.be.an Array
+         
+         it 'should have a single fork tag', ->
+           expect( options._t.forks ).to.be.eql [ 'a tag' ]
+       
+       describe 'With options object and an ended transaction, with no fork tag', ->
+         uuid = uuid_v4()
+         
+         input_options = { _t: { id: uuid } }
+         
+         it 'should return another options object', ->
+           options = add_fork_tag( input_options, 'a tag' )
+           
+           expect( options ).to.not.be input_options
+           
+           expect( typeof( options ) ).to.be.eql 'object'
+         
+         it 'should have a distinct transaction object', ->
+           expect( typeof( options._t ) ).to.be.eql 'object'
+           
+           expect( options._t ).to.not.be input_options._t
+         
+         it 'should have the same uuid as input options', ->
+           expect( options._t.id ).to.be uuid
+         
+         it 'should have more undefined', ->
+           expect( options._t.more ).to.be undefined
+         
+         it 'should have a forks Array', ->
+           expect( options._t.forks ).to.be.an Array
+         
+         it 'should have a single fork tag', ->
+           expect( options._t.forks ).to.be.eql [ 'a tag' ]
+         
+         it 'should have no other attributes', ->
+           expect( options ).to.be.eql { _t: { id: uuid, forks: [ 'a tag' ] } }
+       
+       describe 'With options object and an ongoing transaction, with no fork tag', ->
+         uuid = uuid_v4()
+         
+         input_options = { _t: { id: uuid, more: true } }
+         
+         it 'should return another options object', ->
+           options = add_fork_tag( input_options, 'a tag' )
+           
+           expect( options ).to.not.be input_options
+         
+         it 'should have a transaction object distinct from input options', ->
+           expect( typeof( options._t ) ).to.be.eql 'object'
+           
+           expect( options._t ).to.not.be input_options._t
+         
+         it 'should have the same uuid as input options', ->
+           expect( options._t.id ).to.be uuid
+         
+         it 'should have more set to true', ->
+           expect( options._t.more ).to.be true
+         
+         it 'should have a single fork tag', ->
+           expect( options._t.forks ).to.be.eql [ 'a tag' ]
+         
+         it 'should have no other attributes', ->
+           expect( options ).to.be.eql { _t: { id: uuid, more: true, forks: [ 'a tag' ] } }
+       
+       describe 'With options object and an ongoing transaction, and the same fork tag', ->
+         uuid = uuid_v4()
+         
+         input_options = { _t: { id: uuid, more: true, forks: [ 'a tag' ] } }
+         
+         it 'should return the same options object, same transaction object and same forks array', ->
+           options = add_fork_tag( input_options, 'a tag' )
+           
+           expect( options          ).to.be input_options
+           expect( options._t       ).to.be input_options._t
+           expect( options._t.forks ).to.be input_options._t.forks
+         
+         it 'should have no other attributes', ->
+           expect( options ).to.be.eql { _t: { id: uuid, more: true, forks: [ 'a tag' ] } }
+       
+       describe 'With options object and an ongoing transaction with an upstream fork tag', ->
+         uuid = uuid_v4()
+         
+         input_options = { _t: { id: uuid, more: true, forks: [ 'upstream tag' ] } }
+         
+         it 'should return another options object', ->
+           options = add_fork_tag( input_options, 'a tag' )
+           
+           expect( options ).to.not.be input_options
+         
+         it 'should return an options object', ->
+           expect( typeof( options ) ).to.be.eql 'object'
+         
+         it 'should have a distinct transaction object', ->
+           expect( typeof( options._t ) ).to.be.eql 'object'
+           
+           expect( options._t ).to.not.be input_options._t
+         
+         it 'should have the same uuid as input options', ->
+           expect( options._t.id ).to.be uuid
+         
+         it 'should have more set to true', ->
+           expect( options._t.more ).to.be true
+         
+         it 'should have a distinct forks Array', ->
+           expect( options._t.forks ).to.be.an Array
+           
+           expect( options._t.forks ).to.not.be input_options._t.forks
+         
+         it 'should have two fork tags, with the new tag last', ->
+           expect( options._t.forks ).to.be.eql [ 'upstream tag', 'a tag' ]
+         
+         it 'should have no other attributes', ->
+           expect( options ).to.be.eql { _t: { id: uuid, more: true, forks: [ 'upstream tag', 'a tag' ] } }
+       
+       describe 'On an ending transaction with an upstream fork tag', ->
+         uuid = uuid_v4()
+         
+         input_options = { _t: { id: uuid, forks: [ 'upstream tag' ] } }
+         
+         it 'should return another options object', ->
+           options = add_fork_tag( input_options, 'a tag' )
+           
+           expect( options ).to.not.be input_options
+         
+         it 'should return an options object', ->
+           expect( typeof( options ) ).to.be.eql 'object'
+         
+         it 'should have a distinct transaction object', ->
+           expect( typeof( options._t ) ).to.be.eql 'object'
+           
+           expect( options._t ).to.not.be input_options._t
+         
+         it 'should have the same uuid as input options', ->
+           expect( options._t.id ).to.be uuid
+         
+         it 'should have more set to true', ->
+           expect( options._t.more ).to.be undefined
+         
+         it 'should have a distinct forks Array', ->
+           expect( options._t.forks ).to.be.an Array
+           
+           expect( options._t.forks ).to.not.be input_options._t.forks
+         
+         it 'should have two fork tags, with the new tag last', ->
+           expect( options._t.forks ).to.be.eql [ 'upstream tag', 'a tag' ]
+         
+         it 'should have no other attributes', ->
+           expect( options ).to.be.eql { _t: { id: uuid, forks: [ 'upstream tag', 'a tag' ] } }
+       
+     # add_fork_tag( options, tag )
+     
+  describe 'RS.Transactions() and RS.Transaction()', ->
     start_count = Transaction.count
     
     describe 'Transaction with no options or pipelet', ->
