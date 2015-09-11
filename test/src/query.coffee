@@ -1492,22 +1492,15 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    output = new RS.Pipelet()._output
+    source = new RS.Pipelet()
+    output = source._output
     
     tree = output.tree
     
-    subscriber_1 = rs.set( [], { name: 'subscriber_1' } )
-    subscriber_2 = rs.set( [], { name: 'subscriber_2' } )
-    subscriber_3 = rs.set( [], { name: 'subscriber_3' } )
-    subscriber_4 = rs.set( [], { name: 'subscriber_4' } )
-    
-    tree.add [ { flow: 'user', id: 123 } ], subscriber_1._input
-    
-    tree.add [ { flow: 'user', id: 345 } ], subscriber_2._input
-    
-    tree.add [ {} ], subscriber_3._input
-    
-    tree.add [ { id: 123 }, { flow: 'user' } ], subscriber_4._input
+    subscriber_1 = source.filter( [ { flow: 'user', id: 123 } ]     ).set( [], { name: 'subscriber_1' } )
+    subscriber_2 = source.filter( [ { flow: 'user', id: 345 } ]     ).set( [], { name: 'subscriber_2' } )
+    subscriber_3 = source.filter( [ {} ]                            ).set( [], { name: 'subscriber_3' } )
+    subscriber_4 = source.filter( [ { id: 123 }, { flow: 'user' } ] ).set( [], { name: 'subscriber_4' } )
     
     output.emit 'add', [
       { flow: 'group' }
