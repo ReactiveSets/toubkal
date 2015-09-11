@@ -16,9 +16,9 @@
 # Tests results are then available in test.out
 #
 if [ "$1" = "" ]; then
-  npm test > test.out || echo " test failed"
+  npm test 2>&1 > test.out || echo " test failed"
 else
-  ./test/bin/tests.sh $1 > test.out || echo " test failed"
+  ./test/bin/tests.sh $1 2>&1 > test.out || echo " test failed"
 fi
 
 echo
