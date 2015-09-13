@@ -4,16 +4,19 @@
   
   var trigger = new rs.RS.Pipelet();
   
+  var tag = rs.RS.uuid.v4();
+  
   var out = images
     .trace( 'images' )
     .next( trigger.set_flow( 'trigger' ), function( image, trigger ) {
-      trigger.id = image.last += 1;
-    } )
+      trigger.id = ++image.last;
+    }, { fork_tag: tag } )
     .trace( 'next' )
   ;
   
   out
     .flow( 'images' )
+    .trace( 'images from next' )
     ._add_destination( images )
   ;
   
@@ -23,12 +26,23 @@
     .greedy()
   ;
   
-  var tid = '--------- pseudo transaction -----------';
+  rs.union( [
+      out.flow( 'images' ),
+      out.flow( 'trigger' )
+    ], { tag: tag } )
+    
+    .trace( 'after union', { tag: tag } )
+    .greedy()
+  ;
+  
+  var t = new rs.RS.Transactions.Transaction( null, 2 );
   
   trigger
     ._add( [{}] )
-    ._add( [{}] )
-  //  ._add( [{},{}], { _t: { id: tid, more: true } } )
-  //  ._add( [], { _t: { id: tid } } )
+  //  ._add( [{}] )
+  //  ._add( [{},{}], t.next().get_emit_options() )
+  //  ._add( [], t.next().get_emit_options() )
   ;
+  
+  t.end();
 } );
