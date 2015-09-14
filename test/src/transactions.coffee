@@ -874,12 +874,14 @@ describe 'Transactions test suite', ->
         ]
     
     describe 'Input / Output Transactions()', ->
-      describe 'I/O Transactions on a tagged input', ->
+      describe 'I/O Transactions on a tagged input, with single tagged transaction', ->
         input    = new RS.Loggable 'input'
         output_1 = new RS.Loggable 'output_1'
         output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' ).set_tag( 'source' ).set_branches( 2 )
+        input_transactions = new Input_Transactions( input, 'input' )
+          .set_tag( 'source' )
+          .set_branches( 2 )
         
         output_1_transactions = new Output_Transactions output_1, 'output_1'
         output_2_transactions = new Output_Transactions output_2, 'output_2'
@@ -894,22 +896,27 @@ describe 'Transactions test suite', ->
           _t: {
             id: tid
             forks: [
-              'top'
               'source'
             ]
           }
         }
         
         no_more = clone no_more_origin
+        no_more_out = clone no_more
+        delete no_more_out._t.forks
         
         more_origin = clone no_more_origin
         more_origin._t.more = true
         more = clone more_origin
+        more_out = clone more
+        delete more_out._t.forks
         
         o = output_1_transactions.get_options( input_transactions, more )
         
-        it 'output_1_transactions concurrent options should be returned unaltered (more)', ->
-          expect( o ).to.be more
+        it 'output_1_transactions concurrent options should be returned with more and removed forks array', ->
+          expect( o ).to.be.eql more_out
+        
+        it 'should not have altered input options', ->
           expect( more ).to.eql more_origin
         
         it 'input transactions should have one transaction waiting for another output to terminate', ->
@@ -927,7 +934,7 @@ describe 'Transactions test suite', ->
           expect( input_transaction.count ).to.be 1
         
         it 'input_transaction should have output_1_transactions', ->  
-          expect( input_transaction.get output_1_transactions ).to.be.eql output_1_transactions
+          expect( input_transaction.get output_1_transactions ).to.be output_1_transactions
         
         it 'input_transaction should have no source terminated', ->
           expect( input_transaction.terminated_count ).to.be 0
@@ -950,13 +957,15 @@ describe 'Transactions test suite', ->
           expect( output_1_transaction.count ).to.be 1
         
         it 'output_1_transaction should have input_transactions', ->
-          expect( output_1_transaction.get input_transactions ).to.be.eql input_transactions
+          expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options should have more even after sending no more', ->
+        it 'concurent options should have more even after sending no more, without forks', ->
           o = output_1_transactions.get_options input_transactions, no_more
           
-          expect( o ).to.be.eql more
-          expect( more ).to.eql more_origin
+          expect( o ).to.be.eql more_out
+        
+        it 'should not have altered input options', ->
+          expect( no_more ).to.eql no_more_origin
         
         it 'input transactions should have one transaction waiting for another output to terminate', ->
           expect( input_transactions.count ).to.be 1
@@ -982,10 +991,12 @@ describe 'Transactions test suite', ->
         it 'output_1_transactions.get_from_tid( tid ) should now be undefined', ->
           expect( output_1_transactions.get_from_tid tid ).to.be undefined
         
-        it 'output_2_transactions concurrent options (more) should be returned unaltered', ->
+        it 'output_2_transactions concurrent options (more) without forks', ->
           o = output_2_transactions.get_options( input_transactions, more )
           
-          expect( o ).to.be more
+          expect( o ).to.be.eql more_out
+        
+        it 'should not have altered input options', ->
           expect( more ).to.eql more_origin
         
         it 'input transactions should show ongoing progress of transaction from output_2_transactions', ->
@@ -1023,10 +1034,191 @@ describe 'Transactions test suite', ->
         it 'this counterpart should be input_transactions', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options for output_2_transactions should have no more after sending no more', ->
+        it 'concurent options for output_2_transactions should have no more after sending no more, and no forks', ->
           o = output_2_transactions.get_options input_transactions, no_more
           
-          expect( o ).to.be no_more
+          expect( o ).to.be.eql no_more_out
+        
+        it 'should not have altered input options', ->
+          expect( no_more ).to.eql no_more_origin
+        
+        it 'output_2_transaction should now be empty', ->
+          expect( output_2_transaction.count ).to.be 0
+        
+        it 'input_transactions should no longer hold any input transactions', ->
+          expect( input_transactions.transactions ).to.be.eql {}
+          expect( input_transactions.count ).to.be 0
+        
+        it 'output_2_transactions should have zero inputs', ->
+          expect( output_2_transactions.count ).to.be 0
+        
+      describe 'I/O Transactions on a tagged input, with nested tagged transaction', ->
+        input    = new RS.Loggable 'input'
+        output_1 = new RS.Loggable 'output_1'
+        output_2 = new RS.Loggable 'output_2'
+        
+        input_transactions = new Input_Transactions( input, 'input' )
+          .set_tag( 'source' )
+          .set_branches( 2 )
+        
+        output_1_transactions = new Output_Transactions output_1, 'output_1'
+        output_2_transactions = new Output_Transactions output_2, 'output_2'
+        
+        input_transaction = null
+        output_1_transaction = null
+        output_2_transaction = null
+        
+        tid = uuid_v4()
+        
+        no_more_origin = {
+          _t: {
+            id: tid
+            forks: [
+              'top'
+              'source'
+            ]
+          }
+        }
+        
+        no_more = clone no_more_origin
+        no_more_out = clone no_more
+        no_more_out._t.forks = [ 'top' ]
+        
+        more_origin = clone no_more_origin
+        more_origin._t.more = true
+        more = clone more_origin
+        more_out = clone more
+        more_out._t.forks = [ 'top' ]
+        
+        o = output_1_transactions.get_options( input_transactions, more )
+        
+        it 'output_1_transactions concurrent options should be returned with more and removed last fork tag', ->
+          expect( o ).to.be.eql more_out
+        
+        it 'should not have altered input options', ->
+          expect( more ).to.eql more_origin
+        
+        it 'input transactions should have one transaction waiting for another output to terminate', ->
+          expect( input_transactions.count ).to.be 1
+        
+        it 'should be an Input_Transaction', ->
+          input_transaction = input_transactions.get_from_tid tid
+          
+          expect( input_transaction ).to.be.a Input_Transaction
+        
+        it 'input_transactions should have input_transaction', ->
+          expect( input_transactions.has input_transaction ).to.be input_transaction
+        
+        it 'input_transaction should have one output transaction', ->
+          expect( input_transaction.count ).to.be 1
+        
+        it 'input_transaction should have output_1_transactions', ->  
+          expect( input_transaction.get output_1_transactions ).to.be output_1_transactions
+        
+        it 'input_transaction should have no source terminated', ->
+          expect( input_transaction.terminated_count ).to.be 0
+        
+        it 'input_transaction should be tagged', ->
+          expect( input_transaction.tagged ).to.be true
+          
+        it 'output_1_transactions should have one input', ->
+          expect( output_1_transactions.count ).to.be 1
+        
+        it 'output_1_transaction retrieved with tid should be an Output_Transaction', ->
+          output_1_transaction = output_1_transactions.get_from_tid tid
+          
+          expect( output_1_transaction ).to.be.a Output_Transaction
+        
+        it 'output_1_transactions should have output_1_transaction', ->
+          expect( output_1_transactions.has output_1_transaction ).to.be output_1_transaction
+        
+        it 'output_1_transaction should have one counterpart', ->
+          expect( output_1_transaction.count ).to.be 1
+        
+        it 'output_1_transaction should have input_transactions', ->
+          expect( output_1_transaction.get input_transactions ).to.be input_transactions
+        
+        it 'concurent options should have more even after sending no more, without the last fork tag', ->
+          o = output_1_transactions.get_options input_transactions, no_more
+          
+          expect( o ).to.be.eql more_out
+        
+        it 'should not have altered input options', ->
+          expect( no_more ).to.eql no_more_origin
+        
+        it 'input transactions should have one transaction waiting for another output to terminate', ->
+          expect( input_transactions.count ).to.be 1
+        
+        it 'it should be the same input_transaction as earlier', ->
+          expect( input_transactions.has input_transaction ).to.be input_transaction
+        
+        it 'input_transaction should still have no more source counterpart', ->
+          expect( input_transaction.count ).to.be 0
+        
+        it 'input_transaction should still have no more source counterpart', ->
+          expect( input_transaction.count ).to.be 0
+        
+        it 'input_transaction should now have one terminated source output', ->
+          expect( input_transaction.terminated_count ).to.be 1
+        
+        it 'should still be tagged', ->
+          expect( input_transaction.tagged ).to.be true
+        
+        it 'output_1_transactions should have zero inputs', ->
+          expect( output_1_transactions.count ).to.be 0
+        
+        it 'output_1_transactions.get_from_tid( tid ) should now be undefined', ->
+          expect( output_1_transactions.get_from_tid tid ).to.be undefined
+        
+        it 'output_2_transactions concurrent options (more) should have removed last fork', ->
+          o = output_2_transactions.get_options( input_transactions, more )
+          
+          expect( o ).to.be.eql more_out
+        
+        it 'should not have altered input options', ->
+          expect( more ).to.eql more_origin
+        
+        it 'input transactions should show ongoing progress of transaction from output_2_transactions', ->
+          expect( input_transactions.count ).to.be 1
+        
+        it 'input transaction should still be input_transaction', ->
+          expect( input_transactions.get_from_tid tid ).to.be input_transaction
+        
+        it 'should have one counterpart', ->
+          expect( input_transaction.count ).to.be 1
+        
+        it 'should have one counterpart terminated', ->
+          expect( input_transaction.terminated_count ).to.be 1
+        
+        it 'should have a null reference to terminated output_1_transactions', ->
+          expect( input_transaction.get output_1_transactions ).to.be null
+        
+        it 'should have output_2_transactions ongoing', ->
+          expect( input_transaction.get output_2_transactions ).to.be output_2_transactions
+        
+        it 'output_2_transactions should have one input transactions', ->
+          expect( output_2_transactions.count ).to.be 1
+        
+        it 'it should be found by tid and should be an Output_Transaction', ->
+          output_2_transaction = output_2_transactions.get_from_tid tid
+          
+          expect( output_2_transaction ).to.be.a Output_Transaction
+        
+        it 'it should not be output_1_transaction', ->
+          expect( output_2_transaction ).to.not.be.eql output_1_transaction
+        
+        it 'it should have one input transactions counterpart', ->
+          expect( output_2_transaction.count ).to.be 1
+        
+        it 'this counterpart should be input_transactions', ->
+          expect( output_2_transaction.get input_transactions ).to.be input_transactions
+        
+        it 'concurent options for output_2_transactions should have no more after sending no more, and removed last fork tag', ->
+          o = output_2_transactions.get_options input_transactions, no_more
+          
+          expect( o ).to.be.eql no_more_out
+        
+        it 'should not have altered input options', ->
           expect( no_more ).to.eql no_more_origin
         
         it 'output_2_transaction should now be empty', ->
