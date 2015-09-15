@@ -1286,7 +1286,7 @@ describe 'Transactions test suite', ->
           expect( input_transaction.get output_1_transactions ).to.be output_1_transactions
         
         it 'output_1_transactions.get_terminated_input_transactions( no_more ) should return [ input_transactions ]', ->
-          expect( output_1_transactions.get_terminated_input_transactions( no_more ) ).to.be.eql [ input_transactions ]
+          expect( output_1_transactions.get_terminated_input_transactions( no_more ) ).to.be.eql [ { input_transactions: input_transactions, options: no_more } ]
           expect( no_more ).to.be.eql no_more_origin
         
         it 'output_1_transactions should have no output transactions', ->
