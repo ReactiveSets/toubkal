@@ -4,7 +4,7 @@
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*771 automated tests*
+*871 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -533,7 +533,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 771 automated tests for the Toubkal core pipelets that run
+We have curently developped 871 automated tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -575,7 +575,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 771 of 771 tests (4196ms)
+-> passed 871 of 871 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -737,7 +737,7 @@ node server.js > server.out
 - Finalize API, in view of 1.0 release
 - Implement all remaining ToDo
 - Feature freeze
-- Develop additional tests, goal is at least 1100 automated tests
+- Develop additional tests, goal is at least 2200 automated tests
 - Improve documentation and tutorial
 
 ### Version 0.8.0 - P2P Dataflows
@@ -746,14 +746,14 @@ node server.js > server.out
 
 - WebRTC pipelets
 - Implement Peer-To-Peer dataflows using WebRTC
-- Develop additional tests, goal is at least 1000 automated tests
+- Develop additional tests, goal is at least 2000 automated tests
 
 ### Version 0.7.0 - Charding
 
 #### Main Goals:
 
 - Horizontal distribution / Charding using websocket dispatcher
-- Develop additional tests, goal is at least 900 automated tests
+- Develop additional tests, goal is at least 1800 automated tests
 - Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
 - Implement websocket_clients() and websocket_server() pipelets as a faster alternative
   to socket_io equivalents.
@@ -765,7 +765,7 @@ This will be the first Beta version with a reasonably stable API
 #### Main Goals:
 
 - Implement as many ToDo as possible
-- Develop additional tests, goal is at least 1200 automated tests
+- Develop additional tests, goal is at least 1600 automated tests
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
 - Session Strorage Dataflow
@@ -781,7 +781,7 @@ This will be the first Beta version with a reasonably stable API
   - Split This repository into toubkal, rs_server, rs_client, rs_socket_io, rs_bootstrap, ... repositories
   - Implement rs package manager
   - Implement rs automatic pipelet patching
-- Develop additional tests, goal is at least 1000 automated tests
+- Develop additional tests, goal is at least 1400 automated tests
 
 ### Version 0.4.0 - Versionned Persistance
 
@@ -795,7 +795,7 @@ This version introduces the capability to keep historical values of objects pers
   - Operations log
   - Query cache
   
-- Develop additional tests, goal is at least 900 automated tests
+- Develop additional tests, goal is at least 1200 automated tests
 
 - Query Tree else()
   - Emits data events not routed to any other destination input
@@ -818,6 +818,7 @@ ETA: December 12th 2015, 3 years anniversary of project debut
 - Multi-provider Sign-in Widget
 - Refactor / stabilize pipelet API
 - Object persistance, i.e. does not keep older version of objects' values
+- At least 1000 tests
 
 ##### Work in progress:
 
@@ -981,7 +982,7 @@ ETA: December 12th 2015, 3 years anniversary of project debut
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 771 automated tests
+- 871 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
