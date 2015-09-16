@@ -29,7 +29,7 @@
   rs.union( [
       out.flow( 'images' ),
       out.flow( 'trigger' )
-    ], { tag: tag } )
+    ] /*, { tag: tag }*/ ) // tag is on trace() bellow for now
     
     .trace( 'after union', { tag: tag } )
     .greedy()
