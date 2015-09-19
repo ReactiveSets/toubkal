@@ -54,9 +54,6 @@ describe 'set():', ->
     .delay( 100 )
     .trace( 'Delayed Set' )
     .filter( () -> true )
-    .set()
-  
-  #delayed_set = delayed_set.filter( () -> true ).set()
   
   cars = rs
     .set( [
