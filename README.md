@@ -4,7 +4,7 @@
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*871 automated tests*
+*955 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -99,8 +99,11 @@ Toubkal is already very reliable thanks to its comprehensive test suite and is
 currently used to deliver a production web application featuring reactive photo albums
 for a 3D image modeling and rendering company.
 
-Some features are still work in progress and some APIs are subject to changes meaning
-that Toubkal should be considered Alpha at this time.
+The architecture of the system is now stable, with main components (pipelets, queries,
+and transaction) well defined.
+
+Although the API may still change from time to time, we have entered a more mature phase
+where high level API is getting quite stable, and lower-level API changes much less often.
 
 Toubkal should provide a functionally-rich framework by version 0.6 including reasonably
 complete documentation extracted from the code where it currently stands, and reasonably
@@ -533,7 +536,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 871 automated tests for the Toubkal core pipelets that run
+We have curently developped 955 automated tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -575,7 +578,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 871 of 871 tests (4196ms)
+-> passed 955 of 955 tests (4196ms)
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -982,7 +985,7 @@ ETA: December 12th 2015, 3 years anniversary of project debut
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 871 automated tests
+- 955 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
