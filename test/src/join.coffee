@@ -28,9 +28,28 @@ expect = this.expect || utils.expect
 check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
 
-RS      = rs.RS
-extend  = RS.extend
+RS           = rs.RS
+extend       = RS.extend
+value_equals = RS.value_equals
+log          = RS.log.bind null, 'join tests'
 
+compare_expected_values = ( expected, values ) ->
+  # log 'compare_expected_values() expected: ', expected.a
+  # log 'compare_expected_values() values:', values
+    
+  expect( values.length ).to.be expected.a.length
+  
+  for v in values
+    i = expected.index_of( v )
+    
+    # log 'value:', v, ', index of (in expected values):', i
+    
+    expect( i ).to.not.be -1
+    
+    # log 'expected value:', expected.a[ i ]
+    
+    expect( expected.a[ i ] ).to.eql v
+  
 # ----------------------------------------------------------------------------------------------
 # join test suite
 # ---------------
@@ -72,6 +91,7 @@ describe 'join() authors, books, and books_sales:', ->
     { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
   ], { name: 'books' }
   
+  # left join
   books_with_authors = books.join(
     authors
     
@@ -80,8 +100,26 @@ describe 'join() authors, books, and books_sales:', ->
     ( book, author ) ->
       return if author then extend {}, book, { author_name: author.name } else book
     
-    { left: true, name: 'books_with_authors' }
-  ).set()
+    { key: [ 'id', 'author_id' ], left: true, name: 'books_with_authors' }
+  )
+  
+  books_with_authors_set = books_with_authors.unique_set( [], { silent: true } )
+  
+  # right join
+  authors_on_books = authors.join(
+    books
+    
+    [ [ 'id', 'author_id' ] ]
+    
+    ( author, book ) ->
+      return if author then extend {}, book, { author_name: author.name } else book
+    
+    { key: [ 'id', 'author_id' ], right: true, name: 'authors_on_books' }
+  )
+  
+  authors_on_books_set = authors_on_books.set()
+  
+  # ToDo: full outer join tests
   
   books_sales = rs.set [
     { book_id:  1, sales:       200, year: 1859 }
@@ -102,38 +140,41 @@ describe 'join() authors, books, and books_sales:', ->
     { book_id: 16, sales:        13             }
   ], { key: ['year', 'book_id'], name: 'books_sales' }
   
-  it 'should join books and authors', ( done ) ->
+  expected = rs.set [
+    { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+    { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+    { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+    { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+    { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+    { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+    { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+    { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
+    { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
+    { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+    { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
+    { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+    { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
+    { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+    { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
+  ], { key: [ 'id', 'author_id' ] }
+  
+  it 'should join books and authors (left join)', ( done ) ->
     books_with_authors._fetch_all ( values ) -> check done, ->
-      found = true
-      
-      result = rs.set [
-        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
-        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
-        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
-        { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
-        { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
-        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
-        { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
-        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
-        { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
-        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
-        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
-      ], { key: [ 'id', 'title', 'author_id', 'author_name' ] }
-      
-      for v in values
-        continue if result.index_of( v ) isnt -1
-        
-        found = false
-        
-        break
-        
-      expect( found ).to.be true
-      
-  it 'should add a joined author', ( done ) ->
+      compare_expected_values expected, values
+  
+  it 'should join books and authors (left join) on downstream set', ( done ) ->
+    books_with_authors_set._fetch_all ( values ) -> check done, ->
+      compare_expected_values expected, values
+  
+  it 'should join authors on books (right join)', ( done ) ->
+    authors_on_books._fetch_all ( values ) -> check done, ->
+      compare_expected_values expected, values
+  
+  it 'should join authors on books (right join) on downstream set', ( done ) ->
+    authors_on_books_set._fetch_all ( values ) -> check done, ->
+      compare_expected_values expected, values
+  
+  it 'should add a joined author (left join)', ( done ) ->
     authors._add [
       { id: 13, name: "Ellen G. White"          }
       { id: 14, name: "Roald Dahl"              }
@@ -143,34 +184,37 @@ describe 'join() authors, books, and books_sales:', ->
       { id: 15, title: "Steps to Christ"                         , author_id: 13 }
     ]
     
+    expected = rs.set [
+      { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+      { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+      { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+      { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+      { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+      { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+      { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+      { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
+      { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
+      { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+      { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
+      { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+      { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
+      { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+#      { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
+      { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+      { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+    ], { key: [ 'id', 'author_id' ] }
+    
     books_with_authors._fetch_all ( values ) -> check done, () ->
-      found = true
-      
-      result = rs.set [
-        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
-        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
-        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
-        { id:  7, title: "The McGuffey Readers"                    , author_id:  6, author_name: "William Holmes McGuffey" }
-        { id:  9, title: "The Hunger Games"                        , author_id:  7, author_name: "Suzanne Collins"         }
-        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
-        { id: 11, title: "The Dukan Diet"                          , author_id:  9, author_name: "Pierre Dukan"            }
-        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
-        { id: 13, title: "Lolita"                                  , author_id: 11, author_name: "Vladimir Nabokov"        }
-        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
-        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
-        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
-        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
-      ], { key: [ 'id', 'title', 'author_id', 'author_name' ] }
-      
-      for v in values
-        continue if result.index_of( v ) isnt -1
-
-        found = false
-
-        break
-
-      expect( found ).to.be true
+      compare_expected_values expected, values
+  
+  it 'should add a joined author (left join) on downstream set', ( done ) ->
+    books_with_authors_set._fetch_all ( values ) -> check done, ->
+      compare_expected_values expected, values
+  
+  it 'should add a joined author (right join)', ( done ) ->
+    authors_on_books._fetch_all ( values ) -> check done, () ->
+      compare_expected_values expected, values
+  
+  it 'should add a joined author (right join) on downstream set', ( done ) ->
+    authors_on_books_set._fetch_all ( values ) -> check done, () ->
+      compare_expected_values expected, values
