@@ -48,11 +48,11 @@ compare_expected_values = ( expected, values ) ->
 # join test suite
 # ---------------
 
-describe 'join() authors, books, and books_sales:', ->
+describe 'join() authors and books', ->
   authors = rs.set [
     { id:  1, name: "Charles Dickens"         }
     { id:  2, name: "J. R. R. Tolkien"        }
-    { id:  3, name: "Dan Brown"               }
+    #{ id:  3, name: "Dan Brown"               }
     { id:  4, name: "Paulo Coelho"            }
     { id:  5, name: "Stieg Larsson"           }
     { id:  6, name: "William Holmes McGuffey" }
@@ -146,30 +146,9 @@ describe 'join() authors, books, and books_sales:', ->
   
   books_or_authors_set = books_or_authors.set()
   
-  books_sales = rs.set [
-    { book_id:  1, sales:       200, year: 1859 }
-    { book_id:  2, sales:       150, year: 1955 }
-    { book_id:  3, sales:        80, year: 2003 }
-    { book_id:  4, sales:        65, year: 1988 }
-    { book_id:  5, sales:        39, year: 2000 }
-    { book_id:  6, sales:        30, year: 2005 }
-    { book_id:  7, sales:       125, year: 1853 }
-    { book_id:  8, sales:       100, year: 1937 }
-    { book_id:  9, sales:        23, year: 2008 }
-    { book_id: 10, sales: undefined, year: 1999 }
-    { book_id: 11, sales:        10, year: 2000 }
-    { book_id: 12, sales: undefined, year: 2008 }
-    { book_id: 13, sales:        50, year: 1955 }
-    { book_id: 14, sales:       100, year: undefined }
-    { book_id: 15, sales:        60, year: null }
-    { book_id: 16, sales:        13             }
-  ], { key: ['year', 'book_id'], name: 'books_sales' }
-  
   expected_inner = [
     { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
     { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-    { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-    { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
     { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
     { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
     { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
@@ -180,8 +159,8 @@ describe 'join() authors, books, and books_sales:', ->
   expected = [
     { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
     { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-    { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-    { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+    { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+    { id:  5, title: "Angels and Demons"                       , author_id:  3 }
     { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
     { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
     { id:  9, title: "The Hunger Games"                        , author_id:  7 }
@@ -194,8 +173,8 @@ describe 'join() authors, books, and books_sales:', ->
   expected_outer = [
     { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
     { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-    { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-    { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+    { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+    { id:  5, title: "Angels and Demons"                       , author_id:  3 }
     { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
     { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
     {                                                            author_id:  6, author_name: "William Holmes McGuffey" }
@@ -251,8 +230,6 @@ describe 'join() authors, books, and books_sales:', ->
       expected_inner = [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
@@ -272,8 +249,8 @@ describe 'join() authors, books, and books_sales:', ->
       expected = [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id:  9, title: "The Hunger Games"                        , author_id:  7 }
@@ -302,8 +279,8 @@ describe 'join() authors, books, and books_sales:', ->
       expected_outer = [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id:  9, title: "The Hunger Games"                        , author_id:  7 }
@@ -333,8 +310,6 @@ describe 'join() authors, books, and books_sales:', ->
       expected_inner = [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
@@ -355,8 +330,8 @@ describe 'join() authors, books, and books_sales:', ->
       expected = [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id:  9, title: "The Hunger Games"                        , author_id:  7 }
@@ -386,8 +361,8 @@ describe 'join() authors, books, and books_sales:', ->
       expected_outer = [
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id:  9, title: "The Hunger Games"                        , author_id:  7 }
@@ -418,8 +393,6 @@ describe 'join() authors, books, and books_sales:', ->
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
@@ -441,8 +414,8 @@ describe 'join() authors, books, and books_sales:', ->
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
-        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
-        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
         { id:  9, title: "The Hunger Games"                        , author_id:  7 }
@@ -473,6 +446,93 @@ describe 'join() authors, books, and books_sales:', ->
         { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+        {                                                            author_id:  6, author_name: "William Holmes McGuffey" }
+        {                                                            author_id:  9, author_name: "Pierre Dukan"            }
+        {                                                            author_id: 11, author_name: "Vladimir Nabokov"        }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                           (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'adding an author of two books already listed', ->
+    it 'should add two books of that author (inner join)', ( done ) ->
+      authors._add [
+        { id:  3, name: "Dan Brown"               }
+      ]
+      
+      expected_inner = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same                  (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should add the author name of two books (left join)', ( done ) ->
+      expected = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
         { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
         { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
         { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
@@ -491,7 +551,7 @@ describe 'join() authors, books, and books_sales:', ->
       books_or_authors._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
     
-    it 'should do the same                           (full outer join) on downstream set', ( done ) ->
+    it 'should do the same                      (full outer join) on downstream set', ( done ) ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
     
