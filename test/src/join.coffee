@@ -34,15 +34,15 @@ value_equals = RS.value_equals
 log          = RS.log.bind null, 'join tests'
 
 compare_expected_values = ( expected, values ) ->
-  log 'compare_expected_values() expected: ', expected
-  log 'compare_expected_values() values:', values
+  #log 'compare_expected_values() expected: ', expected
+  #log 'compare_expected_values() values:', values
+  
+  expect( values.length ).to.be expected.length
   
   for v in values
     # log 'value:', v
     
     expect( expected.filter( value_equals.bind this, v ).length ).to.be 1
-  
-  expect( values.length ).to.be expected.length
   
 # ----------------------------------------------------------------------------------------------
 # join test suite
@@ -552,6 +552,253 @@ describe 'join() authors and books', ->
         compare_expected_values expected_outer, values
     
     it 'should do the same                      (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing an author of two books already listed', ->
+    it 'should remove two books of that author (inner join)', ( done ) ->
+      authors._remove [
+        { id:  3, name: "Dan Brown"               }
+      ]
+      
+      expected_inner = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same                  (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should remove the author name of two books (left join)', ( done ) ->
+      expected = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                         (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                         (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                         (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                         (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+        {                                                            author_id:  6, author_name: "William Holmes McGuffey" }
+        {                                                            author_id:  9, author_name: "Pierre Dukan"            }
+        {                                                            author_id: 11, author_name: "Vladimir Nabokov"        }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                         (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+  
+  describe 'removing a book for an author who has another book listed', ->
+    it 'should remove only this book (inner join)', ( done ) ->
+      books._remove [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
+      ]
+      
+      expected_inner = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same           (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same           (left join)', ( done ) ->
+      expected = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same           (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same           (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same           (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same           (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        { id: 15, title: "Steps to Christ"                         , author_id: 13, author_name: "Ellen G. White"          }
+        {                                                            author_id:  6, author_name: "William Holmes McGuffey" }
+        {                                                            author_id:  9, author_name: "Pierre Dukan"            }
+        {                                                            author_id: 11, author_name: "Vladimir Nabokov"        }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same           (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+  
+  describe 'removing another book for an author with a single book', ->
+    it 'should remove only this book (inner join)', ( done ) ->
+      books._remove [
+        { id: 15, title: "Steps to Christ"                         , author_id: 13 }
+      ]
+      
+      expected_inner = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same           (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same           (left join)', ( done ) ->
+      expected = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same           (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same           (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same           (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should remove the book but add back its author (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14, author_name: "Roald Dahl"              }
+        {                                                          , author_id: 13, author_name: "Ellen G. White"          }
+        {                                                            author_id:  6, author_name: "William Holmes McGuffey" }
+        {                                                            author_id:  9, author_name: "Pierre Dukan"            }
+        {                                                            author_id: 11, author_name: "Vladimir Nabokov"        }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                             (full outer join) on downstream set', ( done ) ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
     
