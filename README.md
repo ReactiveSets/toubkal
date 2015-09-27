@@ -2,15 +2,15 @@
 
 **High-Performances Reactive Web Application Framework**
 
-[![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+*Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*955 automated tests*
+*1081 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
 [![NPM version](https://badge.fury.io/js/toubkal.png)](http://badge.fury.io/js/toubkal)
 
-*Liberating your Creativity, while fighting Climate Change*
+[![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Teaser
 Displaying a reactive ```<table>``` which DOM container is ```#sales_table```, ordered by date,
@@ -90,27 +90,27 @@ reactive applications, liberating your creativity.
 
 ## Introduction
 Toubkal is a high-productivity, high-performances, scalable, reactive web application
-framework aiming at improving productivity, reducing servers' environmental footprint,
-and increasing mobile clients battery life by making an optimal use of server, network
-and client resources.
+framework aiming at improving your productivity for the development of complex
+applications, reducing servers' environmental footprint, and increasing mobile clients
+battery life by making an optimal use of server, network and client resources.
 
 ### Development Stage
-Toubkal is already very reliable thanks to its comprehensive test suite and is
-currently used to deliver a production web application featuring reactive photo albums
-for a 3D image modeling and rendering company.
+Toubkal is already quite reliable thanks to its comprehensive test suite and is
+currently used to deliver a complex enterprise web application.
 
-The architecture of the system is now stable, with main components (pipelets, queries,
+The architecture of Toubkal is now stable, with main components (pipelets, queries,
 and transaction) well defined.
 
 Although the API may still change from time to time, we have entered a more mature phase
-where high level API is getting quite stable, and lower-level API changes much less often.
+where the high level API is now quite stable, while lower-level API changes much less
+often.
 
 Toubkal should provide a functionally-rich framework by version 0.6 including reasonably
 complete documentation extracted from the code where it currently stands, and reasonably
 stable API.
 
 ### Our Team
-Toubkal is developped by a team of experienced and passionate back-end and
+Toubkal is developped by a small team of experienced and passionate back-end and
 front-end developpers.
 
 We are well founded, not looking for additional founding, with enough resources to
@@ -185,7 +185,7 @@ model that works in all cases, without requiring you to write a single additiona
 code, so that you can sleep at night knowing that end-user data cannot be exposed by some
 piece of code that forgot to test a role in a corner-case.
 
-#### How do you improve Productivity?
+#### How does Toubkal improve your Productivity?
 
 By allowing you to describe **what** you need in a declarative style, instead of
 **how** this could ever be accomplished.
@@ -195,12 +195,14 @@ as stated above, is hard, really hard. So hard that today the only way to achiev
 throwing millions of dollars at the problem, and/or struggling with bugs, bottlenecks
 and hard-to-work-around architecture limitations.
 
-The only thing you need to know to understand Toubkal programs is about **Toubkal Pipelets**.
+The most important concept you need to know to understand Toubkal programs is about
+**Toubkal Pipelets** and how to combine them to create programs that react to data
+change events:
 
 ```javascript
-rs.upstream_pipelet( parameter, ... )
-  .a_pipelet( ... )
-  .downstream_pipelet( ... )
+rs.upstream_pipelet  ( parameter, ... )
+  .a_pipelet         ( parameter, ... )
+  .downstream_pipelet( parameter, ... )
 ;
 ```
 
@@ -211,8 +213,8 @@ A pipelet is a **factory function** which instances:
 - **Emit** change events to **downstream** pipelets
 - Have **no side effects** on other pipelets upstream or downstream
 - Are **piped** to upstream and downstream pipelets using the **'.' operator**
-- May be connected to additional upstream pipelets using parameters
-- Can be composed with other pipelets to provide new pipelets
+- May be connected to additional pipelets using parameters
+- Can be **composed** with other pipelets to provide new pipelets
 
 A Toubkal program is a JavaScript program where one can mix imperative-style programming
 with Toubkal declarative-style programming.
@@ -536,7 +538,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 955 automated tests for the Toubkal core pipelets that run
+We have curently developped 1081 automated tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -578,7 +580,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 955 of 955 tests (4196ms)
+-> passed 1081 of 1081 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -738,9 +740,8 @@ node server.js > server.out
 #### Main Goals:
 
 - Finalize API, in view of 1.0 release
-- Implement all remaining ToDo
+- Implement all remaining ToDo, code coverage to 99+%
 - Feature freeze
-- Develop additional tests, goal is at least 2200 automated tests
 - Improve documentation and tutorial
 
 ### Version 0.8.0 - P2P Dataflows
@@ -749,14 +750,12 @@ node server.js > server.out
 
 - WebRTC pipelets
 - Implement Peer-To-Peer dataflows using WebRTC
-- Develop additional tests, goal is at least 2000 automated tests
 
 ### Version 0.7.0 - Charding
 
 #### Main Goals:
 
 - Horizontal distribution / Charding using websocket dispatcher
-- Develop additional tests, goal is at least 1800 automated tests
 - Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
 - Implement websocket_clients() and websocket_server() pipelets as a faster alternative
   to socket_io equivalents.
@@ -768,7 +767,7 @@ This will be the first Beta version with a reasonably stable API
 #### Main Goals:
 
 - Implement as many ToDo as possible
-- Develop additional tests, goal is at least 1600 automated tests
+- Develop additional tests, goal is at least 2000 automated tests, code coverage to 90%
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
 - Session Strorage Dataflow
@@ -781,10 +780,10 @@ This will be the first Beta version with a reasonably stable API
 - Internationalization
 - Packaging:
   - Finalize module pattern
-  - Split This repository into toubkal, rs_server, rs_client, rs_socket_io, rs_bootstrap, ... repositories
+  - Split This repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ... repositories
   - Implement rs package manager
   - Implement rs automatic pipelet patching
-- Develop additional tests, goal is at least 1400 automated tests
+- Develop additional tests, goal is at least 1800 automated tests, measure test coverage
 
 ### Version 0.4.0 - Versionned Persistance
 
@@ -798,16 +797,12 @@ This version introduces the capability to keep historical values of objects pers
   - Operations log
   - Query cache
   
-- Develop additional tests, goal is at least 1200 automated tests
+- Develop additional tests, goal is at least 1600 automated tests
 
 - Query Tree else()
   - Emits data events not routed to any other destination input
   - Pipelet else() captures these events
   - May be used to detect clients attempts to submit un-authorize data
-
-- Union upstream query routing:
-  - Prevents useless duplication of fetch and query updates on all upstream union branches
-  - Routes fetch and update queries based on downstream query
 
 ### Version 0.3.0 - Complex Queries, Authentication && Authorizations, Basic Persistance
 
@@ -821,7 +816,7 @@ ETA: December 12th 2015, 3 years anniversary of project debut
 - Multi-provider Sign-in Widget
 - Refactor / stabilize pipelet API
 - Object persistance, i.e. does not keep older version of objects' values
-- At least 1000 tests
+- At least 1200 tests
 
 ##### Work in progress:
 
@@ -985,7 +980,7 @@ ETA: December 12th 2015, 3 years anniversary of project debut
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-- 955 automated tests
+- 1081 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
