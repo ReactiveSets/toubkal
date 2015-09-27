@@ -34,8 +34,8 @@ value_equals = RS.value_equals
 log          = RS.log.bind null, 'join tests'
 
 compare_expected_values = ( expected, values ) ->
-  #log 'compare_expected_values() expected: ', expected
-  #log 'compare_expected_values() values:', values
+  log 'compare_expected_values() expected: ', expected
+  log 'compare_expected_values() values:', values
   
   expect( values.length ).to.be expected.length
   
@@ -799,6 +799,512 @@ describe 'join() authors and books', ->
         compare_expected_values expected_outer, values
     
     it 'should do the same                             (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing two authors', ->
+    it 'should remove one book with its author (inner join)', ( done ) ->
+      authors._remove [
+        { id: 13, name: "Ellen G. White"          }
+        { id: 14, name: "Roald Dahl"              }
+      ]
+      
+      expected_inner = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same                     (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should remove one book with author adding back the book without the author (left join)', ( done ) ->
+      expected = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                                                         (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                                                         (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                                                         (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                                                         (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5, author_name: "Stieg Larsson"           }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        { id: 14, title: "And Then There Were None"                , author_id: 12, author_name: "Agatha Christie"         }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
+        {                                                            author_id:  6, author_name: "William Holmes McGuffey" }
+        {                                                            author_id:  9, author_name: "Pierre Dukan"            }
+        {                                                            author_id: 11, author_name: "Vladimir Nabokov"        }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                                                         (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing 6 books', ->
+    it 'should remove 3 books with author (inner join)', ( done ) ->
+      books._remove [
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  8, title: "The Hobbit"                              , author_id:  2 }
+        { id:  6, title: "The Girl with the Dragon Tattoo"         , author_id:  5 }
+        { id: 14, title: "And Then There Were None"                , author_id: 12 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
+      ]
+      
+      expected_inner = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same                (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should remove 6 books (left join)', ( done ) ->
+      expected = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same    (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same    (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same    (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same    (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8, author_name: "J.K. Rowling"            }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10, author_name: "Stephenie Meyer"         }
+        {                                                            author_id:  6, author_name: "William Holmes McGuffey" }
+        {                                                            author_id:  9, author_name: "Pierre Dukan"            }
+        {                                                            author_id: 11, author_name: "Vladimir Nabokov"        }
+        {                                                            author_id:  2, author_name: "J. R. R. Tolkien"        }
+        {                                                            author_id:  5, author_name: "Stieg Larsson"           }
+        {                                                            author_id: 12, author_name: "Agatha Christie"         }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same    (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing 7 authors', ->
+    it 'should remove 3 books with author (inner join)', ( done ) ->
+      authors._remove [
+        { id:  1, name: "Charles Dickens"         }
+        #{ id:  2, name: "J. R. R. Tolkien"        }
+        #{ id:  4, name: "Paulo Coelho"            }
+        { id:  5, name: "Stieg Larsson"           }
+        { id:  6, name: "William Holmes McGuffey" }
+        { id:  8, name: "J.K. Rowling"            }
+        { id:  9, name: "Pierre Dukan"            }
+        { id: 10, name: "Stephenie Meyer"         }
+        #{ id: 11, name: "Vladimir Nabokov"        }
+        { id: 12, name: "Agatha Christie"         }
+      ]
+      
+      expected_inner = [
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same                (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should remove 3 authors from books (left join)', ( done ) ->
+      expected = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8 }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10 }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                 (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                 (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                 (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should remove 3 authors from books and 4 authors without books (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4, author_name: "Paulo Coelho"            }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8 }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10 }
+        {                                                            author_id: 11, author_name: "Vladimir Nabokov"        }
+        {                                                            author_id:  2, author_name: "J. R. R. Tolkien"        }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                                             (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing all (5) remaining books then all (3) remaining authors', ->
+    it 'should remove the last book (inner join)', ( done ) ->
+      books._remove [
+        { id:  1, title: "A Tale of Two Cities"                    , author_id:  1 }
+        { id:  4, title: "The Alchemist"                           , author_id:  4 }
+        { id:  9, title: "The Hunger Games"                        , author_id:  7 }
+        { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author_id:  8 }
+        { id: 12, title: "Breaking Dawn"                           , author_id: 10 }
+      ]
+      
+      authors._remove [
+        { id:  2, name: "J. R. R. Tolkien"        }
+        { id:  4, name: "Paulo Coelho"            }
+        { id: 11, name: "Vladimir Nabokov"        }
+      ]
+      
+      expected_inner = []
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same          (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should remove 5 remaining books (left join)', ( done ) ->
+      expected = []
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same              (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same              (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same              (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should remove all remaining books and authors (full outer join)', ( done ) ->
+      expected_outer = []
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                            (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'adding back 4 books then the 2 authors of these four books (2 books per author)', ->
+    it 'should add 4 books with their 2 authors (inner join)', ( done ) ->
+      books._add [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  8, title: "The Hobbit"                              , author_id:  2 }
+      ]
+      
+      authors._add [
+        { id:  2, name: "J. R. R. Tolkien"        }
+        { id:  3, name: "Dan Brown"               }
+      ]
+      
+      expected_inner = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same                      (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same                      (left join)', ( done ) ->
+      expected = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                      (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                      (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing these 2 authors of those four books (2 books per author)', ->
+    it 'should remove all 4 books (inner join)', ( done ) ->
+      authors._remove [
+        { id:  2, name: "J. R. R. Tolkien"        }
+        { id:  3, name: "Dan Brown"               }
+      ]
+      
+      expected_inner = []
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same        (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should remove 2 authors 4 from books (left join)', ( done ) ->
+      expected = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
+        { id:  8, title: "The Hobbit"                              , author_id:  2 }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                   (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                   (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                   (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same                   (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
+        { id:  8, title: "The Hobbit"                              , author_id:  2 }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                   (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing last four books and adding back their 2 authors (2 books per author)', ->
+    it 'should still show no books (inner join)', ( done ) ->
+      books._remove [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  8, title: "The Hobbit"                              , author_id:  2 }
+      ]
+      
+      authors._add [
+        { id:  2, name: "J. R. R. Tolkien"        }
+        { id:  3, name: "Dan Brown"               }
+      ]
+      
+      expected_inner = []
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same         (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should remove 4 books (left join)', ( done ) ->
+      expected = []
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same    (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same    (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same    (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should remove 4 books and add back two authors (full outer join)', ( done ) ->
+      expected_outer = [
+        {                                                            author_id:  2, author_name: "J. R. R. Tolkien"        }
+        {                                                            author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                             (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+  describe 'removing adding back the four books of these 2 authors (2 books per author)', ->
+    it 'should add back these 4 books (inner join)', ( done ) ->
+      books._add [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+        { id:  8, title: "The Hobbit"                              , author_id:  2 }
+      ]
+      
+      expected_inner = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same            (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same            (left join)', ( done ) ->
+      expected = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same            (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same            (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same            (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should remove the two standalone authors then add 4 books back with these two authors (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3, author_name: "Dan Brown"               }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                                                                    (full outer join) on downstream set', ( done ) ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
     
