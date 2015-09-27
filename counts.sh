@@ -1,5 +1,7 @@
 #!/bin/sh
-find *sh *.json *.md *.txt .travis.yml lib test bin \
+echo "Tests:"
+
+find test \
   -type d \( \
        -path test/bootstrap \
     -o -path test/deprecated \
@@ -9,6 +11,15 @@ find *sh *.json *.md *.txt .travis.yml lib test bin \
     -o -path test/css/images \
   \) \
   -prune -o \
+  -regextype posix-egrep -regex '.*[^~]' \
+  -type f \
+  -exec wc -l {} + \
+| sort -n
+
+echo
+echo "Source:"
+
+find *sh *.json *.md .travis.yml lib bin \
   -regextype posix-egrep \
   -regex '.*[^~]' \
   -type f \
