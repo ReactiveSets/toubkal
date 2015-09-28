@@ -956,14 +956,11 @@ describe 'join() authors and books', ->
     it 'should remove 3 books with author (inner join)', ( done ) ->
       authors._remove [
         { id:  1, name: "Charles Dickens"         }
-        #{ id:  2, name: "J. R. R. Tolkien"        }
-        #{ id:  4, name: "Paulo Coelho"            }
         { id:  5, name: "Stieg Larsson"           }
         { id:  6, name: "William Holmes McGuffey" }
         { id:  8, name: "J.K. Rowling"            }
         { id:  9, name: "Pierre Dukan"            }
         { id: 10, name: "Stephenie Meyer"         }
-        #{ id: 11, name: "Vladimir Nabokov"        }
         { id: 12, name: "Agatha Christie"         }
       ]
       
@@ -1247,7 +1244,7 @@ describe 'join() authors and books', ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
     
-  describe 'removing adding back the four books of these 2 authors (2 books per author)', ->
+  describe 'adding back the four books of these 2 authors (2 books per author)', ->
     it 'should add back these 4 books (inner join)', ( done ) ->
       books._add [
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
