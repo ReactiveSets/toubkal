@@ -162,7 +162,7 @@ just-in-time code generators and other optimizations.
 #### What's the big deal about authorizations?
 
 Writing a complex application is hard-enough, add to this any significantly-complex
-authorization scheme and the whole thing breaks appart, slows-down to a crawl, clutters
+authorization scheme and the whole thing breaks apart, slows-down to a crawl, clutters
 the code with plenty of unspotted security holes throughout every part of the
 application, and every now and then exposes end-users' data to unauthorized users.
 
