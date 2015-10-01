@@ -1,10 +1,15 @@
 #!/bin/sh
 
-files='lib/*js lib/server/*js lib/client/*js'
+files='*sh *.md lib bin test'
 
 if ( [ "$1" != "" ]; ) then
   files="$1 $2 $3 $4 $5 $6"
 fi
 
-grep -nH ToDo $files | sed -e 's/^\([^:]*\):\([^:]*\):.*ToDo/\+\2 \1/i' | less
-
+find $files                \
+  -regextype posix-egrep   \
+  -regex '.*[^~]'          \
+  -type f                  \
+  -exec grep -nH ToDo {} + \
+| sed -e 's/^\([^:]*\):\([^:]*\):.*ToDo/\+\2 \1/i' \
+| less
