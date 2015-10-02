@@ -22,7 +22,7 @@
 # Source map support for v8 stack traces
 # --------------------------------------
 
-require( 'source-map-support' ).install()
+this.expect || require( 'source-map-support' ).install()
 
 # ----------------------------------------------------------------------------------------------
 # Setup mocha BDD, load expect
