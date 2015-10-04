@@ -131,7 +131,7 @@ describe 'join() authors and books', ->
     { key: [ 'id', 'author_id' ], right: true, name: 'authors_on_books' }
   )
   
-  authors_on_books_set = authors_on_books.set()
+  authors_on_books_set = authors_on_books.trace( 'authors_on_books trace' ).set()
   
   # full outer join
   books_or_authors = books.join(
@@ -144,7 +144,7 @@ describe 'join() authors and books', ->
     { key: [ 'id', 'author_id' ], outer: true, name: 'books_or_authors' }
   )
   
-  books_or_authors_set = books_or_authors.set()
+  books_or_authors_set = books_or_authors.trace( 'authors_or_books trace' ).set()
   
   expected_inner = [
     { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
@@ -1304,4 +1304,17 @@ describe 'join() authors and books', ->
     it 'should do the same                                                                    (full outer join) on downstream set', ( done ) ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
+  
+  describe 'checking anti-state of downstream sets are empty', ->
+    it 'should have nothing in its anti-state (inner join)      downstream set', () ->
+      expect( books_authors_set.b.length ).to.be 0
+    
+    it 'should have nothing in its anti-state (left join)       downstream set', () ->
+      expect( books_with_authors_set.b.length ).to.be 0
+    
+    it 'should have nothing in its anti-state (right join)      downstream set', () ->
+      expect( authors_on_books_set.b.length ).to.be 0
+    
+    it 'should have nothing in its anti-state (full outer join) downstream set', () ->
+      expect( books_or_authors_set.b.length ).to.be 0
     
