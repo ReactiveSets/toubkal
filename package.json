@@ -1,7 +1,7 @@
 {
   "name": "toubkal",
   
-  "version": "0.2.13",
+  "version": "0.2.14",
   
   "description": "High-Performances Reactive Web Application Framework",
   
@@ -30,7 +30,7 @@
     "aws-sdk"     : "2.0.0-rc13",
     "nodemailer"  : "0.6.3",
     "easyimage"   : "0.1.6",
-    "passport"    : "0.2.0",
+    "passport"    : "0.2.2",
     "compressible": "1.0.1",
     "htmlparser2" : "3.8.2"
   },
@@ -43,15 +43,15 @@
     "zombie"                : "2.0.0-alpha31",
     "mocha-unfunk-reporter" : "0.4.0",
     "forever"               : "0.11.1",
-    "express"               : "4.1.1",
+    "express"               : "4.13.3",
     "express-session"       : "1.0.3",
     "morgan"                : "1.0.0",
     "cookie-parser"         : "1.0.1",
     "body-parser"           : "1.0.2",
-    "passport-twitter"      : "1.0.2",
-    "passport-facebook"     : "1.0.3",
-    "passport-github"       : "0.1.5",
-    "passport-google-oauth" : "0.1.5",
+    "passport-twitter"      : "1.0.3",
+    "passport-facebook"     : "2.0.0",
+    "passport-github"       : "0.3.0",
+    "passport-google-oauth" : "0.2.0",
     "cookie"                : "0.1.2",
     "uid2"                  : "0.0.3"
   },
