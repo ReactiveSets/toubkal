@@ -1,7 +1,7 @@
 {
   "name": "toubkal",
   
-  "version": "0.2.14",
+  "version": "0.2.15",
   
   "description": "High-Performances Reactive Web Application Framework",
   
@@ -50,7 +50,7 @@
     "body-parser"           : "1.0.2",
     "passport-twitter"      : "1.0.3",
     "passport-facebook"     : "2.0.0",
-    "passport-github"       : "0.3.0",
+    "passport-github"       : "1.0.0",
     "passport-google-oauth" : "0.2.0",
     "cookie"                : "0.1.2",
     "uid2"                  : "0.0.3"
