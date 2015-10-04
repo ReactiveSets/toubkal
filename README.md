@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1081 automated tests*
+*1085 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -538,7 +538,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1081 automated tests for the Toubkal core pipelets that run
+We have curently developped 1085 continuous integration tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -580,7 +580,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1081 of 1081 tests
+-> passed 1085 of 1085 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -762,17 +762,19 @@ node server.js > server.out
 
 ### Version 0.6.0 - Packaging / First Beta
 
-This will be the first Beta version with a reasonably stable API
+First Beta version with API almost finalized.
 
 #### Main Goals:
 
 - Implement as many ToDo as possible
-- Develop additional tests, goal is at least 2000 automated tests, code coverage to 90%
+- Develop additional tests, goal is at least 2500 continuous integration tests, code coverage to 90%
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
 - Session Strorage Dataflow
 
-### Version 0.5.0 - Web Application Framework / Packaging
+### Version 0.5.0 - Web Application Framework / Packaging / Versionning
+
+This version introduces the capability to keep historical values of objects persisted and cached.
 
 #### Main Goals:
 
@@ -783,13 +785,12 @@ This will be the first Beta version with a reasonably stable API
   - Split This repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ... repositories
   - Implement rs package manager
   - Implement rs automatic pipelet patching
-- Develop additional tests, goal is at least 1800 automated tests, measure test coverage
+- Develop additional tests, goal is at least 2000 continuous integration tests, measure test coverage
 
-### Version 0.4.0 - Versionned Persistance
-
-This version introduces the capability to keep historical values of objects persisted and cached.
-
-#### Main Goals:
+- Super-state and versioning:
+  - define attribute _v for versions, allowing to manage complete anti-state and super-state
+  - super-state will contain versions of an object added after a first version is already in the state
+    - allow complete desorder between multiple adds and revmove on the same object defined by its id
 
 - Versionned persistance, i.e. 
   - Refactor fetch() to provide adds, removes, updates operations instead of adds, enables versionning
@@ -797,116 +798,44 @@ This version introduces the capability to keep historical values of objects pers
   - Operations log
   - Query cache
   
-- Develop additional tests, goal is at least 1600 automated tests
+- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
+  - Bug with routing algorythm for / route
+  - Fix updates
+
+### Version 0.4.0 - Complex Queries
+
+ETA: December 12th 2015, 3 years anniversary of project debut
+
+#### Main Goals:
+
+- Develop additional tests, goal is at least 1600 continuous integration tests
+
+- Error handling:
+  - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
+  - provide pipelet to revert errors
+  - filter may route errors based on error values
+  - alter may alter error values 
 
 - Query Tree else()
   - Emits data events not routed to any other destination input
   - Pipelet else() captures these events
   - May be used to detect clients attempts to submit un-authorize data
 
-### Version 0.3.0 - Complex Queries, Authentication && Authorizations, Basic Persistance
-
-This version is the first version allowing to build complex streaming applications.
-
-ETA: December 12th 2015, 3 years anniversary of project debut
-
-#### Remaining Goals:
-
-- Dynamic Authorizations Query Dataflow from user id
-- Multi-provider Sign-in Widget
-- Refactor / stabilize pipelet API
-- Object persistance, i.e. does not keep older version of objects' values
-- At least 1200 tests
-
-##### Work in progress:
-
-- Error handling through 'error' dataflow
-  - Error values have the following attributes:
-    - flow (String): the string 'error'
-    - code (String): the error code
-    - message (String): an optional error message
-    - operation (String): 'add' or 'remove', the operation that caused the error
-    - error_flow (String): the flow for which the error occured
-    - sender (String): an identification of the sender of the operation to allow
-      routing back to sender. Sender's valued comes from operations option 'sender'
-    - values (Array of Objects): the values for which the error occured
-  
-  - Allows downstream pipelets to handle errors by reverting failed operations:
-    - a failed add is reverted by remove
-    - a failed remove is reverted by add
-    - errors can be routed back to sender using filters for the flow and sender attributes
-
-  - Error dataflow is handled specifically by some core pipelets:
-    - set_flow() does not alter the flow attribute when set to 'error'
-    - unique_set() forwards incomming errors to underlying set
-  
-  - ToDo:
-    - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
-    - provide pipelet to revert errors
-    - filter may route errors based on error values
-    - alter may alter error values 
-
-- MySQL read/write dataflows pipelets:
-  - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:
-    - mysql_connections(): manages MySQL connections
-    
-    - mysql_read(): statelessly read MySQL table:
-      - Builds SELECT .. WHERE from downstream query
-    
-    - mysql_write(): statelessly writes (DELETE and INSERT) to MySQL table
-    
-    - configuration(): to retrieve MySQL user credentials, removing credentials from code
-
-- Dropbox file sharing for photo albums (developped and tested in demo repository)
-
-- Out-of-band fetchable global lazy log dataflow for: exceptions, errors, and debug information
+- File write:
+  - to configuration()
+  - to other files
 
 - Intergrate Safe Complex Query expressions into Query and Query_Tree
 
-- Concurrent Transactions Synchronization (fully developped, adding tests)
+##### Work in progress:
 
-- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-  - Bug with routing algorythm for / route
-  - Fix updates
+- Facebook React server-side:
+  - using html_parse() to insert elements into a DOM tree
+  - using html_serialize() to rebuild modified html to server
 
-- Refactor modules, packaging:
-  - use undefine() to load modules from any situation, node, browser, AMD loaders
-  - split into meaningful subdirectories to eventually split the project into subprojects
+- Dropbox file sharing for photo albums (developped and tested in demo repository)
 
-- Database based on watch_directory() + dispatch() + configuration()
-  - Without versioning because this is based on configuration()
-  - File write, write to configuration file
-  - Optimize output changes using an Array Object diff
-
-- Refactor pipelet keys, where id will become mandatory to ease implementation of multi-dataflows
-  - Allow easy caching using set() pipelet
-  - define attribute _v for versions, allowing to manage complete anti-state and super-state
-  - super-state will contain versions of an object added after a first version is already in the state
-    - allow complete desorder between multiple adds and revmove on the same object defined by its id
-
-- Facebook React integration
-  - Client-side done
-  - Server-side:
-    - using html_parse() to insert elements into a DOM tree
-    - using html_serialize() to rebuild modified html to server
-
-##### Features already developped:
-
-- next(), a pipelet to maintain auto-incremented attributes on trigger
-
-- Operations Optimizer:
-  - waits for transactions to complete to emit operations
-  - on transaction completion, emits optimized operations, i.e. the minimum set of adds, removes and updates
-
-- Teaser example
-
-- Authentication with Passport
-  - Provider credentials from configuration
-  - User Identities Management
-  - Dynamic Routes Management
-  - Integration with express
-
-- Safe Complex Query expressions:
+- Safe Complex Query expressions (implemented, needs integration):
   - Sanitized for safe execution on server even when crafted by untrusted clients
   
   - For execution by upstream servers to reduce bandwidth, cpu usage and latency
@@ -950,6 +879,92 @@ ETA: December 12th 2015, 3 years anniversary of project debut
     }
 ```
 
+### Version 0.3.0 - Authentication && Authorizations, Persistance
+
+This version is the first version allowing to build complex streaming applications.
+
+Pipelet API has been significantly refactored and getting close to version 1.0 API.
+
+ETA: October 21st 2015.
+
+#### Remaining Goals:
+
+- Dynamic Authorizations Query Dataflow from user id
+- Multi-provider Sign-in Widget
+- At least 1200 continuous integration tests
+
+##### Work in progress:
+
+- Authentication with Passport
+  - Provider credentials from configuration
+  - User Identities Management
+  - Dynamic Routes Management
+  - Integration with express
+  - Integration with socket_io_xxx pipelets
+
+- join() pipelet:
+  - Adding tests
+  - Finalize outer joins (left, right, full)
+  - Optmizations: stateless output
+  - Refactoring and documentation
+
+##### Already developped:
+
+- 1085 continuous integration tests
+
+- MySQL read/write dataflows pipelets:
+  - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:
+    - mysql_connections(): manages MySQL connections
+    
+    - mysql_read(): statelessly read MySQL table:
+      - Builds SELECT .. WHERE from downstream query
+    
+    - mysql_write(): statelessly writes (DELETE and INSERT) to MySQL table
+    
+    - configuration(): to retrieve MySQL user credentials, removing credentials from code
+
+- react(): Facebook React client-side pipelet
+
+- next(): a pipelet to maintain auto-incremented attributes on trigger
+
+- Operations Optimizer:
+  - waits for transactions to complete to emit operations
+  - on transaction completion, emits optimized operations, i.e. the minimum set of adds, removes and updates
+
+- Examples:
+  - Examples server to serve assets and data for client examples, using configuration files for datasets
+  - Teaser using socket_io_server(), flow(), filter(), order(), trace(), and table()
+  - Reactive user table with react()
+  - Chat using socket_io_server() and form()
+
+- Refactor / stabilize pipelet API
+
+- Error handling using 'error' dataflow
+  - Error values have the following attributes:
+    - flow (String): the string 'error'
+    - code (String): the error code
+    - message (String): an optional error message
+    - operation (String): 'add' or 'remove', the operation that caused the error
+    - error_flow (String): the flow for which the error occured
+    - sender (String): an identification of the sender of the operation to allow
+      routing back to sender. Sender's valued comes from operations option 'sender'
+    - values (Array of Objects): the values for which the error occured
+  
+  - Allows downstream pipelets to handle errors by reverting failed operations:
+    - a failed add is reverted by remove
+    - a failed remove is reverted by add
+    - errors can be routed back to sender using filters for the flow and sender attributes
+
+  - Error dataflow is handled specifically by some core pipelets:
+    - set_flow() does not alter the flow attribute when set to 'error'
+    - unique_set() forwards incomming errors to underlying set
+  
+- Refactor modules, packaging:
+  - use undefine() to load modules from any situation, node, browser, AMD loaders
+  - split into meaningful subdirectories to eventually split the project into subprojects
+
+- Concurrent Transactions Synchronization with branch tags
+
 - Refactor pipelet class model:
   - Ease the definition of multiple, semantically distinct, inputs and outputs without definining pipelets
   - Define Plug base class for:
@@ -979,8 +994,6 @@ ETA: December 12th 2015, 3 years anniversary of project debut
   - RS.Options object defined methods for manipulating operations' options:
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
-
-- 1081 automated tests
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
@@ -1034,7 +1047,7 @@ Output_Transaction        | Manage an output transaction
 - Filter support for static and dynamic queries
 - Transactions
 - Automate UI tests on Travis
-- 309 automated tests
+- 309 continuous integration tests
 - Controllets which control upstream query trees using downstream queries
 - Improve Pipelet API and naming conventions
 - Virtual Hosts w/ optimized routing
