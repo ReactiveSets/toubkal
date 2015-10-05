@@ -48,6 +48,44 @@ compare_expected_values = ( expected, values ) ->
 # join test suite
 # ---------------
 
+describe 'join() invalid parameter(s)', ->
+  merge = ->
+  
+  it 'should throw if merge is not a function', ->
+    f = -> rs.set().join rs.set(), [ 'id' ]
+    
+    expect( f ).to.throwException()
+  
+  it 'should throw if conditions is not an Array', ->
+    f = -> rs.set().join rs.set(), {}, merge
+    
+    expect( f ).to.throwException()
+  
+  it 'should throw if conditions is empty', ->
+    f = -> rs.set().join rs.set(), [], merge
+    
+    expect( f ).to.throwException()
+  
+  it 'should throw if condition is not a string or object', ->
+    f = -> rs.set().join rs.set(), [ 1 ], merge
+    
+    expect( f ).to.throwException()
+    
+  it 'should throw if condition is an Array which first element is not a string', ->
+    f = -> rs.set().join rs.set(), [ [ 1, 'id' ] ], merge
+    
+    expect( f ).to.throwException()
+
+  it 'should throw if condition is an Array which second element is not a string', ->
+    f = -> rs.set().join rs.set(), [ [ 'id', 1 ] ], merge
+    
+    expect( f ).to.throwException()
+
+  it 'should throw if condition is an Array with less than two elements', ->
+    f = -> rs.set().join rs.set(), [ [ 'id' ] ], merge
+    
+    expect( f ).to.throwException()
+
 describe 'join() authors and books', ->
   authors = rs.set [
     { id:  1, name: "Charles Dickens"         }
@@ -94,57 +132,14 @@ describe 'join() authors and books', ->
   merge_author_book = ( author, book ) ->
     return merge_book_author( book, author )
   
-  # inner join
-  books_authors = books.join(
-    authors
-    
-    [ [ 'author_id', 'id' ] ]
-    
-    merge_book_author
-    
-    { key: [ 'id', 'author_id' ], name: 'books_authors' }
-  )
-  
-  books_authors_set = books_authors.set()
-  
-  # left join
-  books_with_authors = books.join(
-    authors
-    
-    [ [ 'author_id', 'id' ] ]
-    
-    merge_book_author
-    
-    { key: [ 'id', 'author_id' ], left: true, name: 'books_with_authors' }
-  )
-  
-  books_with_authors_set = books_with_authors.set()
-  
-  # right join
-  authors_on_books = authors.join(
-    books
-    
-    [ [ 'id', 'author_id' ] ]
-    
-    merge_author_book
-    
-    { key: [ 'id', 'author_id' ], right: true, name: 'authors_on_books' }
-  )
-  
-  authors_on_books_set = authors_on_books.trace( 'authors_on_books trace' ).set()
-  
-  # full outer join
-  books_or_authors = books.join(
-    authors
-    
-    [ [ 'author_id', 'id' ] ]
-    
-    merge_book_author
-    
-    { key: [ 'id', 'author_id' ], outer: true, name: 'books_or_authors' }
-  )
-  
-  books_or_authors_set = books_or_authors.trace( 'authors_or_books trace' ).set()
+  books_authors          = null
+  books_authors_set      = null
+  books_with_authors     = null
+  books_with_authors_set = null
+  authors_on_books       = null
+  authors_on_books_set   = null
+  books_or_authors       = null
+  books_or_authors_set   = null
   
   expected_inner = [
     { id:  1, title: "A Tale of Two Cities"                    , author_id:  1, author_name: "Charles Dickens"         }
@@ -189,6 +184,58 @@ describe 'join() authors and books', ->
   
   describe 'joining books and authors sets', ->
     it 'should join books authors (inner join)', ( done ) ->
+      # inner join
+      books_authors = books.join(
+        authors
+        
+        [ [ 'author_id', 'id' ] ]
+        
+        merge_book_author
+        
+        { key: [ 'id', 'author_id' ], name: 'books_authors' }
+      )
+      
+      books_authors_set = books_authors.set()
+      
+      # left join
+      books_with_authors = books.join(
+        authors
+        
+        [ [ 'author_id', 'id' ] ]
+        
+        merge_book_author
+        
+        { key: [ 'id', 'author_id' ], left: true, name: 'books_with_authors' }
+      )
+      
+      books_with_authors_set = books_with_authors.set()
+      
+      # right join
+      authors_on_books = authors.join(
+        books
+        
+        [ [ 'id', 'author_id' ] ]
+        
+        merge_author_book
+        
+        { key: [ 'id', 'author_id' ], right: true, name: 'authors_on_books' }
+      )
+      
+      authors_on_books_set = authors_on_books.trace( 'authors_on_books trace' ).set()
+      
+      # full outer join
+      books_or_authors = books.join(
+        authors
+        
+        [ [ 'author_id', 'id' ] ]
+        
+        merge_book_author
+        
+        { key: [ 'id', 'author_id' ], outer: true, name: 'books_or_authors' }
+      )
+      
+      books_or_authors_set = books_or_authors.trace( 'authors_or_books trace' ).set()
+      
       books_authors._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_inner, values
     
