@@ -34,8 +34,8 @@ value_equals = RS.value_equals
 log          = RS.log.bind null, 'join tests'
 
 compare_expected_values = ( expected, values ) ->
-  log 'compare_expected_values() expected: ', expected
-  log 'compare_expected_values() values:', values
+  # log 'compare_expected_values() expected: ', expected
+  # log 'compare_expected_values() values:', values
   
   expect( values.length ).to.be expected.length
   
@@ -1318,3 +1318,207 @@ describe 'join() authors and books', ->
     it 'should have nothing in its anti-state (full outer join) downstream set', () ->
       expect( books_or_authors_set.b.length ).to.be 0
     
+describe 'join() users and users profile, on "id" attribute', ->
+  users              = null
+  profiles           = null
+  merge_user_profile = null
+  users_profiles     = null
+  users_profiles_set = null
+  expected           = null
+  on_add             = null
+  on_remove          = null
+  on_update          = null
+  
+  describe 'joining users and users profile', ->
+    it 'should have one user with no name', ( done ) ->
+      users = rs.set [
+        { id: 1, email: 'one@example.com' }
+      ]
+      
+      profiles = rs.set [
+        { id: 1, name: 'one' }
+      ]
+      
+      merge_user_profile = ( user, profile ) -> extend {}, user, profile
+      
+      users_profiles = users.join(
+          profiles,
+          
+          [ 'id' ],
+          
+          merge_user_profile,
+          
+          { left: true }
+          
+        ).trace 'users profiles trace'
+      
+      users_profiles_set = users_profiles.set()
+      
+      users_profiles._on 'add',    ( values, options ) -> on_add    && on_add    values, options
+      users_profiles._on 'remove', ( values, options ) -> on_remove && on_remove values, options
+      users_profiles._on 'update', ( values, options ) -> on_update && on_update values, options
+      
+      expected = [
+        { id: 1, email: 'one@example.com', name: 'one' }
+      ]
+      
+      users_profiles._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should have one user with no name on downstream set', ( done ) ->
+      users_profiles_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+  
+  describe 'adding a user', ->
+    it 'should add a user with no name', ( done ) ->
+      on_add = ( values, options )  -> check done, ->
+        expect( values ).to.be.eql [ { id: 2, email: 'two@example.com' } ]
+        on_add = null
+      
+      users._add [ { id: 2, email: 'two@example.com' } ]
+      
+      expected.push { id: 2, email: 'two@example.com' }
+    
+    it 'should now have two users, one with no name', ( done ) ->
+      users_profiles._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should now have two users, one with no name on downstream set', ( done ) ->
+      users_profiles_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+  
+  describe 'adding a user profile for second user', ->
+    it 'should update second user to add name', ( done ) ->
+      on_update = ( updates, options )  -> check done, ->
+        expect( updates ).to.be.eql [
+          [
+            { id: 2, email: 'two@example.com' }
+            { id: 2, email: 'two@example.com', name: 'two' }
+          ]
+        ]
+        
+        on_update = null
+      
+      profiles._add [ { id: 2, name: 'two' } ]
+      
+      expected[ 1 ] = { id: 2, email: 'two@example.com', name: 'two' }
+      
+    it 'should now have two users with names', ( done ) ->
+      users_profiles._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should now have two users with names on downstream set', ( done ) ->
+      users_profiles_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+  
+  describe 'remove user profiles of both users', ->
+    it 'should update first user to remove name', ( done ) ->
+      on_update = ( updates, options )  -> check done, ->
+        expect( updates ).to.be.eql [
+          [
+            { id: 1, email: 'one@example.com', name: 'one' }
+            { id: 1, email: 'one@example.com' }
+          ]
+          [
+            { id: 2, email: 'two@example.com', name: 'two' }
+            { id: 2, email: 'two@example.com' }
+          ]
+        ]
+        
+        on_update = null
+      
+      profiles._remove [ { id: 1, name: 'one' }, { id: 2, name: 'two' } ]
+      
+      expected[ 0 ] = { id: 1, email: 'one@example.com' }
+      expected[ 1 ] = { id: 2, email: 'two@example.com' }
+      
+    it 'should now have two users with no name', ( done ) ->
+      users_profiles._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should now have two users with no name on downstream set', ( done ) ->
+      users_profiles_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+  
+  describe 'adding back both user profiles of both users', ->
+    it 'should update first user to remove name', ( done ) ->
+      on_update = ( updates, options )  -> check done, ->
+        expect( updates ).to.be.eql [
+          [
+            { id: 1, email: 'one@example.com' }
+            { id: 1, email: 'one@example.com', name: 'one' }
+          ]
+          [
+            { id: 2, email: 'two@example.com' }
+            { id: 2, email: 'two@example.com', name: 'two' }
+          ]
+        ]
+        
+        on_update = null
+      
+      profiles._add [ { id: 1, name: 'one' }, { id: 2, name: 'two' } ]
+      
+      expected[ 0 ] = { id: 1, email: 'one@example.com', name: 'one' }
+      expected[ 1 ] = { id: 2, email: 'two@example.com', name: 'two' }
+      
+    it 'should now have two users with names', ( done ) ->
+      users_profiles._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should now have two users with names on downstream set', ( done ) ->
+      users_profiles_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+  
+  describe 'removing both users', ->
+    it 'remove both users', ( done ) ->
+      on_remove = ( values, options )  -> check done, ->
+        expect( values ).to.be.eql [
+          { id: 1, email: 'one@example.com', name: 'one' }
+          { id: 2, email: 'two@example.com', name: 'two' }
+        ]
+        
+        on_remove = null
+      
+      users._remove [
+        { id: 1, email: 'one@example.com' }
+        { id: 2, email: 'two@example.com' }
+      ]
+      
+      expected = []
+      
+    it 'should now have no user', ( done ) ->
+      users_profiles._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should now have no user on downstream set', ( done ) ->
+      users_profiles_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+  
+  describe 'adding back both users', ->
+    it 'add back both users', ( done ) ->
+      on_add = ( values, options )  -> check done, ->
+        expect( values ).to.be.eql [
+          { id: 1, email: 'one@example.com', name: 'one' }
+          { id: 2, email: 'two@example.com', name: 'two' }
+        ]
+        
+        on_add = null
+      
+      users._add [
+        { id: 1, email: 'one@example.com' }
+        { id: 2, email: 'two@example.com' }
+      ]
+      
+      expected = [
+        { id: 1, email: 'one@example.com', name: 'one' }
+        { id: 2, email: 'two@example.com', name: 'two' }
+      ]
+      
+    it 'should now have two users with names', ( done ) ->
+      users_profiles._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should now have two users with names on downstream set', ( done ) ->
+      users_profiles_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+  
