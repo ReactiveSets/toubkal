@@ -1016,7 +1016,7 @@ Other Classes && methods  | Short Description
 --------------------------|------------------------------------------------
 value_equals()            | Allows comparison of any types of values, including deeply nested objects and arrays
 undefine()                | Universal module loader for node and the browser, exported as own npm module
-Lap_Timer                 | Helps calulate time difference between events, used by loggers
+Lap_Timer                 | Helps calculate time difference between events, used by loggers
 Console_Logger            | Logger to console.log() with timestamps and lap lines 
 Client assets             | Sets to ease assembly of minified files for clients
 HTTP_Router               | Efficiently route HTTP requests using base URLs
