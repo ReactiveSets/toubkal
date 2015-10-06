@@ -219,9 +219,10 @@ describe 'join() authors and books', ->
         merge_author_book
         
         { key: [ 'id', 'author_id' ], right: true, name: 'authors_on_books' }
-      )
+        
+      ) #.trace 'authors_on_books trace'
       
-      authors_on_books_set = authors_on_books.trace( 'authors_on_books trace' ).set()
+      authors_on_books_set = authors_on_books.set()
       
       # full outer join
       books_or_authors = books.join(
@@ -232,9 +233,10 @@ describe 'join() authors and books', ->
         merge_book_author
         
         { key: [ 'id', 'author_id' ], outer: true, name: 'books_or_authors' }
-      )
+        
+      )#.trace 'authors_or_books trace'
       
-      books_or_authors_set = books_or_authors.trace( 'authors_or_books trace' ).set()
+      books_or_authors_set = books_or_authors.set()
       
       books_authors._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_inner, values
@@ -1404,6 +1406,60 @@ describe 'join() authors and books', ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
   
+  describe 'removing these two books of the second author (2 books per author)', ->
+    it 'should remove these 2 books (inner join)', ( done ) ->
+      books._remove [
+        { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
+        { id:  5, title: "Angels and Demons"                       , author_id:  3 }
+      ]
+      
+      expected_inner = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same          (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same          (left join)', ( done ) ->
+      expected = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same          (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same          (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same          (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should remove two books and add back one standalone author (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        {                                                            author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                                         (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+  
   describe 'checking anti-state of downstream sets are empty', ->
     it 'should have nothing in its anti-state (inner join)      downstream set', () ->
       expect( books_authors_set.b.length ).to.be 0
@@ -1449,7 +1505,7 @@ describe 'join() users and users profile, on "id" attribute', ->
           
           { left: true }
           
-        ).trace 'users profiles trace'
+        ).trace 'users profiles trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
       
       users_profiles_set = users_profiles.set()
       
