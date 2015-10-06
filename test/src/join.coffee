@@ -1291,13 +1291,65 @@ describe 'join() authors and books', ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
     
-  describe 'adding back the four books of these 2 authors (2 books per author)', ->
-    it 'should add back these 4 books (inner join)', ( done ) ->
+  describe 'adding back two books of one authors (2 books per author)', ->
+    it 'should add back these 2 books (inner join)', ( done ) ->
       books._add [
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
+        { id:  8, title: "The Hobbit"                              , author_id:  2 }
+      ]
+      
+      expected_inner = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+      ]
+      
+      books_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same            (inner join) on donwstream set', ( done ) ->
+      books_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_inner, values
+    
+    it 'should do the same            (left join)', ( done ) ->
+      expected = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+      ]
+      
+      books_with_authors._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same            (left join) on downstream set', ( done ) ->
+      books_with_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same            (right join)', ( done ) ->
+      authors_on_books._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should do the same            (right join) on downstream set', ( done ) ->
+      authors_on_books_set._fetch_all ( values ) -> check done, () ->
+        compare_expected_values expected, values
+    
+    it 'should remove the one standalone author then add 2 books back of this author (full outer join)', ( done ) ->
+      expected_outer = [
+        { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
+        {                                                            author_id:  3, author_name: "Dan Brown"               }
+      ]
+      
+      books_or_authors._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+    
+    it 'should do the same                                                           (full outer join) on downstream set', ( done ) ->
+      books_or_authors_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_outer, values
+  
+  describe 'adding back the two books of the second author (2 books per author)', ->
+    it 'should add back these 2 books (inner join)', ( done ) ->
+      books._add [
         { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
         { id:  5, title: "Angels and Demons"                       , author_id:  3 }
-        { id:  8, title: "The Hobbit"                              , author_id:  2 }
       ]
       
       expected_inner = [
@@ -1337,7 +1389,7 @@ describe 'join() authors and books', ->
       authors_on_books_set._fetch_all ( values ) -> check done, () ->
         compare_expected_values expected, values
     
-    it 'should remove the two standalone authors then add 4 books back with these two authors (full outer join)', ( done ) ->
+    it 'should remove one standalone author then add 2 books back of this author (full outer join)', ( done ) ->
       expected_outer = [
         { id:  2, title: "The Lord of the Rings"                   , author_id:  2, author_name: "J. R. R. Tolkien"        }
         { id:  8, title: "The Hobbit"                              , author_id:  2, author_name: "J. R. R. Tolkien"        }
@@ -1348,7 +1400,7 @@ describe 'join() authors and books', ->
       books_or_authors._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
     
-    it 'should do the same                                                                    (full outer join) on downstream set', ( done ) ->
+    it 'should do the same                                                       (full outer join) on downstream set', ( done ) ->
       books_or_authors_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_outer, values
   
