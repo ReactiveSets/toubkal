@@ -1,10 +1,10 @@
 # Toubkal
 
-**High-Performances Reactive Web Application Framework**
+**High-Productivity Reactive Web Application Framework**
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1085 automated tests*
+*1120 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -538,7 +538,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1085 continuous integration tests for the Toubkal core pipelets that run
+We have curently developped 1120 continuous integration tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -580,7 +580,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1085 of 1085 tests
+-> passed 1120 of 1120 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -910,7 +910,7 @@ ETA: October 21st 2015.
 
 ##### Already developped:
 
-- 1085 continuous integration tests
+- 1120 continuous integration tests
 
 - MySQL read/write dataflows pipelets:
   - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:
