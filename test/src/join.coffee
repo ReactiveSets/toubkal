@@ -124,7 +124,7 @@ describe 'join() authors and books', ->
   ], { name: 'books' }
   
   merge_book_author = ( book, author ) ->
-    return if ( author and book )
+    if ( author and book )
       extend {}, book, { author_name: author.name }
     else
       book or { author_id: author.id, author_name: author.name }
@@ -1461,18 +1461,18 @@ describe 'join() authors and books', ->
         compare_expected_values expected_outer, values
   
   describe 'checking anti-state of downstream sets are empty', ->
-    it 'should have nothing in its anti-state (inner join)      downstream set', () ->
+    it 'should have nothing in (inner join)      downstream set anti-state', () ->
       expect( books_authors_set.b.length ).to.be 0
     
-    it 'should have nothing in its anti-state (left join)       downstream set', () ->
+    it 'should have nothing in (left join)       downstream set anti-state', () ->
       expect( books_with_authors_set.b.length ).to.be 0
     
-    it 'should have nothing in its anti-state (right join)      downstream set', () ->
+    it 'should have nothing in (right join)      downstream set anti-state', () ->
       expect( authors_on_books_set.b.length ).to.be 0
     
-    it 'should have nothing in its anti-state (full outer join) downstream set', () ->
+    it 'should have nothing in (full outer join) downstream set anti-state', () ->
       expect( books_or_authors_set.b.length ).to.be 0
-    
+
 describe 'join() users and users profile, on "id" attribute', ->
   users              = null
   profiles           = null
@@ -1676,4 +1676,558 @@ describe 'join() users and users profile, on "id" attribute', ->
     it 'should now have two users with names on downstream set', ( done ) ->
       users_profiles_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
+    
+    it 'should have nothing in downstream set anti-state', () ->
+      expect( users_profiles_set.b.length ).to.be 0
+
+describe 'join(), multiple conditions', ->
+  projects             = null
+  views                = null
+  images               = null
   
+  merge_views_images   = null
+  
+  views_and_images     = null
+  views_and_images_set = null
+  
+  views_images         = null
+  views_images_set     = null
+  
+  images_views         = null
+  images_views_set     = null
+  
+  views_or_images      = null
+  views_or_images_set  = null
+  
+  expected             = null
+  expected_left        = null
+  expected_right       = null
+  expected_full        = null
+  
+  on_add               = null
+  on_remove            = null
+  on_update            = null
+  
+  describe 'joining views and images', ->
+    it 'should join non-empty sets of views and images', ( done ) ->
+      # The set "projects" is not used in this test suite, it is only defined to help understand the test
+      projects = rs.set [
+        { id: 1, name: 'First project' }
+        { id: 2, name: 'Second project' }
+      ]
+      
+      views = rs.set [
+        { project_id: '1', id: 1, name: 'Project 1 view 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1' }
+        
+      ], { key: [ 'project_id', 'id' ] }
+      
+      images = rs.set [
+        { project_id: '1', view_id: 1, id: 1, name: 'Project 1 view 1 image 1' }
+        { project_id: '2', view_id: 1, id: 1, name: 'Project 2 view 1 image 1' }
+        { project_id: '2', view_id: 1, id: 2, name: 'Project 2 view 1 image 2' }
+        { project_id: '2', view_id: 2, id: 1, name: 'Project 2 view 2 image 1' }
+        
+      ], { key: [ 'project_id', 'view_id', 'id' ] }
+      
+      merge_views_images = ( view, image ) ->
+        if ( view and image )
+          extend {}, view, { image_id: image.id, image_name: image.name }
+        else
+          view or { project_id: image.project_id, id: image.view_id, image_id: image.id, image_name: image.name }
+      
+      # inner join
+      views_and_images = views.join(
+          images
+          
+          [ 'project_id', [ 'id', 'view_id' ] ]
+          
+          merge_views_images
+          
+          { key: [ 'project_id', 'id', 'image_id' ] }
+          
+        ).trace 'views and images trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+      
+      views_and_images_set = views_and_images.set()
+      
+      views_and_images._on 'add',    ( values, options ) -> on_add    && on_add    values, options
+      views_and_images._on 'remove', ( values, options ) -> on_remove && on_remove values, options
+      views_and_images._on 'update', ( values, options ) -> on_update && on_update values, options
+      
+      expected = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+      ]
+      
+      views_and_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same on downstream set', ( done ) ->
+      views_and_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same for a left join, displaying one view with no image', ( done ) ->
+      # left join
+      views_images = views.join(
+          images
+          
+          [ 'project_id', [ 'id', 'view_id' ] ]
+          
+          merge_views_images
+          
+          { left: true, key: [ 'project_id', 'id', 'image_id' ] }
+          
+        ).trace 'views images trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+      
+      views_images_set = views_images.set()
+      
+      expected_left = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+      ]
+      
+      views_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same on (left join) downstream set', ( done ) ->
+      views_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same for a right join, displaying one image associated with no view', ( done ) ->
+      # right join
+      images_views = views.join(
+          images
+          
+          [ 'project_id', [ 'id', 'view_id' ] ]
+          
+          merge_views_images
+          
+          { right: true, key: [ 'project_id', 'id', 'image_id' ] }
+          
+        ).trace 'images views trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+      
+      images_views_set = images_views.set()
+      
+      expected_right = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      images_views._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same on (right join) downstream set', ( done ) ->
+      images_views_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same for a full outer join, showing orphan view and image', ( done ) ->
+      # full outer join
+      views_or_images = views.join(
+          images
+          
+          [ 'project_id', [ 'id', 'view_id' ] ]
+          
+          merge_views_images
+          
+          { outer: true, key: [ 'project_id', 'id', 'image_id' ] }
+          
+        ).trace 'views or images trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+      
+      views_or_images_set = views_or_images.set()
+      
+      expected_full = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      views_or_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+    
+    it 'should do the same on (outer join) downstream set', ( done ) ->
+      views_or_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+  
+  describe 'adding 3 images to empty view', ->
+    it 'should add 3 images (inner join)', ( done ) ->
+      images._add [
+        { project_id: '1', view_id: 2, id: 1, name: 'Project 1 view 2 image 1' }
+        { project_id: '1', view_id: 2, id: 2, name: 'Project 1 view 2 image 2' }
+        { project_id: '1', view_id: 2, id: 3, name: 'Project 1 view 2 image 3' }
+      ]
+      
+      expected.push(
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+      )
+      
+      views_and_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same on (inner join) downstream set', ( done ) ->
+      views_and_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same for a left join, updating orphan view with 3 images', ( done ) ->
+      expected_left = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+      ]
+      
+      views_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same on (left join) downstream set', ( done ) ->
+      views_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same for a right join, adding 3 images', ( done ) ->
+      expected_right = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      images_views._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same on (right join) downstream set', ( done ) ->
+      images_views_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same for a full outer join, updating orphan view with 3 images', ( done ) ->
+      expected_full = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      views_or_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+    
+    it 'should do the same on (outer join) downstream set', ( done ) ->
+      views_or_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+  
+  describe 'adding two views, on for on orphan image, another with no image', ->
+    it 'should add 1 image (inner join)', ( done ) ->
+      views._add [
+        { project_id: '2', id: 2, name: 'Project 2 view 2' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      expected.push(
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      )
+      
+      views_and_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same on (inner join) downstream set', ( done ) ->
+      views_and_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should add one image and one view (left join)', ( done ) ->
+      expected_left.push(
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      )
+      
+      views_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same on (left join) downstream set', ( done ) ->
+      views_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should update one image with its view (right join)', ( done ) ->
+      expected_right = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      images_views._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same on (right join) downstream set', ( done ) ->
+      images_views_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should update one image with its view, and add orphan view (full outer join)', ( done ) ->
+      expected_full = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      views_or_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+    
+    it 'should do the same on (outer join) downstream set', ( done ) ->
+      views_or_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+  
+  describe 'removing 2 views', ->
+    it 'should remove 5 images (inner join)', ( done ) ->
+      views._remove [
+        { project_id: '1', id: 2, name: 'Project 1 view 2' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1' }
+      ]
+      
+      expected = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      views_and_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same on  (inner join) downstream set', ( done ) ->
+      views_and_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same on  (left join)', ( done ) ->
+      expected_left = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      views_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same on (left join) downstream set', ( done ) ->
+      views_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should update 5 images to remove view names (right join)', ( done ) ->
+      expected_right = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      images_views._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same on (right join) downstream set', ( done ) ->
+      images_views_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same (full outer join)', ( done ) ->
+      expected_full = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      views_or_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+    
+    it 'should do the same on (outer join) downstream set', ( done ) ->
+      views_or_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+  
+  describe 'removing 5 images', ->
+    it 'should remove the last two images (inner join)', ( done ) ->
+      images._remove [
+        { project_id: '1', view_id: 1, id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', view_id: 2, id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '2', view_id: 1, id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', view_id: 1, id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', view_id: 2, id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      expected = []
+      
+      views_and_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do the same on  (inner join) downstream set', ( done ) ->
+      views_and_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should remove last 2 images, leaving two more orphan views (left join), 1 remove and 1 update', ( done ) ->
+      expected_left = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      views_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same on (left join) downstream set', ( done ) ->
+      views_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should remove 5 images, leaving two orphan images (right join)', ( done ) ->
+      expected_right = [
+        { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+      ]
+      
+      images_views._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same on (right join) downstream set', ( done ) ->
+      images_views_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should remove 5 images, leaving 2 more orphan views (full outer join), 1 remove and 1 update', ( done ) ->
+      expected_full = [
+        { project_id: '1', id: 1, name: 'Project 1 view 1' }
+        { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      views_or_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+    
+    it 'should do the same on (outer join) downstream set', ( done ) ->
+      views_or_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+  
+  describe 'removing last 3 views', ->
+    it 'should do nothing (inner join)', ( done ) ->
+      views._remove [
+        { project_id: '1', id: 1, name: 'Project 1 view 1' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      views_and_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do nothing (inner join) downstream set', ( done ) ->
+      views_and_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should remove last  views (left join)', ( done ) ->
+      expected_left = []
+      
+      views_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do the same on (left join) downstream set', ( done ) ->
+      views_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do nothing, leaving two orphan images (right join)', ( done ) ->
+      images_views._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same on (right join) downstream set', ( done ) ->
+      images_views_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should remove 3 views, leaving 2 orphan images', ( done ) ->
+      expected_full = [
+        { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+      ]
+      
+      views_or_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+    
+    it 'should do the same on (outer join) downstream set', ( done ) ->
+      views_or_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+  
+  describe 'removing last 2 images', ->
+    it 'do nothing (inner join)', ( done ) ->
+      images._remove [
+        { project_id: '1', view_id: 2, id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', view_id: 2, id: 3, image_name: 'Project 1 view 2 image 3' }
+      ]
+      
+      views_and_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do nothing (inner join) downstream set', ( done ) ->
+      views_and_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected, values
+    
+    it 'should do nothing (left join)', ( done ) ->
+      views_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should do nothing (left join) downstream set', ( done ) ->
+      views_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_left, values
+    
+    it 'should remove last 2 orphan images (right join)', ( done ) ->
+      expected_right = []
+      
+      images_views._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same on (right join) downstream set', ( done ) ->
+      images_views_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_right, values
+    
+    it 'should do the same (full outer join)', ( done ) ->
+      expected_full = []
+      
+      views_or_images._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+    
+    it 'should do the same on (outer join) downstream set', ( done ) ->
+      views_or_images_set._fetch_all ( values ) -> check done, ->
+        compare_expected_values expected_full, values
+  
+  describe 'checking anti-state of downstream sets are empty', ->
+    it 'should have nothing in (inner join)      downstream set anti-state', () ->
+      expect( views_and_images_set.b.length ).to.be 0
+    
+    it 'should have nothing in (left join)       downstream set anti-state', () ->
+      expect( views_images_set.b.length ).to.be 0
+    
+    it 'should have nothing in (right join)      downstream set anti-state', () ->
+      expect( images_views_set.b.length ).to.be 0
+    
+    it 'should have nothing in (full outer join) downstream set anti-state', () ->
+      expect( views_or_images_set.b.length ).to.be 0
+
