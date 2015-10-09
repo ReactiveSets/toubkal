@@ -1708,6 +1708,15 @@ describe 'join(), multiple conditions', ->
   on_remove            = null
   on_update            = null
   
+  adds                 = null
+  removes              = null
+  updates              = null
+  
+  reset = ->
+    adds    = []
+    removes = []
+    updates = []
+  
   describe 'joining views and images', ->
     it 'should join non-empty sets of views and images', ( done ) ->
       # The set "projects" is not used in this test suite, it is only defined to help understand the test
@@ -1751,9 +1760,15 @@ describe 'join(), multiple conditions', ->
       
       views_and_images_set = views_and_images.set()
       
+      reset()
+      
       views_and_images._on 'add',    ( values, options ) -> on_add    && on_add    values, options
       views_and_images._on 'remove', ( values, options ) -> on_remove && on_remove values, options
       views_and_images._on 'update', ( values, options ) -> on_update && on_update values, options
+      
+      on_add    = ( values  , options ) -> adds   .push [ values  , options ]
+      on_remove = ( values  , options ) -> removes.push [ values  , options ]
+      on_update = ( _updates, options ) -> updates.push [ _updates, options ]
       
       expected = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
@@ -1782,6 +1797,10 @@ describe 'join(), multiple conditions', ->
         ).trace 'views images trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
       
       views_images_set = views_images.set()
+      
+      views_images._on 'add',    ( values, options ) -> on_add    && on_add    values, options
+      views_images._on 'remove', ( values, options ) -> on_remove && on_remove values, options
+      views_images._on 'update', ( values, options ) -> on_update && on_update values, options
       
       expected_left = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
@@ -1812,6 +1831,10 @@ describe 'join(), multiple conditions', ->
       
       images_views_set = images_views.set()
       
+      images_views._on 'add',    ( values, options ) -> on_add    && on_add    values, options
+      images_views._on 'remove', ( values, options ) -> on_remove && on_remove values, options
+      images_views._on 'update', ( values, options ) -> on_update && on_update values, options
+      
       expected_right = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
@@ -1841,6 +1864,10 @@ describe 'join(), multiple conditions', ->
       
       views_or_images_set = views_or_images.set()
       
+      views_or_images._on 'add',    ( values, options ) -> on_add    && on_add    values, options
+      views_or_images._on 'remove', ( values, options ) -> on_remove && on_remove values, options
+      views_or_images._on 'update', ( values, options ) -> on_update && on_update values, options
+      
       expected_full = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2, name: 'Project 1 view 2' }
@@ -1857,13 +1884,28 @@ describe 'join(), multiple conditions', ->
         compare_expected_values expected_full, values
   
   describe 'adding 3 images to empty view', ->
-    it 'should add 3 images (inner join)', ( done ) ->
+    it 'should add 3 images (inner join) in one operation', ->
+      reset()
+      
       images._add [
         { project_id: '1', view_id: 2, id: 1, name: 'Project 1 view 2 image 1' }
         { project_id: '1', view_id: 2, id: 2, name: 'Project 1 view 2 image 2' }
         { project_id: '1', view_id: 2, id: 3, name: 'Project 1 view 2 image 3' }
       ]
       
+      add = adds.shift()
+      
+      # values
+      compare_expected_values add[ 0 ], [
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+      ]
+      
+      # options
+      expect( add[ 1 ] ).to.be.eql {}
+    
+    it 'should have 6 images (inner join)', ( done ) ->
       expected.push(
         { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
         { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
@@ -1873,11 +1915,39 @@ describe 'join(), multiple conditions', ->
       views_and_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should do the same on (inner join) downstream set', ( done ) ->
+    it 'should have the same (inner join) downstream set', ( done ) ->
       views_and_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should do the same for a left join, updating orphan view with 3 images', ( done ) ->
+    it 'should update 1 view to add one image then add two images (left join) in a transaction', ->
+      update = updates.shift()
+      add    = adds   .shift()
+      
+      # values
+      compare_expected_values update[ 0 ], [
+        [
+          { project_id: '1', id: 2, name: 'Project 1 view 2' }
+          { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        ]
+      ]
+      
+      compare_expected_values add[ 0 ], [
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+      ]
+      
+      # options
+      _t = update[ 1 ]._t
+      
+      expect( typeof _t ).to.be 'object'
+      
+      tid = _t.id
+      
+      expect( _t ).to.be.eql { id: tid, more: true }
+      
+      expect( add[ 1 ] ).to.be.eql { _t: { id: tid } }
+    
+    it 'should now have 6 images and no orphan views (left join)', ( done ) ->
       expected_left = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -1890,11 +1960,24 @@ describe 'join(), multiple conditions', ->
       views_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should do the same on (left join) downstream set', ( done ) ->
+    it 'should have the same (left join) downstream set', ( done ) ->
       views_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should do the same for a right join, adding 3 images', ( done ) ->
+    it 'should add 3 images (right join) in one add operation', ->
+      add = adds.shift()
+      
+      # values
+      compare_expected_values add[ 0 ], [
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+      ]
+      
+      # options
+      expect( add[ 1 ] ).to.be.eql {}
+    
+    it 'should now have 7 images, one with no view (right join)', ( done ) ->
       expected_right = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -1908,11 +1991,39 @@ describe 'join(), multiple conditions', ->
       images_views._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same on (right join) downstream set', ( done ) ->
+    it 'should have the same on (right join) downstream set', ( done ) ->
       images_views_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same for a full outer join, updating orphan view with 3 images', ( done ) ->
+    it 'should update 1 view to add one image then add two images (outer join) in a transaction', ->
+      update = updates.shift()
+      add    = adds   .shift()
+      
+      # values
+      compare_expected_values update[ 0 ], [
+        [
+          { project_id: '1', id: 2, name: 'Project 1 view 2' }
+          { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        ]
+      ]
+      
+      compare_expected_values add[ 0 ], [
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+      ]
+      
+      # options
+      _t = update[ 1 ]._t
+      
+      expect( typeof _t ).to.be 'object'
+      
+      tid = _t.id
+      
+      expect( _t ).to.be.eql { id: tid, more: true }
+      
+      expect( add[ 1 ] ).to.be.eql { _t: { id: tid } }
+    
+    it 'should have 7 images, one with no view (full outer join)', ( done ) ->
       expected_full = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -1926,17 +2037,35 @@ describe 'join(), multiple conditions', ->
       views_or_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
     
-    it 'should do the same on (outer join) downstream set', ( done ) ->
+    it 'should have the same on (outer join) downstream set', ( done ) ->
       views_or_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
+    
+    it 'should have no other operations', ->
+      expect( adds   .length ).to.be 0
+      expect( removes.length ).to.be 0
+      expect( updates.length ).to.be 0
   
-  describe 'adding two views, on for on orphan image, another with no image', ->
-    it 'should add 1 image (inner join)', ( done ) ->
+  describe 'adding two views, one for an orphan image, another with no image', ->
+    it 'should add 1 image (inner join) in one operation', ( done ) ->
+      reset()
+      
       views._add [
         { project_id: '2', id: 2, name: 'Project 2 view 2' }
         { project_id: '2', id: 3, name: 'Project 2 view 3' }
       ]
       
+      add = adds.shift()
+      
+      compare_expected_values add[ 0 ], [
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      expect( add[ 1 ] ).to.be.eql {}
+      
+      done()
+    
+    it 'should now have 7 images (inner join)', ( done ) ->
       expected.push(
         { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
       )
@@ -1944,11 +2073,23 @@ describe 'join(), multiple conditions', ->
       views_and_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should do the same on (inner join) downstream set', ( done ) ->
+    it 'should have the same on (inner join) downstream set', ( done ) ->
       views_and_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should add one image and one view (left join)', ( done ) ->
+    it 'should add one image with its view, plus one view with no image, in one operation', ( done ) ->
+      add = adds.shift()
+      
+      compare_expected_values add[ 0 ], [
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      expect( add[ 1 ] ).to.be.eql {}
+      
+      done()
+      
+    it 'should have one more image and one more view (left join)', ( done ) ->
       expected_left.push(
         { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
         { project_id: '2', id: 3, name: 'Project 2 view 3' }
@@ -1957,11 +2098,25 @@ describe 'join(), multiple conditions', ->
       views_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should do the same on (left join) downstream set', ( done ) ->
+    it 'should have the same on (left join) downstream set', ( done ) ->
       views_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
     it 'should update one image with its view (right join)', ( done ) ->
+      update = updates.shift()
+      
+      compare_expected_values update[ 0 ], [
+        [
+          { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+          { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        ]
+      ]
+      
+      expect( update[ 1 ] ).to.be.eql {}
+      
+      done()
+    
+    it 'should now have 7 images, all with views (right join)', ( done ) ->
       expected_right = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -1975,11 +2130,40 @@ describe 'join(), multiple conditions', ->
       images_views._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same on (right join) downstream set', ( done ) ->
+    it 'should have the same (right join) downstream set', ( done ) ->
       images_views_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should update one image with its view, and add orphan view (full outer join)', ( done ) ->
+    it 'should update one image with its view, and add orphan view (full outer join) in a transaction', ( done ) ->
+      update = updates.shift()
+      add    = adds   .shift()
+      
+      # values
+      compare_expected_values update[ 0 ], [
+        [
+          { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+          { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        ]
+      ]
+      
+      compare_expected_values add[ 0 ], [
+        { project_id: '2', id: 3, name: 'Project 2 view 3' }
+      ]
+      
+      # options
+      _t = update[ 1 ]._t
+      
+      expect( typeof _t ).to.be 'object'
+      
+      tid = _t.id
+      
+      expect( _t ).to.be.eql { id: tid, more: true }
+      
+      expect( add[ 1 ] ).to.be.eql { _t: { id: tid } }
+      
+      done()
+    
+    it 'should have 7 images and one orphan view (full outer join)', ( done ) ->
       expected_full = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -1994,17 +2178,39 @@ describe 'join(), multiple conditions', ->
       views_or_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
     
-    it 'should do the same on (outer join) downstream set', ( done ) ->
+    it 'should have the same (full outer join) downstream set', ( done ) ->
       views_or_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
+    
+    it 'should have no other operations', ->
+      expect( adds   .length ).to.be 0
+      expect( removes.length ).to.be 0
+      expect( updates.length ).to.be 0
   
   describe 'removing 2 views', ->
-    it 'should remove 5 images (inner join)', ( done ) ->
+    it 'should remove 5 images (inner join) in one operation', ( done ) ->
+      reset()
+      
       views._remove [
         { project_id: '1', id: 2, name: 'Project 1 view 2' }
         { project_id: '2', id: 1, name: 'Project 2 view 1' }
       ]
       
+      remove = removes.shift()
+      
+      compare_expected_values remove[ 0 ], [
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+      ]
+      
+      expect( remove[ 1 ] ).to.be.eql {}
+      
+      done()
+    
+    it 'should have 2 images left (inner join)', ( done ) ->
       expected = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
@@ -2013,11 +2219,26 @@ describe 'join(), multiple conditions', ->
       views_and_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should do the same on  (inner join) downstream set', ( done ) ->
+    it 'should have the same (inner join) downstream set', ( done ) ->
       views_and_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should do the same on  (left join)', ( done ) ->
+    it 'should remove 5 images (left join) in one operation', ( done ) ->
+      remove = removes.shift()
+      
+      compare_expected_values remove[ 0 ], [
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+        { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+      ]
+      
+      expect( remove[ 1 ] ).to.be.eql {}
+      
+      done()
+    
+    it 'should have 2 images and one orphan view left (left join)', ( done ) ->
       expected_left = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
@@ -2027,11 +2248,43 @@ describe 'join(), multiple conditions', ->
       views_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should do the same on (left join) downstream set', ( done ) ->
+    it 'should have the same (left join) downstream set', ( done ) ->
       views_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should update 5 images to remove view names (right join)', ( done ) ->
+    it 'should update 5 images to remove view names (right join) in one operation', ( done ) ->
+      update = updates.shift()
+      
+      expect( update ).to.be.eql [
+        [
+          [
+            { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+            { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+          ]
+          [
+            { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+            { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+          ]
+          [
+            { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+            { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+          ]
+          [
+            { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+            { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+          ]
+          [
+            { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+            { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+          ]
+        ]
+        
+        {}
+      ]
+      
+      done()
+    
+    it 'should have 7 images, 5 withou view names (right join)', ( done ) ->
       expected_right = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -2045,11 +2298,43 @@ describe 'join(), multiple conditions', ->
       images_views._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same on (right join) downstream set', ( done ) ->
+    it 'should have the same (right join) downstream set', ( done ) ->
       images_views_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same (full outer join)', ( done ) ->
+    it 'should update 5 images to remove view names (full outer join) in one operation', ( done ) ->
+      update = updates.shift()
+      
+      expect( update ).to.be.eql [
+        [
+          [
+            { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 1, image_name: 'Project 1 view 2 image 1' }
+            { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+          ]
+          [
+            { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 2, image_name: 'Project 1 view 2 image 2' }
+            { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+          ]
+          [
+            { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+            { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+          ]
+          [
+            { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 1, image_name: 'Project 2 view 1 image 1' }
+            { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+          ]
+          [
+            { project_id: '2', id: 1, name: 'Project 2 view 1', image_id: 2, image_name: 'Project 2 view 1 image 2' }
+            { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+          ]
+        ]
+        
+        {}
+      ]
+      
+      done()
+    
+    it 'should have 7 images, 5 without view names, plus one orphan view (full outer join)', ( done ) ->
       expected_full = [
         { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -2064,12 +2349,19 @@ describe 'join(), multiple conditions', ->
       views_or_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
     
-    it 'should do the same on (outer join) downstream set', ( done ) ->
+    it 'should have the same (outer join) downstream set', ( done ) ->
       views_or_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
+    
+    it 'should have no other operations', ->
+      expect( adds   .length ).to.be 0
+      expect( removes.length ).to.be 0
+      expect( updates.length ).to.be 0
   
   describe 'removing 5 images', ->
-    it 'should remove the last two images (inner join)', ( done ) ->
+    it 'should remove last 2 images (inner join) in one operation', ( done ) ->
+      reset()
+      
       images._remove [
         { project_id: '1', view_id: 1, id: 1, image_name: 'Project 1 view 1 image 1' }
         { project_id: '1', view_id: 2, id: 1, image_name: 'Project 1 view 2 image 1' }
@@ -2078,16 +2370,50 @@ describe 'join(), multiple conditions', ->
         { project_id: '2', view_id: 2, id: 1, image_name: 'Project 2 view 2 image 1' }
       ]
       
+      remove = removes.shift()
+      
+      expect( remove ).to.be.eql [
+        [
+          { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+          { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+        ]
+        
+        {}
+      ]
+      
+      done()
+      
+    it 'should have no image left (inner join)', ( done ) ->
       expected = []
       
       views_and_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should do the same on  (inner join) downstream set', ( done ) ->
+    it 'should have the same (inner join) downstream set', ( done ) ->
       views_and_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should remove last 2 images, leaving two more orphan views (left join), 1 remove and 1 update', ( done ) ->
+    it 'should update last 2 views to remove 2 images (left join), in 1 update operation', ( done ) ->
+      update = updates.shift()
+      
+      expect( update ).to.be.eql [
+        [
+          [
+            { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+            { project_id: '1', id: 1, name: 'Project 1 view 1' }
+          ]
+          [
+            { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+            { project_id: '2', id: 2, name: 'Project 2 view 2' }
+          ]
+        ]
+        
+        {}
+      ]
+      
+      done()
+    
+    it 'should now have 3 orphan views (left join)', ( done ) ->
       expected_left = [
         { project_id: '1', id: 1, name: 'Project 1 view 1' }
         { project_id: '2', id: 2, name: 'Project 2 view 2' }
@@ -2097,11 +2423,24 @@ describe 'join(), multiple conditions', ->
       views_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should do the same on (left join) downstream set', ( done ) ->
+    it 'should have the same (left join) downstream set', ( done ) ->
       views_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should remove 5 images, leaving two orphan images (right join)', ( done ) ->
+    it 'should remove 5 images, 3 were orphan images (right join) in one operation', ( done ) ->
+      remove = removes.shift()
+      
+      expect( remove[ 0 ] ).to.be.eql [
+        { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+        { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+        { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+      ]
+      
+      done()
+    
+    it 'should should have two orphan images (right join)', ( done ) ->
       expected_right = [
         { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
         { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
@@ -2110,11 +2449,45 @@ describe 'join(), multiple conditions', ->
       images_views._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same on (right join) downstream set', ( done ) ->
+    it 'should have the same (right join) downstream set', ( done ) ->
       images_views_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should remove 5 images, leaving 2 more orphan views (full outer join), 1 remove and 1 update', ( done ) ->
+    it 'should remove 3 images and update 2 views to remove images (full outer join), 1 remove and 1 update', ( done ) ->
+      remove = removes.shift()
+      update = updates.shift()
+      
+      expect( remove[ 0 ] ).to.be.eql [
+        { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+        { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+        { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+      ]
+      
+      expect( update[ 0 ] ).to.be.eql [
+        [
+          { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+          { project_id: '1', id: 1, name: 'Project 1 view 1' }
+        ]
+        [
+          { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+          { project_id: '2', id: 2, name: 'Project 2 view 2' }
+        ]
+      ]
+      
+      # options
+      _t = remove[ 1 ]._t
+      
+      expect( typeof _t ).to.be 'object'
+      
+      tid = _t.id
+      
+      expect( _t ).to.be.eql { id: tid, more: true }
+      
+      expect( update[ 1 ] ).to.be.eql { _t: { id: tid } }
+      
+      done()
+    
+    it 'should have 3 oprhan views and 2 orphan images (full outer join)', ( done ) ->
       expected_full = [
         { project_id: '1', id: 1, name: 'Project 1 view 1' }
         { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
@@ -2126,12 +2499,19 @@ describe 'join(), multiple conditions', ->
       views_or_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
     
-    it 'should do the same on (outer join) downstream set', ( done ) ->
+    it 'should have the same (full outer join) downstream set', ( done ) ->
       views_or_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
+    
+    it 'should have no other operations', ->
+      expect( adds.length ).to.be 0
+      expect( removes.length ).to.be 0
+      expect( updates.length ).to.be 0
   
   describe 'removing last 3 views', ->
     it 'should do nothing (inner join)', ( done ) ->
+      reset()
+      
       views._remove [
         { project_id: '1', id: 1, name: 'Project 1 view 1' }
         { project_id: '2', id: 2, name: 'Project 2 view 2' }
@@ -2145,13 +2525,28 @@ describe 'join(), multiple conditions', ->
       views_and_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected, values
     
-    it 'should remove last  views (left join)', ( done ) ->
+    it 'should remove last 3 views (left join)', ( done ) ->
+      remove = removes.shift()
+      
+      expect( remove ).to.be.eql [
+        [
+          { project_id: '1', id: 1, name: 'Project 1 view 1' }
+          { project_id: '2', id: 2, name: 'Project 2 view 2' }
+          { project_id: '2', id: 3, name: 'Project 2 view 3' }
+        ]
+        
+        {}
+      ]
+      
+      done()
+      
+    it 'should have zero images left (left join)', ( done ) ->
       expected_left = []
       
       views_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
-    it 'should do the same on (left join) downstream set', ( done ) ->
+    it 'should have the same (left join) downstream set', ( done ) ->
       views_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_left, values
     
@@ -2159,11 +2554,26 @@ describe 'join(), multiple conditions', ->
       images_views._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same on (right join) downstream set', ( done ) ->
+    it 'should do nothing (right join) downstream set', ( done ) ->
       images_views_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should remove 3 views, leaving 2 orphan images', ( done ) ->
+    it 'should remove 3 views (full outer join)', ( done ) ->
+      remove = removes.shift()
+      
+      expect( remove ).to.be.eql [
+        [
+          { project_id: '1', id: 1, name: 'Project 1 view 1' }
+          { project_id: '2', id: 2, name: 'Project 2 view 2' }
+          { project_id: '2', id: 3, name: 'Project 2 view 3' }
+        ]
+        
+        {}
+      ]
+      
+      done()
+    
+    it 'should leave 2 orphan images (full outer join)', ( done ) ->
       expected_full = [
         { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
         { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
@@ -2172,12 +2582,19 @@ describe 'join(), multiple conditions', ->
       views_or_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
     
-    it 'should do the same on (outer join) downstream set', ( done ) ->
+    it 'should have the same (full outer join) downstream set', ( done ) ->
       views_or_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
+    
+    it 'should have no other operations', ->
+      expect( adds   .length ).to.be 0
+      expect( removes.length ).to.be 0
+      expect( updates.length ).to.be 0
   
   describe 'removing last 2 images', ->
     it 'do nothing (inner join)', ( done ) ->
+      reset()
+      
       images._remove [
         { project_id: '1', view_id: 2, id: 2, image_name: 'Project 1 view 2 image 2' }
         { project_id: '1', view_id: 2, id: 3, image_name: 'Project 1 view 2 image 3' }
@@ -2199,24 +2616,57 @@ describe 'join(), multiple conditions', ->
         compare_expected_values expected_left, values
     
     it 'should remove last 2 orphan images (right join)', ( done ) ->
+      remove = removes.shift()
+      
+      expect( remove ).to.be.eql [
+        [
+          { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+          { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        ]
+        
+        {}
+      ]
+      
+      done()
+    
+    it 'should have nothing left (right join)', ( done ) ->
       expected_right = []
       
       images_views._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same on (right join) downstream set', ( done ) ->
+    it 'should have the same (right join) downstream set', ( done ) ->
       images_views_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_right, values
     
-    it 'should do the same (full outer join)', ( done ) ->
+    it 'should remove last 2 orphan images (full outer join)', ( done ) ->
+      remove = removes.shift()
+      
+      expect( remove ).to.be.eql [
+        [
+          { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+          { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        ]
+        
+        {}
+      ]
+      
+      done()
+    
+    it 'should have nothing left (full outer join)', ( done ) ->
       expected_full = []
       
       views_or_images._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
     
-    it 'should do the same on (outer join) downstream set', ( done ) ->
+    it 'should have the same (full outer join) downstream set', ( done ) ->
       views_or_images_set._fetch_all ( values ) -> check done, ->
         compare_expected_values expected_full, values
+    
+    it 'should have no other operations', ->
+      expect( adds   .length ).to.be 0
+      expect( removes.length ).to.be 0
+      expect( updates.length ).to.be 0
   
   describe 'checking anti-state of downstream sets are empty', ->
     it 'should have nothing in (inner join)      downstream set anti-state', () ->
