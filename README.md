@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1215 automated tests*
+*1467 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -538,7 +538,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1215 continuous integration tests for the Toubkal core pipelets that run
+We have curently developped 1467 continuous integration tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -580,7 +580,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1215 of 1215 tests
+-> passed 1467 of 1467 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -767,7 +767,7 @@ First Beta version with API almost finalized.
 #### Main Goals:
 
 - Implement as many ToDo as possible
-- Develop additional tests, goal is at least 2500 continuous integration tests, code coverage to 90%
+- Develop additional tests, goal is at least 3000 continuous integration tests, code coverage to 90%
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
 - Session Strorage Dataflow
@@ -785,7 +785,7 @@ This version introduces the capability to keep historical values of objects pers
   - Split This repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ... repositories
   - Implement rs package manager
   - Implement rs automatic pipelet patching
-- Develop additional tests, goal is at least 2000 continuous integration tests, measure test coverage
+- Develop additional tests, goal is at least 2500 continuous integration tests, measure test coverage
 
 - Super-state and versioning:
   - define attribute _v for versions, allowing to manage complete anti-state and super-state
@@ -808,7 +808,7 @@ ETA: December 12th 2015, 3 years anniversary of project debut
 
 #### Main Goals:
 
-- Develop additional tests, goal is at least 1600 continuous integration tests
+- Develop additional tests, goal is at least 2000 continuous integration tests
 
 - Error handling:
   - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
@@ -891,7 +891,6 @@ ETA: October 21st 2015.
 
 - Dynamic Authorizations Query Dataflow from user id
 - Multi-provider Sign-in Widget
-- At least 1200 continuous integration tests
 
 ##### Work in progress:
 
@@ -910,7 +909,7 @@ ETA: October 21st 2015.
 
 ##### Already developped:
 
-- 1215 continuous integration tests
+- 1467 continuous integration tests
 
 - MySQL read/write dataflows pipelets:
   - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:

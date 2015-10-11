@@ -34,8 +34,8 @@ value_equals = RS.value_equals
 log          = RS.log.bind null, 'join tests'
 
 compare_expected_values = ( expected, values ) ->
-  # log 'compare_expected_values() expected: ', expected
-  # log 'compare_expected_values() values:', values
+  log 'compare_expected_values() expected: ', expected
+  log 'compare_expected_values() values:', values
   
   expect( values.length ).to.be expected.length
   
@@ -48,45 +48,47 @@ compare_expected_values = ( expected, values ) ->
 # join test suite
 # ---------------
 
+describe 'join() invalid parameter(s)', ->
+  merge = ->
+  
+  it 'should throw if merge is not a function', ->
+    f = -> rs.set().join rs.set(), [ 'id' ]
+    
+    expect( f ).to.throwException()
+  
+  it 'should throw if conditions is not an Array', ->
+    f = -> rs.set().join rs.set(), {}, merge
+    
+    expect( f ).to.throwException()
+  
+  it 'should throw if conditions is empty', ->
+    f = -> rs.set().join rs.set(), [], merge
+    
+    expect( f ).to.throwException()
+  
+  it 'should throw if condition is not a string or object', ->
+    f = -> rs.set().join rs.set(), [ 1 ], merge
+    
+    expect( f ).to.throwException()
+    
+  it 'should throw if condition is an Array which first element is not a string', ->
+    f = -> rs.set().join rs.set(), [ [ 1, 'id' ] ], merge
+    
+    expect( f ).to.throwException()
+
+  it 'should throw if condition is an Array which second element is not a string', ->
+    f = -> rs.set().join rs.set(), [ [ 'id', 1 ] ], merge
+    
+    expect( f ).to.throwException()
+
+  it 'should throw if condition is an Array with less than two elements', ->
+    f = -> rs.set().join rs.set(), [ [ 'id' ] ], merge
+    
+    expect( f ).to.throwException()
+
 join_tests = ( options ) ->
-  describe 'join() invalid parameter(s)', ->
-    merge = ->
-    
-    it 'should throw if merge is not a function', ->
-      f = -> rs.set().join rs.set(), [ 'id' ]
-      
-      expect( f ).to.throwException()
-    
-    it 'should throw if conditions is not an Array', ->
-      f = -> rs.set().join rs.set(), {}, merge
-      
-      expect( f ).to.throwException()
-    
-    it 'should throw if conditions is empty', ->
-      f = -> rs.set().join rs.set(), [], merge
-      
-      expect( f ).to.throwException()
-    
-    it 'should throw if condition is not a string or object', ->
-      f = -> rs.set().join rs.set(), [ 1 ], merge
-      
-      expect( f ).to.throwException()
-      
-    it 'should throw if condition is an Array which first element is not a string', ->
-      f = -> rs.set().join rs.set(), [ [ 1, 'id' ] ], merge
-      
-      expect( f ).to.throwException()
-
-    it 'should throw if condition is an Array which second element is not a string', ->
-      f = -> rs.set().join rs.set(), [ [ 'id', 1 ] ], merge
-      
-      expect( f ).to.throwException()
-
-    it 'should throw if condition is an Array with less than two elements', ->
-      f = -> rs.set().join rs.set(), [ [ 'id' ] ], merge
-      
-      expect( f ).to.throwException()
-
+  no_filter = options && options.no_filter
+  
   describe 'join() authors and books', ->
     authors = rs.set [
       { id:  1, name: "Charles Dickens"         }
@@ -2058,6 +2060,8 @@ join_tests = ( options ) ->
         
         add = adds.shift()
         
+        return done() unless no_filter
+        
         compare_expected_values add[ 0 ], [
           { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
         ]
@@ -2080,6 +2084,8 @@ join_tests = ( options ) ->
       
       it 'should add one image with its view, plus one view with no image, in one operation', ( done ) ->
         add = adds.shift()
+        
+        return done() unless no_filter
         
         compare_expected_values add[ 0 ], [
           { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
@@ -2105,6 +2111,8 @@ join_tests = ( options ) ->
       
       it 'should update one image with its view (right join)', ( done ) ->
         update = updates.shift()
+        
+        return done() unless no_filter
         
         compare_expected_values update[ 0 ], [
           [
@@ -2138,6 +2146,8 @@ join_tests = ( options ) ->
       it 'should update one image with its view, and add orphan view (full outer join) in a transaction', ( done ) ->
         update = updates.shift()
         add    = adds   .shift()
+        
+        return done() unless no_filter
         
         # values
         compare_expected_values update[ 0 ], [
@@ -2428,7 +2438,7 @@ join_tests = ( options ) ->
         views_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_left, values
       
-      it 'should remove 5 images, 3 were orphan images (right join) in one operation', ( done ) ->
+      no_filter && it 'should remove 5 images, 3 were orphan images (right join) in one operation', ( done ) ->
         remove = removes.shift()
         
         expect( remove[ 0 ] ).to.be.eql [
@@ -2454,7 +2464,7 @@ join_tests = ( options ) ->
         images_views_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_right, values
       
-      it 'should remove 3 images and update 2 views to remove images (full outer join), 1 remove and 1 update', ( done ) ->
+      no_filter && it 'should remove 3 images and update 2 views to remove images (full outer join), 1 remove and 1 update', ( done ) ->
         remove = removes.shift()
         update = updates.shift()
         
@@ -2504,7 +2514,7 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
       
-      it 'should have no other operations', ->
+      no_filter and it 'should have no other operations', ->
         expect( adds.length ).to.be 0
         expect( removes.length ).to.be 0
         expect( updates.length ).to.be 0
@@ -2688,3 +2698,4 @@ join_tests = ( options ) ->
 # --------------------------------------------
 
 join_tests( { no_filter: true } )
+join_tests()
