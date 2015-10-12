@@ -4,7 +4,7 @@
   
   var trigger = new rs.RS.Pipelet();
   
-  var tag = rs.RS.uuid.v4();
+  var tag = 'next';
   
   var out = images
     .trace( 'images' )
@@ -28,10 +28,10 @@
   
   rs.union( [
       out.flow( 'images' ),
-      out.flow( 'trigger' )
-    ] /*, { tag: tag }*/ ) // tag is on trace() bellow for now
+      out.flow( 'trigger' ).delay( 200 )
+    ], { tag: tag } )
     
-    .trace( 'after union', { tag: tag } )
+    .trace( 'after union' )
     .greedy()
   ;
   
