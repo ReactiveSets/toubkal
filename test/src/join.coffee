@@ -1726,7 +1726,7 @@ join_tests = ( options ) ->
       removes = []
       updates = []
     
-    no_other_operations = , ->
+    no_other_operations = ->
       it 'should have no other operations', ->
         expect( { adds: adds.length, removes: removes.length, updates: updates.length } ).to.be.eql { adds: 0, removes: 0, updates: 0 }
     
