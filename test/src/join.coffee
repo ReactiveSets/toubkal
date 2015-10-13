@@ -34,8 +34,8 @@ value_equals = RS.value_equals
 log          = RS.log.bind null, 'join tests'
 
 compare_expected_values = ( expected, values ) ->
-  log 'compare_expected_values() expected: ', expected
-  log 'compare_expected_values() values:', values
+  #log 'compare_expected_values() expected: ', expected
+  #log 'compare_expected_values() values:', values
   
   expect( values.length ).to.be expected.length
   
@@ -1906,7 +1906,11 @@ join_tests = ( options ) ->
         ]
         
         # options
-        expect( add[ 1 ] ).to.be.eql {}
+        options = add[ 1 ]
+        _t = options && options._t
+        
+        expect( !! ( _t && _t.more  ) ).to.be false
+        expect( !! ( _t && _t.forks ) ).to.be false
       
       it 'should have 6 images (inner join)', ( done ) ->
         expected.push(
@@ -1948,6 +1952,8 @@ join_tests = ( options ) ->
         
         expect( _t ).to.be.eql { id: tid, more: true }
         
+        expect( !! _t.forks ).to.be false
+        
         expect( add[ 1 ] ).to.be.eql { _t: { id: tid } }
       
       it 'should now have 6 images and no orphan views (left join)', ( done ) ->
@@ -1978,7 +1984,11 @@ join_tests = ( options ) ->
         ]
         
         # options
-        expect( add[ 1 ] ).to.be.eql {}
+        options = add[ 1 ]
+        _t = options && options._t
+        
+        expect( !! ( _t && _t.more  ) ).to.be false
+        expect( !! ( _t && _t.forks ) ).to.be false
       
       it 'should now have 7 images, one with no view (right join)', ( done ) ->
         expected_right = [
@@ -2383,17 +2393,25 @@ join_tests = ( options ) ->
         
         remove = removes.shift()
         
-        expect( remove ).to.be.eql [
-          [
-            { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
-            { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
-          ]
-          
-          {}
+        expect( remove[ 0 ] ).to.be.eql [
+          { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+          { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
         ]
         
-        done()
+        if no_filter
+          expect( remove[ 1 ] ).to.be.eql {}
+        else
+          _t = remove[ 1 ]._t
+          
+          expect( _t  ).to.be.eql { id: _t.id, more: true }
+          
+          expect( adds.shift() ).to.eql [
+            []
+            { _t: { id: _t.id } }
+          ]
         
+        done()
+      
       it 'should have no image left (inner join)', ( done ) ->
         expected = []
         
@@ -2612,6 +2630,13 @@ join_tests = ( options ) ->
         ]
         
         views_and_images._fetch_all ( values ) -> check done, ->
+          if ! no_filter
+            add = adds.shift()
+            
+            id = add[1]._t.id
+            
+            expect( add ).to.be.eql [ [], { _t: { id: id } } ]
+          
           compare_expected_values expected, values
       
       it 'should do nothing (inner join) downstream set', ( done ) ->
@@ -2629,14 +2654,17 @@ join_tests = ( options ) ->
       it 'should remove last 2 orphan images (right join)', ( done ) ->
         remove = removes.shift()
         
-        expect( remove ).to.be.eql [
-          [
-            { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
-            { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
-          ]
-          
-          {}
+        expect( remove[ 0 ] ).to.be.eql [
+          { project_id: '1', id: 2,                           image_id: 2, image_name: 'Project 1 view 2 image 2' }
+          { project_id: '1', id: 2,                           image_id: 3, image_name: 'Project 1 view 2 image 3' }
         ]
+        
+        # options no-more, no forks
+        options = remove[ 1 ]
+        _t = options && options._t
+        
+        expect( !! ( _t && _t.more  ) ).to.be false
+        expect( !! ( _t && _t.forks ) ).to.be false
         
         done()
       
@@ -2675,9 +2703,7 @@ join_tests = ( options ) ->
           compare_expected_values expected_full, values
       
       it 'should have no other operations', ->
-        expect( adds   .length ).to.be 0
-        expect( removes.length ).to.be 0
-        expect( updates.length ).to.be 0
+        expect( { adds: adds.length, removes: removes.length, updates: updates.length } ).to.be.eql { adds: 0, removes: 0, updates: 0 }
     
     describe 'checking anti-state of downstream sets are empty', ->
       it 'should have nothing in (inner join)      downstream set anti-state', () ->
