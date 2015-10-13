@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1467 automated tests*
+*1470 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -538,7 +538,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1467 continuous integration tests for the Toubkal core pipelets that run
+We have curently developped 1470 continuous integration tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -580,7 +580,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1467 of 1467 tests
+-> passed 1470 of 1470 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -901,15 +901,9 @@ ETA: October 21st 2015.
   - Integration with express
   - Integration with socket_io_xxx pipelets
 
-- join() pipelet:
-  - Adding tests
-  - Finalize outer joins (left, right, full)
-  - Optmizations: stateless output
-  - Refactoring and documentation
-
 ##### Already developped:
 
-- 1467 continuous integration tests
+- 1470 continuous integration tests
 
 - MySQL read/write dataflows pipelets:
   - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:
@@ -929,6 +923,13 @@ ETA: October 21st 2015.
 - Operations Optimizer:
   - waits for transactions to complete to emit operations
   - on transaction completion, emits optimized operations, i.e. the minimum set of adds, removes and updates
+
+- join() pipelet:
+  - Adding exhaustive tests suites (517 tests total)
+  - Finalize outer joins (left, right, full) with transactions handling
+  - Implement dynamic filters on inner and right join to reduce data pull
+  - Optmizations: stateless output
+  - Refactoring and documentation
 
 - Examples:
   - Examples server to serve assets and data for client examples, using configuration files for datasets

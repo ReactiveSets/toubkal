@@ -89,7 +89,13 @@ describe 'join() invalid parameter(s)', ->
 join_tests = ( options ) ->
   no_filter = options && options.no_filter
   
-  describe 'join() authors and books', ->
+  flavor =
+    if no_filter
+      " (no filter)"
+    else
+      " (filter allowed)"
+  
+  describe 'join() authors and books' + flavor, ->
     authors = rs.set [
       { id:  1, name: "Charles Dickens"         }
       { id:  2, name: "J. R. R. Tolkien"        }
@@ -185,7 +191,7 @@ join_tests = ( options ) ->
       { id: 16, title: "Charlie and the Chocolate Factory"       , author_id: 14 }
     ]
     
-    describe 'joining books and authors sets', ->
+    describe 'joining books and authors sets' + flavor, ->
       it 'should join books authors (inner join)', ( done ) ->
         # inner join
         books_authors = books.join(
@@ -272,7 +278,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'adding two authors', ->
+    describe 'adding two authors' + flavor, ->
       it 'should allow to add one book which author was missing (inner join)', ( done ) ->
         authors._add [
           { id: 13, name: "Ellen G. White"          }
@@ -353,7 +359,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'adding a book', ->
+    describe 'adding a book' + flavor, ->
       it 'should add a book with its author (inner join)', ( done ) ->
         books._add [
           { id: 15, title: "Steps to Christ"                         , author_id: 13 }
@@ -435,7 +441,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'adding a book for an author who already has another book listed', ->
+    describe 'adding a book for an author who already has another book listed' + flavor, ->
       it 'should add an additional book for its author (inner join)', ( done ) ->
         books._add [
           { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
@@ -520,7 +526,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'adding an author of two books already listed', ->
+    describe 'adding an author of two books already listed' + flavor, ->
       it 'should add two books of that author (inner join)', ( done ) ->
         authors._add [
           { id:  3, name: "Dan Brown"               }
@@ -607,7 +613,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'removing an author of two books already listed', ->
+    describe 'removing an author of two books already listed' + flavor, ->
       it 'should remove two books of that author (inner join)', ( done ) ->
         authors._remove [
           { id:  3, name: "Dan Brown"               }
@@ -692,7 +698,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
     
-    describe 'removing a book for an author who has another book listed', ->
+    describe 'removing a book for an author who has another book listed' + flavor, ->
       it 'should remove only this book (inner join)', ( done ) ->
         books._remove [
           { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
@@ -774,7 +780,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
     
-    describe 'removing another book for an author with a single book', ->
+    describe 'removing another book for an author with a single book' + flavor, ->
       it 'should remove only this book (inner join)', ( done ) ->
         books._remove [
           { id: 15, title: "Steps to Christ"                         , author_id: 13 }
@@ -854,7 +860,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'removing two authors', ->
+    describe 'removing two authors' + flavor, ->
       it 'should remove one book with its author (inner join)', ( done ) ->
         authors._remove [
           { id: 13, name: "Ellen G. White"          }
@@ -933,7 +939,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'removing 6 books', ->
+    describe 'removing 6 books' + flavor, ->
       it 'should remove 3 books with author (inner join)', ( done ) ->
         books._remove [
           { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
@@ -1004,7 +1010,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'removing 7 authors', ->
+    describe 'removing 7 authors' + flavor, ->
       it 'should remove 3 books with author (inner join)', ( done ) ->
         authors._remove [
           { id:  1, name: "Charles Dickens"         }
@@ -1069,7 +1075,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'removing all (5) remaining books then all (3) remaining authors', ->
+    describe 'removing all (5) remaining books then all (3) remaining authors' + flavor, ->
       it 'should remove the last book (inner join)', ( done ) ->
         books._remove [
           { id:  1, title: "A Tale of Two Cities"                    , author_id:  1 }
@@ -1122,7 +1128,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'adding back 4 books then the 2 authors of these four books (2 books per author)', ->
+    describe 'adding back 4 books then the 2 authors of these four books (2 books per author)' + flavor, ->
       it 'should add 4 books with their 2 authors (inner join)', ( done ) ->
         books._add [
           { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
@@ -1188,7 +1194,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'removing these 2 authors of those four books (2 books per author)', ->
+    describe 'removing these 2 authors of those four books (2 books per author)' + flavor, ->
       it 'should remove all 4 books (inner join)', ( done ) ->
         authors._remove [
           { id:  2, name: "J. R. R. Tolkien"        }
@@ -1242,7 +1248,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'removing last four books and adding back their 2 authors (2 books per author)', ->
+    describe 'removing last four books and adding back their 2 authors (2 books per author)' + flavor, ->
       it 'should still show no books (inner join)', ( done ) ->
         books._remove [
           { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
@@ -1296,7 +1302,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
       
-    describe 'adding back two books of one authors (2 books per author)', ->
+    describe 'adding back two books of one authors (2 books per author)' + flavor, ->
       it 'should add back these 2 books (inner join)', ( done ) ->
         books._add [
           { id:  2, title: "The Lord of the Rings"                   , author_id:  2 }
@@ -1350,7 +1356,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
     
-    describe 'adding back the two books of the second author (2 books per author)', ->
+    describe 'adding back the two books of the second author (2 books per author)' + flavor, ->
       it 'should add back these 2 books (inner join)', ( done ) ->
         books._add [
           { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
@@ -1409,7 +1415,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
     
-    describe 'removing these two books of the second author (2 books per author)', ->
+    describe 'removing these two books of the second author (2 books per author)' + flavor, ->
       it 'should remove these 2 books (inner join)', ( done ) ->
         books._remove [
           { id:  3, title: "The Da Vinci Code"                       , author_id:  3 }
@@ -1463,7 +1469,7 @@ join_tests = ( options ) ->
         books_or_authors_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_outer, values
     
-    describe 'checking anti-state of downstream sets are empty', ->
+    describe 'checking anti-state of downstream sets are empty' + flavor, ->
       it 'should have nothing in (inner join)      downstream set anti-state', () ->
         expect( books_authors_set.b.length ).to.be 0
       
@@ -1476,7 +1482,7 @@ join_tests = ( options ) ->
       it 'should have nothing in (full outer join) downstream set anti-state', () ->
         expect( books_or_authors_set.b.length ).to.be 0
 
-  describe 'join() users and users profile, on "id" attribute', ->
+  describe 'join() users and users profile, on "id" attribute' + flavor, ->
     users              = null
     profiles           = null
     merge_user_profile = null
@@ -1487,7 +1493,7 @@ join_tests = ( options ) ->
     on_remove          = null
     on_update          = null
     
-    describe 'joining users and users profile', ->
+    describe 'joining users and users profile' + flavor, ->
       it 'should have one user with no name', ( done ) ->
         users = rs.set [
           { id: 1, email: 'one@example.com' }
@@ -1527,7 +1533,7 @@ join_tests = ( options ) ->
         users_profiles_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
     
-    describe 'adding a user', ->
+    describe 'adding a user' + flavor, ->
       it 'should add a user with no name', ( done ) ->
         on_add = ( values, options )  -> check done, ->
           expect( values ).to.be.eql [ { id: 2, email: 'two@example.com' } ]
@@ -1545,7 +1551,7 @@ join_tests = ( options ) ->
         users_profiles_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
     
-    describe 'adding a user profile for second user', ->
+    describe 'adding a user profile for second user' + flavor, ->
       it 'should update second user to add name', ( done ) ->
         on_update = ( updates, options )  -> check done, ->
           expect( updates ).to.be.eql [
@@ -1569,7 +1575,7 @@ join_tests = ( options ) ->
         users_profiles_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
     
-    describe 'remove user profiles of both users', ->
+    describe 'remove user profiles of both users' + flavor, ->
       it 'should update first user to remove name', ( done ) ->
         on_update = ( updates, options )  -> check done, ->
           expect( updates ).to.be.eql [
@@ -1598,7 +1604,7 @@ join_tests = ( options ) ->
         users_profiles_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
     
-    describe 'adding back both user profiles of both users', ->
+    describe 'adding back both user profiles of both users' + flavor, ->
       it 'should update first user to remove name', ( done ) ->
         on_update = ( updates, options )  -> check done, ->
           expect( updates ).to.be.eql [
@@ -1627,7 +1633,7 @@ join_tests = ( options ) ->
         users_profiles_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
     
-    describe 'removing both users', ->
+    describe 'removing both users' + flavor, ->
       it 'remove both users', ( done ) ->
         on_remove = ( values, options )  -> check done, ->
           expect( values ).to.be.eql [
@@ -1652,7 +1658,7 @@ join_tests = ( options ) ->
         users_profiles_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
     
-    describe 'adding back both users', ->
+    describe 'adding back both users' + flavor, ->
       it 'add back both users', ( done ) ->
         on_add = ( values, options )  -> check done, ->
           expect( values ).to.be.eql [
@@ -1683,7 +1689,7 @@ join_tests = ( options ) ->
       it 'should have nothing in downstream set anti-state', () ->
         expect( users_profiles_set.b.length ).to.be 0
 
-  describe 'join(), multiple conditions', ->
+  describe 'join(), multiple conditions' + flavor, ->
     projects             = null
     views                = null
     images               = null
@@ -1720,7 +1726,11 @@ join_tests = ( options ) ->
       removes = []
       updates = []
     
-    describe 'joining views and images', ->
+    no_other_operations = , ->
+      it 'should have no other operations', ->
+        expect( { adds: adds.length, removes: removes.length, updates: updates.length } ).to.be.eql { adds: 0, removes: 0, updates: 0 }
+    
+    describe 'joining views and images' + flavor, ->
       it 'should join non-empty sets of views and images', ( done ) ->
         # The set "projects" is not used in this test suite, it is only defined to help understand the test
         projects = rs.set [
@@ -1886,7 +1896,7 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
     
-    describe 'adding 3 images to empty view', ->
+    describe 'adding 3 images to empty view' + flavor, ->
       it 'should add 3 images (inner join) in one operation', ->
         reset()
         
@@ -2054,12 +2064,9 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
       
-      it 'should have no other operations', ->
-        expect( adds   .length ).to.be 0
-        expect( removes.length ).to.be 0
-        expect( updates.length ).to.be 0
+      no_other_operations()
     
-    describe 'adding two views, one for an orphan image, another with no image', ->
+    describe 'adding two views, one for an orphan image, another with no image' + flavor, ->
       it 'should add 1 image (inner join) in one operation', ( done ) ->
         reset()
         
@@ -2068,9 +2075,11 @@ join_tests = ( options ) ->
           { project_id: '2', id: 3, name: 'Project 2 view 3' }
         ]
         
-        add = adds.shift()
-        
-        return done() unless no_filter
+        add =
+          if no_filter
+            adds.shift()
+          else
+            adds.splice( 2, 1 )[ 0 ]
         
         compare_expected_values add[ 0 ], [
           { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
@@ -2092,10 +2101,8 @@ join_tests = ( options ) ->
         views_and_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
       
-      it 'should add one image with its view, plus one view with no image, in one operation', ( done ) ->
+      it 'should add one image with its view, plus one view with no image (left join) in one operation', ( done ) ->
         add = adds.shift()
-        
-        return done() unless no_filter
         
         compare_expected_values add[ 0 ], [
           { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
@@ -2120,9 +2127,11 @@ join_tests = ( options ) ->
           compare_expected_values expected_left, values
       
       it 'should update one image with its view (right join)', ( done ) ->
-        update = updates.shift()
-        
-        return done() unless no_filter
+        update =
+          if no_filter
+            updates.shift()
+          else
+            updates.splice( 1, 1 )[ 0 ]
         
         compare_expected_values update[ 0 ], [
           [
@@ -2156,8 +2165,6 @@ join_tests = ( options ) ->
       it 'should update one image with its view, and add orphan view (full outer join) in a transaction', ( done ) ->
         update = updates.shift()
         add    = adds   .shift()
-        
-        return done() unless no_filter
         
         # values
         compare_expected_values update[ 0 ], [
@@ -2203,12 +2210,9 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
       
-      it 'should have no other operations', ->
-        expect( adds   .length ).to.be 0
-        expect( removes.length ).to.be 0
-        expect( updates.length ).to.be 0
+      no_other_operations()
     
-    describe 'removing 2 views', ->
+    describe 'removing 2 views' + flavor, ->
       it 'should remove 5 images (inner join) in one operation', ( done ) ->
         reset()
         
@@ -2374,12 +2378,9 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
       
-      it 'should have no other operations', ->
-        expect( adds   .length ).to.be 0
-        expect( removes.length ).to.be 0
-        expect( updates.length ).to.be 0
+      no_other_operations()
     
-    describe 'removing 5 images', ->
+    describe 'removing 5 images' + flavor, ->
       it 'should remove last 2 images (inner join) in one operation', ( done ) ->
         reset()
         
@@ -2456,18 +2457,50 @@ join_tests = ( options ) ->
         views_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_left, values
       
-      no_filter && it 'should remove 5 images, 3 were orphan images (right join) in one operation', ( done ) ->
-        remove = removes.shift()
+      if no_filter
+        it 'should remove 5 images, 3 were orphan images (right join) in one operation', ( done ) ->
+          remove = removes.shift()
+          
+          expect( remove[ 0 ] ).to.be.eql [
+            { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+            { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+            { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+            { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+            { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+          ]
         
-        expect( remove[ 0 ] ).to.be.eql [
-          { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
-          { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
-          { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
-          { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
-          { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
-        ]
-        
-        done()
+          done()
+      else
+        it 'should remove 5 images, 3 were orphan images (right join) in one update and one remove operation', ( done ) ->
+          update = updates.shift()
+          remove = removes.shift()
+          
+          expect( update[ 0 ] ).to.be.eql [
+            [
+              { project_id: '1', id: 1, name: 'Project 1 view 1', image_id: 1, image_name: 'Project 1 view 1 image 1' }
+              { project_id: '1', id: 1,                           image_id: 1, image_name: 'Project 1 view 1 image 1' }
+            ]
+            [
+              { project_id: '2', id: 2, name: 'Project 2 view 2', image_id: 1, image_name: 'Project 2 view 2 image 1' }
+              { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+            ]
+          ]
+          
+          expect( remove[ 0 ] ).to.be.eql [
+            { project_id: '1', id: 1,                           image_id: 1, image_name: 'Project 1 view 1 image 1' }
+            { project_id: '1', id: 2,                           image_id: 1, image_name: 'Project 1 view 2 image 1' }
+            { project_id: '2', id: 1,                           image_id: 1, image_name: 'Project 2 view 1 image 1' }
+            { project_id: '2', id: 1,                           image_id: 2, image_name: 'Project 2 view 1 image 2' }
+            { project_id: '2', id: 2,                           image_id: 1, image_name: 'Project 2 view 2 image 1' }
+          ]
+          
+          # options
+          id = update[ 1 ]._t.id
+          
+          expect( update[ 1 ] ).to.be.eql { _t: { id: id, more: true } }
+          expect( remove[ 1 ] ).to.be.eql { _t: { id: id             } }
+          
+          done()
       
       it 'should should have two orphan images (right join)', ( done ) ->
         expected_right = [
@@ -2482,7 +2515,7 @@ join_tests = ( options ) ->
         images_views_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_right, values
       
-      no_filter && it 'should remove 3 images and update 2 views to remove images (full outer join), 1 remove and 1 update', ( done ) ->
+      it 'should remove 3 images and update 2 views to remove images (full outer join), 1 remove and 1 update', ( done ) ->
         remove = removes.shift()
         update = updates.shift()
         
@@ -2532,12 +2565,9 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
       
-      no_filter and it 'should have no other operations', ->
-        expect( adds.length ).to.be 0
-        expect( removes.length ).to.be 0
-        expect( updates.length ).to.be 0
+      no_other_operations()
     
-    describe 'removing last 3 views', ->
+    describe 'removing last 3 views' + flavor, ->
       it 'should do nothing (inner join)', ( done ) ->
         reset()
         
@@ -2615,12 +2645,9 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
       
-      it 'should have no other operations', ->
-        expect( adds   .length ).to.be 0
-        expect( removes.length ).to.be 0
-        expect( updates.length ).to.be 0
+      no_other_operations()
     
-    describe 'removing last 2 images', ->
+    describe 'removing last 2 images' + flavor, ->
       it 'do nothing (inner join)', ( done ) ->
         reset()
         
@@ -2702,10 +2729,9 @@ join_tests = ( options ) ->
         views_or_images_set._fetch_all ( values ) -> check done, ->
           compare_expected_values expected_full, values
       
-      it 'should have no other operations', ->
-        expect( { adds: adds.length, removes: removes.length, updates: updates.length } ).to.be.eql { adds: 0, removes: 0, updates: 0 }
+      no_other_operations()
     
-    describe 'checking anti-state of downstream sets are empty', ->
+    describe 'checking anti-state of downstream sets are empty' + flavor, ->
       it 'should have nothing in (inner join)      downstream set anti-state', () ->
         expect( views_and_images_set.b.length ).to.be 0
       
@@ -2724,4 +2750,5 @@ join_tests = ( options ) ->
 # --------------------------------------------
 
 join_tests( { no_filter: true } )
+
 join_tests()
