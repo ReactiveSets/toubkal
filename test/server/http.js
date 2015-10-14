@@ -21,37 +21,29 @@
 */
 "use strict";
 
-var rs      = require( 'toubkal/lib/core/filter.js' )
+var rs      = require( 'toubkal' )
   , RS      = rs.RS
   , log     = RS.log
   , extend  = RS.extend
 ;
-
-require( 'toubkal/lib/server/file.js' );
-require( 'toubkal/lib/server/http.js' );
-require( 'toubkal/lib/socket_io/socket_io_clients.js' );
 
 var client_assets = require( 'toubkal/lib/server/client_assets.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
 */
-var de = true;
-  
-function ug( m ) {
-  log( "rs tests http, " + m );
-} // ug()
+var de = true, ug = log.bind( null, 'test server,' );
  
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
 var http_servers = rs
   .set( [
-    { ip_address: '0.0.0.0' },
+    //{ ip_address: '0.0.0.0' },
     { port: 8080 },
-    { ip_address: '192.168.254.45' }, // bad ip address
-    { port: 8043, key: '', cert: '' }, // https server usimg key and cert
-    { port: 8044, pfx: '' }, // https server using pfx
+    //{ ip_address: '192.168.254.45' }, // bad ip address
+    //{ port: 8043, key: '', cert: '' }, // https server usimg key and cert
+    //{ port: 8044, pfx: '' }, // https server using pfx
   ] )
   .auto_increment()
   .http_servers()
@@ -141,44 +133,17 @@ http_servers
 ;
 
 // Passport Application is described in ./passport.js
-require( './passport.js' )( express, session_options, application, passport_route );
+require( './passport.js' )( express, session_options, application, passport_route, 'http://localhost:8080' );
 
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
 */
-require( 'toubkal/lib/server/uglify.js' );
-require( 'toubkal/lib/core/order.js' );
 
 // lib/toubkal-min.js
 var toubkal_min = client_assets.toubkal_min();
 
 // Listen when lib/toubkal-min.js is ready
 http_servers.http_listen( toubkal_min );
-
-var toubkal_core_min = rs.union( [
-    client_assets.npm_dependencies,
-    client_assets.core
-  ] )
-  
-  .auto_increment( { name: 'toubkal core' } )
-  .watch()
-  .order( [ { id: 'id' } ] )
-  .uglify( 'lib/toubkal-core-min.js', { warnings: false } )
-;
-
-var toubkal_ui_min = rs.union( [
-    client_assets.ui,
-    client_assets.bootstrap
-  ] )
-  
-  .auto_increment( { name: 'toubkal ui' } )
-  
-  .watch()
-  
-  .order( [ { id: 'id' } ] )
-  
-  .uglify( 'lib/toubkal_ui-min.js', { warnings: false } )
-;
 
 var mocha_css = rs
   .set( [ { name: 'mocha/mocha.css' } ] )
@@ -304,8 +269,8 @@ rs.union( [ mocha_css, mocha_expect ] )
 rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
   ._input
   .insert_source_union()     // adding a union as the source of rs.serve() input
-  ._add_source( toubkal_core_min ) // now adding sources to that union
-  ._add_source( toubkal_ui_min )
+//  ._add_source( toubkal_core_min ) // now adding sources to that union
+//  ._add_source( toubkal_ui_min )
   ._add_source( toubkal_min )
 ;
 
