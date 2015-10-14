@@ -20,7 +20,7 @@ var RS  = rs.RS
 
 function ug( message ) { log( 'passport, ' + message ) }
 
-module.exports = function( express, session_options, application, base_route ) {
+module.exports = function( express, session_options, application, base_route, base_url ) {
   RS.notifications = rs.set();
   
   var input                 = rs.pass_through()
@@ -35,14 +35,20 @@ module.exports = function( express, session_options, application, base_route ) {
   ;
   
   rs
-    .passport_strategies( users_database )
+    .passport_strategies( users_database, base_url + base_route )
     
     .passport( users_database )
     
     ._output.on( 'middleware', app_config )
   ;
   
+  var initialized = false;
+  
   function app_config( passport, passport_routes ) {
+    if ( initialized ) return;
+    
+    initialized = true;
+    
     application
       .use( logger()                   ) // request logger middleware
       .use( cookie_parser()            ) // cookie parser
@@ -53,5 +59,4 @@ module.exports = function( express, session_options, application, base_route ) {
       .use( passport_routes()          )
     ;
   } // app_config()
-  
 } // module.exports
