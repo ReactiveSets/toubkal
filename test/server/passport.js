@@ -21,23 +21,56 @@ var RS  = rs.RS
 function ug( message ) { log( 'passport, ' + message ) }
 
 module.exports = function( express, session_options, application, base_route, base_url ) {
-  RS.notifications = rs.set();
+  // Define in-memory database
+  var schemas = rs.set( [
+    { id: 'user_profile' },
+    { id: 'user_provider_profile', key: [ 'user_id', 'provider_id' ] },
+    { id: 'user_provider_email' }
+  ] );
   
-  var input                 = rs.pass_through()
+  var database = rs.dispatch( schemas, function( source, options ) {
+    var flow = this.id;
     
-    , user_profile          = input.flow( 'user_profile'          ).set()
-    , user_provider_profile = input.flow( 'user_provider_profile' ).set()
-    , user_provider_email   = input.flow( 'user_provider_email'   ).set( [], { key: [ 'user_id', 'provider_id' ] } )
+    return source
+      .flow( flow, { key: this.key } )
+      // .mysql( flow, this.columns )
+      .set( [] )
+      .flow( flow )
+    ;
+  } );
+  
+  // Passport user profiles
+  database
+    .flow( 'user_profile' )
     
-    , output                = rs.union( [ user_profile, user_provider_profile, user_provider_email ] )
+    .passport_profiles()
     
-    , users_database        = rs.encapsulate( input, output )
+    .alter( function( user ) {
+      // New user profile from provider profile
+      var _ = user.profile;
+      
+      var profile = {
+        flow         : 'user_profile',
+        id           : user.id,
+        provider_name: user.provider_name,
+        provider_id  : user.provider_id,
+        name         : _.displayName,
+        emails       : _.emails,
+        photo        : _.photos[ 0 ].value
+      };
+      
+      de&&ug( 'new user profile:', profile );
+      
+      return profile;
+    }, { no_clone: true } )
+    
+    ._add_destination( database )
   ;
   
   rs
-    .passport_strategies( users_database, base_url + base_route )
+    .passport_strategies( base_url + base_route )
     
-    .passport( users_database )
+    .passport()
     
     ._output.on( 'middleware', app_config )
   ;
