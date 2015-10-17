@@ -6,7 +6,6 @@ var rs  = require( 'toubkal' )
   , cookie_parser = require(  'cookie-parser'  )
   , body_parser   = require(   'body-parser'   )
   , session       = require( 'express-session' )
-  
 ;
 
 require( 'toubkal/lib/server/passport.js' );
@@ -14,11 +13,10 @@ require( 'toubkal/lib/server/passport.js' );
 var RS  = rs.RS
   , log = RS.log
   , de  = true
+  , ug  = log.bind( null, 'passport' )
   
   , extend = RS.extend
 ;
-
-function ug( message ) { log( 'passport, ' + message ) }
 
 module.exports = function( express, session_options, application, base_route, base_url ) {
   // Define in-memory database
@@ -59,7 +57,7 @@ module.exports = function( express, session_options, application, base_route, ba
         photo        : _.photos[ 0 ].value
       };
       
-      de&&ug( 'new user profile:', profile );
+      de&&ug( 'new user profile:', profile.id );
       
       return profile;
     }, { no_clone: true } )
