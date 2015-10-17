@@ -26,19 +26,28 @@ module.exports = function( express, session_options, application, base_route, ba
     { id: 'user_provider_email' }
   ] );
   
-  var database = rs.dispatch( schemas, function( source, options ) {
-    var flow = this.id;
+  var database;
+  
+  RS.Pipelet.Compose( 'database', function( source, options ) {
+    // ToDo: add singleton option to RS.Pipelet.Compose()
+    database = database || rs.dispatch( schemas, function( source, options ) {
+      var flow = this.id;
+      
+      return source
+        .flow( flow, { key: this.key } )
+        // .mysql( flow, this.columns )
+        .set( [] )
+        .flow( flow )
+      ;
+    } );
     
-    return source
-      .flow( flow, { key: this.key } )
-      // .mysql( flow, this.columns )
-      .set( [] )
-      .flow( flow )
-    ;
+    return database._add_source( source );
   } );
   
   // Passport user profiles
-  database
+  rs
+    .database()
+    
     .flow( 'user_profile' )
     
     .passport_profiles()
@@ -62,13 +71,16 @@ module.exports = function( express, session_options, application, base_route, ba
       return profile;
     }, { no_clone: true } )
     
-    ._add_destination( database )
+    .database()
   ;
   
+//  http_servers
+//    .passport_configuration( rs.passport_common_strategies() )
   rs
     .passport_strategies( base_url + base_route )
     
     .passport()
+    //.passport_routes( app_config )
     
     ._output.on( 'middleware', app_config )
   ;
