@@ -74,10 +74,10 @@ module.exports = function( express, session_options, application, base_route, ba
     .database()
   ;
   
-//  http_servers
-//    .passport_configuration( rs.passport_common_strategies() )
   rs
-    .passport_strategies( base_url + base_route )
+    .passport_strategies_configuration( base_url + base_route )
+    
+    .passport_strategies()
     
     .passport()
     //.passport_routes( app_config )
