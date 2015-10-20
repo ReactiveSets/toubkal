@@ -66,7 +66,7 @@ module.exports = function( express, session_options, application, base_route, ba
         photo        : _.photos[ 0 ].value
       };
       
-      de&&ug( 'new user profile:', profile.id );
+      de&&ug( 'new user profile:', user );
       
       return profile;
     }, { no_clone: true } )
@@ -79,7 +79,9 @@ module.exports = function( express, session_options, application, base_route, ba
     
     .passport_strategies()
     
-    .passport()
+    .trace( 'strategies' )
+    
+    .passport_routes()
     //.passport_routes( app_config )
     
     ._output.on( 'middleware', app_config )
