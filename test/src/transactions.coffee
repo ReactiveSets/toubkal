@@ -846,7 +846,7 @@ describe 'Transactions test suite', ->
           tid           : tid
           count         : 1
           source_more   : false
-          need_close    : false
+          need_close    : true
           closed        : false
           added_length  : 3
           removed_length: 0
