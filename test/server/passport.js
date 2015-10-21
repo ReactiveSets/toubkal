@@ -20,6 +20,15 @@ var RS  = rs.RS
 ;
 
 module.exports = function( express, session_options, application, base_route, base_url ) {
+  application
+    .use( logger()                   ) // request logger middleware
+    .use( cookie_parser()            ) // cookie parser
+    .use( body_parser()              ) // extensible request body parser
+    .use( session( session_options ) ) // session management
+    .use( passport.initialize()      )
+    .use( passport.session()         )
+  ;
+  
   // Define in-memory database
   var schemas = rs.set( [
     { id: 'user_profile' },
@@ -82,18 +91,6 @@ module.exports = function( express, session_options, application, base_route, ba
     
     .trace( 'strategies' )
     
-    .passport_routes( application_configuration, { base_route: base_route } )
+    .passport_routes( application, { base_route: base_route } )
   ;
-  
-  function application_configuration( router ) {
-    application
-      .use( logger()                   ) // request logger middleware
-      .use( cookie_parser()            ) // cookie parser
-      .use( body_parser()              ) // extensible request body parser
-      .use( session( session_options ) ) // session management
-      .use( passport.initialize()      )
-      .use( passport.session()         )
-      .use( router()                   )
-    ;
-  } // application_configuration()
 } // module.exports
