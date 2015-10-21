@@ -105,18 +105,18 @@ describe 'set():', ->
         { id: 4, name: "Berlin"       , country: "Germany"                      }
       ]
   
-  describe 'index_of():', ->
-    it 'set.index_of( { id: 2 } ) should be -1: empty set', ->
-      expect( set.index_of( { id: 2 } ) ).to.be.eql -1
+  describe '_a_index_of():', ->
+    it 'set._a_index_of( { id: 2 } ) should be -1: empty set', ->
+      expect( set._a_index_of( { id: 2 } ) ).to.be.eql -1
     
-    it 'cities.index_of( { id: 2 } ) should be 1', ->
-      expect( cities.index_of( { id: 2 } ) ).to.be.eql 1
+    it 'cities._a_index_of( { id: 2 } ) should be 1', ->
+      expect( cities._a_index_of( { id: 2 } ) ).to.be.eql 1
     
-    it 'cars.index_of( { id: 2, model: "S Class" } ) should be 1', ->
-      expect( cars.index_of( { id: 2, model: "S Class" } ) ).to.be.eql 1
+    it 'cars._a_index_of( { id: 2, model: "S Class" } ) should be 1', ->
+      expect( cars._a_index_of( { id: 2, model: "S Class" } ) ).to.be.eql 1
     
-    it 'cars.index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
-      expect( cars.index_of( { id: 3, model: "S Class" } ) ).to.be.eql -1
+    it 'cars._a_index_of( { id: 3, model: "S Class" } ) should be -1: not found', ->
+      expect( cars._a_index_of( { id: 3, model: "S Class" } ) ).to.be.eql -1
   
   describe 'remove():', ->
     it 'set._remove( [ { id: 1 } ] )._add( [ { id: 2 } ] ) should have id 2', ( done ) ->

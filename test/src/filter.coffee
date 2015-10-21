@@ -359,7 +359,7 @@ describe 'filter()', ->
       cities._add [ { id: 9, name: "Paris", country: "France" } ]
       
       cities_from_countries._fetch_all ( values ) -> check done, ->
-        expect( cities.index_of( { id: 9 } ) ).to.not.be.eql -1
+        expect( cities._a_index_of( { id: 9 } ) ).to.not.be.eql -1
         
         expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
           { id:  1, name: "Marrakech"    , country: "Morocco"                      }
@@ -377,7 +377,7 @@ describe 'filter()', ->
       ]
       
       cities_from_countries._fetch_all ( values ) -> check done, ->
-        expect( cities.index_of( { id: 9 } ) ).to.not.be.eql -1
+        expect( cities._a_index_of( { id: 9 } ) ).to.not.be.eql -1
         
         expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
           { id:  1, name: "Marrakech"    , country: "Morocco"                      }
@@ -393,7 +393,7 @@ describe 'filter()', ->
       countries._remove [ { country: "Germany" } ]
       
       cities_from_countries._fetch_all ( values ) -> check done, ->
-        expect( countries.index_of( { country: "Germany" } ) ).to.be.eql -1
+        expect( countries._a_index_of( { country: "Germany" } ) ).to.be.eql -1
         
         expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
           { id:  1, name: "Marrakech"    , country: "Morocco"                      }
@@ -409,7 +409,7 @@ describe 'filter()', ->
       cities._remove [ { id: 8, name: "Chicago"      , country: "USA"    , state: "Illinois"   } ]
       
       cities_from_countries._fetch_all ( values ) -> check done, ->
-        expect( cities.index_of( { id: 8 } ) ).to.be.eql -1
+        expect( cities._a_index_of( { id: 8 } ) ).to.be.eql -1
         
         expect( values.sort ( a, b ) -> a.id - b.id ).to.be.eql [
           { id:  1, name: "Marrakech"    , country: "Morocco"                      }
