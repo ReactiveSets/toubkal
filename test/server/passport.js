@@ -2,10 +2,11 @@
 
 var rs  = require( 'toubkal' )
   
-  , logger        = require(     'morgan'      )
-  , cookie_parser = require(  'cookie-parser'  )
-  , body_parser   = require(   'body-parser'   )
+  , logger        = require( 'morgan'          )
+  , cookie_parser = require( 'cookie-parser'   )
+  , body_parser   = require( 'body-parser'     )
   , session       = require( 'express-session' )
+  , passport      = require( 'passport'        )
 ;
 
 require( 'toubkal/lib/server/passport.js' );
@@ -81,19 +82,10 @@ module.exports = function( express, session_options, application, base_route, ba
     
     .trace( 'strategies' )
     
-    .passport_routes()
-    //.passport_routes( app_config )
-    
-    ._output.on( 'middleware', app_config )
+    .passport_routes( application_configuration, { base_route: base_route } )
   ;
   
-  var initialized = false;
-  
-  function app_config( passport, passport_routes ) {
-    if ( initialized ) return;
-    
-    initialized = true;
-    
+  function application_configuration( router ) {
     application
       .use( logger()                   ) // request logger middleware
       .use( cookie_parser()            ) // cookie parser
@@ -101,7 +93,7 @@ module.exports = function( express, session_options, application, base_route, ba
       .use( session( session_options ) ) // session management
       .use( passport.initialize()      )
       .use( passport.session()         )
-      .use( passport_routes()          )
+      .use( router()                   )
     ;
-  } // app_config()
+  } // application_configuration()
 } // module.exports
