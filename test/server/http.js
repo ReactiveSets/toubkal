@@ -52,89 +52,8 @@ var http_servers = rs
   .trace( 'http servers' )
 ;
 
-/* -------------------------------------------------------------------------------------------
-   Express Application for Passport
-*/
-var express            = require( 'express' )
-  , cookie             = require( 'cookie' )
-  , parse_cookie       = cookie.parse
-  , session            = require( 'express-session' )
-  , uid2               = require( 'uid2' )
-  , session_store      = new session.MemoryStore()
-  , application        = express()
-  , session_options    = { key: 'rs_sid', secret: 'fudge', store: session_store }
-  , parseSignedCookies = require( 'cookie-parser/lib/parse.js' ).signedCookies
-  // Make a handler that does not receive the next() parameter, because errors will be
-  // handled by express
-  , handler = function( request, response ) { application( request, response ) }
-  
-  , passport_route = '/passport'
-;
-
-function get_session( request, fn ) {
-  var cookie = request.headers.cookie;
-  
-  if ( ! request.signedCookies ) {
-    if ( ! request.cookies ) {
-      cookie = decodeURIComponent( cookie );
-      
-      de&&ug( 'get_session(), decoded cookie: ' + cookie );
-      
-      request.cookies = cookie = parse_cookie( cookie );
-      
-      de&&ug( 'get_session(), parsed cookie: ' + log.s( cookie ) );
-    }
-    
-    request.signedCookies = cookie = parseSignedCookies( cookie, session_options.secret );
-    
-    de&&ug( 'get_session(), signed cookie parsed: ' + log.s( cookie ) );
-  }
-  
-  var rs_sid = request.signedCookies[ session_options.key ];
-  
-  de&&ug( 'get_session(), rs_sid: ' + rs_sid );
-  
-  session_store.get( rs_sid, function( error, _session ) {
-    if ( error ) {
-      de&&ug( 'get_session(), error getting session from store: ' + error );
-    } else if ( _session ) {
-      de&&ug( 'get_session(), create session in request' );
-      
-      request.sessionID = rs_sid;
-      request.sessionStore = session_store;
-      
-      _session = session_store.createSession( request, _session );
-    } else {
-      de&&ug( 'get_session(), no session, create empty session' );
-      
-      if ( ! rs_sid ) {
-        rs_sid = uid2( 24 );
-        
-        de&&ug( 'get_session(), no rs_sid, generate: ' + rs_sid );
-        
-        // ToDo: Need to setup cookie on response.end that needs to be captured in socket.io handshake, cannot be done here
-      }
-      
-      request.sessionID = rs_sid;
-      request.sessionStore = session_store;
-      
-      _session = new session.Session( request );
-      _session.cookie = new session.Cookie( {} );
-      
-      _session = session_store.createSession( request, _session );
-    }
-    
-    fn( error, _session );
-  } )
-} // get_session()
-
-// Bind express Application to base url route '/passport'
-http_servers
-  .serve_http_servers( handler, { routes: passport_route } )
-;
-
 // Passport Application is described in ./passport.js
-require( './passport.js' )( express, session_options, application, passport_route, 'http://localhost:8080' );
+var get_session = require( './passport.js' )( http_servers );
 
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
@@ -276,7 +195,7 @@ rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
 ;
 
 // Socket.io Server tests
-var clients = http_servers.socket_io_clients( { remove_timeout: 10 } );
+var clients = http_servers.socket_io_clients( { remove_timeout: 10, get_session: get_session } );
 
 var source_set = rs.set( [ {}, {}, {}, {} ] ).auto_increment()
   , source_1 = rs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
@@ -295,6 +214,7 @@ function client( source, options ) {
   
   output = input.trace( 'from socket.io clients' );
   
+  // ToDo: this code goes to socket_io_clients()
   get_session( socket.socket.handshake, function( error, session ) {
     if ( session ) {
       session.views = ( session.views || 0 ) + 1;
@@ -302,22 +222,24 @@ function client( source, options ) {
       //session.resetMaxAge();
       session.save( function( error ) {
         if ( error ) {
-          de&&ug( 'client, failed saving session, error: '
-            + log.s( {
-              name: error.name,
-              message: error.message,
-              stack: error.stack && error.stack.split( '\n' )
-            } )
-          );
+          de&&ug( 'client, failed saving session, error:', {
+            name: error.name,
+            message: error.message,
+            stack: error.stack && error.stack.split( '\n' )
+          } );
           
           return;
         }
         
-        de&&ug( 'client, saved session' + log.s( session ) );
+        de&&ug( 'client, saved session:', session );
       } );
+      
+      var passport      = session.passport
+        , passport_user = passport && passport.user
+      ;
     }
     
-    de&&ug( 'client, session: ' + log.s( { error: error || 'no error', session: session || 'no session' }, null, ' ' ) );
+    de&&ug( 'client, session:', { error: error, session: session, user: passport_user } );
   } );
   
   return { input: input, output: output };
