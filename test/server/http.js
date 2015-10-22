@@ -205,42 +205,17 @@ var source_set = rs.set( [ {}, {}, {}, {} ] ).auto_increment()
 function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
-  var socket = this.socket
-    , input  = socket
+  var socket  = this.socket
+    , input   = socket
+    , user_id = socket.socket.handshake.user_id
     , output
   ;
+  
+  de&&ug( 'client(), user id:', user_id );
   
   input._add_source( source );
   
   output = input.trace( 'from socket.io clients' );
-  
-  // ToDo: this code goes to socket_io_clients()
-  get_session( socket.socket.handshake, function( error, session ) {
-    if ( session ) {
-      session.views = ( session.views || 0 ) + 1;
-      
-      //session.resetMaxAge();
-      session.save( function( error ) {
-        if ( error ) {
-          de&&ug( 'client, failed saving session, error:', {
-            name: error.name,
-            message: error.message,
-            stack: error.stack && error.stack.split( '\n' )
-          } );
-          
-          return;
-        }
-        
-        de&&ug( 'client, saved session:', session );
-      } );
-      
-      var passport      = session.passport
-        , passport_user = passport && passport.user
-      ;
-    }
-    
-    de&&ug( 'client, session:', { error: error, session: session, user: passport_user } );
-  } );
   
   return { input: input, output: output };
 } // client()
