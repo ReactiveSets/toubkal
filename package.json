@@ -22,17 +22,18 @@
   },
   
   "dependencies": {
-    "undefine"    : "0.2.6",
-    "node-uuid"   : "1.4.1",
-    "socket.io"   : "0.9.16",
-    "uglify-js"   : "2.5.0",
-    "mime"        : "1.2.11",
-    "aws-sdk"     : "2.0.0-rc13",
-    "nodemailer"  : "1.8.0",
-    "easyimage"   : "0.1.6",
-    "passport"    : "0.2.2",
-    "compressible": "1.0.1",
-    "htmlparser2" : "3.8.2"
+    "undefine"         : "0.2.6",
+    "node-uuid"        : "1.4.1",
+    "socket.io"        : "0.9.16",
+    "socket.io-client" : "0.9.16",
+    "uglify-js"        : "2.5.0",
+    "mime"             : "1.2.11",
+    "aws-sdk"          : "2.0.0-rc13",
+    "nodemailer"       : "1.8.0",
+    "easyimage"        : "0.1.6",
+    "passport"         : "0.2.2",
+    "compressible"     : "1.0.1",
+    "htmlparser2"      : "3.8.2"
   },
   
   "devDependencies": {
