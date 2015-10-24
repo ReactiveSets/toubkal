@@ -35,26 +35,59 @@ Pipelet = RS.Pipelet
 # ------------------
 
 describe 'Pipelet', ->
+  describe 'Add( name, pipelet_factory )', ->
+    factory = ->
+    
+    it 'should allow a name of 5 characters long starting with two lower case letters', ->
+      expect( -> Pipelet.Add 'ab_0c', factory ).to.not.throwException()
+    
+    it 'should not allow a name already used', ->
+      expect( -> Pipelet.Add 'ab_0c', factory ).to.throwException()
+    
+    it 'should not allow a name of less than 5 characters long', ->
+      expect( -> Pipelet.Add 'abcd', factory ).to.throwException()
+    
+    it 'should not allow a name to start with underscore', ->
+      expect( -> Pipelet.Add '_aaaaaaaaaaaaa', factory ).to.throwException()
+    
+    it 'should not allow a name with underscore in the second letter', ->
+      expect( -> Pipelet.Add 'a_bcde', factory ).to.throwException()
+    
+    it 'should not allow a name starting with a digit', ->
+      expect( -> Pipelet.Add '0abcde', factory ).to.throwException()
+    
+    it 'should not allow a name with a digit in the second letter', ->
+      expect( -> Pipelet.Add 'a0bcde', factory ).to.throwException()
+    
+    it 'should not allow a name with a capital letter', ->
+      expect( -> Pipelet.Add 'abcdeF', factory ).to.throwException()
+  
   describe 'set_default_options()', ->
-    set_default_options = Pipelet.set_default_options
-    
-    source = {}
-    
-    source_path = {
-      _key: [ 'path' ]
-    }
-    
-    f = ( p, options ) ->
-    
-    f.default_options = {
-      test: true
-    }
-    
-    defaults = {
-      other: 'other'
-    }
+    set_default_options = null
+    source              = null
+    source_path         = null
+    f                   = null
+    defaults            = null
     
     it 'should return parameters with all default options set', ->
+      set_default_options = Pipelet.set_default_options
+      
+      source = {}
+      
+      source_path = {
+        _key: [ 'path' ]
+      }
+      
+      f = ( p, options ) ->
+      
+      f.default_options = {
+        test: true
+      }
+      
+      defaults = {
+        other: 'other'
+      }
+      
       ( ( p1, options ) ->
           expect( set_default_options( f, source, arguments, defaults ) ).to.be.eql [
             'p1'
@@ -239,14 +272,19 @@ describe 'Pipelet', ->
       )()
     
   describe 'Lazy and Greedy Pipelet Connections', ->
-    values = [ { id: 1 }, { id: 2 } ]
-    
-    source = new Pipelet()
-    lazy   = new Pipelet()
-    greedy = rs.greedy()
+    values = null
+    source = null
+    lazy   = null
+    greedy = null
     
     describe 'add_source()', ->
       it 'Attempting to use _input.add_source() with a Pipelet instead of an Output should throw', ->
+        values = [ { id: 1 }, { id: 2 } ]
+        
+        source = new Pipelet()
+        lazy   = new Pipelet()
+        greedy = rs.greedy()
+        
         expect( () -> greedy._input.add_source source ).to.throwException()
       
       it 'Adding as "source" as a source to "lazy", "source" should have "lazy" input as desintations', ->

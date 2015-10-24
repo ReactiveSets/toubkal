@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1470 automated tests*
+*1478 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -538,7 +538,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1470 continuous integration tests for the Toubkal core pipelets that run
+We have curently developped 1478 continuous integration tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -580,7 +580,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1470 of 1470 tests
+-> passed 1478 of 1478 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -797,14 +797,18 @@ This version introduces the capability to keep historical values of objects pers
   - Dataflows Meta Data for key, and query indexes definition
   - Operations log
   - Query cache
-  
+
 - Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
   - Bug with routing algorythm for / route
   - Fix updates
 
+- File write:
+  - to configuration()
+  - to other files
+
 ### Version 0.4.0 - Complex Queries
 
-ETA: December 12th 2015, 3 years anniversary of project debut
+ETA: December 31th 2015
 
 #### Main Goals:
 
@@ -820,10 +824,6 @@ ETA: December 12th 2015, 3 years anniversary of project debut
   - Emits data events not routed to any other destination input
   - Pipelet else() captures these events
   - May be used to detect clients attempts to submit un-authorize data
-
-- File write:
-  - to configuration()
-  - to other files
 
 - Intergrate Safe Complex Query expressions into Query and Query_Tree
 
@@ -885,7 +885,7 @@ This version is the first version allowing to build complex streaming applicatio
 
 Pipelet API has been significantly refactored and getting close to version 1.0 API.
 
-ETA: October 21st 2015.
+ETA: October 31st 2015.
 
 #### Remaining Goals:
 
@@ -903,7 +903,7 @@ ETA: October 21st 2015.
 
 ##### Already developped:
 
-- 1470 continuous integration tests
+- 1478 continuous integration tests
 
 - MySQL read/write dataflows pipelets:
   - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:
