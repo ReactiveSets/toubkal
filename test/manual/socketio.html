@@ -15,9 +15,13 @@
   <body>
     <div id="socketio_test">
       <h2>Socket.io Server Tests</h2>
+      
+      <div id="source"></div>
     </div>
     
     <script>
+      var RS = rs.RS, $ = RS.$;
+      
       rs.set( [
           { id: 1 },
           { id: 2 },
@@ -36,7 +40,9 @@
         
         .flow( 'source' )
         
-        .set()
+        .order( [ { id: 'id', descending: true } ] )
+        
+        .table( $( '#source' ), [ { id: 'flow' }, { id: 'id' } ] )
       ;
     </script>
   </body>
