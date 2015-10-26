@@ -26,9 +26,9 @@ var rs                 = require( 'toubkal'                    )
   , passport_route = '/passport'
   
   , RS  = rs.RS
-  , log = RS.log
+  , log = RS.log.bind( null, 'passport' )
   , de  = true
-  , ug  = log.bind( null, 'passport' )
+  , ug  = log
   
   , extend = RS.extend
   
@@ -117,65 +117,78 @@ module.exports = function( http_servers ) {
     .serve_http_servers( handler, { routes: passport_route } )
   ;
   
-  return get_session;
+  return get_session( session_options );
 } // module.exports
 
-function get_session( request, fn ) {
-  var cookie = request.headers.cookie;
+function get_session( session_options ) {
+  var ug = log.bind( null, 'get_session(),' );
   
-  if ( ! request.signedCookies ) {
-    if ( ! request.cookies ) {
-      cookie = decodeURIComponent( cookie );
-      
-      de&&ug( 'get_session(), decoded cookie: ' + cookie );
-      
-      request.cookies = cookie = parse_cookie( cookie );
-      
-      de&&ug( 'get_session(), parsed cookie: ' + log.s( cookie ) );
-    }
+  return _get_session;
+  
+  function _get_session( request, next ) {
+    var cookie = request.headers.cookie;
     
-    request.signedCookies = cookie = parseSignedCookies( cookie, session_options.secret );
-    
-    de&&ug( 'get_session(), signed cookie parsed: ' + log.s( cookie ) );
-  }
-  
-  var rs_sid = request.signedCookies[ session_options.key ];
-  
-  de&&ug( 'get_session(), rs_sid: ' + rs_sid );
-  
-  session_store.get( rs_sid, function( error, _session ) {
-    if ( error ) {
-      de&&ug( 'get_session(), error getting session from store: ' + error );
-    } else if ( _session ) {
-      de&&ug( 'get_session(), create session in request, _session:', _session );
-      
-      request.sessionID = rs_sid;
-      request.sessionStore = session_store;
-      
-      _session = session_store.createSession( request, _session );
-    /*
-    } else {
-    
-      de&&ug( 'get_session(), no session, create empty session' );
-      
-      if ( ! rs_sid ) {
-        rs_sid = uid2( 24 );
+    if ( ! request.signedCookies ) {
+      if ( ! request.cookies ) {
+        cookie = decodeURIComponent( cookie );
         
-        de&&ug( 'get_session(), no rs_sid, generate: ' + rs_sid );
+        de&&ug( 'decoded cookie:', cookie );
         
-        // ToDo: Need to setup cookie on response.end that needs to be captured in socket.io handshake, cannot be done here
+        request.cookies = cookie = parse_cookie( cookie );
+        
+        de&&ug( 'parsed cookie:', cookie );
       }
       
-      request.sessionID = rs_sid;
-      request.sessionStore = session_store;
+      request.signedCookies = cookie = parseSignedCookies( cookie, session_options.secret );
       
-      _session = new session.Session( request );
-      _session.cookie = new session.Cookie( {} );
-      
-      _session = session_store.createSession( request, _session );
-    */
+      de&&ug( 'signed cookie parsed:', cookie );
     }
     
-    fn( error, _session );
-  } )
+    var rs_sid = request.signedCookies[ session_options.key ];
+    
+    de&&ug( 'rs_sid:', rs_sid );
+    
+    var session_store = session_options.store;
+    
+    session_store.get( rs_sid, function( error, _session ) {
+      if ( error ) {
+        de&&ug( 'error getting session from store:', error );
+        
+        return next( error );
+      }
+      
+      request.sessionStore = session_store;
+      
+      if ( _session ) {
+        de&&ug( 'create session in request, _session:', _session );
+        
+        request.sessionID = rs_sid;
+        
+        _session = session_store.createSession( request, _session );
+        
+      /*
+      } else {
+      
+        de&&ug( 'no session, create empty session' );
+        
+        if ( ! rs_sid ) {
+          rs_sid = uid2( 24 );
+          
+          de&&ug( 'no rs_sid, generate:', rs_sid );
+          
+          // ToDo: Need to setup cookie on response.end that needs to be captured in socket.io handshake, cannot be done here
+        }
+        
+        request.sessionID = rs_sid;
+        
+        _session = new session.Session( request );
+        _session.cookie = new session.Cookie( {} );
+        
+        _session = session_store.createSession( request, _session );
+      */
+      }
+      
+      next( null, _session );
+    } )
+  } // _get_session()
 } // get_session()
