@@ -6,20 +6,23 @@
 var rs                 = require( 'toubkal'         )
   , express            = require( 'express'         )
   , logger             = require( 'morgan'          )
-  , cookie_parser      = require( 'cookie-parser'   )
   , body_parser        = require( 'body-parser'     )
   , session            = require( 'express-session' )
   , passport           = require( 'passport'        )
   
   , application        = express()
-  , session_store      = new session.MemoryStore()
-  , session_options    = { key: 'rs_sid', secret: 'fudge', store: session_store }
+  
+  , session_options    = {
+      key: 'rs_sid',
+      secret: 'fudge', // ToDo: get express-session secret from configuration
+      store: new session.MemoryStore(),
+      saveUninitialized: true,
+      resave: false
+    }
   
   // Make a handler that does not receive the next() parameter, because errors will be
   // handled by express
   , handler = function( request, response ) { application( request, response ) }
-  
-  , passport_route = '/passport'
   
   , RS  = rs.RS
   , log = RS.log.bind( null, 'passport' )
@@ -28,21 +31,21 @@ var rs                 = require( 'toubkal'         )
   
   , extend = RS.extend
   
-  , base_url = 'http://localhost:8080';
+  , base_url = 'http://localhost:8080'
+  , passport_route = '/passport'
 ;
 
 require( 'toubkal/lib/server/passport.js' );
 
 application
-  .use( logger()                   ) // request logger middleware
-  .use( cookie_parser()            ) // cookie parser
-  .use( body_parser()              ) // extensible request body parser
-  .use( session( session_options ) ) // manage sessions
+  .use( logger()                   )
+  .use( body_parser()              )
+  .use( session( session_options ) )
   .use( passport.initialize()      )
   .use( passport.session()         )
 ;
 
-// Define in-memory database
+// Define in-memory database singleton
 var schemas = rs.set( [
   { id: 'user_profile' },
   { id: 'user_provider_profile', key: [ 'user_id', 'provider_id' ] },
@@ -118,64 +121,17 @@ module.exports = function( http_servers ) {
 
 function get_session( session_options ) {
   var ug                 = log.bind( null, 'get_session(),' )
-  //, uid2               = require( 'uid2' )
-    , cookie_parser      = require( 'cookie-parser' )( session_options.secret )
+    , session            = require( 'express-session' )( session_options )
+    , response           = {}
   ;
   
   return function( request, next ) {
-    cookie_parser( request, null, function( error ) {
+    session( request, response, function( error ) {
       if ( error ) return next( error );
       
-      _get_session( request, next );
-    } );
-  };
-  
-  function _get_session( request, next ) {
-    var rs_sid = request.signedCookies[ session_options.key ];
-    
-    de&&ug( 'rs_sid:', rs_sid );
-    
-    var session_store = session_options.store;
-    
-    session_store.get( rs_sid, function( error, _session ) {
-      if ( error ) {
-        de&&ug( 'error getting session from store:', error );
-        
-        return next( error );
-      }
+      de&&ug( 'session', request.session, 'response:', response );
       
-      request.sessionStore = session_store;
-      
-      if ( _session ) {
-        de&&ug( 'create session in request, _session:', _session );
-        
-        request.sessionID = rs_sid;
-        
-        _session = session_store.createSession( request, _session );
-        
-      /*
-      } else {
-      
-        de&&ug( 'no session, create empty session' );
-        
-        if ( ! rs_sid ) {
-          rs_sid = uid2( 24 );
-          
-          de&&ug( 'no rs_sid, generate:', rs_sid );
-          
-          // ToDo: Need to setup cookie on response.end that needs to be captured in socket.io handshake, cannot be done here
-        }
-        
-        request.sessionID = rs_sid;
-        
-        _session = new session.Session( request );
-        _session.cookie = new session.Cookie( {} );
-        
-        _session = session_store.createSession( request, _session );
-      */
-      }
-      
-      next( null, _session );
+      return next( null, request.session );
     } )
-  } // _get_session()
+  }
 } // get_session()
