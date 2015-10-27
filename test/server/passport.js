@@ -3,19 +3,15 @@
 /* -------------------------------------------------------------------------------------------
    Express Application for Passport
 */
-var rs                 = require( 'toubkal'                    )
-  , express            = require( 'express'                    )
-  , logger             = require( 'morgan'                     )
-  , cookie_parser      = require( 'cookie-parser'              )
-  , parseSignedCookies = require( 'cookie-parser/lib/parse.js' ).signedCookies
-  , body_parser        = require( 'body-parser'                )
-  , session            = require( 'express-session'            )
-  , passport           = require( 'passport'                   )
-  , cookie             = require( 'cookie'                     )
-  , uid2               = require( 'uid2'                       )
+var rs                 = require( 'toubkal'         )
+  , express            = require( 'express'         )
+  , logger             = require( 'morgan'          )
+  , cookie_parser      = require( 'cookie-parser'   )
+  , body_parser        = require( 'body-parser'     )
+  , session            = require( 'express-session' )
+  , passport           = require( 'passport'        )
   
   , application        = express()
-  , parse_cookie       = cookie.parse
   , session_store      = new session.MemoryStore()
   , session_options    = { key: 'rs_sid', secret: 'fudge', store: session_store }
   
@@ -121,29 +117,20 @@ module.exports = function( http_servers ) {
 } // module.exports
 
 function get_session( session_options ) {
-  var ug = log.bind( null, 'get_session(),' );
+  var ug                 = log.bind( null, 'get_session(),' )
+  //, uid2               = require( 'uid2' )
+    , cookie_parser      = require( 'cookie-parser' )( session_options.secret )
+  ;
   
-  return _get_session;
+  return function( request, next ) {
+    cookie_parser( request, null, function( error ) {
+      if ( error ) return next( error );
+      
+      _get_session( request, next );
+    } );
+  };
   
   function _get_session( request, next ) {
-    var cookie = request.headers.cookie;
-    
-    if ( ! request.signedCookies ) {
-      if ( ! request.cookies ) {
-        cookie = decodeURIComponent( cookie );
-        
-        de&&ug( 'decoded cookie:', cookie );
-        
-        request.cookies = cookie = parse_cookie( cookie );
-        
-        de&&ug( 'parsed cookie:', cookie );
-      }
-      
-      request.signedCookies = cookie = parseSignedCookies( cookie, session_options.secret );
-      
-      de&&ug( 'signed cookie parsed:', cookie );
-    }
-    
     var rs_sid = request.signedCookies[ session_options.key ];
     
     de&&ug( 'rs_sid:', rs_sid );
