@@ -905,6 +905,12 @@ ETA: October 31st 2015.
 
 - 1478 continuous integration tests
 
+- Web Storage API:
+  - local_storage( flow ) pipelet
+  - multiton (one singleton per dataflow )
+  - supports both localStorage and sessionStorage via storage option
+  - listens to other pages "storage" events to update in realtime dataflow
+
 - MySQL read/write dataflows pipelets:
   - mysql(): provides read/write dataflows for MySQL table, uses lower-level pipelets:
     - mysql_connections(): manages MySQL connections
@@ -997,6 +1003,7 @@ ETA: October 31st 2015.
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
+local_storage()           | Implements Web Storage API
 next()                    | A pipelet to maintain auto-incremented attributes on trigger
 mysql()                   | In toubkal_mysql repository, provides read/write dataflows to/from MySQL tables
 operations_optimizer()    | On complete, remove unnecessary adds, removes, updates

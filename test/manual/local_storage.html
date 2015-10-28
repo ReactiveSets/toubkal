@@ -5,7 +5,7 @@
     
     <link rel="stylesheet" href="/test/css/mocha.css" />
     
-    <title>Socket.io Server Tests</title>
+    <title>Local Storage Test</title>
     
     <script src="/socket.io/socket.io.js"></script>
     
@@ -14,7 +14,13 @@
   
   <body>
     <div id="socketio_test">
-      <h2>Socket.io Server Tests</h2>
+      <h2>Local Storage Test</h2>
+      
+      <p>Run in another tab with
+        <a href="./socketio.html">socket io test</a>
+        
+        to visualize real-time changes
+      </p>
       
       <div id="source"></div>
     </div>
@@ -22,24 +28,7 @@
     <script>
       var RS = rs.RS, $ = RS.$;
       
-      rs.set( [
-          { id: 1 },
-          { id: 2 },
-          { id: 3 }
-        ], { name: 'client-set-source' } )
-        
-        .set_flow( 'client_set' )
-        
-        //.set( [], { name: 'client-set' } )
-        
-        .trace( 'to socket io server' )
-        
-        .socket_io_server()
-        
-        .trace( 'from socket io server' )
-        
-        .flow( 'source' )
-        
+      rs
         .local_storage( 'source' )
         
         .order( [ { id: 'id', descending: true } ] )
