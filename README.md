@@ -924,6 +924,8 @@ ETA: October 31st 2015.
 
 - react(): Facebook React client-side pipelet
 
+- beat(): a pipelet to emit events at time intervals
+- once(): a pipelet to emit a single event after a timeout
 - next(): a pipelet to maintain auto-incremented attributes on trigger
 
 - Operations Optimizer:
@@ -1003,6 +1005,8 @@ ETA: October 31st 2015.
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
+beat()                    | Emit events at time intervals
+once()                    | Emit an event on timeout
 local_storage()           | Implements Web Storage API
 next()                    | A pipelet to maintain auto-incremented attributes on trigger
 mysql()                   | In toubkal_mysql repository, provides read/write dataflows to/from MySQL tables

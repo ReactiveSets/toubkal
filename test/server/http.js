@@ -197,10 +197,6 @@ rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
 // Socket.io Server tests
 var clients = http_servers.socket_io_clients( { remove_timeout: 10, session_options: session_options } );
 
-var source_set = rs.set( [ {}, {}, {}, {} ] ).auto_increment()
-  , source_1 = rs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
-;
-
 // ToDo: add authorizations test
 function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
@@ -220,12 +216,33 @@ function client( source, options ) {
   return { input: input, output: output };
 } // client()
 
-var client_filter = rs.set( [ { flow: 'client_set', id: 1 }, { flow: 'client_set', id: 3 } ] );
-
-rs.union( [
-    source_set.set_flow( 'source' ),
-    source_1.set_flow( 'source_1' )
+var client_filter = rs
+  .once( 15000 ) // in 15 seconds
+  
+  .alter( function( value ) {
+    extend( value, { flow: 'client_set', id: 2 } );
+  } )
+  
+  .set( [
+    { flow: 'client_set', id: 1 },
+    { flow: 'client_set', id: 3 }
   ] )
+;
+
+var source_set = rs
+  .beat( 10000 ) // every 10 seconds
+  .union( [ rs.set( [ {}, {}, {}, {} ] ) ] )
+  .auto_increment()
+  .set_flow( 'source' )
+;
+
+var source_1 = rs
+  .set( [ {}, {}, {}, {}, {} ] )
+  .auto_increment()
+  .set_flow( 'source_1' )
+;
+
+rs.union( [ source_set, source_1 ] )
   
   .trace( 'to socket.io clients' )
   
@@ -237,11 +254,3 @@ rs.union( [
   
   .set()
 ;
-
-1 && setInterval( function() {
-  source_set._add( [ {} ] ); // this should add to the input of the auto_increment() pipelet of source_set
-} , 10000 );
-
-setTimeout( function() {
-  client_filter._add( [ { flow: 'client_set', id: 2 } ] );
-}, 15000 );
