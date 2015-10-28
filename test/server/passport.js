@@ -22,16 +22,14 @@ var rs                 = require( 'toubkal'         )
   
   // Make a handler that does not receive the next() parameter, because errors will be
   // handled by express
-  , handler = function( request, response ) { application( request, response ) }
+  , handler        = function( request, response ) { application( request, response ) }
   
-  , RS  = rs.RS
-  , log = RS.log.bind( null, 'passport' )
-  , de  = true
-  , ug  = log
+  , RS             = rs.RS
+  , log            = RS.log.bind( null, 'passport' )
+  , de             = true
+  , ug             = log
   
-  , extend = RS.extend
-  
-  , base_url = 'http://localhost:8080'
+  , base_url       = 'http://localhost:8080'
   , passport_route = '/passport'
 ;
 
@@ -116,22 +114,5 @@ module.exports = function( http_servers ) {
     .serve_http_servers( handler, { routes: passport_route } )
   ;
   
-  return get_session( session_options );
+  return session_options;
 } // module.exports
-
-function get_session( session_options ) {
-  var ug                 = log.bind( null, 'get_session(),' )
-    , session            = require( 'express-session' )( session_options )
-    , response           = {}
-  ;
-  
-  return function( request, next ) {
-    session( request, response, function( error ) {
-      if ( error ) return next( error );
-      
-      de&&ug( 'session', request.session, 'response:', response );
-      
-      return next( null, request.session );
-    } )
-  }
-} // get_session()

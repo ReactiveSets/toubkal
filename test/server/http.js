@@ -53,7 +53,7 @@ var http_servers = rs
 ;
 
 // Passport Application is described in ./passport.js
-var get_session = require( './passport.js' )( http_servers );
+var session_options = require( './passport.js' )( http_servers );
 
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
@@ -195,7 +195,7 @@ rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
 ;
 
 // Socket.io Server tests
-var clients = http_servers.socket_io_clients( { remove_timeout: 10, get_session: get_session } );
+var clients = http_servers.socket_io_clients( { remove_timeout: 10, session_options: session_options } );
 
 var source_set = rs.set( [ {}, {}, {}, {} ] ).auto_increment()
   , source_1 = rs.set( [ {}, {}, {}, {}, {} ] ).auto_increment()
