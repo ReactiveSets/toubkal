@@ -201,13 +201,17 @@ var clients = http_servers.socket_io_clients( { remove_timeout: 10, session_opti
 function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
-  var socket  = this.socket
-    , input   = socket
-    , user_id = socket.socket.handshake.user_id
+  var socket    = this.socket
+    , input     = socket
+    , handshake = socket.socket.handshake
+    , user_id   = handshake.user_id
+    , sid       = handshake.sessionID
     , output
   ;
   
-  de&&ug( 'client(), user id:', user_id );
+  de&&ug( 'client()', { user_id: user_id, sid: sid } );
+  
+  source.filter( [ { flow: 'user', id: user_id } ] ).greedy();
   
   input._add_source( source );
   
