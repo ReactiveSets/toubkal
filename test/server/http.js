@@ -186,7 +186,7 @@ rs.union( [ mocha_css, mocha_expect ] )
 // The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
 // of self-unions of pipelets. The prefered form is remains using an explicit Union.
 // rs.union( [ toubkal_core_min, toubkal_ui_min, toubkal_min ] )
-rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ] } )
+rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ], session_options: session_options } )
   ._input
   .insert_source_union()     // adding a union as the source of rs.serve() input
 //  ._add_source( toubkal_core_min ) // now adding sources to that union
