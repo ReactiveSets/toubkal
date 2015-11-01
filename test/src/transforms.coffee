@@ -49,7 +49,6 @@ describe 'transforms', ->
     it 'should provide adjectives', ( done ) ->
       adjectives = source
         .attribute_to_value( { key: [ 'adjective' ] } )
-        .trace( 'adjectives' )
         .set()
       
       adjectives._fetch_all ( adjectives ) -> check done, () ->
@@ -63,39 +62,29 @@ describe 'transforms', ->
       
       adjectives._fetch_all ( adjectives ) -> check done, () ->
         expect( adjectives ).to.be.eql [ { adjective: 'strong' } ]
-    
+  
   describe 'value_to_attribute():', ->
-    adjectives = [
-      { adjective: 'strong' }
-      { adjective: 'weak'   }
+    adjectives = rs.set [
+      { id: 1, adjective: 'strong' }
+      { id: 2, adjective: 'weak'   }
     ]
     
-    source = rs.set( adjectives, { key: [ 'adjective' ] } )
-    
-    containers = null
-    
     it 'should embed adjectives in content attribute', ( done ) ->
-      containers = source
+      adjectives
         .value_to_attribute()
-        .trace( 'adjectives' )
-        .auto_increment()
-      
-      containers._fetch_all ( values )  -> check done, () ->
-        expect( values ).to.be.eql [
-          { adjective: 1, content: { adjective: 'strong' } }
-          { adjective: 2, content: { adjective: 'weak'   } }
-        ]
-    
-    it 'should embed adjectives in content attribute and add defaults attributes', ( done ) ->
-      source = rs.set( adjectives, { key: [ 'adjective' ] } )
-      
-      containers = source
-        .value_to_attribute( { defaults: { flow: 'adjective' } } )
-        .set()
         ._fetch_all ( values )  -> check done, () ->
           expect( values ).to.be.eql [
-            { flow: 'adjective', content: { adjective: 'strong' } }
-            { flow: 'adjective', content: { adjective: 'weak'   } }
+            { id: 1, content: { id: 1, adjective: 'strong' } }
+            { id: 2, content: { id: 2, adjective: 'weak'   } }
+          ]
+    
+    it 'should embed adjectives in content attribute and add defaults attributes', ( done ) ->
+      adjectives
+        .value_to_attribute( { defaults: { flow: 'adjective' } } )
+        ._fetch_all ( values )  -> check done, () ->
+          expect( values ).to.be.eql [
+            { flow: 'adjective', id: 1, content: { id: 1, adjective: 'strong' } }
+            { flow: 'adjective', id: 2, content: { id: 2, adjective: 'weak'   } }
           ]
   
   describe 'attribute_to_values()', ->
