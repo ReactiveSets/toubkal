@@ -108,11 +108,13 @@ describe 'transforms', ->
       }
     ] )
     
-    cities = source
-      .attribute_to_values( { key: [ 'city' ] } )
-      .set()
+    cities = null
     
     it 'should get cities', ( done ) ->
+      cities = source
+        .attribute_to_values( { key: [ 'city' ] } )
+        .set()
+      
       cities._fetch_all ( values ) ->
         check done, () ->
           expect( values ).to.be.eql [
@@ -140,3 +142,143 @@ describe 'transforms', ->
             { city: 'Paris'     }
             { city: 'Marseille' }
           ]
+  
+  describe 'values_to_attribute()', ->
+    cities = [
+      { city: 'Paris'     }
+      { city: 'Marseille' }
+      { city: 'Lille'     }
+      { city: 'Caen'      }
+    ]
+    
+    source = null
+    value = null
+    
+    it 'should embed all cities into a value with content attribute', ->
+      source = rs.set cities, { key: [ 'city' ] }
+      
+      value = source.values_to_attribute()
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+          ] }
+        ]
+    
+    it 'should allow to add two cities', ->
+      source._add [
+        { city: 'Bordeaux'  }
+        { city: 'Bastia'    }
+      ] 
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+            { city: 'Bordeaux'  }
+            { city: 'Bastia'    }
+          ] }
+        ]
+    
+    it 'should allow to remove three cities', ->
+      source._remove [
+        { city: 'Bordeaux'  }
+        { city: 'Marseille' }
+        { city: 'Caen'      }
+      ] 
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Lille'     }
+            { city: 'Bastia'    }
+          ] }
+        ]
+    
+    it 'should allow to update a city', ->
+      source._update [ [
+        { city: 'Lille'     }
+        { city: 'Lyon'      }
+      ] ]
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Bastia'    }
+            { city: 'Lyon'      }
+          ] }
+        ]
+    
+    it 'should embed all cities into a value with content attribute (on a set)', ->
+      source = rs.set cities, { key: [ 'city' ] }
+      
+      value = source.values_to_attribute().set()
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+          ] }
+        ]
+    
+    it 'should allow to add two cities (on a set)', ->
+      source._add [
+        { city: 'Bordeaux'  }
+        { city: 'Bastia'    }
+      ] 
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Marseille' }
+            { city: 'Lille'     }
+            { city: 'Caen'      }
+            { city: 'Bordeaux'  }
+            { city: 'Bastia'    }
+          ] }
+        ]
+    
+    it 'should allow to remove three cities (on a set)', ->
+      source._remove [
+        { city: 'Bordeaux'  }
+        { city: 'Marseille' }
+        { city: 'Caen'      }
+      ] 
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Lille'     }
+            { city: 'Bastia'    }
+          ] }
+        ]
+    
+    it 'should allow to update a city (on a set)', ->
+      source._update [ [
+        { city: 'Lille'     }
+        { city: 'Lyon'      }
+      ] ]
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql [
+          { id: 1, content: [
+            { city: 'Paris'     }
+            { city: 'Bastia'    }
+            { city: 'Lyon'      }
+          ] }
+        ]
+    

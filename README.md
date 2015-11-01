@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1478 automated tests*
+*1486 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -538,7 +538,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1478 continuous integration tests for the Toubkal core pipelets that run
+We have curently developped 1486 continuous integration tests for the Toubkal core pipelets that run
 after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -580,7 +580,7 @@ Some image manipulation pipelets require ImageMagick that [you can download here
 # cd toubkal
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1478 of 1478 tests
+-> passed 1486 of 1486 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -885,7 +885,7 @@ This version is the first version allowing to build complex streaming applicatio
 
 Pipelet API has been significantly refactored and getting close to version 1.0 API.
 
-ETA: October 31st 2015.
+ETA: November 8th 2015.
 
 #### Remaining Goals:
 
@@ -903,7 +903,7 @@ ETA: October 31st 2015.
 
 ##### Already developped:
 
-- 1478 continuous integration tests
+- 1486 continuous integration tests
 
 - Web Storage API:
   - local_storage( flow ) pipelet
@@ -1005,6 +1005,7 @@ ETA: October 31st 2015.
 
 Pipelet                   | Short Description
 --------------------------|------------------------------------------------
+values_to_attribute()     | Embed input values under a content attribute of a single output value.
 beat()                    | Emit events at time intervals
 once()                    | Emit an event on timeout
 local_storage()           | Implements Web Storage API
