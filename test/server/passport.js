@@ -4,13 +4,11 @@
    Express Application for Passport
 */
 var rs                 = require( 'toubkal'         )
-  , express            = require( 'express'         )
+  , application        = require( 'express'         )()
   , logger             = require( 'morgan'          )
   , body_parser        = require( 'body-parser'     )
   , session            = require( 'express-session' )
   , passport           = require( 'passport'        )
-  
-  , application        = express()
   
   , session_options    = {
       key: 'rs_sid',
@@ -20,17 +18,8 @@ var rs                 = require( 'toubkal'         )
       resave: false
     }
   
-  // Make a handler that does not receive the next() parameter, because errors will be
-  // handled by express
-  , handler        = function( request, response ) { application( request, response ) }
-  
-  , RS             = rs.RS
-  , log            = RS.log.bind( null, 'passport' )
-  , de             = true
-  , ug             = log
-  
-  , base_url       = 'http://localhost:8080'
-  , passport_route = '/passport'
+  , base_url           = 'http://localhost:8080'
+  , passport_route     = '/passport'
 ;
 
 require( 'toubkal/lib/server/passport.js' );
@@ -44,29 +33,31 @@ application
 ;
 
 // Define in-memory database singleton
-var schemas = rs.set( [
-  { id: 'user_profile' },
-  { id: 'user_provider_profile', key: [ 'user_id', 'provider_id' ] },
-  { id: 'user_provider_email' }
-] );
-
-var database;
-
-RS.Pipelet.Compose( 'database', function( source, options ) {
-  // ToDo: add singleton option to RS.Pipelet.Compose()
-  database = database || rs.dispatch( schemas, function( source, options ) {
-    var flow = this.id;
-    
-    return source
-      .flow( flow, { key: this.key } )
-      // .mysql( flow, this.columns )
-      .set( [] )
-      .flow( flow )
-    ;
-  } );
+!function() {
+  var schemas = rs.set( [
+    { id: 'user_profile' },
+    { id: 'user_provider_profile', key: [ 'user_id', 'provider_id' ] },
+    { id: 'user_provider_email' }
+  ] );
   
-  return database._add_source( source );
-} );
+  var database; // singleton
+  
+  rs.RS.Pipelet.Compose( 'database', function( source, options ) {
+    // ToDo: add singleton option to Compose()
+    database = database || rs.dispatch( schemas, function( source, options ) {
+      var flow = this.id;
+      
+      return source
+        .flow( flow, { key: this.key } )
+        // .mysql( flow, this.columns )
+        .set( [] )
+        .flow( flow )
+      ;
+    } );
+    
+    return database._add_source( source );
+  } );
+}() // database()
 
 // Passport user profiles
 rs
@@ -90,10 +81,10 @@ rs
       photo        : _.photos[ 0 ].value
     };
     
-    de&&ug( 'new user profile:', user );
-    
     return profile;
   }, { no_clone: true } )
+  
+  .trace( 'new user profiles' )
   
   .database()
 ;
@@ -101,9 +92,11 @@ rs
 rs
   .passport_strategies_configuration( base_url + passport_route )
   
+  .trace( 'configured strategies' )
+  
   .passport_strategies()
   
-  .trace( 'strategies' )
+  .trace( 'initialized strategies' )
   
   .passport_routes( application, { base_route: passport_route } )
 ;
@@ -116,3 +109,9 @@ module.exports = function( http_servers ) {
   
   return session_options;
 } // module.exports
+
+// serve_http_servers() handler that does not receive the next()
+// parameter, because errors will be handled by express
+function handler( request, response ) {
+  application( request, response )
+}
