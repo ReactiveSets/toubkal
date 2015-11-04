@@ -30,6 +30,36 @@ application
   .use( session( session_options ) )
   .use( passport.initialize()      )
   .use( passport.session()         )
+  
+  .use( rs.express_route()._router() )
+  
+  .get( '/passport/logout', function( request, response, next ) {
+    var base_route = passport_route;
+    
+    request.logout();
+    
+    response.redirect( base_route + '/login' );
+    
+    // ToDo: update sessions_users dataflow to remove user from session
+  } )
+  
+  .get( '/passport/profile', function( request, response, next ) {
+    var base_route = passport_route;
+    
+    if( ! request.isAuthenticated() ) return response.redirect( '/passport/login' );
+    
+    var user = request.user
+      , res  = '<p><a href="'  + base_route       + '/logout">logout</a></p>'
+          + '<p><img src="'    + user.photo       + '" /></p>'
+          + '<p>Name: '        + user.name        + '</p>'
+          + '<p>User ID: '     + user.id          + '</p>'
+          + '<p>Provider ID: ' + user.provider_id + '</p>'
+    ;
+    
+    response.end( res );
+    
+    // ToDo: update sessions_users dataflow to add user to session
+  } )
 ;
 
 // Define in-memory database singleton
@@ -89,6 +119,53 @@ rs
   .database()
 ;
 
+var login_menu = rs
+  .passport_strategies()
+  
+  // Don't do anything if this is just a credentials change
+  .operations_optimizer()
+  
+  // Set order attribute to name if not present
+  .alter( function( strategy ) { strategy.order = strategy.order || strategy.name } )
+  
+  // All strategies into content attribute
+  .values_to_attribute()
+  
+  // Sort strategies in content by order attribute
+  .content_order( 'order' )
+  
+  // Render html in content attribute from strategies
+  .content_alter( function( strategies ) {
+    return '' +
+      '<html>\n' +
+      '  <head>\n' +
+      '    <style>li {list-style-type: none;}</style>\n' +
+      '  </head>\n' +
+        
+      '  <body>\n' +
+      '    <ul>\n' +
+      '      <li>Login using your account at</li>\n' +
+            
+            strategies
+              .map( function( strategy ) {
+                var name = strategy.display_name || strategy.name
+                  , path = '/passport/' + strategy.name
+                ;
+                
+                return '      <li><a href="' + path + '">' + name + '</a></li>\n'
+              } )
+              
+              .join( '' )
+            +
+      '    </ul>\n' +
+      '  <body>\n' +
+      '</html>\n'
+    ;
+  } )
+  
+  .content_route( '/passport/login' )
+;
+
 rs
   .passport_strategies_configuration( base_url + passport_route )
   
@@ -98,7 +175,12 @@ rs
   
   .trace( 'initialized strategies' )
   
-  .passport_routes( application, { base_route: passport_route } )
+  .passport_strategies_routes()
+  
+  .union( [ login_menu ] )
+  
+  .express_route()
+  // .passport_routes( application, { base_route: passport_route } )
 ;
 
 module.exports = function( http_servers ) {
