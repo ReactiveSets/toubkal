@@ -8,6 +8,8 @@ var rs                 = require( 'toubkal'         )
   , session            = require( 'express-session' )
   , passport           = require( 'passport'        )
   
+  , Compose            = rs.RS.Pipelet.Compose
+  
     // ToDo: get session_options from configuration
   , session_options    = {
       key: 'rs_sid',
@@ -64,13 +66,13 @@ application
   
   var database; // singleton
   
-  rs.RS.Pipelet.Compose( 'database', function( source, options ) {
+  Compose( 'database', function( source, options ) {
     // ToDo: add singleton option to Compose()
     database = database || rs.dispatch( schemas, function( source, options ) {
       var flow = this.id;
       
       return source
-        .flow( flow, { key: this.key } )
+        .flow( flow, { key: this.key || [ 'id' ] } )
         // .mysql( flow, this.columns )
         .set( [] )
         .flow( flow )
@@ -178,6 +180,7 @@ rs
 module.exports = function( http_servers ) {
   // Bind express Application to base url route '/passport'
   http_servers
+    // ToDo: make a pipelet to serve an express application
     .serve_http_servers( handler, { routes: passport_route } )
   ;
   
