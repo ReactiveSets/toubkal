@@ -16,6 +16,7 @@
     <div id="socketio_test">
       <h2>Socket.io Server Tests</h2>
       
+      <div id="profile"></div>
       <div id="source"></div>
     </div>
     
@@ -45,6 +46,29 @@
         .order( [ { id: 'id', descending: true } ] )
         
         .table( $( '#source' ), [ { id: 'flow' }, { id: 'id' } ] )
+      ;
+      
+      var columns = [ 'photo', 'message', 'name', 'provider_name', 'provider_id' ]
+        .map( function( column ) {
+          return { id: column }
+        } )
+      ;
+      
+      rs
+        .socket_io_server()
+        .flow( 'user_profile' )
+        .alter( function( user ) {
+          user.photo =
+            '<img title="' + user.id +
+              '" src="' + user.photo +
+            '"/>'
+          ;
+          
+          user.message = 'Hello';
+        } )
+        .trace( 'user profile' )
+        .order( [ { id: 'id' } ] )
+        .table( $( '#profile' ), columns )
       ;
     </script>
   </body>

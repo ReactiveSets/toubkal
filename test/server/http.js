@@ -211,13 +211,40 @@ function client( source, options ) {
   
   de&&ug( 'client()', { user_id: user_id, sid: sid } );
   
-  source.filter( [ { flow: 'user', id: user_id } ] ).greedy();
+  // Get reactive authenticated user from session id
+  // Build user profile query with it
+  var user_profile_query = source
+    .filter( [ { flow: 'user_sessions', id: sid } ] )
+    
+    .alter( function( user_session ) {
+      return { flow: 'user_profile', id: user_session.user_id }
+    }, { no_clone: true } )
+    
+    .trace( 'user profile query' )
+  ;
   
-  input._add_source( source );
+  // Read Authorizations
+  var can_read = rs.union( [
+    // public dataflows
+    rs.set( [
+      { flow: 'client_set' },
+      { flow: 'source' }
+    ] ),
+    
+    // Current authenticated user profile, if any
+    user_profile_query
+  ] );
   
-  output = input.trace( 'from socket.io clients' );
+  source
+    .filter( can_read )
+    ._add_destination( input )
+  ;
   
-  return { input: input, output: output };
+  output = input
+    .trace( 'from socket.io clients' )
+  ;
+  
+  return output;
 } // client()
 
 var client_filter = rs
@@ -246,11 +273,33 @@ var source_1 = rs
   .set_flow( 'source_1' )
 ;
 
-rs.union( [ source_set, source_1 ] )
+var sessions = rs
+  .session_store()
+  
+  // ToDo: make a passport pipelet for the following:
+  .alter( function( session ) {
+    // ToDo: use undocumented passport internals to get logged-in user id
+    var passport = session.content.passport
+      , user_id = passport && passport.user
+    ;
+    
+    return user_id && { flow: 'user_sessions', id: session.id, user_id: user_id }
+  },
+  
+  {
+    no_clone: true,
+    
+    _query_transform: function user_sessions_query_transform( term ) {
+      if ( term.flow == 'user_sessions' ) return { id: term.id };
+    } // user_sessions_query_transform()
+  } )
+;
+
+rs.union( [ source_set, source_1, sessions, rs.database() ] )
   
   .trace( 'to socket.io clients' )
   
-  .dispatch( clients, client, { no_encapsulate: true, input_output: true } )
+  .dispatch( clients, client, { no_encapsulate: true } )
   
   .trace( 'from dispatch' )
   
