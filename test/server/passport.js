@@ -5,15 +5,13 @@
 */
 var rs                 = require( 'toubkal'         )
   , application        = require( 'express'         )()
-  , logger             = require( 'morgan'          )
-  , body_parser        = require( 'body-parser'     )
   , session            = require( 'express-session' )
   , passport           = require( 'passport'        )
   
+    // ToDo: get session_options from configuration
   , session_options    = {
       key: 'rs_sid',
-      secret: 'fudge', // ToDo: get express-session secret from configuration
-      store: new session.MemoryStore(),
+      secret: 'fudge',
       saveUninitialized: true,
       resave: false
     }
@@ -22,11 +20,9 @@ var rs                 = require( 'toubkal'         )
   , passport_route     = '/passport'
 ;
 
-require( 'toubkal/lib/server/passport.js' );
+session_options.store = new rs.RS.Session_Store( rs.session_store() );
 
 application
-  .use( logger()                   )
-  .use( body_parser()              )
   .use( session( session_options ) )
   .use( passport.initialize()      )
   .use( passport.session()         )
@@ -39,8 +35,6 @@ application
     request.logout();
     
     response.redirect( base_route + '/login' );
-    
-    // ToDo: update sessions_users dataflow to remove user from session
   } )
   
   .get( '/passport/profile', function( request, response, next ) {
@@ -57,8 +51,6 @@ application
     ;
     
     response.end( res );
-    
-    // ToDo: update sessions_users dataflow to add user to session
   } )
 ;
 
@@ -141,7 +133,7 @@ var login_menu = rs
       '  <head>\n' +
       '    <style>li {list-style-type: none;}</style>\n' +
       '  </head>\n' +
-        
+      
       '  <body>\n' +
       '    <ul>\n' +
       '      <li>Login using your account at</li>\n' +
