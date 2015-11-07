@@ -39,147 +39,147 @@ clone = extend.clone
 # -----------------
 
 describe 'extend', ->
-describe 'extend()', ->
-  it 'should be a function', ->
-    expect( extend ).to.be.a 'function'
-  
-  o1 = 
-    id: 1
-    name: 'khalifa'
-  
-  o2 = 
-    email: 'knassik@gmail.com'
-  
-  o3 =
-    country: 'Morocco'
-    name: 'khalifa nassik'
-    email: 'khalifan@gmail.com'
-
-  _o1 = clone o1
-  _o2 = clone o2
-  _o3 = clone o3
-
-  result = undefined
-  
-  it 'should be identity, i.e. extend( object ) should be strictly equal to object', ->
-    result = extend o1
+  describe 'extend()', ->
+    it 'should be a function', ->
+      expect( extend ).to.be.a 'function'
     
-    expect( result ).to.be o1
-  
-  it 'should modify o1 in extend( o1, o2 )', ->
-    result = extend o1, o2
+    o1 = 
+      id: 1
+      name: 'khalifa'
     
-    expect( o1 ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } )
-
-  it 'should return o1', ->
-    expect( result ).to.be o1
-  
-  it 'should not modify o2', ->
-    expect( o2 ).to.be.eql _o2
-  
-  it 'should modify o1 after extend( o1, o2, o3 )', ->
-    o1 = clone _o1 # restore o1 original value
-
-    result = extend o1, o2, o3
+    o2 = 
+      email: 'knassik@gmail.com'
     
-    expect( o1 ).to.be.eql( { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' } ) and
-    expect( result ).to.be o1
-  
-  it 'should not have modified o2', ->
-    expect( o2 ).to.be.eql _o2
+    o3 =
+      country: 'Morocco'
+      name: 'khalifa nassik'
+      email: 'khalifan@gmail.com'
 
-  it 'should not have modified o3', ->
-    expect( o3 ).to.be.eql _o3
+    _o1 = clone o1
+    _o2 = clone o2
+    _o3 = clone o3
 
-  it 'should return {} in extend( null )', ->
-    expect( extend( null ) ).to.be.eql {}
-
-  it 'should return {} in extend( undefined )', ->
-    expect( extend( undefined ) ).to.be.eql {}
-
-  it 'should return {} in extend( null, null )', ->
-    expect( extend( null, null ) ).to.be.eql {}
-
-  it 'should return {} in extend( undefined, undefined )', ->
-    expect( extend( undefined, undefined ) ).to.be.eql {}
-
-  it 'should return o3 clone in extend( null, null, null, o3, null )', ->
-    result = extend null, null, null, o3, null
+    result = undefined
     
-    expect( result ).to.be.eql( o3 ) and expect( result ).to.not.be o3
-
-  it 'should return o3 clone in extend( undefined, undefined, undefined, o3, undefined )', ->
-    result = extend( undefined, undefined, undefined, o3, undefined )
-
-    expect( result ).to.be.eql( o3 ) and expect( result ).to.not.be o3
-
-describe 'extend_2():', ->
-  extend_2 = extend._2
-  
-  it 'should be a function', ->
-    expect( extend_2 ).to.be.a 'function'
-
-  it 'should not be extend()', ->
-    expect( extend_2 ).to.not.be extend
-  
-  o1 = 
-    id: 1
-    name: 'khalifa'
-  
-  o2 = 
-    email: 'knassik@gmail.com'
-  
-  _o1 = clone o1
-  _o2 = clone o2
-
-  result = undefined
-  
-  it 'should be identity, i.e. extend_2( object ) should be strictly equal to object', ->
-    result = extend_2 o1
+    it 'should be identity, i.e. extend( object ) should be strictly equal to object', ->
+      result = extend o1
+      
+      expect( result ).to.be o1
     
-    expect( result ).to.be o1
-  
-  it 'should modify o1 in extend_2( o1, o2 )', ->
-    result = extend_2 o1, o2
+    it 'should modify o1 in extend( o1, o2 )', ->
+      result = extend o1, o2
+      
+      expect( o1 ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } )
+
+    it 'should return o1', ->
+      expect( result ).to.be o1
     
-    expect( o1 ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } )
+    it 'should not modify o2', ->
+      expect( o2 ).to.be.eql _o2
+    
+    it 'should modify o1 after extend( o1, o2, o3 )', ->
+      o1 = clone _o1 # restore o1 original value
 
-  it 'should return o1', ->
-    expect( result ).to.be o1
-  
-  it 'should not modify o2', ->
-    expect( o2 ).to.be.eql _o2
-  
-  it 'should return object in extend_2( object, null )', ->
-    expect( extend_2( o2, null ) ).to.be o2
+      result = extend o1, o2, o3
+      
+      expect( o1 ).to.be.eql( { id: 1, name: 'khalifa nassik', email: 'khalifan@gmail.com', country: 'Morocco' } ) and
+      expect( result ).to.be o1
+    
+    it 'should not have modified o2', ->
+      expect( o2 ).to.be.eql _o2
 
-  it 'should return object in extend_2( object, undefined )', ->
-    expect( extend_2( o2, undefined ) ).to.be o2
+    it 'should not have modified o3', ->
+      expect( o3 ).to.be.eql _o3
 
-  it 'should return null in extend_2( null )', ->
-    expect( extend_2( null ) ).to.be null
+    it 'should return {} in extend( null )', ->
+      expect( extend( null ) ).to.be.eql {}
 
-  it 'should return undefined in extend_2( undefined )', ->
-    expect( extend_2( undefined ) ).to.be undefined
+    it 'should return {} in extend( undefined )', ->
+      expect( extend( undefined ) ).to.be.eql {}
 
-  it 'should return null in extend_2( null, null )', ->
-    expect( extend_2( null, null ) ).to.be null
+    it 'should return {} in extend( null, null )', ->
+      expect( extend( null, null ) ).to.be.eql {}
 
-  it 'should return undefined in extend_2( undefined, undefined )', ->
-    expect( extend_2( undefined, undefined ) ).to.be undefined
+    it 'should return {} in extend( undefined, undefined )', ->
+      expect( extend( undefined, undefined ) ).to.be.eql {}
 
-  it 'should return null in extend_2( null, undefined )', ->
-    expect( extend_2( null, undefined ) ).to.be null
+    it 'should return o3 clone in extend( null, null, null, o3, null )', ->
+      result = extend null, null, null, o3, null
+      
+      expect( result ).to.be.eql( o3 ) and expect( result ).to.not.be o3
 
-  it 'should return undefined in extend_2( undefined, null )', ->
-    expect( extend_2( undefined, null ) ).to.be undefined
+    it 'should return o3 clone in extend( undefined, undefined, undefined, o3, undefined )', ->
+      result = extend( undefined, undefined, undefined, o3, undefined )
 
-  it 'should throw in extend_2( null, o2 )', ->
-    f = -> extend_2 null, o2
+      expect( result ).to.be.eql( o3 ) and expect( result ).to.not.be o3
 
-    expect( f ).to.throwException()
+  describe 'extend_2():', ->
+    extend_2 = extend._2
+    
+    it 'should be a function', ->
+      expect( extend_2 ).to.be.a 'function'
 
-  it 'should throw in extend_2( undefined, o2 )', ->
-    f = -> extend_2 undefined, o2
+    it 'should not be extend()', ->
+      expect( extend_2 ).to.not.be extend
+    
+    o1 = 
+      id: 1
+      name: 'khalifa'
+    
+    o2 = 
+      email: 'knassik@gmail.com'
+    
+    _o1 = clone o1
+    _o2 = clone o2
 
-    expect( f ).to.throwException()
+    result = undefined
+    
+    it 'should be identity, i.e. extend_2( object ) should be strictly equal to object', ->
+      result = extend_2 o1
+      
+      expect( result ).to.be o1
+    
+    it 'should modify o1 in extend_2( o1, o2 )', ->
+      result = extend_2 o1, o2
+      
+      expect( o1 ).to.be.eql( { id: 1, name: 'khalifa', email: 'knassik@gmail.com' } )
+
+    it 'should return o1', ->
+      expect( result ).to.be o1
+    
+    it 'should not modify o2', ->
+      expect( o2 ).to.be.eql _o2
+    
+    it 'should return object in extend_2( object, null )', ->
+      expect( extend_2( o2, null ) ).to.be o2
+
+    it 'should return object in extend_2( object, undefined )', ->
+      expect( extend_2( o2, undefined ) ).to.be o2
+
+    it 'should return null in extend_2( null )', ->
+      expect( extend_2( null ) ).to.be null
+
+    it 'should return undefined in extend_2( undefined )', ->
+      expect( extend_2( undefined ) ).to.be undefined
+
+    it 'should return null in extend_2( null, null )', ->
+      expect( extend_2( null, null ) ).to.be null
+
+    it 'should return undefined in extend_2( undefined, undefined )', ->
+      expect( extend_2( undefined, undefined ) ).to.be undefined
+
+    it 'should return null in extend_2( null, undefined )', ->
+      expect( extend_2( null, undefined ) ).to.be null
+
+    it 'should return undefined in extend_2( undefined, null )', ->
+      expect( extend_2( undefined, null ) ).to.be undefined
+
+    it 'should throw in extend_2( null, o2 )', ->
+      f = -> extend_2 null, o2
+
+      expect( f ).to.throwException()
+
+    it 'should throw in extend_2( undefined, o2 )', ->
+      f = -> extend_2 undefined, o2
+
+      expect( f ).to.throwException()
