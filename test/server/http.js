@@ -289,7 +289,7 @@ var sessions = rs
   {
     no_clone: true,
     
-    _query_transform: function user_sessions_query_transform( term ) {
+    query_transform: function user_sessions_query_transform( term ) {
       if ( term.flow == 'user_sessions' ) return { id: term.id };
     } // user_sessions_query_transform()
   } )
