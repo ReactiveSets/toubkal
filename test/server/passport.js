@@ -174,7 +174,6 @@ rs
   .union( [ login_menu ] )
   
   .express_route()
-  // .passport_routes( application, { base_route: passport_route } )
 ;
 
 module.exports = function( http_servers ) {

@@ -275,24 +275,7 @@ var source_1 = rs
 
 var sessions = rs
   .session_store()
-  
-  // ToDo: make a passport pipelet for the following:
-  .alter( function( session ) {
-    // ToDo: use undocumented passport internals to get logged-in user id
-    var passport = session.content.passport
-      , user_id = passport && passport.user
-    ;
-    
-    return user_id && { flow: 'user_sessions', id: session.id, user_id: user_id }
-  },
-  
-  {
-    no_clone: true,
-    
-    query_transform: function user_sessions_query_transform( term ) {
-      if ( term.flow == 'user_sessions' ) return { id: term.id };
-    } // user_sessions_query_transform()
-  } )
+  .passport_user_sessions()
 ;
 
 rs.union( [ source_set, source_1, sessions, rs.database() ] )
