@@ -28,7 +28,7 @@
     "socket.io-client" : "0.9.16",
     "uglify-js"        : "2.5.0",
     "mime"             : "1.2.11",
-    "aws-sdk"          : "2.2.13",
+    "aws-sdk"          : "2.2.15",
     "nodemailer"       : "1.8.0",
     "easyimage"        : "0.1.6",
     "passport"         : "0.2.2",
