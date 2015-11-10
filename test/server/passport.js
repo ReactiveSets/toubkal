@@ -22,7 +22,7 @@ var rs                 = require( 'toubkal'         )
   , passport_route     = '/passport'
 ;
 
-session_options.store = new rs.RS.Session_Store( rs.session_store() );
+session_options.store = new rs.RS.Express_Session_Store( rs.session_store() );
 
 application
   .use( session( session_options ) )
