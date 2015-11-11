@@ -129,7 +129,7 @@ var login_menu = rs
   .content_order( 'order' )
   
   // Render html in content attribute from strategies
-  .content_alter( function( strategies ) {
+  .content_transform( function( strategies ) {
     return '' +
       '<html>\n' +
       '  <head>\n' +
