@@ -110,11 +110,8 @@ complete documentation extracted from the code where it currently stands, and re
 stable API.
 
 ### Our Team
-Toubkal is developped by a small team of experienced and passionate back-end and
-front-end developpers.
-
-We are well founded, not looking for additional founding, with enough resources to
-complete this project.
+Toubkal is developped by a dedicated small team of experienced and passionate back-end
+and front-end developpers. We have enough resources to complete this project.
 
 If you are an experienced javascript programmer, understand the power of reactive
 programming and would like to join our team, contact us.
@@ -219,63 +216,6 @@ A pipelet is a **factory function** which instances:
 A Toubkal program is a JavaScript program where one can mix imperative-style programming
 with Toubkal declarative-style programming.
 
-The following provides an example of a non-trivial, high-performance, data server with
-reactive updates on everything including authorization changes, in 60 lines of code,
-comments included:
-```javascript
-var rs = require( 'toubkal' ); // Loads Toubkal core and server pipelets, returns rs head pipelet
-
-var database = rs.file_json_store( 'data_store.json' ); // * Input/Output dataflows to/from datastore, one-line, no external database required
-
-var users = database.flow( 'users' ); // Dataflow of users' credentials:
-
-var clients = rs
-  // Define a set of web servers
-  .set( [ 
-    { ip_address: '0.0.0.0', port: 80 },                         // http://example.com/
-    { ip_address: '0.0.0.0', port:443, key: '***', cert: '***' } // https://example.com/
-  ] )
-  
-  .http_servers()              // Start http and https servers
-  .socket_io_clients()         // Dataflow of socket.io client connections
-  .authenticate_users( users ) // * Dataflow of authenticated users' connections providing user_id
-;
-
-var authorizations = database.flow( 'authorizations' ); // Dataflow of all users' authorizations
-
-database
-  .dispatch( clients, client )  // Serve 64k simultaneous user connexions over one core
-  ._add_destination( database ) // Directs output of the dispatcher to the database pipelet
-;
-
-// Individual client composition
-function client( source ) { // source refers to the output of the database here
-  var user_id = this.user_id; // id of authenticated user
-  
-  var get_query = authorizations
-    .filter( [ { user_id: user_id, get: true } ] )    // Get authorizations for this user
-    .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
-  ;
-  
-  var set_query = authorizations               
-    .filter( [ { user_id: user_id, set: true } ] )    // Set authorizations for this user
-    .remove_attributes( [ 'user_id', 'get', 'set' ] ) // Strip unwanted query attributes
-  ;
-  
-  var socket = this.socket;     // Socket to exchange data with web browser
-  
-  source                        // Dataflows from the database through dispatch()
-    .filter( get_query )        // delivers only what this user is authorized to get
-    ._add_destination( socket ) // Send data to web browser
-  ;
-  
-  return socket          // Receive data from web browser
-  
-    .filter( set_query ) // only collects from client unauthorized writes
-  ;
-}
-```
-
 Toubkal's **Subscribe / Push** reactive model allows to solve the **how** so that you
 don't have to deal with it.
 
@@ -366,7 +306,7 @@ communications consistency, Stateful pipelets may receive data events in any ord
 are responsible for maintaining an application-consistent state.
 
 Stateful pipelets are implemented thanks to the stateful set() pipelet that is typically
-used as a base pipelet for all stateful pipelets.
+used as a base pipelet for stateful pipelets.
 
 Also, much like the TCP protocol, stateful pipelets are found at the edges of a
 Toubkal network of stateless pipelets.
@@ -413,25 +353,22 @@ proactive debugging of errors while in production, and effective service quality
 monitoring.
 
 Transactions allow to group related operations over time and allow synhronization
-of concurrent dataflows. This synchronization becomes implicit at the architect
-level removing the possibility of race condition errors that have been traditionaly
-very hard to debug.
+of concurrent dataflows.
 
 Developping stateless pipelets is straightforward, requiring to write a simple and
-simple transform function very much akin pure function programming. Stateless Pipelets
+simple transform function very much akin pure functional programming. Stateless Pipelets
 API takes care of everything else, managing add, remove, fetch functions as well as
 transactions.
 
-Developping stateful pipelets remains complex and we are working to improve Toubkal's
-low-level Stateful API to improve productivity. Managing state requires to implement
-both add and remove functions, a fetch function to return initial state, and properly
-handle transactions and out-of-order operations.
+Developping stateful pipelets requires to implement add and remove functions, a fetch
+function to return initial state, and properly handle transactions and out-of-order
+operations.
 
 ### Service Architecture
 
 With Toubkal, services are typically composed of three different services:
 
-- A stateful network of persistent database pipelets
+- A stateful network of persistent database and external services pipelets
 - A stateless network of event dispatchers, acting as a marshalled multicasting network
 for dataflows
 - A stateful network of client widgets delivering applications to end-users
@@ -531,15 +468,14 @@ and other sources for other pipelets.
 We plan on extracting and completing this documentation to provide the following
 manuals:
 
-- A Tutorial
 - Toubkal Application Architect Manual
 - Toubkal Pipelet Developper's Guide
 - A Reference Manual for all available pipelets by module
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1486 continuous integration tests for the Toubkal core pipelets that run
-after every commit on Travis CI under node version 0.10. We no longer test version
+We have curently developped 1486 continuous integration tests for the Toubkal core and framework
+pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
 
@@ -550,15 +486,6 @@ pass the top priority is to fix the test before anything else.
 We also do manual testing on the following web browsers: Chrome (latest), Firefox
 (latest), IE 9, 10, and 11.
 
-We publish to npm regularily, typically when we want to update the demonstration site or
-each time we increment the minor version. If you need more updates just let us know.
-
-### Contributions
-
-Contributions are welcome but difficult at this time because Toubkal is still in alpha,
-APIs may still change, and low-level documentation is incomplete requiring a lot of
-support on our part. We however welcome contributors disiring to join our team.
-
 ## Installation
 
 From npm, latest release:
@@ -566,18 +493,13 @@ From npm, latest release:
 # npm install toubkal
 ```
 
-Some image manipulation pipelets require ImageMagick that [you can download here](http://www.imagemagick.org/script/binary-releases.php.).
-
 ## Running tests
 ```bash
 # npm install -g coffee-script
 # npm install -g mocha
-# npm install expect.js
-# npm install mocha-unfunk-reporter
-#
 # git clone https://github.com/ReactiveSets/toubkal.git
-#
 # cd toubkal
+# npm install
 # ./run_tests.sh
 Full test results are in test.out
 -> passed 1486 of 1486 tests
@@ -585,153 +507,19 @@ Full test results are in test.out
 # less -R test.out # for tests detailed traces
 ```
 
-## Example of complete client and server application
-
-Application retrieving sales and employees from a server, aggregates these by year and displays the results
-incrementally in an html table.
-
-This example also shows how to produce in realtime minified `all.css` and `all-min.js`. All assets content
-is prefetched in this example for maximum performance. The less css compiler is also used to compile in real
-time .less files. The same could be done to compile coffee script or use any other code compiler.
-
-#### index.html
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Toubkal - Aggregate Sales by Year and Employee</title>
-    
-    <link rel="stylesheet" href="all.css" />
-    
-    <script src="all-min.js"></script>
-    
-    <script src="/socket.io/socket.io.js"></script>
-  </head>
-  
-  <body>
-    <div id="sales_table"></div>
-    
-    <script>client()</script>
-  </body>
-</html>
-```
-
-#### client.js
-
-```javascript
-"use strict";
-
-function client() {
-  var RS      = rs.RS                // RS references ReactiveSets' Classes and methods
-    , extend  = RS.extend            // used to merge employees and sales
-    , sales   = [ { id: 'sales' } ]  // Aggregate sales measures
-    , by_year = [ { id: 'year'  } ]  // Aggregate dimensions
-    
-    // Table columns order by year and employee name
-    , by_year_employee = [ { id: 'year' }, { id: 'employee_name' } ]
-    
-    // Define table displayed columns
-    , columns = [
-      { id: 'year'         , label: 'Year'          }, // First column
-      { id: 'employee_name', label: 'Employee Name' },
-      { id: 'sales'        , label: 'Sales $'       }
-    ]
-  ;
-  
-  var server = rs.socket_io_server(); // exchange dataflows with server using socket.io
-  
-  // Get employees from server
-  var employees = server.flow( 'employees' ); // filter values which "flow" attribute equals 'employee'
-  
-  // Produce report after joining sales and employees
-  server
-    .flow( 'sales' )
-    .join( employees, merge, { left: true } ) // this is a left join
-    .aggregate( sales, by_year )
-    .order( by_year_employee )
-    .table( 'sales_table', columns )
-  ;
-  
-  // Merge function for sales and employees
-  // Returns sales with employee names coming from employee flow
-  function merge( sale, employee ) {
-    // Employee can be undefined because this is a left join
-    if ( employee ) return extend( { employee_name: employee.name }, sale );
-    
-    return sale;
-  }
-} // client()
-```
-
-#### server.js
-
-```javascript
-var rs = require( 'toubkal' );
-
-var servers = rs
-  .set( [ // Define http servers
-    { port:80, ip_address: '0.0.0.0' } // this application has only one server
-    { port:443, ip_address: '0.0.0.0', key: 'key string', cert: 'cert string' }
-    // See also "Setting up free SSL on your Node server" http://n8.io/setting-up-free-ssl-on-your-node-server/
-  ] )
-  .http_servers() // start http servers
-;
-
-// Get a dataflow for a minified lib/toubkal-min.js with source map and source files
-var client_assets = require( 'toubkal/lib/server/client_assets' )
-  , toubkal_min = client_assets.toubkal_min()
-;
-
-// Listen on server when toubkal-min.js is ready (when minification is complete)
-servers.http_listen( toubkal_min );
-
-// Other static assets
-rs.set( [
-    { path: 'html' },
-    { path: 'css'  }
-  ] )
-  
-  .watch_directories()     // Retrrieves files list with realtime updates (watching html and css directories)
-  
-  .union( rs.set( [
-    { path: 'client.js' }
-  ] )
-  
-  .watch()                 // Retrieves file content with realtime updates
-  
-  .union( [ toubkal_min ] ) // Add minified assets
-  
-  .serve( servers )        // Deliver up-to-date compiled and mimified assets to clients
-;
-
-// Start socket servers on all http servers using socket.io
-var clients = servers.socket_io_clients(); // Provide a dataflow of socket.io client connections
-
-rs.union( [
-    rs.configuration( { filepath: 'sales.json'    , flow: 'sales'     } ), // The dataflow store of all sales
-    rs.configuration( { filepath: 'employees.json', flow: 'employees' } )  // The dataflow store of all employees
-  ] )
-  
-  // Serve realtime content to all socket.io clients
-  .dispatch( clients, function( source, options ) {
-    var socket = this.socket;
-    
-    // Insert socket dataflow to exchage data with this client
-    source._add_destination( socket );
-    
-    return socket;
-  } )
-;
-```
-
-#### Start server
-
+## Running core tests in a browser:
 ```bash
-node server.js > server.out
+# node test/server/http.js
 ```
+
+Then browse http://localhost:8080/test/manual/
+
+## Running browser examples:
+```bash
+# node examples/server.js
+```
+
+Then browse http://localhost:8080/
 
 ## Roadmap / Releases
 
@@ -879,31 +667,28 @@ ETA: December 31th 2015
     }
 ```
 
-### Version 0.3.0 - Authentication && Authorizations, Persistance
+### Version 0.3.0 - Authentication && Authorizations, Persistance - November 12th 2015
 
-This version is the first version allowing to build complex streaming applications.
+Allows to build complex streaming applications with Social Authentication and MySQL persistance.
 
 Pipelet API has been significantly refactored and getting close to version 1.0 API.
 
-ETA: November 8th 2015.
-
-#### Remaining Goals:
-
-- Dynamic Authorizations Query Dataflow from user id
-- Multi-provider Sign-in Widget
-
-##### Work in progress:
-
-- Authentication with Passport
-  - Provider credentials from configuration
-  - User Identities Management
-  - Dynamic Routes Management
-  - Integration with express
-  - Integration with socket_io_xxx pipelets
-
-##### Already developped:
-
 - 1486 continuous integration tests
+
+- Reactive Authentication with Passport:
+  - passport_profiles(): authenticated user profiles dataflow
+  - Provider credentials from configuration file
+  - Strategies initialization
+  - Strategies routes from initialized strategies
+  - Integration with socket_io_clients()
+  - Express session support:
+    - Providing a session_store() dataflow
+    - Providing a Express_Session_Store(), an Express session store
+    - Getting users form session_store() with passport_user_sessions()
+    - In serve() to allow to set session when serving static assets
+    - In socket_io_clients() to retrieve session id
+  - Multi-provider Sign-in Widget example from initialized strategies
+  - Reactive Authorizations example from session id and session_store()
 
 - Web Storage API:
   - local_storage( flow ) pipelet
@@ -1003,29 +788,39 @@ ETA: November 8th 2015.
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-Pipelet                   | Short Description
---------------------------|------------------------------------------------
-values_to_attribute()     | Embed input values under a content attribute of a single output value.
-beat()                    | Emit events at time intervals
-once()                    | Emit an event on timeout
-local_storage()           | Implements Web Storage API
-next()                    | A pipelet to maintain auto-incremented attributes on trigger
-mysql()                   | In toubkal_mysql repository, provides read/write dataflows to/from MySQL tables
-operations_optimizer()    | On complete, remove unnecessary adds, removes, updates
-html_serialize()          | Serialize DOM tree generated by html_parse()
-html_parse()              | Parse html content to htmlparser2 DOM tree
-react_table()             | Reactive table rows and columns implemented using react()
-react()                   | Transform a full set to a DOM widget using a Facebook React render function
-http_listen()             | Listen to http servers, allows to get the 'listening' event (used by socket.io 0.9 for its garbage collector)
-virtual_http_servers()    | Allows to run many frameworks and socket.io servers virtual hosts
-serve_http_servers()      | Bind http event handlers to HTTP_Router()
-passport()                | Passport authentication
-passport_strategies()     | Manage Passport strategies
-greedy()                  | A non-lazy stateless pipelet
-make_base_directories()   | Create base directories for a dataset of file paths
+Pipelet                             | Short Description
+------------------------------------|--------------------------------------------------------------------------------------
+passport_profiles()                 | Manages Passport authenticated user profiles
+passport_strategies_configuration() | Watch configuration file for passport strategies
+passport_strategies()               | Initialize Passport strategies
+passport_strategies_routes()        | Updates strategies routes from initialized strategies
+express_route()                     | Reactive express routes middleware
+session_store()                     | A session store implemented as a bidirectional dataflow
+passport_user_sessions()            | Get Passport authenticated users from session_store() and session id
+content_order()                     | Orders the array of values contained in a content attribute
+content_sort()                      | Sorts the array of values contained in a content attribute
+content_transform()                 | Modifies content attribute using a transform()
+content_route()                     | Add a route and express middleware handler for a content
+values_to_attribute()               | Embed input values under a content attribute of a single output value.
+beat()                              | Emit events at time intervals
+once()                              | Emit an event on timeout
+local_storage()                     | Implements Web Storage API
+next()                              | A pipelet to maintain auto-incremented attributes on trigger
+mysql()                             | In toubkal_mysql repository, provides read/write dataflows to/from MySQL tables
+operations_optimizer()              | On complete, remove unnecessary adds, removes, updates
+html_serialize()                    | Serialize DOM tree generated by html_parse()
+html_parse()                        | Parse html content to htmlparser2 DOM tree
+react_table()                       | Reactive table rows and columns implemented using react()
+react()                             | Transform a full set to a DOM widget using a Facebook React render function
+http_listen()                       | Listen to http servers, allows to get the 'listening' event (used by socket.io 0.9 for its garbage collector)
+virtual_http_servers()              | Allows to run many frameworks and socket.io servers virtual hosts
+serve_http_servers()                | Bind http event handlers to HTTP_Router()
+greedy()                            | A non-lazy stateless pipelet
+make_base_directories()             | Create base directories for a dataset of file paths
 
 Other Classes && methods  | Short Description
---------------------------|------------------------------------------------
+--------------------------|---------------------------------------------------------------------------------------------------------
+Express_Session_Store()   | An Express session store using a bidirectional dataflow as the underlying store
 value_equals()            | Allows comparison of any types of values, including deeply nested objects and arrays
 undefine()                | Universal module loader for node and the browser, exported as own npm module
 Lap_Timer                 | Helps calculate time difference between events, used by loggers
