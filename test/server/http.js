@@ -216,9 +216,9 @@ function client( source, options ) {
   var user_profile_query = source
     .filter( [ { flow: 'user_sessions', id: sid } ] )
     
-    .alter( function( user_session ) {
+    .map( function( user_session ) {
       return { flow: 'user_profile', id: user_session.user_id }
-    }, { no_clone: true } )
+    } )
     
     .trace( 'user profile query' )
   ;

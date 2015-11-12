@@ -628,7 +628,7 @@ ETA: December 31th 2015
   
   - For execution by upstream servers to reduce bandwidth, cpu usage and latency
   
-  - JSON-friendly Objects and Arrays for any JSON transport such as socket.io or websocket
+  - JSON Objects and Arrays for any JSON transport
   
   - Side-effect free
   
@@ -653,7 +653,7 @@ ETA: December 31th 2015
     - Search in Array    : ```in```
     - Array / String     : ```length```
     - Date               : ```Date value year month day hours minutes seconds milliseconds time```
-    - Custom operators   : defined using JavaScript functions but used as JSON-friendly Strings and Arrays to prevent code-injection
+    - Custom operators   : defined using JavaScript functions but used as JSON Strings and Arrays to prevent code-injection
   
   - Example: Expression to get active users whom last logged-in before 2013:
 
@@ -669,6 +669,7 @@ ETA: December 31th 2015
 
 Pipelet                             | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+map()                               | Maps input values to function returning a single value or falsy
 flat_map()                          | Maps input values to function returning an Array of output values
 
 ### Version 0.3.0 - Authentication && Authorizations, Persistance - November 12th 2015

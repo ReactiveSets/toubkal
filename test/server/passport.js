@@ -91,7 +91,7 @@ rs
   
   .passport_profiles()
   
-  .alter( function( user ) {
+  .map( function( user ) {
     // New user profile from provider profile
     var _ = user.profile;
     
@@ -106,7 +106,7 @@ rs
     };
     
     return profile;
-  }, { no_clone: true } )
+  } )
   
   .trace( 'new user profiles' )
   

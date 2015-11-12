@@ -73,7 +73,7 @@ module.exports = function( servers ) {
   var tables = entries
     .filter( [ { extension: 'json' } ] )
     
-    .alter( function( table ) {
+    .map( function( table ) {
       var path = table.path
         , flow = path.split( '.' )
       ;
@@ -83,7 +83,7 @@ module.exports = function( servers ) {
       flow = flow.join( '.' ); // e.g. datasets/sales
       
       return { flow: '/table', 'name': flow, 'path': path };
-    }, { no_clone: true } )
+    } )
     
     .operations_optimizer()
     
