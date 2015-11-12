@@ -667,6 +667,10 @@ ETA: December 31th 2015
     }
 ```
 
+Pipelet                             | Short Description
+------------------------------------|--------------------------------------------------------------------------------------
+flat_map()                          | Maps input values to function returning an Array of output values
+
 ### Version 0.3.0 - Authentication && Authorizations, Persistance - November 12th 2015
 
 Allows to build complex streaming applications with Social Authentication and MySQL persistance.
