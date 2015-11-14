@@ -29,7 +29,7 @@
 */
 var servers = require( 'toubkal/lib/server/http.js' )
   .set( [
-    { id: 1, ip_address: '0.0.0.0', port: 8080 },
+    { id: 1, ip_address: '0.0.0.0', port: 8081 },
   ] )
   .http_servers()
 ;
