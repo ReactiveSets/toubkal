@@ -22,7 +22,7 @@
   },
   
   "dependencies": {
-    "undefine"         : "0.2.6",
+    "undefine"         : "0.2.7",
     "node-uuid"        : "1.4.7",
     "socket.io"        : "0.9.16",
     "socket.io-client" : "0.9.16",
