@@ -117,7 +117,7 @@ var login_menu = rs
   .passport_strategies()
   
   // Don't do anything if this is just a credentials change
-  .operations_optimizer()
+  .optimize()
   
   // Set order attribute to name if not present
   .alter( function( strategy ) { strategy.order = strategy.order || strategy.name } )
