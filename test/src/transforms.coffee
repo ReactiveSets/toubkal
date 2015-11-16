@@ -282,3 +282,14 @@ describe 'transforms', ->
           ] }
         ]
     
+    it 'should allow to remove last three cities (on a set)', ->
+      source._remove [
+        { city: 'Paris'     }
+        { city: 'Bastia'    }
+        { city: 'Lyon'      }
+      ]
+      
+      value._fetch_all ( values ) ->
+        expect( values ).to.be.eql []
+
+    

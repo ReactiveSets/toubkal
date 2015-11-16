@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1486 automated tests*
+*1487 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -474,7 +474,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1486 continuous integration tests for the Toubkal core and framework
+We have curently developped 1487 continuous integration tests for the Toubkal core and framework
 pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -502,7 +502,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1486 of 1486 tests
+-> passed 1487 of 1487 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -598,6 +598,8 @@ This version introduces the capability to keep historical values of objects pers
 
 ETA: December 31th 2015
 
+- 1487 continuous integration tests
+
 #### Main Goals:
 
 - Develop additional tests, goal is at least 2000 continuous integration tests
@@ -667,8 +669,9 @@ ETA: December 31th 2015
     }
 ```
 
-Pipelet                             | Short Description
+New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+group()                             | Group input values by function into content attribute
 map()                               | Maps input values to function returning a single value or falsy
 flat_map()                          | Maps input values to function returning an Array of output values
 
@@ -793,7 +796,7 @@ Pipelet API has been significantly refactored and getting close to version 1.0 A
     - forward(): returns an options Objects with options that must be forwarded
     - has_more(): returns truly if there is an incomplete transaction
 
-Pipelet                             | Short Description
+New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
 passport_profiles()                 | Manages Passport authenticated user profiles
 passport_strategies_configuration() | Watch configuration file for passport strategies
@@ -865,7 +868,7 @@ Output_Transaction        | Manage an output transaction
 - Virtual Hosts w/ optimized routing
 - Touch Events on bootstrap pipelets
 
-Pipelet                   | Short Description
+New Pipelets              | Short Description
 --------------------------|------------------------------------------------
 watch_directories()       | Updated when entries in directories are updated
 url_events()              | Browser url changes
