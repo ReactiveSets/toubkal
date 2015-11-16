@@ -53,9 +53,11 @@
   /* -------------------------------------------------------------------------------------------
      de&&ug()
      
-     Set de to false to remove all log code, minifiers will typically elliminate dead code
+     Set "de" to true to add log code.
+     
+     When "de" is false minifiers should elliminate all debugging code.
   */
-  var de = true, ug = RS.log.bind( null, 'square' );
+  var de = false, ug = RS.log.bind( null, 'square' );
   
   /* -------------------------------------------------------------------------------------------
      square()
