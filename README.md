@@ -671,6 +671,9 @@ ETA: December 31th 2015
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+adds()                              | Selects "add" operations only, operations that create objects
+removes()                           | Selects "remove" operations only, operations that remove objects
+updates()                           | Selects "update" operations only, operations that modify existing objects
 group()                             | Group input values by function into content attribute
 map()                               | Maps input values to function returning a single value or falsy
 flat_map()                          | Maps input values to function returning an Array of output values
