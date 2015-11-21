@@ -671,6 +671,8 @@ ETA: December 31th 2015
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+not_exists()                        | Existence validation for dataflow adds (no-exists), removes and updates (exists)
+fetch_flow_key()                    | Fetch dataflow key from flows metadata
 adds()                              | Selects "add" operations only, operations that create objects
 removes()                           | Selects "remove" operations only, operations that remove objects
 updates()                           | Selects "update" operations only, operations that modify existing objects
