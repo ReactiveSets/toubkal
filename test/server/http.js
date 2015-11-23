@@ -33,7 +33,7 @@ var client_assets = require( 'toubkal/lib/server/client_assets.js' );
    de&&ug()
 */
 var de = true, ug = log.bind( null, 'test server,' );
- 
+
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
@@ -206,7 +206,6 @@ function client( source, options ) {
     , handshake = socket.socket.handshake
     , user_id   = handshake.user_id
     , sid       = handshake.sessionID
-    , output
   ;
   
   de&&ug( 'client()', { user_id: user_id, sid: sid } );
@@ -235,16 +234,10 @@ function client( source, options ) {
     user_profile_query
   ] );
   
-  source
+  return source
     .filter( can_read )
-    ._add_destination( input )
+    .through( input )
   ;
-  
-  output = input
-    .trace( 'from socket.io clients' )
-  ;
-  
-  return output;
 } // client()
 
 var client_filter = rs
@@ -284,7 +277,7 @@ rs.union( [ source_set, source_1, sessions, rs.database() ] )
   
   .dispatch( clients, client, { no_encapsulate: true } )
   
-  .trace( 'from dispatch' )
+  .trace( 'from socket.io clients' )
   
   .filter( client_filter )
   

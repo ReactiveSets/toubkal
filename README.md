@@ -671,6 +671,7 @@ ETA: December 31th 2015
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+through()                           | Getting dataflow through another pipelet (implemented a Pipelet method)
 not_exists()                        | Existence validation for dataflow adds (no-exists), removes and updates (exists)
 fetch_flow_key()                    | Fetch dataflow key from flows metadata
 adds()                              | Selects "add" operations only, operations that create objects
