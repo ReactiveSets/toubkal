@@ -33,7 +33,7 @@
     "easyimage"        : "2.1.0",
     "passport"         : "0.2.2",
     "compressible"     : "2.0.6",
-    "htmlparser2"      : "3.8.2"
+    "htmlparser2"      : "3.8.3"
   },
   
   "devDependencies": {
