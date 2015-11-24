@@ -1,7 +1,7 @@
 {
   "name": "toubkal",
   
-  "version": "0.3.2",
+  "version": "0.3.3-wip",
   
   "description": "High-Productivity Reactive Web Application Framework",
   
@@ -32,7 +32,7 @@
     "nodemailer"       : "1.10.0",
     "easyimage"        : "2.1.0",
     "express-session"  : "1.12.1",
-    "passport"         : "0.2.2",
+    "passport"         : "0.3.2",
     "compressible"     : "2.0.6",
     "htmlparser2"      : "3.8.3"
   },
