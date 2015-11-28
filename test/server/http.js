@@ -201,14 +201,13 @@ var clients = http_servers.socket_io_clients( { remove_timeout: 10, session_opti
 function client( source, options ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
-  var socket    = this.socket
-    , input     = socket
-    , handshake = socket.socket.handshake
-    , user_id   = handshake.user_id
-    , sid       = handshake.sessionID
+  var input  = this.socket
+    , socket = input.socket
+    , sid    = socket.sid // socket.io v1.3.x
+            || socket.handshake.sid // v0.9.16
   ;
   
-  de&&ug( 'client()', { user_id: user_id, sid: sid } );
+  de&&ug( 'client() sid:', sid );
   
   // Get reactive authenticated user from session id
   // Build user profile query with it
