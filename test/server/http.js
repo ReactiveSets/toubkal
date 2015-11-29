@@ -203,8 +203,7 @@ function client( source, options ) {
   
   var input  = this.socket
     , socket = input.socket
-    , sid    = socket.sid // socket.io v1.3.x
-            || socket.handshake.sid // v0.9.16
+    , sid    = socket.sid
   ;
   
   de&&ug( 'client() sid:', sid );
