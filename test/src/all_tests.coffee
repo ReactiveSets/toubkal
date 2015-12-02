@@ -51,7 +51,3 @@ require './html_serialize.js'
 try
   require.resolve 'zombie'
   require './ui.js'
-
-fs = require 'fs'
-
-require './passport.js' if fs.existsSync '~/config.rs.json'
