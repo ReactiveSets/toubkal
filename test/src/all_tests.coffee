@@ -48,6 +48,8 @@ require './file.js'
 require './html_parse.js'
 require './html_serialize.js'
 
+require './server.js'
+
 try
   require.resolve 'zombie'
   require './ui.js'
