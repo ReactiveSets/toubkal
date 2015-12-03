@@ -222,6 +222,40 @@ describe 'filter()', ->
         { flow: "user", id: 3 }
       ]
     
+    it 'should allow fetching by "users" with an additional query', ( done ) ->
+      fetched = ( users ) ->
+        check done, () ->
+          expect( users ).to.be.eql [
+            { flow: "user", id: 1 }
+            { flow: "user", id: 3 }
+          ]
+      
+      users
+        ._fetch_all fetched, [ { id: 1 }, { id: 3 }, { id: 5 } ]
+    
+    it 'should allow fetching with no downstream query by "users"', ( done ) ->
+      multiflow
+        .flow( "user" )
+        ._fetch_all ( users ) ->
+          check done, () ->
+            expect( users ).to.be.eql [
+              { flow: "user", id: 1 }
+              { flow: "user", id: 2 }
+              { flow: "user", id: 3 }
+            ]
+    
+    it 'should allow fetching with no downstream query by "users" with an additional query', ( done ) ->
+      fetched = ( users ) ->
+        check done, () ->
+          expect( users ).to.be.eql [
+            { flow: "user", id: 1 }
+            { flow: "user", id: 3 }
+          ]
+      
+      multiflow
+        .flow( "user" )
+        ._fetch_all fetched, [ { id: 1 }, { id: 3 }, { id: 5 } ]
+    
     it 'should filter a multiflow by "groups"', ( done ) ->
       check_set_content done, groups, [
         { flow: "group", id: 1 }
