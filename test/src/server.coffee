@@ -65,7 +65,7 @@ describe 'in-memory database with dispatch()', ->
           .trace( flow + ' in' )
           .set( [] )
           .trace( flow + ' out' )
-          .set_flow( flow )
+          .flow( flow )
     
     fetched = ( data ) ->
       check done, () ->
