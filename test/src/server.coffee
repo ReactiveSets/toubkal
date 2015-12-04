@@ -76,20 +76,16 @@ describe 'in-memory database with dispatch()', ->
   it 'should allow to add a user in database', ( done ) ->
     database._add [ { flow: 'users', id: 1, name: 'joe' } ]
     
-    fetched = ( data ) ->
+    database._fetch_all ( data ) ->
       check done, () ->
         expect( data ).to.be.eql [ { flow: 'users', id: 1, name: 'joe' } ]
-    
-    database._fetch_all fetched, [ { flow: 'users' }, { flow: 'profiles' } ]
   
   it 'should allow to remove user from database', ( done ) ->
     database._remove [ { flow: 'users', id: 1, name: 'joe' } ]
     
-    fetched = ( data ) ->
+    database._fetch_all ( data ) ->
       check done, () ->
         expect( data ).to.be.eql []
-    
-    database._fetch_all fetched, [ { flow: 'users' }, { flow: 'profiles' } ]
   
   it 'should allow to add two users, a user profile and ignore other data', ( done ) ->
     database._add [
@@ -99,39 +95,33 @@ describe 'in-memory database with dispatch()', ->
       { flow: 'other', id: 1 }
     ]
     
-    fetched = ( data ) ->
+    database._fetch_all ( data ) ->
       check done, () ->
         expect( data ).to.be.eql [
           { flow: 'users', id: 1, name: 'joe' }
           { flow: 'users', id: 1, name: 'jack' }
           { flow: 'profiles', id: 1, user_id: 1, age: 26 }
         ]
-    
-    database._fetch_all fetched, [ { flow: 'users' }, { flow: 'profiles' } ]
   
   it 'should allow to remove profiles schema', ( done ) ->
     schemas._remove [ { id: 'profiles' } ]
     
-    fetched = ( data ) ->
+    database._fetch_all ( data ) ->
       check done, () ->
         expect( data ).to.be.eql [
           { flow: 'users', id: 1, name: 'joe' }
           { flow: 'users', id: 1, name: 'jack' }
         ]
-    
-    database._fetch_all fetched, [ { flow: 'users' }, { flow: 'profiles' } ]
   
   it 'should allow to update users schema without altering underlying data', ( done ) ->
     schemas._update [ [ { id: 'users' }, { id: 'users', description: 'A collection of users' } ] ]
     
-    fetched = ( data ) ->
+    database._fetch_all ( data ) ->
       check done, () ->
         expect( data ).to.be.eql [
           { flow: 'users', id: 1, name: 'joe' }
           { flow: 'users', id: 1, name: 'jack' }
         ]
-    
-    database._fetch_all fetched, [ { flow: 'users' }, { flow: 'profiles' } ]
 
 describe 'socket_io_clients()', ->
   it 'should be a Pipelet', ->
