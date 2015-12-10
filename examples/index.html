@@ -10,42 +10,28 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic|Oswald&subset=latin,latin-ext"/>
     <link href="css/base.css"  type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
     
-    <!-- React version 0.14.0 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.min.js"     type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.min.js" type="text/javascript"></script>
-    
     <script src="/socket.io/socket.io.js"></script>
     
     <script src="/lib/toubkal-min.js"></script>
-    <script src="/node_modules/toubkal/lib/react/react.js"></script>
-    
-    <!-- jQuery version 1.11.3  -->
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js" type="text/javascript"></script>
-    
-    <!-- Bootstrap version 3.3.4 JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js" type="text/javascript"></script>
   </head>
   
   <body>
     <h3>Toubkal Examples</h3>
     
-    <div id="examples"></div>
+    <ul id="examples"></ul>
     
     <script>
       rs.socket_io_server()
         .flow( 'examples' )
         
-        .react( rs.RS.$( '#examples' ), function() {
-          return React.createElement( 'ul', null, this.state.values.map( create_item ) );
+        .to_dom( '#examples', function render( document, $li, example ) {
+          var $a = document.createElement( 'a' );
           
-          function create_item( example ) {
-            var path = example.path
-              , link = React.createElement( 'a', { 'href': path }, example.title )
-            ;
-            
-            return React.createElement( 'li', { key: path }, link );
-          }
-        }, { component_name: 'examples menu' } )
+          $a.href      = example.path;
+          $a.innerHTML = example.title;
+          
+          $li.appendChild( $a );
+        } )
       ;
       
       rs.socket_io_server()
