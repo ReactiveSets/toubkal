@@ -36,7 +36,7 @@ Pipelet = RS.Pipelet
 
 describe 'Pipelet', ->
   describe 'Add( name, pipelet_factory )', ->
-    factory = ->
+    factory = ( source, parameters ) ->
     
     it 'should allow a name of 5 characters long starting with two lower case letters', ->
       expect( -> Pipelet.Add 'ab_0c', factory ).to.not.throwException()
@@ -61,8 +61,16 @@ describe 'Pipelet', ->
     
     it 'should not allow a name with a capital letter', ->
       expect( -> Pipelet.Add 'abcdeF', factory ).to.throwException()
+    
+    it 'should not allow a factory function wih less than 2 parameters', ->
+      expect( -> Pipelet.Add 'ab_0c2', ( source ) -> ).to.throwException()
+  
+    it 'should not allow a factory function wih more than 2 parameters', ->
+      expect( -> Pipelet.Add 'ab_0c3', ( source, parameters, extra_parameter ) -> ).to.throwException()
   
   describe 'set_default_options()', ->
+    as_array            = ( a ) -> Array.prototype.slice.call a, 0
+    
     set_default_options = null
     source              = null
     source_path         = null
@@ -89,7 +97,7 @@ describe 'Pipelet', ->
       }
       
       ( ( p1, options ) ->
-          expect( set_default_options( f, source, arguments, defaults ) ).to.be.eql [
+          expect( set_default_options( f, source, as_array( arguments ), defaults ) ).to.be.eql [
             'p1'
             {
               key: [ 'id' ]
@@ -101,7 +109,7 @@ describe 'Pipelet', ->
     
     it 'should use source _key if provided', ->
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ), defaults ) ).to.be.eql [
             'p1'
             {
               key: [ 'path' ]
@@ -113,7 +121,7 @@ describe 'Pipelet', ->
     
     it 'should work if no defaults are provided', ->
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ) ) ).to.be.eql [
             'p1'
             {
               key: [ 'path' ]
@@ -126,7 +134,7 @@ describe 'Pipelet', ->
       f.default_options = null
       
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ) ) ).to.be.eql [
             'p1'
             {
               key: [ 'path' ]
@@ -138,7 +146,7 @@ describe 'Pipelet', ->
       f.default_options = ( p1, options ) -> { p1: 'test ' + p1 }
       
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ) ) ).to.be.eql [
             'p1'
             {
               key: [ 'path' ]
@@ -151,14 +159,14 @@ describe 'Pipelet', ->
       f.default_options = true
       
       ( ( p1, options ) ->
-          expect( () -> set_default_options( f, source_path, arguments ) ).to.throwException()
+          expect( () -> set_default_options( f, source_path, as_array( arguments ) ) ).to.throwException()
       )( 'p1' )
     
     it 'should extend options when provided by caller', ->
       f.default_options = ( p1, options ) -> { p1: 'test ' + p1 }
       
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ) ) ).to.be.eql [
             'p1'
             {
               key: [ 'path' ]
@@ -170,7 +178,7 @@ describe 'Pipelet', ->
     
     it 'caller options should supercede pipelet default options', ->
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ) ) ).to.be.eql [
             'p1'
             {
               key: [ 'path' ]
@@ -181,7 +189,7 @@ describe 'Pipelet', ->
     
     it 'caller options should supercede other default options', ->
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ), defaults ) ).to.be.eql [
             'p1'
             {
               key: [ 'path' ]
@@ -193,7 +201,7 @@ describe 'Pipelet', ->
     
     it 'caller key option should supercede default key', ->
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ), defaults ) ).to.be.eql [
             'p1'
             {
               key: [ 'node-id', 'id' ]
@@ -207,7 +215,7 @@ describe 'Pipelet', ->
       defaults.key = [ 'uuid' ]
       
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ), defaults ) ).to.be.eql [
             'p1'
             {
               key: [ 'uuid' ]
@@ -221,7 +229,7 @@ describe 'Pipelet', ->
       f.default_options = ( p1, options ) -> { p1: 'test ' + p1, key: [ p1 ] }
       
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ), defaults ) ).to.be.eql [
             'path'
             {
               key: [ 'path' ]
@@ -233,21 +241,21 @@ describe 'Pipelet', ->
     
     it 'should throw if options parameter is not an object', ->
       ( ( p1, options ) ->
-          parameters = arguments
+          parameters = as_array( arguments )
           
           expect( () -> set_default_options( f, source_path, parameters, defaults ) ).to.throwException()
       )( 'path', 'not an object' )
     
     it 'should throw if too many parameters are provided', ->
       ( ( p1, options ) ->
-          parameters = arguments
+          parameters = as_array( arguments )
           
           expect( () -> set_default_options( f, source_path, parameters, defaults ) ).to.throwException()
       )( 'path', {}, {} )
     
     it 'should accept null options', ->
       ( ( p1, options ) ->
-          expect( set_default_options( f, source_path, arguments, defaults ) ).to.be.eql [
+          expect( set_default_options( f, source_path, as_array( arguments ), defaults ) ).to.be.eql [
             'path'
             {
               key: [ 'path' ]
@@ -261,7 +269,7 @@ describe 'Pipelet', ->
       ( ( p1, options ) ->
           delete f.default_options;
           
-          parameters = set_default_options( f, source_path, arguments, defaults )
+          parameters = set_default_options( f, source_path, as_array( arguments ), defaults )
           
           expect( parameters ).to.be.an Array
           expect( parameters[ 0 ] ).to.be.eql undefined
