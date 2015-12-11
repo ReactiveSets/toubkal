@@ -7,6 +7,7 @@ module.exports = function( servers ) {
   
   var rs  = require( 'toubkal' )
     , RS  = rs.RS
+    , extend = RS.extend
     , log = RS.log
     , de  = true
     , ug  = log.bind( null, 'examples' )
@@ -34,26 +35,36 @@ module.exports = function( servers ) {
   /* ------------------------------------------------------------------------------------
      Watch all directories from here
   */
-  var directories = rs.set( [ { path: '' } ] ).union()
-    , entries     = directories
-        .watch_directories( { base_directory: __dirname } )
+  rs
+    .Singleton( 'directory_entries', function( source, options ) {
+      return source
+        .watch_directories( extend._2( { base_directory: __dirname } ) )
         
-        .filter( function ignore_temporary_files( entry ) {
-          return entry.extension.slice( -1 )  != '~'
-              && entry.base.substring( 0, 2 ) != '.#'
-          ;
-        } )
-  ;
-  
-  entries
+        .filter( ignore_temporary_files )
+      ;
+      
+      function ignore_temporary_files( entry ) {
+        return entry.extension.slice( -1 )  != '~'
+            && entry.base.substring( 0, 2 ) != '.#'
+        ;
+      }
+    } )
+    
+    .set( [ { path: '' } ] )
+    
+    .directory_entries()
+    
     .filter( [ { type: 'directory' } ] )
-    ._add_destination( directories ) // loopback to watch all subdirectories recursively
+    
+    .directory_entries()
   ;
   
   /* ------------------------------------------------------------------------------------
      Load and Serve Static Assets
   */
-  var files = entries
+  var files = rs
+    .directory_entries()
+    
     .filter( [
       { extension: 'html' },
       { extension: 'css'  },
@@ -70,7 +81,9 @@ module.exports = function( servers ) {
   /* ------------------------------------------------------------------------------------
      The database, made of all found json files
   */
-  var tables = entries
+  var tables = rs
+    .directory_entries()
+    
     .filter( [ { extension: 'json' } ] )
     
     .map( function( table ) {
@@ -105,7 +118,7 @@ module.exports = function( servers ) {
   var clients_output = clients_input
     .dispatch( servers.socket_io_clients(), function( source, options ) {
       
-      return this.socket._add_source( source );
+      return source.through( this.socket );
     }, { single: true } )
   ;
   
@@ -113,7 +126,9 @@ module.exports = function( servers ) {
   var clients = rs.encapsulate( clients_input, clients_output );
   
   // Require examples' data processors
-  var data_processors = entries
+  var data_processors = rs
+    .directory_entries()
+    
     .filter( [ { extension: 'js', depth: 2 } ] )
     
     .filter( function( file ) {
