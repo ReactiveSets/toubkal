@@ -34,9 +34,7 @@
     
     
     <script type="text/javascript" charset="utf-8">
-      var Compose = rs.RS.Pipelet.Compose
-        , organizer = rs.set( [ { id: 'label' } ], { name: 'by label' } )
-      ;
+      var organizer = rs.set( [ { id: 'label' } ], { name: 'by label' } );
             
       // Charts Checkbox
       rs.set( [
@@ -100,8 +98,12 @@
       ;
       
       // The following unobvious composition of two orders with a checkbox_group could be part of control.js
-      Compose( 'ordered_checkbox_group', function( source, order, element, options ) {
-        return source.order( order ).checkbox_group( element ).order( order );
+      rs.Compose( 'ordered_checkbox_group', function( source, order, element, options ) {
+        return source
+          .order( order )
+          .checkbox_group( element )
+          .order( order )
+        ;
       } );
       
       // Table Books with columns as Checkbox Group and Drop Down Organizer
