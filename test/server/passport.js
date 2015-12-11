@@ -8,8 +8,6 @@ var rs                 = require( 'toubkal'         )
   , session            = require( 'express-session' )
   , passport           = require( 'passport'        )
   
-  , Compose            = rs.RS.Pipelet.Compose
-  
     // ToDo: get session_options from configuration
   , session_options    = {
       key: 'rs_sid',
@@ -56,36 +54,34 @@ application
   } )
 ;
 
-// Define in-memory database singleton
-!function() {
-  var schemas = rs.set( [
-    { id: 'user_profile' },
-    { id: 'user_provider_profile', key: [ 'user_id', 'provider_id' ] },
-    { id: 'user_provider_email' }
-  ] );
-  
-  var database; // singleton
-  
-  Compose( 'database', function( source, options ) {
-    // ToDo: add singleton option to Compose()
-    database = database || rs.dispatch( schemas, function( source, options ) {
-      var flow = this.id;
-      
-      return source
-        .flow( flow, { key: this.key || [ 'id' ] } )
-        // .mysql( flow, this.columns )
-        .set( [] )
-        .flow( flow )
-      ;
-    } );
-    
-    return database._add_source( source );
-  } );
-}() // database()
-
-// Passport user profiles
 rs
-  .database()
+  // Define schemas
+  .Singleton( 'schemas', function( source, options ) {
+    return source.set( [
+      { id: 'user_profile' },
+      { id: 'user_provider_profile', key: [ 'user_id', 'provider_id' ] },
+      { id: 'user_provider_email' }
+    ] );
+  } ) // define schemas()
+  
+  // Define in-memory database
+  .Singleton( 'database', function( source, schemas, options ) {
+    return source
+      .dispatch( schemas, function( source, options ) {
+        var flow = this.id;
+        
+        return source
+          .flow( flow, { key: this.key || [ 'id' ] } )
+          // .mysql( flow, this.columns )
+          .set( [] )
+          .trace( flow )
+          .flow( flow )
+        ;
+      } )
+    ;
+  } ) // define database()
+  
+  .database( rs.schemas() )
   
   .flow( 'user_profile' )
   
@@ -109,6 +105,8 @@ rs
   } )
   
   .trace( 'new user profiles' )
+  
+  .flow( 'user_profile' ) // filters-out non-user_profile query updates
   
   .database()
 ;
@@ -139,18 +137,18 @@ var login_menu = rs
       '  <body>\n' +
       '    <ul>\n' +
       '      <li>Login using your account at</li>\n' +
-            
-            strategies
-              .map( function( strategy ) {
-                var name = strategy.display_name || strategy.name
-                  , path = '/passport/' + strategy.name
-                ;
-                
-                return '      <li><a href="' + path + '">' + name + '</a></li>\n'
-              } )
-              
-              .join( '' )
-            +
+             
+             strategies
+               .map( function( strategy ) {
+                 var name = strategy.display_name || strategy.name
+                   , path = '/passport/' + strategy.name
+                 ;
+                 
+                 return '      <li><a href="' + path + '">' + name + '</a></li>\n'
+               } )
+               
+               .join( '' )
+             +
       '    </ul>\n' +
       '  <body>\n' +
       '</html>\n'
@@ -163,14 +161,15 @@ var login_menu = rs
 rs
   .passport_strategies_configuration( base_url + passport_route )
   
-  .trace( 'configured strategies' )
+  //.trace( 'configured strategies' )
   
   .passport_strategies()
   
-  .trace( 'initialized strategies' )
+  //.trace( 'initialized strategies' )
   
   .passport_strategies_routes()
   
+  // ToDo: add a union to express route input
   .union( [ login_menu ] )
   
   .express_route()
