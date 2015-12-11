@@ -46,9 +46,7 @@
 ( 'square', [ 'toubkal', './square' ], function( rs, square ) {
   'use strict';
   
-  var RS      = rs.RS
-    , Compose = RS.Pipelet.Compose
-  ;
+  var RS = rs.RS;
   
   /* -------------------------------------------------------------------------------------------
      de&&ug()
@@ -73,7 +71,7 @@
      
      Check Compose() documentation for options.
   */
-  Compose( 'square', function( source, options ) {
+  rs.Compose( 'square', { single: true }, function( source, options ) {
   
     // alter emits a modfied dataflow from the source dataflow
     return source.alter( function( value ) {

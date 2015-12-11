@@ -69,12 +69,12 @@ describe 'aggregate()', ->
       .order( dimensions )
       .ordered()
   
-  Pipelet.Compose 'aggregate_from', aggregate_from
+  rs.Compose 'aggregate_from', aggregate_from
   
   tolkien_books = ( book, options ) ->
     return book.author is 'J. R. R. Tolkien'
   
-  tolkien_sales_by_year = books_sales.aggregate_from tolkien_books, sales, by_year 
+  tolkien_sales_by_year = books_sales.through rs.aggregate_from tolkien_books, sales, by_year 
   
   it 'should group and order books_sales_by_author by author', ( done ) ->
     books_sales_by_author._fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
