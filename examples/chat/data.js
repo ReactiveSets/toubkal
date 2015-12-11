@@ -31,14 +31,6 @@ module.exports = function( database, clients ) {
     
     .set()
     
-    /*
-    .alter( function( sale ) {
-      sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
-      
-      sale.flow = 'teaser/sales_year';
-    } )
-    */
-    
-    ._add_destination( clients )
+    .through( clients )
   ;
 };
