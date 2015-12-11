@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1499 automated tests*
+*1501 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 
@@ -474,7 +474,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1499 continuous integration tests for the Toubkal core and framework
+We have curently developped 1501 continuous integration tests for the Toubkal core and framework
 pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -502,7 +502,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1499 of 1499 tests
+-> passed 1501 of 1501 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -598,7 +598,7 @@ This version introduces the capability to keep historical values of objects pers
 
 ETA: December 31th 2015
 
-- 1499 continuous integration tests
+- 1501 continuous integration tests
 
 #### Main Goals:
 
@@ -671,6 +671,9 @@ ETA: December 31th 2015
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+Singleton()                         | Creates singleton pipelets out of composition
+Compose()                           | Add boolean options single and singleton
+to_dom()                            | Updates DOM from dataflow for a DOM node, using render function, creating container child
 through()                           | Getting dataflow through another pipelet (implemented a Pipelet method)
 not_exists()                        | Existence validation for dataflow adds (no-exists), removes and updates (exists)
 fetch_flow_key()                    | Fetch dataflow key from flows metadata
