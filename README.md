@@ -671,6 +671,7 @@ ETA: December 31th 2015
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+Multiton()                          | Creates multiton pipelets out of composition
 Singleton()                         | Creates singleton pipelets out of composition
 Compose()                           | Add boolean options single and singleton
 to_dom()                            | Updates DOM from dataflow for a DOM node, using render function, creating container child
