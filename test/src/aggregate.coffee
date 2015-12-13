@@ -69,7 +69,7 @@ describe 'aggregate()', ->
       .order( dimensions )
       .ordered()
   
-  rs.Compose 'aggregate_from', aggregate_from
+  rs.Compose 'aggregate_from', { union: true }, aggregate_from
   
   tolkien_books = ( book, options ) ->
     return book.author is 'J. R. R. Tolkien'

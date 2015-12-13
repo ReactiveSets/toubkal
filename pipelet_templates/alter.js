@@ -71,7 +71,7 @@
      
      Check Compose() documentation for options.
   */
-  rs.Compose( 'square', { single: true }, function( source, options ) {
+  rs.Compose( 'square', function( source, options ) {
   
     // alter emits a modfied dataflow from the source dataflow
     return source.alter( function( value ) {
