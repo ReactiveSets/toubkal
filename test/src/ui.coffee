@@ -22,6 +22,7 @@
 # require modules tests
 # ---------------------
 
-require( './url.js'      )
-require( './controls.js' )
-require( './form.js'     )
+# !!! WARNING: When modifying this list, also modify same list in test/bin/tests.sh
+require( './url_events.js' )
+require( './controls.js'   )
+require( './form.js'       )
