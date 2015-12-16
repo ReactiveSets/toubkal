@@ -21,7 +21,7 @@ else
   if [ "$1" = "ui" ]; then
     sh ./test/bin/pre_test.sh
     
-    sleep 5
+    sleep 3
   fi
   
   ./test/bin/tests.sh $1 2>&1 > test.out || echo " test failed"

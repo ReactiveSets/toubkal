@@ -30,6 +30,10 @@ else
   coffee --map --output test/lib --compile test/src/tests_utils.coffee
   coffee --map --output test/lib --compile test/src/$test.coffee
   
+  if [ $test = "ui" ]; then
+    coffee --map --output test/lib --compile test/src/url.coffee test/src/controls.coffee test/src/form.coffee
+  fi
+  
   test=test/lib/$test.js
 fi
 
