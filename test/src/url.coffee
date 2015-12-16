@@ -45,6 +45,7 @@ describe 'URL Test', ->
     url._fetch_all ( values ) -> check done, ->
       expect( values ).to.be.eql [ {
         id      : 1
+        _v      : 0
         url     : 'http://localhost:8080/test/automated/rs_url.html'
         slashes : true
         protocol: 'http:'
