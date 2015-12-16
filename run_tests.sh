@@ -18,7 +18,17 @@
 if [ "$1" = "" ]; then
   npm test 2>&1 > test.out || echo " test failed"
 else
+  if [ "$1" = "ui" ]; then
+    sh ./test/bin/pre_test.sh
+    
+    sleep 5
+  fi
+  
   ./test/bin/tests.sh $1 2>&1 > test.out || echo " test failed"
+  
+  if [ "$1" = "ui" ]; then
+    sh ./test/bin/post_test.sh
+  fi
 fi
 
 echo
