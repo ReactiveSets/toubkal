@@ -17,7 +17,7 @@
   out
     .flow( 'images' )
     .trace( 'images from next' )
-    ._add_destination( images )
+    .through( images )
   ;
   
   out
