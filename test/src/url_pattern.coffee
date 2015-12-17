@@ -35,12 +35,34 @@ unless rs.url_pattern?
 # Test HTML_Parse()
 # -----------------
 
-# source = rs.set( [ { content: '/api/users/10' } ] )
 source = rs.last()
 
 describe 'url_pattern():', ->
+  
+  describe 'url_pattern() invalid parameters:', ->
+    it 'should throw if attribute is not defined', ->
+      f = -> source.url_pattern( null, '/api/users/:id' )
+      
+      expect( f ).to.throwException()
+    
+    it 'should throw if pattern is not defined', ->
+      f = -> source.url_pattern( 'content' )
+      
+      expect( f ).to.throwException()
+    
+    it 'should throw if pattern is an Array, and the first element is not a RegExp', ->
+      f = -> source.url_pattern( 'content', [ '/api/users/:id' ] )
+      
+      expect( f ).to.throwException()
+    
   describe 'url_pattern( content, /api/users/:id ):', ->
     output = source.url_pattern( 'content', '/api/users/:id' )
+    
+    it '/api/products/5 should be empty', ( done ) ->
+      source._add [ { content: '/api/products/5' } ]
+      
+      output._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.empty
     
     it '/api/users/10 should extract { id: 10 }', ( done ) ->
       source._add [ { content: '/api/users/10' } ]
@@ -50,9 +72,20 @@ describe 'url_pattern():', ->
           { content: '/api/users/10', id: '10' }
         ]
     
-    it '/api/products/5 should be empty', ( done ) ->
-      source._add [ { content: '/api/products/5' } ]
+  describe 'url_pattern( content, [ /^\/api\/([^\/]+)(?:\/(\d+))?$/, resource, id ] ):', ->
+    output = source.url_pattern( 'content', [ /^\/api\/([^\/]+)(?:\/(\d+))?$/, 'resource', 'id' ] )
+    
+    it '/apiiii/users/10 should be empty', ( done ) ->
+      source._add [ { content: '/apiiii/users/10' } ]
       
       output._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.empty
+    
+    it '/api/users/10 should extract { resource: users, id: 10 }', ( done ) ->
+      source._add [ { content: '/api/users/10' } ]
+      
+      output._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { content: '/api/users/10', resource: 'users', id: '10' }
+        ]
     
