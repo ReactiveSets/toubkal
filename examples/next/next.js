@@ -1,23 +1,42 @@
 ( this.undefine || require( 'undefine' )( module, require ) )()
 ( 'next_test', [ [ 'rs', 'toubkal' ] ], function( rs ) {
-  var images = rs.set( [ { flow: 'images', id: '1', last: 0 } ] );
-  
-  var trigger = new rs.RS.Pipelet();
-  
   var tag = 'next';
   
-  var out = images
-    .trace( 'images' )
-    .next( trigger.set_flow( 'trigger' ), function( image, trigger ) {
+  rs
+    .Singleton( 'counters', function( source, options ) {
+      options.key = [ 'id' ];
+      
+      return source
+        .flow( 'counters', options )
+        .set( [ { id: '1', last: 25, description: 'starts at 25' } ] )
+        .set_flow( 'counters' )
+      ;
+    } )
+    
+    .counters()
+    .order( [ { id: 'id' } ] )
+    .table( rs.RS.$( '#next' ), [ { id: 'id' }, { id: 'description' }, { id: 'last' } ] )
+    
+    .Singleton( 'trigger', function( source, options ) {
+      return source
+        .set_flow( 'trigger' )
+      ;
+    } )
+  ;
+  
+  var out = rs
+    .counters()
+    .trace( 'counters' )
+    .next( rs.trigger(), function( image, trigger ) {
       trigger.id = ++image.last;
     }, { fork_tag: tag } )
     .trace( 'next' )
   ;
   
   out
-    .flow( 'images' )
-    .trace( 'images from next' )
-    .through( images )
+    .flow( 'counters' )
+    .trace( 'counters from next' )
+    .counters()
   ;
   
   out
@@ -27,7 +46,7 @@
   ;
   
   rs.union( [
-      out.flow( 'images' ),
+      out.flow( 'counters' ),
       out.flow( 'trigger' ).delay( 200 )
     ], { tag: tag } )
     
@@ -35,14 +54,8 @@
     .greedy()
   ;
   
-  var t = new rs.RS.Transactions.Transaction( null, 2 );
-  
-  trigger
-    ._add( [{}] )
-  //  ._add( [{}] )
-  //  ._add( [{},{}], t.next().get_emit_options() )
-  //  ._add( [], t.next().get_emit_options() )
+  rs
+    .beat( 1000 )
+    .trigger()
   ;
-  
-  t.end();
 } );
