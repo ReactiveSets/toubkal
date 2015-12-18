@@ -7,12 +7,10 @@
 *1508 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
-
 [![NPM version](https://badge.fury.io/js/toubkal.png)](http://badge.fury.io/js/toubkal)
+[![Dependency Status](https://gemnasium.com/ReactiveSets/toubkal.svg)](https://gemnasium.com/ReactiveSets/toubkal)
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Dependency Status](https://gemnasium.com/ReactiveSets/toubkal.svg)](https://gemnasium.com/ReactiveSets/toubkal)
 
 ## Teaser
 Displaying a reactive ```<table>``` which DOM container is ```#sales_table```, ordered by date,
