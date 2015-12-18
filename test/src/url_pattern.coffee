@@ -29,7 +29,7 @@ check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
 
 unless rs.url_pattern?
-  require '../../lib/client/url_pattern.js'
+  require '../../lib/server/url_pattern.js'
 
 # ----------------------------------------------------------------------------------------------
 # Test HTML_Parse()
