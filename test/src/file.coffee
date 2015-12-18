@@ -36,36 +36,6 @@ require '../../lib/server/file.js'
 # ------------------
 
 describe 'file', ->
-  describe 'require_resolve():', ->
-    modules = rs
-      .set( [
-        { id: 1, name: 'node-uuid/uuid.js' }
-      ], { key: [ 'id', 'name' ] } )
-    
-    resolve = modules
-      .require_resolve()
-    
-    resolved = resolve
-      .trace( 'uuid.js' )
-    
-    it 'should resolve node-uuid/uuid.js', ( done ) ->
-      resolved._fetch_all ( values ) -> check done, () ->
-        expect( values.length ).to.be.eql 1
-        
-        uuid = values[ 0 ]
-        name = uuid.name
-        path = uuid.path.replace( /\\/g, '/' )
-        
-        expect( name ).to.be.eql 'node-uuid/uuid.js'
-        expect( path.substr( path.length - name.length ) ).to.be.eql name
-        expect( uuid.uri ).to.be.eql '/node_modules/node-uuid/uuid.js'
-    
-    it 'should allow to remove a module', ( done ) ->
-      modules._remove [ { id: 1, name: 'node-uuid/uuid.js' } ]
-      
-      resolved._fetch_all ( values ) -> check done, () ->
-        expect( values.length ).to.be.eql 0
-  
   describe 'configuration():', ->
     it 'should read a confirugation file in fixtures/config.json', ( done ) ->
       configuration = rs

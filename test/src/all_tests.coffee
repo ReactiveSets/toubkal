@@ -44,6 +44,7 @@ require './join.js'
 
 require './json.js'
 require './transforms.js'
+require './require_resolve.js'
 require './file.js'
 require './html_parse.js'
 require './html_serialize.js'
