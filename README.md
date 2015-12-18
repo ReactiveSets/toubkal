@@ -12,6 +12,8 @@
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![Dependency Status](https://gemnasium.com/ReactiveSets/toubkal.svg)](https://gemnasium.com/ReactiveSets/toubkal)
+
 ## Teaser
 Displaying a reactive ```<table>``` which DOM container is ```#sales_table```, ordered by date,
 for the years 2013 & 2014, from a source ```sales``` dataflow coming from a ```socket.io``` server,
