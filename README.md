@@ -671,6 +671,7 @@ ETA: December 31th 2015
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+animation_frames_polyfill()         | animation_frames() polyfilled
 url_pattern()                       | Parses url for patterns such as /users/:id
 Multiton()                          | Creates multiton pipelets out of composition
 Singleton()                         | Creates singleton pipelets out of composition
