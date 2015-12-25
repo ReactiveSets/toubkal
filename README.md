@@ -671,6 +671,8 @@ ETA: December 31th 2015
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+output()                            | Retrieves a global reference for an output pipelet set by set_output()
+set_output()                        | Sets a global reference for an ouput pipelet
 revert()                            | Revert operations, adds to removes, removes to adds, updates are swapped
 animation_frames_polyfill()         | animation_frames() polyfilled
 url_pattern()                       | Parses url for patterns such as /users/:id

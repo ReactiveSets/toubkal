@@ -62,7 +62,7 @@ module.exports = function( servers ) {
   /* ------------------------------------------------------------------------------------
      Load and Serve Static Assets
   */
-  var files = rs
+  rs
     .directory_entries()
     
     .filter( [
@@ -73,15 +73,15 @@ module.exports = function( servers ) {
     ] )
     .watch( { base_directory: __dirname } )
     .union( [ toubkal_min, react_js ] )
+    
+    // Serve assets to http servers
+    .serve( servers )
   ;
-  
-  // Serve assets to http servers
-  files.serve( servers );
   
   /* ------------------------------------------------------------------------------------
      The database, made of all found json files
   */
-  var tables = rs
+  rs
     .directory_entries()
     
     .filter( [ { extension: 'json' } ] )
@@ -101,9 +101,10 @@ module.exports = function( servers ) {
     .optimize()
     
     .trace( 'database tables' )
+    .set_output( 'tables' )
   ;
   
-  var database = rs.dispatch( tables, function( source, options ) {
+  var database = rs.dispatch( rs.output( 'tables' ), function( source, options ) {
     return source
       .configuration( { 'filepath': this.path, 'flow': this.name, 'base_directory': __dirname  } )
     ;
@@ -113,7 +114,7 @@ module.exports = function( servers ) {
   // ToDo: add option to dispatch() to use a union() as dispatcher instead of passthrough()
   // ToDo: or maybe, make path_through() a union() so that it becomes a controllet
   // ToDo: or just deprecate path_through() altogether
-  var clients_input = rs.union( [ database, tables ], { name: 'clients_input' } );
+  var clients_input = rs.union( [ database, rs.output( 'tables' ) ], { name: 'clients_input' } );
   
   var clients_output = clients_input
     .dispatch( servers.socket_io_clients(), function( source, options ) {
