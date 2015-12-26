@@ -36,6 +36,6 @@ module.exports = function( database, clients ) {
     
     .trace( 'teaser/sales_year' )
     
-    ._add_destination( clients )
+    .through( clients )
   ;
 };
