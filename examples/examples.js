@@ -44,13 +44,10 @@ module.exports = function( servers ) {
     .filter( [ { type: 'directory' } ] )
     
     .directory_entries()
-  ;
   
-  /* ------------------------------------------------------------------------------------
-     Load and Serve Static Assets
-  */
-  rs
-    .directory_entries()
+    /* ------------------------------------------------------------------------------------
+       Load and Serve Static Assets
+    */
     
     .filter( [
       { extension: 'html' },
@@ -58,7 +55,9 @@ module.exports = function( servers ) {
       { extension: 'js'   },
       { extension: 'json' }
     ] )
+    
     .watch( { base_directory: __dirname } )
+    
     .union( [ toubkal_min, react_js ] )
     
     // Serve assets to http servers
@@ -90,6 +89,7 @@ module.exports = function( servers ) {
     .trace( 'database tables' )
     .set_output( 'tables' )
     
+    // socket.io clients
     .Singleton( 'clients', function( source, options ) {
       return source
         .dispatch( servers.socket_io_clients(), function( source, options ) {
@@ -110,10 +110,14 @@ module.exports = function( servers ) {
     .Singleton( 'database', function( source, tables, options ) {
       return rs
         .dispatch( tables, function( source, options ) {
+          var flow = this.name;
+          
           return source
-            .configuration( { 'filepath': this.path, 'flow': this.name, 'base_directory': __dirname  } )
+            .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
+            .trace( 'table ' + flow )
+            .flow( flow )
           ;
-        }, { single: true } )
+        } )
       ;
     } )
     
