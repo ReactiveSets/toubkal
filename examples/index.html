@@ -24,7 +24,7 @@
       rs.socket_io_server()
         .flow( 'examples' )
         
-        .to_dom( '#examples', function render( document, $li, example ) {
+        .$to_dom( '#examples', function render( document, $li, example ) {
           var $a = document.createElement( 'a' );
           
           $a.href      = example.path;
