@@ -41,23 +41,41 @@ describe 'Pipelet', ->
     it 'should allow a name of 5 characters long starting with two lower case letters', ->
       expect( -> Pipelet.Add 'ab_0c', factory ).to.not.throwException()
     
+    it 'should allow a name of 5 characters long starting starting with $, then two lower case letters', ->
+      expect( -> Pipelet.Add '$ab_0', factory ).to.not.throwException()
+    
     it 'should not allow a name already used', ->
       expect( -> Pipelet.Add 'ab_0c', factory ).to.throwException()
     
     it 'should not allow a name of less than 5 characters long', ->
       expect( -> Pipelet.Add 'abcd', factory ).to.throwException()
     
+    it 'should not allow a name of less than 5 characters long starting with $', ->
+      expect( -> Pipelet.Add '$bcd', factory ).to.throwException()
+    
     it 'should not allow a name to start with underscore', ->
       expect( -> Pipelet.Add '_aaaaaaaaaaaaa', factory ).to.throwException()
+    
+    it 'should not allow a name to start with $ followed by underscore', ->
+      expect( -> Pipelet.Add '$_aaaaaaaaaaaaa', factory ).to.throwException()
     
     it 'should not allow a name with underscore in the second letter', ->
       expect( -> Pipelet.Add 'a_bcde', factory ).to.throwException()
     
+    it 'should not allow a name starting with $ with underscore in the third letter', ->
+      expect( -> Pipelet.Add '$a_bcde', factory ).to.throwException()
+    
     it 'should not allow a name starting with a digit', ->
       expect( -> Pipelet.Add '0abcde', factory ).to.throwException()
     
+    it 'should not allow a name starting with $ followed by a digit', ->
+      expect( -> Pipelet.Add '$0abcde', factory ).to.throwException()
+    
     it 'should not allow a name with a digit in the second letter', ->
       expect( -> Pipelet.Add 'a0bcde', factory ).to.throwException()
+    
+    it 'should not allow a name stating with $ following by a digit in the third letter', ->
+      expect( -> Pipelet.Add '$a0bcde', factory ).to.throwException()
     
     it 'should not allow a name with a capital letter', ->
       expect( -> Pipelet.Add 'abcdeF', factory ).to.throwException()

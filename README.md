@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1509 automated tests*
+*1515 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![NPM version](https://badge.fury.io/js/toubkal.png)](http://badge.fury.io/js/toubkal)
@@ -474,7 +474,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1509 continuous integration tests for the Toubkal core and framework
+We have curently developped 1515 continuous integration tests for the Toubkal core and framework
 pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -502,7 +502,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1509 of 1509 tests
+-> passed 1515 of 1515 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -596,34 +596,7 @@ This version introduces the capability to keep historical values of objects pers
 
 ### Version 0.4.0 - Complex Queries
 
-ETA: December 31th 2015
-
-- 1509 continuous integration tests
-
-#### Main Goals:
-
-- Develop additional tests, goal is at least 2000 continuous integration tests
-
-- Error handling:
-  - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
-  - provide pipelet to revert errors
-  - filter may route errors based on error values
-  - alter may alter error values 
-
-- Query Tree else()
-  - Emits data events not routed to any other destination input
-  - Pipelet else() captures these events
-  - May be used to detect clients attempts to submit un-authorize data
-
-- Intergrate Safe Complex Query expressions into Query and Query_Tree
-
-##### Work in progress:
-
-- Facebook React server-side:
-  - using html_parse() to insert elements into a DOM tree
-  - using html_serialize() to rebuild modified html to server
-
-- Dropbox file sharing for photo albums (developped and tested in demo repository)
+#### Work in progress:
 
 - Safe Complex Query expressions (implemented, needs integration):
   - Sanitized for safe execution on server even when crafted by untrusted clients
@@ -669,6 +642,37 @@ ETA: December 31th 2015
     }
 ```
 
+### Version 0.3.5 - Error Handling, Complex Authorizations, DOM Handling
+
+ETA: January 31th 2016
+
+- 1515 continuous integration tests
+
+#### Main Goals:
+
+- Develop additional tests, goal is at least 2000 continuous integration tests
+
+- Error handling:
+  - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
+  - provide pipelet to revert errors
+  - filter may route errors based on error values
+  - alter may alter error values
+
+- Query Tree else()
+  - Emits data events not routed to any other destination input
+  - Pipelet else() captures these events
+  - May be used to detect clients attempts to submit un-authorize data
+
+- Intergrate Safe Complex Query expressions into Query and Query_Tree
+
+#### Work in progress:
+
+- Facebook React server-side:
+  - using html_parse() to insert elements into a DOM tree
+  - using html_serialize() to rebuild modified html to server
+
+- Dropbox file sharing for photo albums (developped and tested in demo repository)
+
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
 output()                            | Retrieves a global reference for an output pipelet set by set_output()
@@ -679,7 +683,7 @@ url_pattern()                       | Parses url for patterns such as /users/:id
 Multiton()                          | Creates multiton pipelets out of composition
 Singleton()                         | Creates singleton pipelets out of composition
 Compose()                           | Add boolean options single and singleton
-to_dom()                            | Updates DOM from dataflow for a DOM node, using render function, creating container child
+$to_dom()                           | Updates DOM from dataflow for a DOM node, using render function, creating container child
 through()                           | Getting dataflow through another pipelet (implemented a Pipelet method)
 not_exists()                        | Existence validation for dataflow adds (no-exists), removes and updates (exists)
 fetch_flow_key()                    | Fetch dataflow key from flows metadata
