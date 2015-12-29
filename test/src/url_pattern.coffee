@@ -58,11 +58,11 @@ describe 'url_pattern():', ->
   describe 'url_pattern( content, /api/users/:id ):', ->
     output = source.url_pattern( 'content', '/api/users/:id' )
     
-    it '/api/products/5 should be empty', ( done ) ->
+    it '/api/products/5 should be empty object', ( done ) ->
       source._add [ { content: '/api/products/5' } ]
       
       output._fetch_all ( values ) -> check done, () ->
-        expect( values ).to.be.empty
+        expect( values ).to.be. [ {} ]
     
     it '/api/users/10 should extract { id: 10 }', ( done ) ->
       source._add [ { content: '/api/users/10' } ]
