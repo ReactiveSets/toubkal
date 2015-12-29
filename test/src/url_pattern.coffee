@@ -62,7 +62,7 @@ describe 'url_pattern():', ->
       source._add [ { content: '/api/products/5' } ]
       
       output._fetch_all ( values ) -> check done, () ->
-        expect( values ).to.be. [ {} ]
+        expect( values[ 0 ] ).to.be.empty()
     
     it '/api/users/10 should extract { id: 10 }', ( done ) ->
       source._add [ { content: '/api/users/10' } ]
@@ -79,7 +79,7 @@ describe 'url_pattern():', ->
       source._add [ { content: '/apiiii/users/10' } ]
       
       output._fetch_all ( values ) -> check done, () ->
-        expect( values ).to.be.empty
+        expect( values[ 0 ] ).to.be.empty()
     
     it '/api/users/10 should extract { resource: users, id: 10 }', ( done ) ->
       source._add [ { content: '/api/users/10' } ]
