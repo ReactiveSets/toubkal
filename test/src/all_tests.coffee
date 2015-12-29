@@ -49,6 +49,7 @@ require './file.js'
 require './html_parse.js'
 require './html_serialize.js'
 require './url_pattern.js'
+require './query_selector.js'
 
 require './server.js'
 
