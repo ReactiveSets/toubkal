@@ -416,6 +416,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
       
@@ -429,6 +430,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
       
@@ -457,6 +459,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
       
@@ -477,6 +480,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 2
+          updated_length: 0
           removed_length: 0
         }
       
@@ -490,6 +494,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 2
+          updated_length: 0
           removed_length: 1
         }
       
@@ -512,6 +517,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 2
+          updated_length: 0
           removed_length: 1
         }
       
@@ -531,6 +537,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 2
+          updated_length: 0
           removed_length: 1
         }
       
@@ -572,6 +579,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
       
@@ -591,6 +599,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
       
@@ -606,6 +615,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
         
@@ -621,6 +631,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 1
+          updated_length: 0
           removed_length: 0
         }
         
@@ -636,6 +647,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 1
+          updated_length: 0
           removed_length: 0
         }
       
@@ -656,6 +668,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 1
+          updated_length: 0
           removed_length: 0
         }
         
@@ -671,6 +684,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 1
+          updated_length: 0
           removed_length: 0
         }
       
@@ -697,6 +711,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 1
+          updated_length: 0
           removed_length: 0
         }
       
@@ -712,6 +727,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 1
+          updated_length: 0
           removed_length: 2
         }
       
@@ -727,6 +743,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : true
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
       
@@ -777,6 +794,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
       
@@ -792,6 +810,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 2
+          updated_length: 0
           removed_length: 0
         }
         
@@ -807,6 +826,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 3
+          updated_length: 0
           removed_length: 0
         }
       
@@ -827,6 +847,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : false
           added_length  : 3
+          updated_length: 0
           removed_length: 0
         }
       
@@ -849,6 +870,7 @@ describe 'Transactions test suite', ->
           need_close    : true
           closed        : false
           added_length  : 3
+          updated_length: 0
           removed_length: 0
         }
       
@@ -864,6 +886,7 @@ describe 'Transactions test suite', ->
           need_close    : false
           closed        : true
           added_length  : 0
+          updated_length: 0
           removed_length: 0
         }
         
