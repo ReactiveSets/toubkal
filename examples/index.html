@@ -22,22 +22,39 @@
     
     <script>
       rs.socket_io_server()
-        .flow( 'examples' )
-        
-        .$to_dom( '#examples', function render( document, $li, example ) {
-          var $a = document.createElement( 'a' );
-          
-          $a.href      = example.path;
-          $a.innerHTML = example.title;
-          
-          $li.appendChild( $a );
+        .Singleton( '$examples', function( source, options ) {
+          return source
+            .trace( 'examples' )
+            .$query_selector( '#examples' )
+          ;
         } )
+        
+        .flow( 'examples', { key: [ 'id' ] } )
+        
+        .trace( 'before $to_dom()' )
+        
+        .$to_dom( rs.$examples() )
+        
+        //.trace( 'between $to_dom()' )
+         
+        .alter( function( v ) {
+          v.tag = 'a';
+          v.content = v.title;
+          v.attributes = { href: v.path };
+        } )
+        
+        .$to_dom()
       ;
       
-      rs.socket_io_server()
-        .flow( '/table' )
-        .trace( 'table' )
-        .greedy()
+      rs.beat( 10000 )
+        .$examples()
+      ;
+      
+      rs.once( 9000 )
+        .map( function( v ) { return { interval: 10000 } } )
+        .beat()
+        .revert()
+        .$examples()
       ;
     </script>
   </body>
