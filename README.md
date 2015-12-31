@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1515 automated tests*
+*1519 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![NPM version](https://badge.fury.io/js/toubkal.png)](http://badge.fury.io/js/toubkal)
@@ -474,7 +474,7 @@ manuals:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1515 continuous integration tests for the Toubkal core and framework
+We have curently developped 1519 continuous integration tests for the Toubkal core and framework
 pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -502,7 +502,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1515 of 1515 tests
+-> passed 1519 of 1519 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -596,6 +596,16 @@ This version introduces the capability to keep historical values of objects pers
 
 ### Version 0.4.0 - Complex Queries
 
+#### Main goals:
+- Develop additional tests, goal is at least 2000 continuous integration tests
+
+- Query Tree else()
+  - Emits data events not routed to any other destination input
+  - Pipelet else() captures these events
+  - May be used to detect clients attempts to submit un-authorize data
+
+- Intergrate Safe Complex Query expressions into Query and Query_Tree
+
 #### Work in progress:
 
 - Safe Complex Query expressions (implemented, needs integration):
@@ -646,35 +656,65 @@ This version introduces the capability to keep historical values of objects pers
 
 ETA: January 31th 2016
 
-- 1515 continuous integration tests
+- 1519 continuous integration tests
 
 #### Main Goals:
 
-- Develop additional tests, goal is at least 2000 continuous integration tests
+- Develop additional tests, goal is at least 1750 continuous integration tests
 
-- Error handling:
+- Error routing and handling:
   - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
-  - provide pipelet to revert errors
+  - provide pipelet to revert errors (done)
   - filter may route errors based on error values
   - alter may alter error values
 
-- Query Tree else()
-  - Emits data events not routed to any other destination input
-  - Pipelet else() captures these events
-  - May be used to detect clients attempts to submit un-authorize data
-
-- Intergrate Safe Complex Query expressions into Query and Query_Tree
-
 #### Work in progress:
 
-- Facebook React server-side:
+- Error handling:
+  - Using revert() to recover from errors, by reverting add, remove, and update operations.
+
+- Complex authorizations and validation:
+  - using adds(), removes() and updates() to differentiate between Create, Delete and Update operations
+    and apply authorization rules accordingly.
+  - using not_exists() to test appropriate existance on adds, removes and updates
+
+- Single page applications routing:
+  - using url_parse() and url_pattern()
+
+- Reinstate update as a first-class operation, making it easier to handle updates
+
+- Server-side rendering:
   - using html_parse() to insert elements into a DOM tree
   - using html_serialize() to rebuild modified html to server
+  - using $query_selector() to select into htmlparse2 tree
+  - using $to_dom() to modify htmlparse2 tree (not implemented)
 
 - Dropbox file sharing for photo albums (developped and tested in demo repository)
 
+#### Completed Work:
+
+- Improve programming patterns using pipelet methods:
+  - Compose()
+  - Singleton()
+  - Multiton()
+  - trough()
+
+- Pipelets manipulating operations:
+  - adds(): filter add operations, useful when these have a strict Create semantic
+  - removes(): filter remove operations, useful when these have a strict Delete semantic
+  - updates(): filter update operations, useful when these have a strict Update semantic
+  - revert(): transforms adds into removes, removes into adds, swap remove and add into updates
+
+- Additional functional stateless pipelets:
+  - map(): allows to emit zero or 1 value for each source value
+  - flat_map(): allows to emit zero to n values for each source value
+
+- Additional functional stateful pipelets:
+  - group(): emit grouped values into content attribute
+
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+$query_selector()                   | Emits a node if query selector found, used as a parameter to $to_dom()
 output()                            | Retrieves a global reference for an output pipelet set by set_output()
 set_output()                        | Sets a global reference for an ouput pipelet
 revert()                            | Revert operations, adds to removes, removes to adds, updates are swapped
