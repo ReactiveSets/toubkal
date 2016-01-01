@@ -7,7 +7,7 @@
 *1519 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
-[![npm version](https://badge.fury.io/js/toubkal.swg)](http://badge.fury.io/js/toubkal)
+[![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
 [![Dependency Status](https://gemnasium.com/ReactiveSets/toubkal.svg)](https://gemnasium.com/ReactiveSets/toubkal)
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
