@@ -18,7 +18,11 @@
   <body>
     <h3>Toubkal Examples</h3>
     
-    <ul id="examples"></ul>
+    <ul id="examples">
+      <li id="to_dom-1-2">
+        <a id="to_dom-2-2">to_dom-2-2</a>
+      </li>
+    </ul>
     
     <script>
       rs.socket_io_server()
@@ -31,30 +35,54 @@
         
         .flow( 'examples', { key: [ 'id' ] } )
         
-        .trace( 'before $to_dom()' )
+        //.order( [ { id: 'id', descending: true } ] )
+        
+        //.trace( 'before examples' )
         
         .$to_dom( rs.$examples() )
         
-        //.trace( 'between $to_dom()' )
-         
+        .trace( 'after examples' )
+        
         .alter( function( v ) {
           v.tag = 'a';
           v.content = v.title;
-          v.attributes = { href: v.path };
+          v.attributes = rs.RS.extend( { href: v.path }, v.attributes );
         } )
         
-        .$to_dom()
+        //.trace( 'before a' )
+        
+        .set_output( 'a' )
       ;
       
-      rs.beat( 10000 )
+      rs.once( 1000 )
+        .alter( function( v ) {
+          rs.output( 'a' )
+            .$to_dom()
+            //.trace( 'after a' )
+            .greedy()
+          ;
+        } )
+      ;
+      
+      var beat = 20000;
+      
+      rs.beat( beat )
+        //.once( 0 )
         .$examples()
       ;
       
-      rs.once( 9000 )
-        .map( function( v ) { return { interval: 10000 } } )
+      rs.once( beat - 2000 )
+        .map( function( v ) { return { interval: beat } } )
         .beat()
         .revert()
         .$examples()
+      ;
+      
+      rs.socket_io_server()
+        .flow( 'assets' )
+        .alter( function( asset ) {
+          window.location.reload()
+        } )
       ;
     </script>
   </body>
