@@ -60,6 +60,8 @@ module.exports = function( servers ) {
     
     .union( [ toubkal_min, react_js ] )
     
+    .set_output( 'assets' )
+    
     // Serve assets to http servers
     .serve( servers )
   ;
@@ -99,6 +101,14 @@ module.exports = function( servers ) {
       ;
     } )
     
+    .clients()
+  ;
+  
+  rs.output( 'assets' )
+    .alter( function( asset ) {
+      delete asset.content;
+    } )
+    .set_flow( 'assets' )
     .clients()
   ;
   
