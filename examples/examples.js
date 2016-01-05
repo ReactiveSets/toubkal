@@ -48,6 +48,7 @@ module.exports = function( servers ) {
     /* ------------------------------------------------------------------------------------
        Load and Serve Static Assets
     */
+    .set_output( 'assets' )
     
     .filter( [
       { extension: 'html' },
@@ -59,8 +60,6 @@ module.exports = function( servers ) {
     .watch( { base_directory: __dirname } )
     
     .union( [ toubkal_min, react_js ] )
-    
-    .set_output( 'assets' )
     
     // Serve assets to http servers
     .serve( servers )
@@ -105,10 +104,31 @@ module.exports = function( servers ) {
   ;
   
   rs.output( 'assets' )
-    .alter( function( asset ) {
-      delete asset.content;
+    .filter( [
+      { extension: 'html' },
+      { extension: 'css'  },
+      { extension: 'js'   },
+    ] )
+    
+    .to_uri()
+    
+    .filter( function( a ) {
+      return [ '/server.js', '/examples.js' ].indexOf( a.uri ) == -1
+        && 'data.js' != a.base
+      ;
     } )
-    .set_flow( 'assets' )
+    
+    .map( function( a ) {
+      return {
+        flow: 'assets', id: a.uri, size: a.size, mtime: a.mtime
+      }
+    }, { key: [ 'id' ] } )
+    
+    .optimize() // make updates
+    
+    // filter-out non-assets fetches
+    .flow( 'assets' )
+    
     .clients()
   ;
   
