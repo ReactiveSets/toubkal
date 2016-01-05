@@ -16,15 +16,56 @@
   </head>
   
   <body>
-    <h3>Toubkal Examples</h3>
+    <h4>Connection State:</h4>
+    <ul id="connection_state"></ul>
+    
+    <h4>Toubkal Examples:</h4>
     
     <ul id="examples">
-      <li id="to_dom-1-2">
+      <!--li id="to_dom-1-2">
         <a id="to_dom-2-2">to_dom-2-2</a>
-      </li>
+      </li-->
     </ul>
     
     <script>
+      // live reload
+      rs.socket_io_server()
+        .flow( 'assets' )
+        .trace( 'assets' )
+        .delay( 500 )
+        .alter( function( asset ) {
+          window.location.reload()
+        } )
+      ;
+    </script>
+    
+    <script>
+      rs.socket_io_state_changes()
+        .trace( 'socket_io_state_changes' )
+        
+        .map( function( v ) {
+          var connected = ( v.state == 'connected' );
+          
+          return {
+            id : 1,
+            
+            content: connected ? 'On' : 'Off',
+            
+            attributes: {
+              title: v.state + ' @' + v.timestamp + ' (' + v.address + ')',
+              
+              style: {
+                'color': connected ? 'green' : 'red'
+              }
+            }
+          }
+        } )
+        
+        .last()
+        
+        .$to_dom( '#connection_state' )
+      ;
+      
       rs.socket_io_server()
         .Singleton( '$examples', function( source, options ) {
           return source
@@ -43,12 +84,12 @@
         
         // .trace( 'after examples' )
         
-        .set_output( '$examples' )
+        .set_output( '$li' )
       ;
       
       rs.once( 1000 )
         .alter( function( v ) {
-          rs.output( '$examples' )
+          rs.output( '$li' )
             .alter( function( v ) {
               v.tag = 'a';
               v.content = v.title;
@@ -64,7 +105,7 @@
         } )
       ;
       
-      var beat = 10000;
+      var beat = 20000;
       
       rs.beat( beat )
         //.once( 0 )
@@ -76,15 +117,6 @@
         .beat()
         .revert()
         .$examples()
-      ;
-      
-      rs.socket_io_server()
-        .flow( 'assets' )
-        .trace( 'assets' )
-        .delay( 1000 )
-        .alter( function( asset ) {
-          window.location.reload()
-        } )
       ;
     </script>
   </body>
