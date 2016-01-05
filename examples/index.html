@@ -28,7 +28,7 @@
       rs.socket_io_server()
         .Singleton( '$examples', function( source, options ) {
           return source
-            .trace( 'examples' )
+            //.trace( 'examples' )
             .$query_selector( '#examples' )
           ;
         } )
@@ -41,22 +41,22 @@
         
         .$to_dom( rs.$examples() )
         
-        .trace( 'after examples' )
+        // .trace( 'after examples' )
         
-        .alter( function( v ) {
-          v.tag = 'a';
-          v.content = v.title;
-          v.attributes = rs.RS.extend( { href: v.path }, v.attributes );
-        } )
-        
-        //.trace( 'before a' )
-        
-        .set_output( 'a' )
+        .set_output( '$examples' )
       ;
       
       rs.once( 1000 )
         .alter( function( v ) {
-          rs.output( 'a' )
+          rs.output( '$examples' )
+            .alter( function( v ) {
+              v.tag = 'a';
+              v.content = v.title;
+              v.attributes = rs.RS.extend( { href: v.path }, v.attributes );
+            } )
+            
+            //.trace( 'before a' )
+            
             .$to_dom()
             //.trace( 'after a' )
             .greedy()
@@ -64,14 +64,14 @@
         } )
       ;
       
-      var beat = 20000;
+      var beat = 10000;
       
       rs.beat( beat )
         //.once( 0 )
         .$examples()
       ;
       
-      rs.once( beat - 2000 )
+      rs.once( beat * 0.9 )
         .map( function( v ) { return { interval: beat } } )
         .beat()
         .revert()
@@ -80,6 +80,8 @@
       
       rs.socket_io_server()
         .flow( 'assets' )
+        .trace( 'assets' )
+        .delay( 1000 )
         .alter( function( asset ) {
           window.location.reload()
         } )
