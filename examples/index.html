@@ -44,18 +44,16 @@
         .trace( 'socket_io_state_changes' )
         
         .map( function( v ) {
-          var connected = ( v.state == 'connected' );
-          
           return {
             id : 1,
             
-            content: connected ? 'On' : 'Off',
+            content: v.connected ? 'On' : 'Off',
             
             attributes: {
               title: v.state + ' @' + v.timestamp + ' (' + v.address + ')',
               
               style: {
-                'color': connected ? 'green' : 'red'
+                'color': v.connected ? 'green' : 'red'
               }
             }
           }
