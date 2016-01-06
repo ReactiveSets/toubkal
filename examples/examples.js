@@ -5,15 +5,16 @@
 module.exports = function( servers ) {
   'use strict';
   
-  var rs     = require( 'toubkal' )
-    , RS     = rs.RS
-    , extend = RS.extend
-    , log    = RS.log.bind( null, 'examples' )
-    , de     = true
-    , ug     = log
-    , assets = require( 'toubkal/lib/server/client_assets.js' )
+  var rs          = require( 'toubkal' )
+    , RS          = rs.RS
+    , extend      = RS.extend
+    , log         = RS.log.bind( null, 'examples' )
+    , de          = true
+    , ug          = log
+    , assets      = require( 'toubkal/lib/server/client_assets.js' )
     , toubkal_min = assets.toubkal_min()
-    , react_js = assets.react.watch()
+    , react_js    = assets.react.watch()
+    , scope       = {}
   ;
   
   // Listen when lib/toubkal-min.js is ready
@@ -44,11 +45,11 @@ module.exports = function( servers ) {
     .filter( [ { type: 'directory' } ] )
     
     .directory_entries()
-  
+    
     /* ------------------------------------------------------------------------------------
        Load and Serve Static Assets
     */
-    .set_output( 'assets' )
+    .set_output( 'assets', scope )
     
     .filter( [
       { extension: 'html' },
@@ -87,8 +88,7 @@ module.exports = function( servers ) {
     
     .optimize()
     
-    .trace( 'database tables' )
-    .set_output( 'tables' )
+    .trace( 'database tables' ).set_output( 'tables', scope )
     
     // socket.io clients
     .Singleton( 'clients', function( source, options ) {
@@ -103,7 +103,7 @@ module.exports = function( servers ) {
     .clients()
   ;
   
-  rs.output( 'assets' )
+  rs.output( 'assets', scope )
     .filter( [
       { extension: 'html' },
       { extension: 'css'  },
@@ -151,7 +151,7 @@ module.exports = function( servers ) {
       ;
     } )
     
-    .database( rs.output( 'tables' ) )
+    .database( rs.output( 'tables', scope ) )
     
     .clients()
   ;
@@ -166,11 +166,10 @@ module.exports = function( servers ) {
       return file.path.split( '/' ).pop() == 'data.js';
     } )
     
-    .trace( 'data processors' )
-    .set_output( 'data_processors' )
+    .trace( 'data processors' ).set_output( 'data_processors', scope )
   ;
   
-  rs.dispatch( rs.output( 'data_processors' ), function() {
+  rs.dispatch( rs.output( 'data_processors', scope ), function() {
     // ToDo: cleanup required when removing a data processor, need to disconnect data from database and clients, and remove from require cache
     // ToDo: allow to hot-reload data-processor
     
