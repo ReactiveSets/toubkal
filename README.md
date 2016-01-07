@@ -594,6 +594,17 @@ This version introduces the capability to keep historical values of objects pers
   - to configuration()
   - to other files
 
+- Server-side rendering:
+  - using html_parse() to insert elements into a DOM tree
+  - using html_serialize() to rebuild modified html to server
+  - using $query_selector() to select into htmlparse2 tree
+  - using $to_dom() to modify htmlparse2 tree (not implemented)
+
+#### Work in Progress:
+- fetch refactoring: developping specification, gathering requirements.
+
+- Dropbox file sharing for photo albums (developped and tested in demo repository)
+
 ### Version 0.4.0 - Complex Queries
 
 #### Main goals:
@@ -678,20 +689,20 @@ ETA: January 31th 2016
     and apply authorization rules accordingly.
   - using not_exists() to test appropriate existance on adds, removes and updates
 
+- Reinstate update as a first-class operation, making it easier to handle updates
+
+- Live page reload to ease developpement.
+
+#### Completed Work:
+
+- Pipelet._add_input() greatly simplifies adding additional inputs to pipelets.
+
 - Single page applications routing:
   - using url_parse() and url_pattern()
 
-- Reinstate update as a first-class operation, making it easier to handle updates
-
-- Server-side rendering:
-  - using html_parse() to insert elements into a DOM tree
-  - using html_serialize() to rebuild modified html to server
-  - using $query_selector() to select into htmlparse2 tree
-  - using $to_dom() to modify htmlparse2 tree (not implemented)
-
-- Dropbox file sharing for photo albums (developped and tested in demo repository)
-
-#### Completed Work:
+- DOM handling pipelets:
+  - $query_selector()
+  - $to_dom()
 
 - Improve programming patterns using pipelet methods:
   - Compose()
