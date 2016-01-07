@@ -62,9 +62,11 @@ describe 'filter()', ->
     is_in_usa = ( city, c, cities ) ->
       return city.country is 'USA'
     
-    cities_in_usa = cities.filter( is_in_usa ).set()
+    cities_in_usa = null
     
     it 'cities_in_usa should be a Pipelet', ->
+      cities_in_usa = cities.filter( is_in_usa ).set()
+      
       expect( cities_in_usa ).to.be.a Pipelet
     
     it 'cities_in_usa should only contain cities in USA', ( done ) ->
@@ -210,12 +212,17 @@ describe 'filter()', ->
       { flow: "comment", id: 4 }
     ], { key: [ 'flow', 'id' ] }
     
-    users    = multiflow.flow( "user"    ).set()
-    groups   = multiflow.flow( "group"   ).set()
-    posts    = multiflow.flow( "post"    ).set()
-    comments = multiflow.flow( "comment" ).set()
+    users    = null
+    groups   = null
+    posts    = null
+    comments = null
     
     it 'should filter a multiflow by "users"', ( done ) ->
+      users    = multiflow.flow( "user"    ).set()
+      groups   = multiflow.flow( "group"   ).set()
+      posts    = multiflow.flow( "post"    ).set()
+      comments = multiflow.flow( "comment" ).set()
+      
       check_set_content done, users, [
         { flow: "user", id: 1 }
         { flow: "user", id: 2 }
@@ -320,9 +327,11 @@ describe 'filter()', ->
       { country: 'USA' }
     ], { key: [ 'country' ] }
     
-    cities_from_countries = cities.filter( countries ).trace( 'cities from countries' ).set( [] )
+    cities_from_countries = null
     
     it 'cities_from_countries should be a Pipelet', ->
+      cities_from_countries = cities.filter( countries ).trace( 'cities from countries' ).set( [] )
+      
       expect( cities_from_countries ).to.be.a Pipelet
     
     it 'cities_from_countries should only contain cities in USA', ( done ) ->
