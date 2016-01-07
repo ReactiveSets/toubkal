@@ -98,7 +98,7 @@ rs
       provider_id  : user.provider_id,
       name         : _.displayName,
       emails       : _.emails,
-      photo        : _.photos[ 0 ].value
+      photo        : _.photos && _.photos[ 0 ].value
     };
     
     return profile;
