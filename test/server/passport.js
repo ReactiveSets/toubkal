@@ -17,6 +17,7 @@ var rs                 = require( 'toubkal'         )
     }
   
   , base_url           = 'http://localhost:8080'
+  //, base_url           = 'http://ourika.rocks:8080'
   , passport_route     = '/passport'
 ;
 
@@ -87,6 +88,8 @@ rs
   
   .passport_profiles()
   
+  .trace( 'logged-in user profiles' )
+  
   .map( function( user ) {
     // New user profile from provider profile
     var _ = user.profile;
@@ -98,7 +101,7 @@ rs
       provider_id  : user.provider_id,
       name         : _.displayName,
       emails       : _.emails,
-      photo        : _.photos && _.photos[ 0 ].value
+      photo        : _.photos && _.photos[ 0 ].value || _._json && _._json.avatar_url
     };
     
     return profile;
