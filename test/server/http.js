@@ -40,7 +40,7 @@ var de = true, ug = log.bind( null, 'test server,' );
 var http_servers = rs
   .set( [
     //{ ip_address: '0.0.0.0' },
-    { port: 8080 },
+    { ip_address: '0.0.0.0', port: 8080 },
     { ip_address: '::1', port: 8080 }
     //{ ip_address: '192.168.254.45' }, // bad ip address
     //{ port: 8043, key: '', cert: '' }, // https server usimg key and cert
@@ -48,7 +48,7 @@ var http_servers = rs
   ] )
   .auto_increment()
   .http_servers()
-  .virtual_http_servers( [ '::1', 'localhost', '127.0.0.1', '192.168.0.36', '146.185.152.167' ] )
+  .virtual_http_servers( [ '::1', 'localhost', '127.0.0.1', '192.168.0.36', '146.185.152.167', 'ourika.rocks' ] )
   .trace( 'http servers' )
 ;
 
