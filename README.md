@@ -560,6 +560,29 @@ First Beta version with API almost finalized.
 - Build Website, featuring documentation and tutorial
 - Session Strorage Dataflow
 
+#### Work-In-Progress:
+
+- Candidate automatic documentation extraction format from comments:
+  - output format is github-flavored markdown
+
+  - Comments format:
+    - starts wirh a block comment line /* --- 
+    - all lines and characters after starting line may, or may-not contain extractable documentation
+    - stops with a block commend ending */
+
+  - @tag: indicates a documentation section, first tag indicates start of documented item:
+    - @pipelet    : a line defining a pipelet
+    - @function   : a line defining a function
+    - @term       : a line defining a term
+    - @section    : a documentation section name this belongs-to (reference, terms, ...)
+    - @short      : a short description
+    - @description: a long description
+    - @parameters : pipelet or function parameters
+
+  - #keyword: indicates a link to another section of the documation, e.g.:
+    - #stateless, #synchronous, #lazy
+    - #greedy()
+
 ### Version 0.5.0 - Web Application Framework / Packaging / Versionning
 
 This version introduces the capability to keep historical values of objects persisted and cached.
