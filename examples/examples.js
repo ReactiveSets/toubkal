@@ -88,10 +88,14 @@ module.exports = function( servers ) {
     
     .optimize()
     
-    .trace( 'database tables' ).set_output( 'tables', scope )
+    .trace( 'database tables' )
+    
+    .flow( '/table' )
+    
+    .set_output( 'tables', scope )
     
     // socket.io clients
-    .Singleton( 'clients', function( source, options ) {
+    .Singleton( 'examples_clients', function( source, options ) {
       return source
         .dispatch( servers.socket_io_clients(), function( source, options ) {
           
@@ -100,7 +104,7 @@ module.exports = function( servers ) {
       ;
     } )
     
-    .clients()
+    .examples_clients()
   ;
   
   rs.output( 'assets', scope )
@@ -129,7 +133,7 @@ module.exports = function( servers ) {
     // filter-out non-assets fetches
     .flow( 'assets' )
     
-    .clients()
+    .examples_clients()
   ;
   
   // Serve database to socket.io clients
@@ -137,7 +141,7 @@ module.exports = function( servers ) {
   // ToDo: or maybe, make path_through() a union() so that it becomes a controllet
   // ToDo: or just deprecate path_through() altogether
   rs
-    .Singleton( 'database', function( source, tables, options ) {
+    .Singleton( 'examples_database', function( source, tables, options ) {
       return rs
         .dispatch( tables, function( source, options ) {
           var flow = this.name;
@@ -145,15 +149,15 @@ module.exports = function( servers ) {
           return source
             .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
             .trace( 'table ' + flow )
-            .flow( flow )
+            .set_flow( flow )
           ;
         } )
       ;
     } )
     
-    .database( rs.output( 'tables', scope ) )
+    .examples_database( rs.output( 'tables', scope ) )
     
-    .clients()
+    .examples_clients()
   ;
   
   // Require examples' data processors
@@ -170,7 +174,7 @@ module.exports = function( servers ) {
   ;
   
   rs.dispatch( rs.output( 'data_processors', scope ), function() {
-    // ToDo: cleanup required when removing a data processor, need to disconnect data from database and clients, and remove from require cache
+    // ToDo: cleanup required when removing a data processor, need to disconnect data from examples_database and clients, and remove from require cache
     // ToDo: allow to hot-reload data-processor
     
     var data_processor = './' + this.path
@@ -181,6 +185,6 @@ module.exports = function( servers ) {
     
     delete require.cache[ path ];
     
-    require( path )( rs.database(), rs.clients() );
+    require( path )( rs.examples_database(), rs.examples_clients() );
   } );
 } // module.exports
