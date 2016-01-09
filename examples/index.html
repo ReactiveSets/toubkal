@@ -41,7 +41,7 @@
     
     <script>
       rs.socket_io_state_changes()
-        .trace( 'socket_io_state_changes' )
+        //.trace( 'socket_io_state_changes' )
         
         .map( function( v ) {
           return {
@@ -61,7 +61,13 @@
         
         .last()
         
-        .$to_dom( '#connection_state' )
+        .$to_dom( rs
+          .socket_io_state_changes()
+          .filter( [ { connected: true } ] )
+          .last()
+          .$query_selector( '#connection_state' )
+          .trace( '#connection_state', { fetch_source_rx: true } )
+        )
       ;
       
       rs.socket_io_server()
