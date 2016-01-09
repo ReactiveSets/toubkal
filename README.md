@@ -579,9 +579,9 @@ First Beta version with API almost finalized.
     - @description: a long description
     - @parameters : pipelet or function parameters
 
-  - #keyword: indicates a link to another section of the documation, e.g.:
-    - #stateless, #synchronous, #lazy
-    - #greedy()
+  - @@keyword: indicates a link to another section of the documation, e.g.:
+    - This is @@stateless, @@synchronous, @@lazy pipelet.
+    - @@greedy()
 
 ### Version 0.5.0 - Web Application Framework / Packaging / Versionning
 
