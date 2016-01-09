@@ -2,5 +2,5 @@
   { "id": 1, "title": "Teaser - Reactive sales table ordered by date", "path": "/teaser/index.html" },
   { "id": 2, "title": "Reactive Users' Table using Facebook React Pipelet", "path": "/react_table/index.html", "attributes":{ "style":"color:darkorange;" } },
   { "id": 3, "title": "a Chat Application using Socket.IO, Form pipelet and React", "path": "/chat/index.html" },
-  { "id": 4, "title": "Testing next()", "path": "/next/index.html", "attributes":{ "style":"color:darkred;text-align:left", "title":"this tests the next pipelet" } }
+  { "id": 4, "title": "Testing next()", "path": "/next/index.html", "attributes":{ "style":"color:darkgreen;text-align:left", "title":"this tests the next pipelet" } }
 ]
