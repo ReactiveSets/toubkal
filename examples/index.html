@@ -66,7 +66,7 @@
           .filter( [ { connected: true } ] )
           .last()
           .$query_selector( '#connection_state' )
-          .trace( '#connection_state', { fetch_source_rx: true } )
+          //.trace( '#connection_state', { fetch_source_rx: true } )
         )
       ;
       
@@ -80,13 +80,13 @@
         
         .flow( 'examples', { key: [ 'id' ] } )
         
-        //.order( [ { id: 'id', descending: true } ] )
+        .order( [ { id: 'id' } ] )
         
-        //.trace( 'before examples' )
+        .trace( 'before examples' )
         
         .$to_dom( rs.$examples() )
         
-        // .trace( 'after examples' )
+        //.trace( 'after examples' )
         
         .set_output( '$li' )
       ;
@@ -111,12 +111,12 @@
       
       var beat = 20000;
       
-      rs.beat( beat )
-        //.once( 0 )
+      rs//.beat( beat )
+        .once( 0 )
         .$examples()
       ;
       
-      rs.once( beat * 0.9 )
+      rs//.once( beat * 0.9 )
         .map( function( v ) { return { interval: beat } } )
         .beat()
         .revert()
