@@ -65,6 +65,9 @@
           .socket_io_state_changes()
           .filter( [ { connected: true } ] )
           .last()
+          // last() does not emit remove operations, so query selector 
+          // remains valid when disconnected, until a new connected state
+          // updates the output
           .$query_selector( '#connection_state' )
           //.trace( '#connection_state', { fetch_source_rx: true } )
         )
@@ -80,7 +83,11 @@
         
         .flow( 'examples', { key: [ 'id' ] } )
         
-        .order( [ { id: 'id' } ] )
+        .optimize()
+        
+        //.trace( 'before order' )
+        
+        .order( [ { id: 'title' } ] )
         
         .trace( 'before examples' )
         
