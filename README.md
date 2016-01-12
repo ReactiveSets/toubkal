@@ -565,19 +565,32 @@ First Beta version with API almost finalized.
 - Candidate automatic documentation extraction format from comments:
   - output format is github-flavored markdown
 
-  - Comments format:
-    - starts wirh a block comment line /* --- 
-    - all lines and characters after starting line may, or may-not contain extractable documentation
-    - stops with a block commend ending */
+  - Input format:
+    - inside any comments
+    - line-oriented
+    - indentation-sensitive
+    - List of items, such as parameters are paragraphs starting with a hyphen "-"
+    - can contain github-flavored markdown
 
-  - @tag: indicates a documentation section, first tag indicates start of documented item:
-    - @pipelet    : a line defining a pipelet
-    - @function   : a line defining a function
-    - @term       : a line defining a term
-    - @section    : a documentation section name this belongs-to (reference, terms, ...)
-    - @short      : a short description
-    - @description: a long description
-    - @parameters : pipelet or function parameters
+  - @tag: indicates a documentation section, first tag in a comment indicates start of documented item:
+    - @pipelet     : defines pipelet signature on one line
+    - @flow        : defines a dataflow name
+    - @function    : defines function signature on one line
+    - @method      : instance method
+    - @class       : defines a class name
+    - @class_method: class method signature
+    - @term        : defines a term
+    - @section     : a documentation section name this belongs-to (introduction, reference, programmer)
+    - @short       : a short description on one line
+    - @description : a long description
+    - @parameters  : list of pipelet, function, method parameters
+    - @returns     : defines returned value
+    - @throws      : defines list of conditions that throw errors
+    - @source      : defines expected source values' attributes
+    - @emits       : defines emitted output values' attributes
+    - @todo        : defines suggestion for future version
+    - @coverage    : indicates automatic tests coverage
+    - @api         : indicates API maturity e.g. experimental, alpha, beta, ga
 
   - @@keyword: indicates a link to another section of the documation, e.g.:
     - This is @@stateless, @@synchronous, @@lazy pipelet.
@@ -697,12 +710,16 @@ ETA: January 31th 2016
 - Develop additional tests, goal is at least 1750 continuous integration tests
 
 - Error routing and handling:
+  - pipelet to push / pop sender, route errors
   - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
   - provide pipelet to revert errors (done)
   - filter may route errors based on error values
   - alter may alter error values
 
 #### Work in progress:
+
+- Scoping:
+  - allow scoping of singletons, multitons, outputs
 
 - Error handling:
   - Using revert() to recover from errors, by reverting add, remove, and update operations.
@@ -732,6 +749,8 @@ ETA: January 31th 2016
   - Singleton()
   - Multiton()
   - trough()
+  - set_output()
+  - output()
 
 - Pipelets manipulating operations:
   - adds(): filter add operations, useful when these have a strict Create semantic
