@@ -62,10 +62,11 @@ Query = RS.Query || require 'toubkal/lib/core/query.js'
 describe 'Query & Query_Tree test suite:', ->
   describe 'Query.Error()', ->
     Query_Error = Query.Error
-    
-    e = new Query_Error 'message'
+    e = null
     
     it 'should be a Query_Error', ->
+      e = new Query_Error 'message'
+      
       expect( e ).to.be.a Query_Error
       expect( e ).to.be.a Error
       
@@ -1182,15 +1183,23 @@ describe 'Query & Query_Tree test suite:', ->
     
     
   describe 'Query_Tree()', ->
-    tree = new Query.Tree()
+    tree = null
     
-    Input = Pipelet.Input
+    Input = null
     
-    subscriber_1 = new Input( {}, 'subscriber_1' )
-    subscriber_2 = new Input( {}, 'subscriber_2' )
-    subscriber_3 = new Input( {}, 'subscriber_3' )
+    subscriber_1 = null
+    subscriber_2 = null
+    subscriber_3 = null
     
     it 'Pipelet() should allow to create a top query tree node', ->
+      tree = new Query.Tree()
+      
+      Input = Pipelet.Input
+      
+      subscriber_1 = new Input( {}, 'subscriber_1' )
+      subscriber_2 = new Input( {}, 'subscriber_2' )
+      subscriber_3 = new Input( {}, 'subscriber_3' )
+      
       expect( tree.top ).to.be.eql {
         branches   : {}
         keys       : []
@@ -1492,24 +1501,34 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
   describe 'Query_Tree routing:', ->
-    source = new RS.Pipelet()
-    output = source._output
+    source = null
+    output = null
     
-    tree = output.tree
+    tree = null
     
-    subscriber_1 = source.filter( [ { flow: 'user', id: 123 } ]     ).set( [], { name: 'subscriber_1' } )
-    subscriber_2 = source.filter( [ { flow: 'user', id: 345 } ]     ).set( [], { name: 'subscriber_2' } )
-    subscriber_3 = source.filter( [ {} ]                            ).set( [], { name: 'subscriber_3' } )
-    subscriber_4 = source.filter( [ { id: 123 }, { flow: 'user' } ] ).set( [], { name: 'subscriber_4' } )
-    
-    output.emit 'add', [
-      { flow: 'group' }
-      { id: 123 }
-      { flow: 'user', id: 123 }
-      { flow: 'user', id: 345 }
-    ]
+    subscriber_1 = null
+    subscriber_2 = null
+    subscriber_3 = null
+    subscriber_4 = null
     
     it 'Should allow to emit an add operation filtered by a query to the first subscriber', ( done ) ->
+      source = new RS.Pipelet().set_scope()
+      output = source._output
+      
+      tree = output.tree
+      
+      subscriber_1 = source.filter( [ { flow: 'user', id: 123 } ]     ).set( [], { name: 'subscriber_1' } )
+      subscriber_2 = source.filter( [ { flow: 'user', id: 345 } ]     ).set( [], { name: 'subscriber_2' } )
+      subscriber_3 = source.filter( [ {} ]                            ).set( [], { name: 'subscriber_3' } )
+      subscriber_4 = source.filter( [ { id: 123 }, { flow: 'user' } ] ).set( [], { name: 'subscriber_4' } )
+      
+      output.emit 'add', [
+        { flow: 'group' }
+        { id: 123 }
+        { flow: 'user', id: 123 }
+        { flow: 'user', id: 345 }
+      ]
+      
       subscriber_1._fetch_all ( values ) -> check done, () ->
         expect( values ).to.be.eql [
           { flow: 'user', id: 123 }
