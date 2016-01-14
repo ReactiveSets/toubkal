@@ -462,15 +462,23 @@ schemes.
 
 This readme provides an introduction to Toubkal.
 
-The bulk of the core documentation is currently embedded in the code of ```lib/pipelet.js```
+The bulk of the core documentation is currently embedded in the code of
+[pipelet.js](https://github.com/ReactiveSets/toubkal/tree/master/lib/core/pipelet.js)
 and other sources for other pipelets.
 
 We plan on extracting and completing this documentation to provide the following
-manuals:
+manuals from version 0.6:
+
+- Toubkal Introduction
+- Toubkal Gloasary of Terms
 
 - Toubkal Application Architect Manual
+- Toubkal Application Architect Reference
+
 - Toubkal Pipelet Developper's Guide
-- A Reference Manual for all available pipelets by module
+- Toubkal Pipelet Developper's Reference
+
+- Toubkal Internals
 
 ### Automated Tests, Continuous Integration
 
@@ -554,47 +562,65 @@ First Beta version with API almost finalized.
 
 #### Main Goals:
 
-- Implement as many ToDo as possible
-- Develop additional tests, goal is at least 3000 continuous integration tests, code coverage to 90%
 - Extract documentation from code
 - Build Website, featuring documentation and tutorial
+- Implement as many ToDo as possible
+- Develop additional tests, goal is at least 3000 continuous integration tests, code coverage to 90%
 - Session Strorage Dataflow
 
 #### Work-In-Progress:
 
-- Candidate automatic documentation extraction format from comments:
-  - output format is github-flavored markdown
+- Candidate automatic documentation extraction format from source code comments:
+  - highly targeted towards Toubkal dataflow programming
+
+  - augmented github-flavored markdown
+
+  - output as dataflow, suitable for transformations to github-flavored markdown, plain html, and more
 
   - Input format:
     - inside any comments
     - line-oriented
     - indentation-sensitive
-    - List of items, such as parameters are paragraphs starting with a hyphen "-"
     - can contain github-flavored markdown
+    - The "@" character is interpreted as meta-data for this format, can be escaped using the "\" character. 
 
-  - @tag: indicates a documentation section, first tag in a comment indicates start of documented item:
-    - @pipelet     : defines pipelet signature on one line
-    - @flow        : defines a dataflow name
-    - @function    : defines function signature on one line
-    - @method      : instance method
-    - @class       : defines a class name
-    - @class_method: class method signature
-    - @term        : defines a term
-    - @section     : a documentation section name this belongs-to (introduction, reference, programmer)
-    - @short       : a short description on one line
-    - @description : a long description
-    - @parameters  : list of pipelet, function, method parameters
-    - @returns     : defines returned value
-    - @throws      : defines list of conditions that throw errors
-    - @source      : defines expected source values' attributes
-    - @emits       : defines emitted output values' attributes
-    - @todo        : defines suggestion for future version
-    - @coverage    : indicates automatic tests coverage
-    - @api         : indicates API maturity e.g. experimental, alpha, beta, ga
+  - @tag: indicates a documentation sub-section, first tag in a comment indicates start of documented item:
+    - if tag is followed by a column ":", the sub-section is multiline, otherwise it is contained on a single line
+    - if an unknown tag is found, a warning is emitted
+    - plurals indicate a list of items described in paragraphs starting with a hyphen "-"
 
-  - @@keyword: indicates a link to another section of the documation, e.g.:
-    - This is @@stateless, @@synchronous, @@lazy pipelet.
-    - @@greedy()
+    - list of currently defined tags:
+      - @pipelet     : pipelet signature
+      - @namespace   ; namespace, e.g. "rs"
+      - @flow        : a dataflow name
+      - @function    : function signature
+      - @method      : instance method signature
+      - @class       : a class constructor signature
+      - @is_a        : parent class name or list of
+      - @class_method: class method signature
+      - @term        : a term
+      - @terms       : a list of terms
+      - @short       : a short description on one line
+      - @description : a long description
+      - @parameter   : a parameter
+      - @parameters  : list of pipelet, function, method parameters
+      - @returns     : function or method returned value
+      - @throws      : list of conditions that throw errors
+      - @examples    : list of usage examples
+      - @source      : expected source values' attributes
+      - @emits       : emitted output values' attributes
+      - @todo        : suggestion for future version
+      - @coverage    : indicates automatic tests coverage
+      - @manual      : a documentation manual name this belongs-to (introduction, manual, reference, guide, programmer, internal)
+      - @section     : a section name within a manual
+      - @api         : indicates API maturity: experimental, alpha, beta, stable, deprecated
+
+  - @@keyword: indicates a link to another section of the documentation:
+    - e.g. This is @@stateless, @@synchronous, @@lazy pipelet.
+    - If keyword is a plural and no entry is found for it, attempt to locate it's singular form
+    - If it cannot be located, a warning is emitted 
+
+  - some pipelets, functions and methods are already following this documentation format
 
 ### Version 0.5.0 - Web Application Framework / Packaging / Versionning
 
