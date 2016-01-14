@@ -27,13 +27,13 @@
 /* -------------------------------------------------------------------------------------------
    Start HTTP Servers
 */
-var servers = require( 'toubkal/lib/server/http.js' )
+var servers = require( 'toubkal' )
   .set( [
     { id: 1, ip_address: '0.0.0.0', port: 8081 },
   ] )
   .http_servers()
 ;
 
-require( './examples.js' )( servers.virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.1.10', '192.168.0.22' ] ) );
+require( './examples' )( servers.virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.1.10', '192.168.0.22' ] ) );
 
 module.export = servers;
