@@ -1512,7 +1512,7 @@ describe 'Query & Query_Tree test suite:', ->
     subscriber_4 = null
     
     it 'Should allow to emit an add operation filtered by a query to the first subscriber', ( done ) ->
-      source = new RS.Pipelet().set_scope()
+      source = new RS.Pipelet().set_namespace()
       output = source._output
       
       tree = output.tree

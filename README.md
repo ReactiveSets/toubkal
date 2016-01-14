@@ -744,8 +744,8 @@ ETA: January 31th 2016
 
 #### Work in progress:
 
-- Scoping:
-  - allow scoping of singletons, multitons, outputs
+- Namespaces:
+  - allow local scoping of singletons, multitons, outputs
 
 - Error handling:
   - Using revert() to recover from errors, by reverting add, remove, and update operations.
@@ -793,6 +793,9 @@ ETA: January 31th 2016
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+namespace()                         | Get namespace of current pipelet
+set_namespace()                     | Set namespace of current pipelet
+create_namespace()                  | Create child namespace of current pipelet or namespace
 $query_selector()                   | Emits a node if query selector found, used as a parameter to $to_dom()
 output()                            | Retrieves a global reference for an output pipelet set by set_output()
 set_output()                        | Sets a global reference for an ouput pipelet
