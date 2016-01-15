@@ -397,8 +397,8 @@ describe 'Pipelet', ->
       it 'Attempting to use _input.add_source() with a Pipelet instead of an Output should throw', ->
         values = [ { id: 1 }, { id: 2 } ]
         
-        source = new Pipelet()
-        lazy   = new Pipelet()
+        source = new Pipelet().set_namespace( rs )
+        lazy   = new Pipelet().set_namespace( rs )
         greedy = rs.greedy()
         
         expect( () -> greedy._input.add_source source ).to.throwException()
@@ -463,7 +463,7 @@ describe 'Pipelet', ->
       
       it 'Adding "lazy" as a destination to "source", "source" should have "lazy" input as desintations', ->
         # Reinitialize lazy because the previous operation threw an exception but left it in a greedy state
-        lazy = new Pipelet()
+        lazy = new Pipelet().set_namespace( rs )
         
         source._add_destination lazy
         
