@@ -1,11 +1,31 @@
 /*  examples.js
 
-    Serve all examples assets and datasets from virtual http servers
+    The MIT License (MIT)
+
+    Copyright (c) 2013-2016, Reactive Sets
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
 */
 module.exports = function( servers ) {
   'use strict';
   
-  var rs          = require( 'toubkal' )
+  var rs          = servers.create_namespace( 'examples' ) // child namespace
     , RS          = rs.RS
     , extend      = RS.extend
     , log         = RS.log.bind( null, 'examples' )
@@ -16,6 +36,10 @@ module.exports = function( servers ) {
     , react_js    = assets.react.watch()
     , scope       = {}
   ;
+  
+  // servers is the virtual servers used by examples.js only
+  // so we can set its namespace
+  servers.set_namespace( rs ); // set namespace to servers' child namespace
   
   // Listen when lib/toubkal-min.js is ready
   servers.http_listen( toubkal_min );
@@ -137,12 +161,12 @@ module.exports = function( servers ) {
   ;
   
   // Serve database to socket.io clients
-  // ToDo: add option to dispatch() to use a union() as dispatcher instead of passthrough()
+  // ToDo: add option to dispatch() to use a union() as dispatcher instead of pass_through()
   // ToDo: or maybe, make path_through() a union() so that it becomes a controllet
   // ToDo: or just deprecate path_through() altogether
   rs
     .Singleton( 'examples_database', function( source, tables, options ) {
-      return rs
+      return source
         .dispatch( tables, function( source, options ) {
           var flow = this.name;
           
