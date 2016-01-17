@@ -33,7 +33,7 @@ subclass = this.rs && this.rs.RS.subclass || require '../../lib/util/subclass.js
 # subclass test suite
 # -------------------
 
-describe 'subclass():', ->
+describe 'subclass()', ->
   it 'subclass() should be a function', ->
     expect( subclass ).to.be.a 'function'
   
@@ -58,3 +58,85 @@ describe 'subclass():', ->
   
   it 'a should not be an instance of Snake', ->
     expect( a ).to.not.be.a Snake
+
+describe 'new_apply()', ->
+  Point = null
+  point = null
+  
+  it 'should allow to create an instance of class Point when constructor returns undefined', ->
+    Point = ( x, y ) ->
+      @x = x
+      @y = y
+      return
+    
+    point = subclass.new_apply( Point, [ 1, 2 ] )
+    
+    expect( point ).to.be.eql {
+      x: 1
+      y: 2
+    }
+  
+  it 'should be an instance of Point', ->
+    expect( point ).to.be.a Point
+  
+  it 'should allow to create an instance of class Point when constructor returns this', ->
+    Point = ( x, y ) ->
+      @x = x
+      @y = y
+      
+      return this
+    
+    point = subclass.new_apply( Point, [ 1, 2 ] )
+    
+    expect( point ).to.be.eql {
+      x: 1
+      y: 2
+    }
+    
+    expect( point ).to.be.a Point
+  
+  it 'should allow to create an instance of class Point though constructor returns a number', ->
+    Point = ( x, y ) ->
+      @x = x
+      return @y = y
+    
+    point = subclass.new_apply( Point, [ 1, 2 ] )
+    
+    expect( point ).to.be.eql {
+      x: 1
+      y: 2
+    }
+    
+    expect( point ).to.be.a Point
+  
+  it 'should allow to create an instance of class Point though constructor returns null', ->
+    Point = ( x, y ) ->
+      @x = x
+      @y = y
+      return null
+    
+    point = subclass.new_apply( Point, [ 1, 2 ] )
+    
+    expect( point ).to.be.eql {
+      x: 1
+      y: 2
+    }
+    
+    expect( point ).to.be.a Point
+  
+  it 'should allow to create a non-instance object with Point() which returns another object', ->
+    Point = ( x, y ) ->
+      that = {}
+      that.x = x
+      that.y = y
+      
+      return that
+    
+    point = subclass.new_apply( Point, [ 1, 2 ] )
+    
+    expect( point ).to.be.eql {
+      x: 1
+      y: 2
+    }
+  
+    expect( point ).not.be.a Point
