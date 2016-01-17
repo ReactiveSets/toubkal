@@ -30,11 +30,11 @@ module.exports = function( database, clients ) {
     
     .alter( function( sale ) {
       sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
-      
-      sale.flow = 'teaser/sales_year';
     }, { name: 'alter teaser/sales_year' } )
     
     .trace( 'teaser/sales_year' )
+    
+    .set_flow( 'teaser/sales_year' )
     
     .through( clients )
   ;
