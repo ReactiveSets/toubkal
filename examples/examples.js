@@ -25,7 +25,7 @@
 module.exports = function( servers ) {
   'use strict';
   
-  var rs          = servers.create_namespace( 'examples' ) // child namespace
+  var rs          = servers.create_namespace( 'examples', true ) // child namespace
     , RS          = rs.RS
     , extend      = RS.extend
     , log         = RS.log.bind( null, 'examples' )
@@ -64,11 +64,11 @@ module.exports = function( servers ) {
     
     .set( [ { path: '' } ] )
     
-    .directory_entries()
+    .through( rs.directory_entries() )
     
     .filter( [ { type: 'directory' } ] )
     
-    .directory_entries()
+    .through( rs.directory_entries() )
     
     /* ------------------------------------------------------------------------------------
        Load and Serve Static Assets
@@ -128,7 +128,7 @@ module.exports = function( servers ) {
       ;
     } )
     
-    .examples_clients()
+    .through( rs.examples_clients() )
   ;
   
   rs.output( 'assets', scope )
@@ -157,7 +157,7 @@ module.exports = function( servers ) {
     // filter-out non-assets fetches
     .flow( 'assets' )
     
-    .examples_clients()
+    .through( rs.examples_clients() )
   ;
   
   // Serve database to socket.io clients
@@ -181,7 +181,7 @@ module.exports = function( servers ) {
     
     .examples_database( rs.output( 'tables', scope ) )
     
-    .examples_clients()
+    .through( rs.examples_clients() )
   ;
   
   // Require examples' data processors
