@@ -52,6 +52,10 @@
             attributes: {
               title: v.state + ' @' + v.timestamp + ' (' + v.address + ')',
               
+              // ToDo: allow attribute values to be functions, called in
+              // some context with events
+              onclick: "alert( 'clicked' )",
+              
               style: {
                 'color': v.connected ? 'green' : 'red'
               }
