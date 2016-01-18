@@ -19,7 +19,8 @@ find test \
 echo
 echo "Source:"
 
-find *sh *.json *.md .travis.yml lib bin \
+find *sh *.json *.md .travis.yml lib bin examples \
+  ! -name '*.json' \
   -regextype posix-egrep \
   -regex '.*[^~]' \
   -type f \
