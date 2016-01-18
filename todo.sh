@@ -1,6 +1,6 @@
 #!/bin/sh
 
-files='*sh *.md lib bin test'
+files='*sh *.md lib bin test examples'
 
 if ( [ "$1" != "" ]; ) then
   files="$1 $2 $3 $4 $5 $6"
