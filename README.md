@@ -793,6 +793,7 @@ ETA: January 31th 2016
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+log_namespace()                     | Helps debug namespace issues
 namespace()                         | Get namespace of current pipelet
 set_namespace()                     | Set namespace of current pipelet
 create_namespace()                  | Create child namespace of current pipelet or namespace
