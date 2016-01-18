@@ -64,11 +64,11 @@ module.exports = function( servers ) {
     
     .set( [ { path: '' } ] )
     
-    .through( rs.directory_entries() )
+    .directory_entries()
     
     .filter( [ { type: 'directory' } ] )
     
-    .through( rs.directory_entries() )
+    .directory_entries()
     
     /* ------------------------------------------------------------------------------------
        Load and Serve Static Assets
@@ -128,7 +128,7 @@ module.exports = function( servers ) {
       ;
     } )
     
-    .through( rs.examples_clients() )
+    .examples_clients()
   ;
   
   rs.output( 'assets', scope )
@@ -157,7 +157,7 @@ module.exports = function( servers ) {
     // filter-out non-assets fetches
     .flow( 'assets' )
     
-    .through( rs.examples_clients() )
+    .examples_clients()
   ;
   
   // Serve database to socket.io clients
@@ -179,9 +179,11 @@ module.exports = function( servers ) {
       ;
     } )
     
+    .log_namespace( 'after singleton' )
+    
     .examples_database( rs.output( 'tables', scope ) )
     
-    .through( rs.examples_clients() )
+    .examples_clients()
   ;
   
   // Require examples' data processors
