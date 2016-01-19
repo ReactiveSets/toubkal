@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1527 automated tests*
+*1547 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -482,7 +482,7 @@ manuals from version 0.6:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1527 continuous integration tests for the Toubkal core and framework
+We have curently developped 1547 continuous integration tests for the Toubkal core and framework
 pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -510,7 +510,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1527 of 1527 tests
+-> passed 1547 of 1547 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -729,7 +729,7 @@ This version introduces the capability to keep historical values of objects pers
 
 ETA: January 31th 2016
 
-- 1527 continuous integration tests
+- 1547 continuous integration tests
 
 #### Main Goals:
 

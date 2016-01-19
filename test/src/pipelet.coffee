@@ -86,6 +86,81 @@ describe 'Pipelet', ->
     it 'should not allow a factory function wih more than 2 parameters', ->
       expect( -> Pipelet.Add 'ab_0c3', ( source, parameters, extra_parameter ) -> ).to.throwException()
   
+  describe 'create_namespace()', ->
+    child = null
+    grandchild = null
+    
+    factory = ( source, parameters ) ->
+    
+    it 'should allow to create a child namespace', ->
+      child = rs.create_namespace( 'child', true );
+      
+      expect( child.namespace() ).to.be child
+    
+    it 'should provide access to RS', ->
+      expect( child.RS ).to.be RS
+    
+    it 'should have rs as a parent class', ->
+      expect( child._is_a 'Namespace.root' ).to.be true
+
+    it 'should allow to create a grand-child namespace', ->
+      grandchild = child.create_namespace( 'grandchild', true );
+      
+      expect( child.namespace() ).to.be child
+    
+    it 'should be a child of child namespace', ->
+      expect( child._is_a 'Namespace.child' ).to.be true
+    
+    it 'should allow to use child to add a factory using Pipelet.Add()', ->
+      expect( -> Pipelet.Add 'child_abc', factory, child ).to.not.throwException()
+    
+    it 'should allow access to factory', ->
+      expect( child.child_abc ).to.be.a Function
+    
+    it 'should not not be accessible from rs', ->
+      expect( rs.child_abc ).to.be undefined
+    
+    it 'but it should be accessible from grand-child namespace', ->
+      expect( grandchild.child_abc ).to.be child.child_abc
+    
+    it 'should allow child to mixin factory into an object', ->
+      object = child._scope._mixin {}
+      
+      expect( Object.keys object ).to.be.eql [ 'child_abc' ]
+      expect( object.child_abc ).to.be child.child_abc
+    
+    it 'should not allow grandchild to mixin factory into an object', ->
+      object = grandchild._scope._mixin {}
+      
+      expect( Object.keys object ).to.be.eql []
+    
+    it 'rs.set_output( "_rs" ).output( "_rs" ) should be rs', ->
+      expect( rs.set_output( '_rs' ).output( '_rs' ) ).to.be rs
+    
+    it 'set output should be accessible from child namespace', ->
+      expect( child.output( '_rs' ) ).to.be rs
+    
+    it 'set output should be accessible from grand-child namespace', ->
+      expect( grandchild.output( '_rs' ) ).to.be rs
+    
+    it 'child.set_output( "_child" ).output( "_child" ) should be child', ->
+      expect( child.set_output( '_child' ).output( '_child' ) ).to.be child
+    
+    it 'rs.output( "_child" ) should throw an Error', ->
+      expect( -> rs.output( '_child' ) ).to.throwException()
+    
+    it 'grandchild.output( "_child" ) should be child', ->
+      expect( grandchild.output( '_child' ) ).to.be child
+    
+    it 'grandchild.set_output( "_child" ) should throw and error', ->
+      expect( -> grandchild.set_output( "_child" ) ).to.throwException()
+    
+    it 'should allow rs.set_output( "_child" ).output( "_child" ) to return rs', ->
+      expect( rs.set_output( "_child" ).output( "_child" ) ).to.be rs
+    
+    it 'child.output( "_child" ) should keep returning child', ->
+      expect( child.output( '_child' ) ).to.be child
+    
   describe 'set_default_options()', ->
     as_array            = ( a ) -> Array.prototype.slice.call a, 0
     
@@ -537,3 +612,4 @@ describe 'Pipelet', ->
         s._output.add_destination( p._input )
         
         expect( s1.a ).to.be.eql values
+
