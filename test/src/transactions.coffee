@@ -404,7 +404,7 @@ describe 'Transactions test suite', ->
         expect( t ).to.be.a Transaction
         expect( t.source_options ).to.be undefined
         expect( t.emit_options ).to.be undefined
-        expect( t.o.__t ).to.be t
+        #expect( t.o.__t ).to.be t
         
       it 't.toJSON() should return a representation of the new transaction', ->
         expect( t.toJSON() ).to.be.eql {
@@ -435,7 +435,7 @@ describe 'Transactions test suite', ->
         }
       
       it 't.get_options() should set more', ->
-        expect( t.get_options() ).to.be.eql { more: true, __t: t }
+        expect( t.get_options() ).to.be.eql { more: true } # , __t: t }
       
       it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
         options = t.get_emit_options()
@@ -499,7 +499,7 @@ describe 'Transactions test suite', ->
         }
       
       it 'should return more with t.get_options()', ->
-        expect( t.get_options() ).to.be.eql { __t: t, more: true }
+        expect( t.get_options() ).to.be.eql { more: true } # { __t: t, more: true }
       
       it 'should return more with transaction id with t.get_emit_options()', ->
         expect( t.get_emit_options() ).to.be.eql { _t: {
