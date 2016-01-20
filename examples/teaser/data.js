@@ -22,11 +22,17 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.    
 */
-module.exports = function( database, clients ) {
+module.exports = function processor( database, clients ) {
   'use strict';
+  
+  var rs = database.namespace()
+    , scope = {} // a local scope, automatically discarded when processor is removed
+  ;
   
   database
     .flow( 'teaser/sales' )
+    
+    .set_output( 'from_database', scope ) // keep track of connection to database for removal
     
     .alter( function( sale ) {
       sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
@@ -36,6 +42,18 @@ module.exports = function( database, clients ) {
     
     .set_flow( 'teaser/sales_year' )
     
+    .set_output( 'to_clients', scope ) // keep track of connection to clients for removal
+    
     .through( clients )
   ;
-};
+  
+  processor.remove = function() {
+    rs.output( 'to_clients', scope )
+      ._remove_destination( clients ) // will fetch to remove data to clients
+      .output( 'from_database', scope )
+      ._remove_source( database, { no_fetch: true } ) // no need to fetch, nobody is listening
+    ;
+    
+    // Note: outputs to_clients and from_database will now be discarded are these are in local scope
+  };
+}; // processor()

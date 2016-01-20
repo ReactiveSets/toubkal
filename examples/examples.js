@@ -196,21 +196,40 @@ module.exports = function( servers ) {
       return file.path.split( '/' ).pop() == 'data.js';
     } )
     
-    .trace( 'data processors' ).set_output( 'data_processors', scope )
+    .alter( function( processor ){} ) // hack to split updates into adds and removes to test dispatch cleanup on remove
+    
+    .trace( 'data processors' )
+    
+    .set_output( 'data_processors', scope )
   ;
   
-  rs.dispatch( rs.output( 'data_processors', scope ), function() {
-    // ToDo: cleanup required when removing a data processor, need to disconnect data from examples_database and clients, and remove from require cache
-    // ToDo: allow to hot-reload data-processor
-    
+  rs.dispatch( rs.output( 'data_processors', scope ), function( source, options ) {
     var data_processor = './' + this.path
-      , path = require.resolve( data_processor )
+      , path           = require.resolve( data_processor )
+      , remove_source  = source._input.remove_source
+      , processor
     ;
     
-    de&&ug( 'require data processor:', data_processor );
+    de&&ug( 'requiring data processor:', data_processor );
     
-    delete require.cache[ path ];
+    try {
+      processor = require( path );
+      
+      processor( rs.examples_database(), rs.examples_clients() );
+    } catch( e ) {
+      log( 'failed to load data processor:', data_processor, ', error:', e );
+    }
     
-    require( path )( rs.examples_database(), rs.examples_clients() );
+    source._input.remove_source = _remove_source;
+    
+    function _remove_source( output, options ) {
+      de&&ug( 'removing data processor:', data_processor );
+      
+      processor && processor.remove && processor.remove()
+      
+      delete require.cache[ path ];
+      
+      remove_source.call( source._input, output, options ) 
+    }
   } );
 } // module.exports
