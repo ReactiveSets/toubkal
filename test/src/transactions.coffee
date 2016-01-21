@@ -833,7 +833,7 @@ describe 'Transactions test suite', ->
       it 'should have emited no add operation to the pipelet', ->
         expect( output._operations ).to.be.eql []
       
-      it 'after ending transation it should have emited nothing because there is more expected upstream', ->
+      it 'after ending transaction it should have emited nothing because there is more expected upstream', ->
         t.end()
         
         expect( output._operations ).to.be.eql []
@@ -899,15 +899,13 @@ describe 'Transactions test suite', ->
     describe 'Input / Output Transactions()', ->
       describe 'I/O Transactions on a tagged input, with single tagged transaction', ->
         input    = new RS.Loggable 'input'
-        output_1 = new RS.Loggable 'output_1'
-        output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' )
+        input_transactions = new Input_Transactions( 'input' )
           .set_tag( 'source' )
           .set_branches( 2 )
         
-        output_1_transactions = new Output_Transactions output_1, 'output_1'
-        output_2_transactions = new Output_Transactions output_2, 'output_2'
+        output_1_transactions = new Output_Transactions 'output_1'
+        output_2_transactions = new Output_Transactions 'output_2'
         
         input_transaction = null
         output_1_transaction = null
@@ -1077,15 +1075,13 @@ describe 'Transactions test suite', ->
         
       describe 'I/O Transactions on a tagged input, with single tagged transaction with another tag', ->
         input    = new RS.Loggable 'input'
-        output_1 = new RS.Loggable 'output_1'
-        output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' )
+        input_transactions = new Input_Transactions( 'input' )
           .set_tag( 'source' )
           .set_branches( 2 )
         
-        output_1_transactions = new Output_Transactions output_1, 'output_1'
-        output_2_transactions = new Output_Transactions output_2, 'output_2'
+        output_1_transactions = new Output_Transactions 'output_1'
+        output_2_transactions = new Output_Transactions 'output_2'
         
         input_transaction = null
         output_1_transaction = null
@@ -1253,14 +1249,12 @@ describe 'Transactions test suite', ->
         
       describe 'I/O Transactions on a non-tagged input, with single tagged transaction with a tag', ->
         input    = new RS.Loggable 'input'
-        output_1 = new RS.Loggable 'output_1'
-        output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' )
+        input_transactions = new Input_Transactions( 'input' )
           .set_branches( 2 )
         
-        output_1_transactions = new Output_Transactions output_1, 'output_1'
-        output_2_transactions = new Output_Transactions output_2, 'output_2'
+        output_1_transactions = new Output_Transactions 'output_1'
+        output_2_transactions = new Output_Transactions 'output_2'
         
         input_transaction = null
         output_1_transaction = null
@@ -1428,15 +1422,13 @@ describe 'Transactions test suite', ->
         
       describe 'I/O Transactions on a tagged input, with nested tagged transaction', ->
         input    = new RS.Loggable 'input'
-        output_1 = new RS.Loggable 'output_1'
-        output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' )
+        input_transactions = new Input_Transactions( 'input' )
           .set_tag( 'source' )
           .set_branches( 2 )
         
-        output_1_transactions = new Output_Transactions output_1, 'output_1'
-        output_2_transactions = new Output_Transactions output_2, 'output_2'
+        output_1_transactions = new Output_Transactions 'output_1'
+        output_2_transactions = new Output_Transactions 'output_2'
         
         input_transaction = null
         output_1_transaction = null
@@ -1607,13 +1599,11 @@ describe 'Transactions test suite', ->
         
       describe 'I/O Transactions with no fork or tag', ->
         input    = new RS.Loggable 'input'
-        output_1 = new RS.Loggable 'output_1'
-        output_2 = new RS.Loggable 'output_2'
         
-        input_transactions = new Input_Transactions( input, 'input' ).set_tag( 'source' ).set_branches( 2 )
+        input_transactions = new Input_Transactions( 'input' ).set_tag( 'source' ).set_branches( 2 )
         
-        output_1_transactions = new Output_Transactions output_1, 'output_1'
-        output_2_transactions = new Output_Transactions output_2, 'output_2'
+        output_1_transactions = new Output_Transactions 'output_1'
+        output_2_transactions = new Output_Transactions 'output_2'
         
         input_transaction = null
         output_1_transaction = null
