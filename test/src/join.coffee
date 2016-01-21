@@ -2404,12 +2404,12 @@ join_tests = ( options ) ->
         else
           _t = remove[ 1 ]._t
           
-          # expect( _t  ).to.be.eql { id: _t.id, more: true }
+          expect( _t  ).to.be.eql { id: _t.id, more: true }
           
           expect( adds.shift() ).to.eql [
             []
-            # { _t: { id: _t.id } }
-          ] && undefined
+            { _t: { id: _t.id } }
+          ]
         
         done()
       
@@ -2495,10 +2495,10 @@ join_tests = ( options ) ->
           ]
           
           # options
-          #id = update[ 1 ]._t.id
+          id = update[ 1 ]._t.id
           
-          expect( update[ 1 ] ).to.be.eql {} # { _t: { id: id, more: true } }
-          expect( remove[ 1 ] ).to.be.eql {} # { _t: { id: id             } }
+          expect( update[ 1 ] ).to.be.eql { _t: { id: id, more: true } }
+          expect( remove[ 1 ] ).to.be.eql { _t: { id: id             } }
           
           done()
       
@@ -2660,9 +2660,9 @@ join_tests = ( options ) ->
           if ! no_filter
             add = adds.shift()
             
-            # id = add[1]._t.id
+            id = add[1]._t.id
             
-            expect( add ).to.be.eql undefined # [ [], { _t: { id: id } } ]
+            expect( add ).to.be.eql [ [], { _t: { id: id } } ]
           
           compare_expected_values expected, values
       
