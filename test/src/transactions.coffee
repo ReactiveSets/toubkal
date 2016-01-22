@@ -901,8 +901,8 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = new Input_Transactions( 'input' )
-          .set_tag( 'source' )
-          .set_branches( 2 )
+        input_transactions.set_tag( 'source' )
+        input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
         output_2_transactions = new Output_Transactions 'output_2'
@@ -1077,8 +1077,8 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = new Input_Transactions( 'input' )
-          .set_tag( 'source' )
-          .set_branches( 2 )
+        input_transactions.set_tag( 'source' )
+        input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
         output_2_transactions = new Output_Transactions 'output_2'
@@ -1251,7 +1251,7 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = new Input_Transactions( 'input' )
-          .set_branches( 2 )
+        input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
         output_2_transactions = new Output_Transactions 'output_2'
@@ -1424,8 +1424,8 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = new Input_Transactions( 'input' )
-          .set_tag( 'source' )
-          .set_branches( 2 )
+        input_transactions.set_tag( 'source' )
+        input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
         output_2_transactions = new Output_Transactions 'output_2'
@@ -1600,7 +1600,9 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions with no fork or tag', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input' ).set_tag( 'source' ).set_branches( 2 )
+        input_transactions = new Input_Transactions( 'input' )
+        input_transactions.set_tag( 'source' )
+        input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
         output_2_transactions = new Output_Transactions 'output_2'

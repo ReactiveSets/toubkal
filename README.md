@@ -475,8 +475,8 @@ manuals from version 0.6:
 - Toubkal Application Architect Manual
 - Toubkal Application Architect Reference
 
-- Toubkal Pipelet Developper's Guide
-- Toubkal Pipelet Developper's Reference
+- Toubkal Pipelet Programer's Guide
+- Toubkal Pipelet Programer's Reference
 
 - Toubkal Internals
 
