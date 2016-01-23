@@ -727,7 +727,7 @@ This version introduces the capability to keep historical values of objects pers
 
 ### Version 0.3.5 - Error Handling, Complex Authorizations, DOM Handling
 
-ETA: January 31th 2016
+ETA: February  29th 2016
 
 - 1547 continuous integration tests
 
@@ -744,9 +744,6 @@ ETA: January 31th 2016
 
 #### Work in progress:
 
-- Namespaces:
-  - allow local scoping of singletons, multitons, outputs
-
 - Error handling:
   - Using revert() to recover from errors, by reverting add, remove, and update operations.
 
@@ -755,11 +752,20 @@ ETA: January 31th 2016
     and apply authorization rules accordingly.
   - using not_exists() to test appropriate existance on adds, removes and updates
 
+#### Completed Work:
+
+- Allow automatic synchronization of all inputs of a pipelet, as long as one uses method Pipelet.._add_input() to add additional inputs.
+  This relies on sharing input transactions between all inputs, and other modifications to make this work properly on controllets.
+  Implemented in filter() and $to_dom()
+
 - Reinstate update as a first-class operation, making it easier to handle updates
 
-- Live page reload to ease developpement.
+- Hot reload of server code, migrating state reliably, implemented in examples.
 
-#### Completed Work:
+- Live page reload to ease developpement, implemented in examples.
+
+- Namespaces:
+  - allow local scoping of singletons, multitons, outputs
 
 - Pipelet._add_input() greatly simplifies adding additional inputs to pipelets.
 
