@@ -799,6 +799,7 @@ ETA: February  29th 2016
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+has_none()                          | Has one value if source has none, has no value if source has one.
 log_namespace()                     | Helps debug namespace issues
 namespace()                         | Get namespace of current pipelet
 set_namespace()                     | Set namespace of current pipelet
