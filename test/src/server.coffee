@@ -39,6 +39,7 @@ require 'toubkal'
 http_servers      = null
 schemas           = null
 database          = null
+database_cache    = null
 socket_io_clients = null
 
 describe 'http_servers()', ->
@@ -64,9 +65,12 @@ describe 'in-memory database with dispatch()', ->
           .flow( flow, { key: this.key || [ 'id' ] } )
           .trace( flow + ' in' )
           .set( [] )
-          .trace( flow + ' out' )
+          .trace( flow + ' out', { all: true } )
           .flow( flow )
     
+    database_cache = database
+      .set( [], { key: [ 'flow', 'id' ] } )
+      
     fetched = ( data ) ->
       check done, () ->
         expect( data ).to.be.eql []
@@ -80,10 +84,20 @@ describe 'in-memory database with dispatch()', ->
       check done, () ->
         expect( data ).to.be.eql [ { flow: 'users', id: 1, name: 'joe' } ]
   
+  it 'should find user in database cache', ( done ) ->
+    database_cache._fetch_all ( data ) ->
+      check done, () ->
+        expect( data ).to.be.eql [ { flow: 'users', id: 1, name: 'joe' } ]
+  
   it 'should allow to remove user from database', ( done ) ->
     database._remove [ { flow: 'users', id: 1, name: 'joe' } ]
     
     database._fetch_all ( data ) ->
+      check done, () ->
+        expect( data ).to.be.eql []
+  
+  it 'should no-longer find user in database cache', ( done ) ->
+    database_cache._fetch_all ( data ) ->
       check done, () ->
         expect( data ).to.be.eql []
   
@@ -103,6 +117,15 @@ describe 'in-memory database with dispatch()', ->
           { flow: 'profiles', id: 1, user_id: 1, age: 26 }
         ]
   
+  it 'should find these users and profile in database cache', ( done ) ->
+    database_cache._fetch_all ( data ) ->
+      check done, () ->
+        expect( data ).to.be.eql [
+          { flow: 'users', id: 1, name: 'joe' }
+          { flow: 'users', id: 1, name: 'jack' }
+          { flow: 'profiles', id: 1, user_id: 1, age: 26 }
+        ]
+  
   it 'should allow to remove profiles schema', ( done ) ->
     schemas._remove [ { id: 'profiles' } ]
     
@@ -113,10 +136,26 @@ describe 'in-memory database with dispatch()', ->
           { flow: 'users', id: 1, name: 'jack' }
         ]
   
+  it 'should also have removed profile data from database cache', ( done ) ->
+    database_cache._fetch_all ( data ) ->
+      check done, () ->
+        expect( data ).to.be.eql [
+          { flow: 'users', id: 1, name: 'joe' }
+          { flow: 'users', id: 1, name: 'jack' }
+        ]
+  
   it 'should allow to update users schema without altering underlying data', ( done ) ->
     schemas._update [ [ { id: 'users' }, { id: 'users', description: 'A collection of users' } ] ]
     
     database._fetch_all ( data ) ->
+      check done, () ->
+        expect( data ).to.be.eql [
+          { flow: 'users', id: 1, name: 'joe' }
+          { flow: 'users', id: 1, name: 'jack' }
+        ]
+  
+  it 'should have updated user schema in database cache', ( done ) ->
+    database_cache._fetch_all ( data ) ->
       check done, () ->
         expect( data ).to.be.eql [
           { flow: 'users', id: 1, name: 'joe' }
