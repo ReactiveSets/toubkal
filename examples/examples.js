@@ -121,9 +121,15 @@ module.exports = function( servers ) {
     // socket.io clients
     .Singleton( 'examples_clients', function( source, options ) {
       return source
+        .optimize( { key: [ 'flow', 'id' ] } )
+        
+        .trace( 'to clients' )
+        
         .dispatch( servers.socket_io_clients(), function( source, options ) {
           
-          return source.through( this.socket );
+          return source
+            .through( this.socket, options )
+          ;
         }, { single: true } )
       ;
     } )
@@ -161,9 +167,6 @@ module.exports = function( servers ) {
   ;
   
   // Serve database to socket.io clients
-  // ToDo: add option to dispatch() to use a union() as dispatcher instead of pass_through()
-  // ToDo: or maybe, make path_through() a union() so that it becomes a controllet
-  // ToDo: or just deprecate path_through() altogether
   rs
     .Singleton( 'examples_database', function( source, tables, options ) {
       return source
@@ -172,7 +175,7 @@ module.exports = function( servers ) {
           
           return source
             .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
-            .trace( 'table ' + flow )
+            //.trace( 'table ' + flow )
             .set_flow( flow )
           ;
         } )
@@ -206,7 +209,6 @@ module.exports = function( servers ) {
   rs.dispatch( rs.output( 'data_processors', scope ), function( source, options ) {
     var data_processor = './' + this.path
       , path           = require.resolve( data_processor )
-      , remove_source  = source._input.remove_source
       , processor
     ;
     
@@ -215,21 +217,31 @@ module.exports = function( servers ) {
     try {
       processor = require( path );
       
-      processor( rs.examples_database(), rs.examples_clients() );
+      processor( rs.examples_database(), rs.examples_clients(), options );
     } catch( e ) {
       log( 'failed to load data processor:', data_processor, ', error:', e );
     }
     
-    source._input.remove_source = _remove_source;
+    hijack( source._input, 'remove_source', remove );
     
-    function _remove_source( output, options ) {
+    function remove( output, options ) {
       de&&ug( 'removing data processor:', data_processor );
       
-      processor && processor.remove && processor.remove()
+      processor && processor.remove && processor.remove( options )
       
       delete require.cache[ path ];
-      
-      remove_source.call( source._input, output, options ) 
     }
   } );
+  
+  function hijack( that, method, f ) {
+    var m =  that[ method ];
+    
+    that[ method ] = function() {
+      var parameters = Array.prototype.slice.call( arguments, 0 );
+      
+      f.apply( that, parameters );
+      
+      m.apply( that, parameters );
+    }
+  }
 } // module.exports

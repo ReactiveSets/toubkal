@@ -1,6 +1,6 @@
 # Toubkal
 
-**High-Productivity Reactive Web Application Framework**
+**Reactive / Dataflow Programming for NodeJS and the Browser**
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
@@ -114,9 +114,9 @@ Toubkal is developped by a dedicated small team of experienced and passionate ba
 and front-end developpers. We have enough resources to complete this project.
 
 If you are an experienced javascript programmer, understand the power of reactive
-programming and would like to join our team, contact us.
+programming and would like to join our team, please contact us.
 
-### Why yet-another JavaScript Web Application Framework?
+### Why yet-another JavaScript Web Application Library?
 The short answer is because we are not satisfied with the productivity, performances,
 and authorization models, of existing frameworks.
 
@@ -760,7 +760,13 @@ ETA: February  29th 2016
 
 - Reinstate update as a first-class operation, making it easier to handle updates
 
-- Hot reload of server code, migrating state reliably, implemented in examples.
+- Hot server-code reloading:
+  - on required module file update
+  - migrating state reliably
+  - simple to implement:
+    - programmer describes disconnections from dataflows
+  - in a transaction allowing optimization of updated data using optimize()
+  - implemented in examples/teaser/data.js
 
 - Live page reload to ease developpement, implemented in examples.
 
