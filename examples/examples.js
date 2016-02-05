@@ -119,7 +119,7 @@ module.exports = function( servers ) {
     .set_output( 'tables', scope )
     
     // socket.io clients
-    .Singleton( 'examples_clients', function( source, options ) {
+    .Singleton( 'clients', function( source, options ) {
       return source
         .optimize( { key: [ 'flow', 'id' ] } )
         
@@ -134,7 +134,7 @@ module.exports = function( servers ) {
       ;
     } )
     
-    .examples_clients()
+    .clients()
   ;
   
   rs.output( 'assets', scope )
@@ -163,12 +163,12 @@ module.exports = function( servers ) {
     // filter-out non-assets fetches
     .flow( 'assets' )
     
-    .examples_clients()
+    .clients()
   ;
   
   // Serve database to socket.io clients
   rs
-    .Singleton( 'examples_database', function( source, tables, options ) {
+    .Singleton( 'database', function( source, tables, options ) {
       return source
         .dispatch( tables, function( source, options ) {
           var flow = this.name;
@@ -184,9 +184,9 @@ module.exports = function( servers ) {
     
     .log_namespace( 'after singleton' )
     
-    .examples_database( rs.output( 'tables', scope ) )
+    .database( rs.output( 'tables', scope ) )
     
-    .examples_clients()
+    .clients()
   ;
   
   // Require examples' data processors
@@ -217,7 +217,7 @@ module.exports = function( servers ) {
     try {
       processor = require( path );
       
-      processor( rs.examples_database(), rs.examples_clients(), options );
+      processor( rs, options );
     } catch( e ) {
       log( 'failed to load data processor:', data_processor, ', error:', e );
     }
@@ -227,7 +227,7 @@ module.exports = function( servers ) {
     function remove( output, options ) {
       de&&ug( 'removing data processor:', data_processor );
       
-      processor && processor.remove && processor.remove( options )
+      processor && processor.remove && processor.remove( options );
       
       delete require.cache[ path ];
     }

@@ -22,11 +22,12 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.    
 */
-module.exports = function processor( database, clients, options ) {
+module.exports = function processor( rs, options ) {
   'use strict';
   
-  var rs = database.namespace()
-    , scope = {} // a local scope, automatically discarded when processor is removed
+  var scope = {} // a local scope, automatically discarded when processor is removed
+    , database = rs.database()
+    , clients  = rs.clients()
   ;
   
   database
