@@ -40,18 +40,19 @@
   },
   
   "devDependencies": {
-    "coffee-script"         : "1.10.0",
-    "source-map-support"    : "0.4.0",
-    "mocha"                 : "2.4.5",
-    "expect.js"             : "0.3.1",
-    "zombie"                : "2.0.0-alpha31",
-    "mocha-unfunk-reporter" : "0.4.0",
-    "forever"               : "0.15.1",
-    "express"               : "4.13.4",
-    "passport-twitter"      : "1.0.4",
-    "passport-facebook"     : "2.0.0",
-    "passport-github"       : "1.0.0",
-    "passport-google-oauth" : "0.2.0"
+    "coffee-script"          : "1.10.0",
+    "source-map-support"     : "0.4.0",
+    "mocha"                  : "2.4.5",
+    "expect.js"              : "0.3.1",
+    "zombie"                 : "2.0.0-alpha31",
+    "mocha-unfunk-reporter"  : "0.4.0",
+    "forever"                : "0.15.1",
+    "express"                : "4.13.4",
+    "passport-twitter"       : "1.0.4",
+    "passport-facebook"      : "2.0.0",
+    "passport-github"        : "1.0.0",
+    "passport-linkedin"      : "1.0.0",
+    "passport-google-oauth20": "1.0.0"
   },
   
   "scripts": {
