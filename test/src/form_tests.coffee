@@ -83,4 +83,6 @@ fields = rs
   .order( [ { id: 'order' } ] )
 
 rs.form( document.getElementById( 'form' ), 'user_profile', fields )
+  .trace( 'form' )
+  .greedy()
   .socket_io_server()
