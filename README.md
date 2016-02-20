@@ -913,7 +913,7 @@ Pipelet API has been significantly refactored and getting close to version 1.0 A
 
   - Error dataflow is handled specifically by some core pipelets:
     - set_flow() does not alter the flow attribute when set to 'error'
-    - unique_set() forwards incomming errors to underlying set
+    - unique() forwards incomming errors to underlying set
   
 - Refactor modules, packaging:
   - use undefine() to load modules from any situation, node, browser, AMD loaders
@@ -1064,6 +1064,7 @@ value_to_attribute()      | Sets value as an attribute and add other default att
 Core Pipelets             | Short Description
 --------------------------|------------------------------------------------
 set()                     | Base stateful pipelet
+unique()                  | Set of unique values, discarding duplicates
 filter()                  | Filters a dataflow
 order()                   | Order a set
 ordered()                 | Follow an ordered set (typically derived)
