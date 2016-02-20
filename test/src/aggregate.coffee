@@ -36,47 +36,57 @@ Pipelet = rs.RS.Pipelet
 # ----------------------
 
 describe 'aggregate()', ->
-  books_sales = rs.set [
-    { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year: 1859 }
-    { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year: 1955 }
-    { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        80, year: 2003 }
-    { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , sales:        65, year: 1988 }
-    { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , sales:        39, year: 2000 }
-    { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , sales:        30, year: 2005 }
-    { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", sales:       125, year: 1853 }
-    { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , sales:       100, year: 1937 }
-    { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , sales:        23, year: 2008 }
-    { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , sales: undefined, year: 1999 }
-    { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , sales:        10, year: 2000 }
-    { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , sales: undefined, year: 2008 }
-    { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , sales:        50, year: 1955 }
-    { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , sales:       100, year: undefined }
-    { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , sales:        60, year: null }
-    { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13             }
-  ]
-  
-  sales  = rs.set [ { id: "sales"  } ]
-  by_author = rs.set [ { id: "author" } ]
-  by_year   = rs.set [ { id: "year"   } ]
-  
-  books_sales_by_author = books_sales.aggregate( sales, by_author ).order( by_author ).ordered()
-  books_sales_by_year   = books_sales.aggregate( sales, by_year ).order( by_year ).ordered()
-  
-  aggregate_from = ( source, from, measures, dimensions, options ) ->
-    return source
-      .filter( from, options )
-      .aggregate( measures, dimensions, options )
-      .order( dimensions )
-      .ordered()
-  
-  rs.Compose 'aggregate_from', { union: true }, aggregate_from
-  
-  tolkien_books = ( book, options ) ->
-    return book.author is 'J. R. R. Tolkien'
-  
-  tolkien_sales_by_year = books_sales.through rs.aggregate_from tolkien_books, sales, by_year 
+  books_sales           = null
+  sales                 = null
+  by_author             = null
+  by_year               = null
+  books_sales_by_author = null
+  books_sales_by_year   = null
+  aggregate_from        = null
+  tolkien_books         = null
+  tolkien_sales_by_year = null
   
   it 'should group and order books_sales_by_author by author', ( done ) ->
+    books_sales = rs.set [
+      { id:  1, title: "A Tale of Two Cities"                    , author: "Charles Dickens"        , sales:       200, year: 1859 }
+      { id:  2, title: "The Lord of the Rings"                   , author: "J. R. R. Tolkien"       , sales:       150, year: 1955 }
+      { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        80, year: 2003 }
+      { id:  4, title: "The Alchemist"                           , author: "Paulo Coelho"           , sales:        65, year: 1988 }
+      { id:  5, title: "Angels and Demons"                       , author: "Dan Brown"              , sales:        39, year: 2000 }
+      { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , sales:        30, year: 2005 }
+      { id:  7, title: "The McGuffey Readers"                    , author: "William Holmes McGuffey", sales:       125, year: 1853 }
+      { id:  8, title: "The Hobbit"                              , author: "J. R. R. Tolkien"       , sales:       100, year: 1937 }
+      { id:  9, title: "The Hunger Games"                        , author: "Suzanne Collins"        , sales:        23, year: 2008 }
+      { id: 10, title: "Harry Potter and the Prisoner of Azkaban", author: "J.K. Rowling"           , sales: undefined, year: 1999 }
+      { id: 11, title: "The Dukan Diet"                          , author: "Pierre Dukan"           , sales:        10, year: 2000 }
+      { id: 12, title: "Breaking Dawn"                           , author: "Stephenie Meyer"        , sales: undefined, year: 2008 }
+      { id: 13, title: "Lolita"                                  , author: "Vladimir Nabokov"       , sales:        50, year: 1955 }
+      { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , sales:       100, year: undefined }
+      { id: 15, title: "Steps to Christ"                         , author: "Ellen G. White"         , sales:        60, year: null }
+      { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"             , sales:        13             }
+    ]
+    
+    sales  = rs.set [ { id: "sales"  } ]
+    by_author = rs.set [ { id: "author" } ]
+    by_year   = rs.set [ { id: "year"   } ]
+    
+    books_sales_by_author = books_sales.aggregate( sales, by_author ).order( by_author ).ordered()
+    books_sales_by_year   = books_sales.aggregate( sales, by_year ).order( by_year ).ordered()
+    
+    aggregate_from = ( source, from, measures, dimensions, options ) ->
+      return source
+        .filter( from, options )
+        .aggregate( measures, dimensions, options )
+        .order( dimensions )
+        .ordered()
+    
+    rs.Compose 'aggregate_from', { union: true }, aggregate_from
+    
+    tolkien_books = ( book, options ) ->
+      return book.author is 'J. R. R. Tolkien'
+    
+    tolkien_sales_by_year = books_sales.through rs.aggregate_from tolkien_books, sales, by_year 
+    
     books_sales_by_author._fetch_all ( sales ) -> check done, () -> expect( sales ).to.be.eql [
         { author: "Agatha Christie"        , sales: 100, _count: 1 }
         { author: "Charles Dickens"        , sales: 200, _count: 1 }
