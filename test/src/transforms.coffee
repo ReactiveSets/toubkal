@@ -259,3 +259,95 @@ describe 'transforms', ->
     
     values_to_attribute_tests()
     values_to_attribute_tests( 'on a set' )
+
+  describe 'pick() Forwards only specified attributes', ->
+    source   = null
+    picked   = null
+    filtered = null
+    
+    it 'should pick name and age from source set', ( done ) ->
+      source = rs.set [
+        { flow: 'users', id: 1, name: 'Joe' , age: 76 }
+        { flow: 'users', id: 2, name: 'Jill', age: 45 }
+        { flow: 'users', id: 3              , age: 56 }
+        { flow: 'users', id: 4                        }
+      ]
+      
+      picked = source.pick( [ 'name', 'age' ], { key: [ 'name', 'age' ] } )
+      
+      picked._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { name: 'Joe' , age: 76 }
+          { name: 'Jill', age: 45 }
+          {               age: 56 }
+          {                       }
+        ]
+    
+    it 'filtered for name: "Jill", should emit only one value', ( done ) ->
+      filtered = picked
+        .filter( [ { name: 'Jill' } ] )
+        .greedy()
+      
+      filtered._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { name: 'Jill', age: 45 }
+        ]
+    
+    it 'should be lazy', ->
+      expect( picked._input.query.query ).to.be.eql [ { name: 'Jill' } ]
+    
+    it 'should allow to remove user 3 and Jill, unfiltered', ( done ) ->
+      source._remove [
+        { flow: 'users', id: 3              , age: 56 }
+        { flow: 'users', id: 2, name: 'Jill', age: 45 }
+      ]
+
+      picked._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { name: 'Joe' , age: 76 }
+          {                       }
+        ]
+    
+    it 'should remove Jill from filtered set', ( done ) ->
+      filtered._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql []
+    
+    
+    it 'should allow to add Jill back with a new age', ( done ) ->
+      source._add [
+        { flow: 'users', id: 2, name: 'Jill', age: 46 }
+      ]
+      
+      picked._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { name: 'Joe' , age: 76 }
+          {                       }
+          { name: 'Jill', age: 46 }
+        ]
+    
+    it 'should also have Jill in filtered set', ( done ) ->
+      filtered._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { name: 'Jill', age: 46 }
+        ]
+    
+    it "should allow to update Joe's age", ( done ) ->
+      source._update [
+        [
+          { flow: 'users', id: 1, name: 'Joe' , age: 76 }
+          { flow: 'users', id: 1, name: 'Joe' , age: 77 }
+        ]
+      ]
+      
+      picked._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          {                       }
+          { name: 'Jill', age: 46 }
+          { name: 'Joe' , age: 77 }
+        ]
+    
+    it 'should not have altered filtered set with Jill', ( done ) ->
+      filtered._fetch_all ( values ) -> check done, () ->
+        expect( values ).to.be.eql [
+          { name: 'Jill', age: 46 }
+        ]
