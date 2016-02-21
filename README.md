@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1578 automated tests*
+*1602 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -482,7 +482,7 @@ manuals from version 0.6:
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1578 continuous integration tests for the Toubkal core and framework
+We have curently developped 1602 continuous integration tests for the Toubkal core and framework
 pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
@@ -510,7 +510,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1578 of 1578 tests
+-> passed 1602 of 1602 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -663,7 +663,6 @@ This version introduces the capability to keep historical values of objects pers
   - using $to_dom() to modify htmlparse2 tree (not implemented)
 
 #### Work in Progress:
-- fetch refactoring: developping specification, gathering requirements.
 
 - Dropbox file sharing for photo albums (developped and tested in demo repository)
 
@@ -729,7 +728,7 @@ This version introduces the capability to keep historical values of objects pers
 
 ETA: February  29th 2016
 
-- 1578 continuous integration tests
+- 1602 continuous integration tests
 
 #### Main Goals:
 
@@ -751,6 +750,17 @@ ETA: February  29th 2016
   - using adds(), removes() and updates() to differentiate between Create, Delete and Update operations
     and apply authorization rules accordingly.
   - using not_exists() to test appropriate existance on adds, removes and updates
+
+- fetch() && update_upstream_query() refactoring:
+  - Implemented in Plug base class of all inputs and outputs
+  - Replaces all implementations of fetch on inputs and outputs
+  - Forward compatible with fetch() API, the API may be deprecated once migration to new API is complete
+  - All plugs now have a source, enables plugs pipelines for fetch() && update_upstream_query()
+  - Allow synchronization between update_upstream_query() and fetch()
+  - Receivers can now receive removes, updates and operations' options
+  - Allow query transforms on all plugs
+  - Filters fetch_unfiltered() if defined
+  - Filters through _tranform() if defined and fetch_unfiltered() not defined
 
 #### Completed Work:
 

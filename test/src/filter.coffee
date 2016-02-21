@@ -461,7 +461,233 @@ describe 'filter()', ->
           { id:  9, name: "Paris"        , country: "France"                       }
           { id: 11, name: 'San Francisco', country: "USA"                          }
         ]
+        
+  # ToDo: test null and pass all query filters
+  
+  describe 'Reactive filter with filter_keys', ->
+    source     = null
+    filter     = null
+    output     = null
+    output_set = null
+    receiver   = null
     
+    delay = ( duration ) ->
+      ( done ) ->
+        setTimeout done, duration
+      
+    it 'should have no values when downstream set is filter is nul', ( done ) ->
+      source = rs.set [
+        { flow: 'users', id: 1, name: 'Joe' }
+        { flow: 'users', id: 2, name: 'Jill' }
+      ], { key: [ 'flow', 'id' ] }
+      
+      filter_keys = [ 'flow', 'id' ]
+      
+      upstream_filter = rs.set [
+        { flow: 'users', id: 1 }
+        { flow: 'users', id: 2 }
+      ], { id: filter_keys }
+      
+      filter = rs.set []
+      
+      output = source
+        # .trace( 'source' )
+        .filter( upstream_filter.delay( 10 ), { filter_keys: filter_keys, name: 'upstream_filter' } )
+        # .trace( 'between upstream_filter and filter', { all: true } )
+        .filter( filter )
+        # .trace( 'after filter' )
+      
+      output_set = output.set()
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql []
+      
+      output._fetch_all receiver
+    
+    it 'output set should also be empty', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql []
+    
+    it "should have one value when downstream filter is { flow: 'users', id: 1 }", ( done ) ->
+      filter._add [ { flow: 'users', id: 1 } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { flow: 'users', id: 1, name: 'Joe' }
+        ]
+      
+      delay( 30 ) () ->
+        output._fetch_all receiver
+    
+    it 'output set should have the same value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [
+            { flow: 'users', id: 1, name: 'Joe' }
+          ]
+    
+    it "should have 2 values when downstream filter is added { flow: 'users', name: 'Jill' }", ( done ) ->
+      filter._add [ { flow: 'users', name: 'Jill' } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { flow: 'users', id: 1, name: 'Joe' }
+          { flow: 'users', id: 2, name: 'Jill' }
+        ]
+      
+      delay( 30 ) () ->
+        output._fetch_all receiver
+    
+    it 'output set should have same values', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [
+            { flow: 'users', id: 1, name: 'Joe' }
+            { flow: 'users', id: 2, name: 'Jill' }
+          ]
+    
+    it "should have one value when downstream filter is removed { flow: 'users', id: 1 }", ( done ) ->
+      filter._remove [ { flow: 'users', id: 1 } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { flow: 'users', id: 2, name: 'Jill' }
+        ]
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have one less value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [
+            { flow: 'users', id: 2, name: 'Jill' }
+          ]
+    
+    it "should have no value when downstream filter is removed { flow: 'users', name: 'Jill' }", ( done ) ->
+      filter._remove [ { flow: 'users', name: 'Jill' } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql []
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have no more value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql []
+    
+    it "should have 2 values when downstream filter is added { flow: 'users' }", ( done ) ->
+      filter._add [ { flow: 'users' } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { flow: 'users', id: 1, name: 'Joe' }
+          { flow: 'users', id: 2, name: 'Jill' }
+        ]
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have two values', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [
+            { flow: 'users', id: 1, name: 'Joe' }
+            { flow: 'users', id: 2, name: 'Jill' }
+          ]
+    
+    it "should have no value when downstream filter is removed { flow: 'users' }", ( done ) ->
+      filter._remove [ { flow: 'users' } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql []
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have no more value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql []
+    
+    it "should have 2 values when downstream filter is added [ { id: 1 }, { id: 2 } ]", ( done ) ->
+      filter._add [ { id: 1 }, { id: 2 } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { flow: 'users', id: 1, name: 'Joe' }
+          { flow: 'users', id: 2, name: 'Jill' }
+        ]
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have two values', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [
+            { flow: 'users', id: 1, name: 'Joe' }
+            { flow: 'users', id: 2, name: 'Jill' }
+          ]
+    
+    it "should have no value when downstream filter is removed [ { id: 1 }, { id: 2 } ]", ( done ) ->
+      filter._remove [ { id: 1 }, { id: 2 } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql []
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have no value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql []
+    
+    it "should have 1 value when downstream filter is added [ { id: 1 }, { id: 1 } ]", ( done ) ->
+      filter._add [ { id: 1 }, { id: 1 } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { flow: 'users', id: 1, name: 'Joe' }
+        ]
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have one value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [
+            { flow: 'users', id: 1, name: 'Joe' }
+          ]
+    
+    it "should have 1 value when downstream filter is removed [ { id: 1 } ]", ( done ) ->
+      filter._remove [ { id: 1 } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { flow: 'users', id: 1, name: 'Joe' }
+        ]
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have one value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [
+            { flow: 'users', id: 1, name: 'Joe' }
+          ]
+    
+    it "should have no value when downstream filter is removed [ { id: 1 } ]", ( done ) ->
+      filter._remove [ { id: 1 } ]
+      
+      receiver = ( values ) -> check done, ->
+        expect( values ).to.be.eql []
+      
+      output._fetch_all receiver
+    
+    it 'output set should also have no value', ( done ) ->
+      output_set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql []
+  
   describe '_notify():', ->
     it 'add(): employee._notify( transaction ) should be equal to result', ( done ) ->
       employee._notify [
