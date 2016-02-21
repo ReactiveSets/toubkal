@@ -1135,12 +1135,42 @@ describe 'Query & Query_Tree test suite:', ->
         q1 = [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
         q.add( [ { flow: 'group' } ] ).and q1
         
-        expect( q.query ).to.be.eql [ { flow: 'group', id: 27 } ]
+        expect( q.query   ).to.be.eql [ { flow: 'group', id: 27 } ]
         expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
         expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
       
       it 'should not have alterned and() parameter query', ->
         expect( q1 ).to.be.eql [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
+      
+      it 'should not remove term if subsequent AND-ed term is merged', ->
+        q = new Query [
+          { flow: 'users', id: 1 }
+          { flow: 'users', id: 2 }
+        ]
+        
+        expect( q.discard_operations() ).to.be.eql [
+          []
+          [
+            { flow: 'users', id: 1 }
+            { flow: 'users', id: 2 }
+          ]
+        ]
+        
+        q.and [
+          { flow: 'users', id: 1 }        # => keep original
+          { flow: 'users', name: 'Jill' } # => merge, but don't remove { flow: 'users', id: 1 }
+        ]
+        
+        expect( q.query ).to.be.eql [
+          { flow: 'users', id: 1 }
+          { flow: 'users', id: 2, name: 'Jill' }
+        ]
+      
+      it 'should have removed one term and added another', ->
+        expect( q.discard_operations() ).to.be.eql [
+          [ { flow: 'users', id: 2 } ]
+          [ { flow: 'users', id: 2, name: 'Jill' } ]
+        ]
     # AND-ing queries
     
     describe 'Finding differences between two queries', ->
