@@ -791,397 +791,401 @@ describe 'Query & Query_Tree test suite:', ->
   describe 'Query():', ->
     q = q1 = null
     
-    it 'new Query( [] ) should create an empty query', ->
-      q = new Query [];
-      
-      expect( q.query   ).to.be.eql []
-      expect( q.adds    ).to.be.eql []
-      expect( q.removes ).to.be.eql []
-      
-    it 'new Query() should create an empty query', ->
-      q = new Query();
-      
-      expect( q.query   ).to.be.eql []
-      expect( q.adds    ).to.be.eql []
-      expect( q.removes ).to.be.eql []
-    
-    
-    
-    it 'Query..add() should allow to "or" two empty queries', ->
-      q = new Query( [] )
-      
-      expect( q.add( [] ).query ).to.be.eql []
-      expect( q.adds ).to.be.eql []
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..add() should add query to empty query', ->
-      expect( q.add( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' } ]
-      expect( q.adds ).to.be.eql [ { flow: 'group' } ]
-      expect( q.removes ).to.be.eql []
-      
-    it 'Query..add() should OR two queries', ->
-      expect( q.add( [ { flow: 'user' } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( q.removes ).to.be.eql []
-      
-    it 'Query..add() should OR two queries and result in optimized query', ->
-      expect( q.add( [ { flow: 'group', id: 1465 } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..add() should not duplicate existing expressions', ->
-      expect( q.add( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query.add() should remove an expression if a new less restrictive is or-ed', ->
-      q.add( [ { flow: 'post', id: 1 }, { flow: 'post' } ] )
-      
-      expect( q.query ).to.be.eql [ { flow: 'group' }, { flow: 'user' }, { flow: 'post' } ]
-      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' }, { flow: 'post', id: 1 }, { flow: 'post' } ]
-      expect( q.removes ).to.be.eql [ { flow: 'post', id: 1 } ]
-    
-    it 'new Query( query ) should self optimize and not alter parameter query', ->
-      query = [ { flow: 'group' }, { flow: 'group' }, { flow: 'user' }, { flow: 'group' }, { flow: 'user' } ]
-      
-      q = new Query( query )
-      
-      expect( q.query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( query ).to.be.eql [ { flow: 'group' }, { flow: 'group' }, { flow: 'user' }, { flow: 'group' }, { flow: 'user' } ]
-      expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..add() should optimize more than one left expression per less restrictive right expression', ->
-      q1 = [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
-      
-      q = new Query( q1 ).add [ flow: 'group' ]
-      
-      expect( q.query   ).to.be.eql [ { flow: 'group' } ]
-      expect( q.adds    ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
-      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
-    
-    it 'should not have alterned Query() parameter query', ->
-      expect( q1 ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
-    
-    
-    
-    it 'Query..and() should allow to "and" two empty queries', ->
-      q = new Query []
-      
-      expect( q.and( [] ).query ).to.be.eql []
-      expect( q.adds    ).to.be.eql []
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..and() should remain empty after "and" query to empty query', ->
-      expect( q.and( [ { flow: 'group' } ] ).query ).to.be.eql []
-      expect( q.adds    ).to.be.eql []
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..and() should not change query after "and" query with same query', ->
-      expect( q.add( [ { flow: 'group' } ] ).and( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' } ]
-      expect( q.adds    ).to.be.eql [ { flow: 'group' } ]
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..and() should AND two queries', ->
-      expect( q.and( [ { id: 26 } ] ).query ).to.be.eql [ { flow: 'group', id: 26 } ]
-      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 } ]
-      expect( q.removes ).to.be.eql [ { flow: 'group' } ]
-    
-    it 'Query..and() with one false sub term should AND two queries', ->
-      q.add( [ { flow: 'group', id: 27 } ] ).and( [ { id: 26 } ] )
-      
-      expect( q.query ).to.be.eql [ { flow: 'group', id: 26 } ]
-      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
-      expect( q.removes ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
-      
-    it 'Query..discard_operations() should empty adds and removes', ->
-      q.discard_operations()
-      
-      expect( q.query ).to.be.eql [ { flow: 'group', id: 26 } ]
-      expect( q.adds    ).to.be.eql []
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..and() with only one false sub term should AND two queries to result in an empty query', ->
-      expect( q.and( [ { id: 27 } ] ).query ).to.be.eql []
-      expect( q.adds    ).to.be.eql []
-      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 } ]
-    
-    it 'Query..and() with two AND propositions should AND two queries and produce two propositions', ->
-      q1 = [ { id: 26 }, { id: 27 } ]
-      q.add( [ { flow: 'group' } ] ).and q1
-      
-      expect( q.query ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
-      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
-      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group' } ]
-    
-    it 'should not have alterned and() parameter query', ->
-      expect( q1 ).to.be.eql [ { id: 26 }, { id: 27 } ]
-      
-    it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
-      q.discard_operations()
-      
-      q1 = [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
-      q.add( [ { flow: 'group' } ] ).and q1
-      
-      expect( q.query ).to.be.eql [ { flow: 'group', id: 27 } ]
-      expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
-      expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
-    
-    it 'should not have alterned and() parameter query', ->
-      expect( q1 ).to.be.eql [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
-      
-    
-    
-    it 'Query..remove() should allow to "remove" two empty queries', ->
-      q = new Query( [] )
-      
-      expect( q.remove( [] ).query ).to.be.eql []
-      expect( q.adds    ).to.be.eql []
-      expect( q.removes ).to.be.eql []
-    
-    it 'Query..remove() should remain empty after "remove" query to empty query', ->
-      expect( q.add( [ { flow: 'group' } ] ).remove( [ { flow: 'group' } ] ).query ).to.be.eql []
-      expect( q.adds    ).to.be.eql [ { flow: 'group' } ]
-      expect( q.removes ).to.be.eql [ { flow: 'group' } ]
-    
-    it 'Query..remove() should raise a Query.Error after "remove" from empty query', ->
-      expect( () -> new Query( [] ).remove( [ { flow: 'group' } ] ).query )
-        .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
-    
-    it 'Query..remove() should raise a Query.Error after "remove" with not-found query', ->
-      expect( () -> new Query( [ { flow: 'group', id: 1 } ] ).remove( [ { flow: 'group' } ] ).query )
-        .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
-    
-    it 'Query..remove() should raise a Query.Error after "remove" with not-found query', ->
-      expect( () -> new Query( [ { flow: 'group' } ] ).remove( [ { flow: 'group', id: 1 } ] ).query )
-        .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
-    
-    it 'Query..remove() should remove two queries after "remove"', ->
-      q = new Query( [
-          { flow: 'user', id: 1 }
-          { flow: 'user', id: 2 }
-          { flow: 'user', id: 3 }
-          { flow: 'user', id: 4 }
-          { flow: 'group', id: 1 }
-          { flow: 'group', id: 2 }
-          { flow: 'group', id: 3 }
-        ] ).remove [
-          { flow: 'group', id: 2 }
-          { flow: 'user', id: 3 }
-        ]
-      
-      expect( q.query ).to.be.eql [
-          { flow: 'user', id: 1 }
-          { flow: 'user', id: 2 }
-          { flow: 'user', id: 4 }
-          { flow: 'group', id: 1 }
-          { flow: 'group', id: 3 }
-        ]
-      expect( q.adds ).to.be.eql [
-          { flow: 'user', id: 1 }
-          { flow: 'user', id: 2 }
-          { flow: 'user', id: 3 }
-          { flow: 'user', id: 4 }
-          { flow: 'group', id: 1 }
-          { flow: 'group', id: 2 }
-          { flow: 'group', id: 3 }
-        ]
-      expect( q.removes ).to.be.eql [
-          { flow: 'group', id: 2 }
-          { flow: 'user', id: 3 }
-        ]
-      
-    it 'Query..remove() should remove expressions after "remove" even if removed out of order', ->
-      q1 = [
-        { flow: 'user', id: 2 }
-        { flow: 'group', id: 3 }
-        { flow: 'user', id: 4 }
-        { flow: 'group', id: 1 }
-        { flow: 'user', id: 1 }
-        { flow: 'user', id: 3 }
-      ]
-      
-      q = new Query( [
-          { flow: 'user', id: 1 }
-          { flow: 'user', id: 2 }
-          { flow: 'user', id: 3 }
-          { flow: 'user', id: 4 }
-          { flow: 'group', id: 1 }
-          { flow: 'group', id: 2 }
-          { flow: 'group', id: 3 }
-        ] ).remove q1
+    describe 'Creating queries', ->
+      it 'new Query( [] ) should create an empty query', ->
+        q = new Query [];
         
-      expect( q.query ).to.be.eql [
-          { flow: 'group', id: 2 }
-        ]
-      expect( q.adds ).to.be.eql [
-          { flow: 'user', id: 1 }
+        expect( q.query   ).to.be.eql []
+        expect( q.adds    ).to.be.eql []
+        expect( q.removes ).to.be.eql []
+        
+      it 'new Query() should create an empty query', ->
+        q = new Query();
+        
+        expect( q.query   ).to.be.eql []
+        expect( q.adds    ).to.be.eql []
+        expect( q.removes ).to.be.eql []
+    # Creating queries
+    
+    describe 'Adding query terms', ->
+      it 'Query..add() should allow to "or" two empty queries', ->
+        q = new Query( [] )
+        
+        expect( q.add( [] ).query ).to.be.eql []
+        expect( q.adds ).to.be.eql []
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..add() should add query to empty query', ->
+        expect( q.add( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' } ]
+        expect( q.adds ).to.be.eql [ { flow: 'group' } ]
+        expect( q.removes ).to.be.eql []
+        
+      it 'Query..add() should OR two queries', ->
+        expect( q.add( [ { flow: 'user' } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( q.removes ).to.be.eql []
+        
+      it 'Query..add() should OR two queries and result in optimized query', ->
+        expect( q.add( [ { flow: 'group', id: 1465 } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..add() should not duplicate existing expressions', ->
+        expect( q.add( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query.add() should remove an expression if a new less restrictive is or-ed', ->
+        q.add( [ { flow: 'post', id: 1 }, { flow: 'post' } ] )
+        
+        expect( q.query ).to.be.eql [ { flow: 'group' }, { flow: 'user' }, { flow: 'post' } ]
+        expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' }, { flow: 'post', id: 1 }, { flow: 'post' } ]
+        expect( q.removes ).to.be.eql [ { flow: 'post', id: 1 } ]
+      
+      it 'new Query( query ) should self optimize and not alter parameter query', ->
+        query = [ { flow: 'group' }, { flow: 'group' }, { flow: 'user' }, { flow: 'group' }, { flow: 'user' } ]
+        
+        q = new Query( query )
+        
+        expect( q.query ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( query ).to.be.eql [ { flow: 'group' }, { flow: 'group' }, { flow: 'user' }, { flow: 'group' }, { flow: 'user' } ]
+        expect( q.adds ).to.be.eql [ { flow: 'group' }, { flow: 'user' } ]
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..add() should optimize more than one left expression per less restrictive right expression', ->
+        q1 = [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+        
+        q = new Query( q1 ).add [ flow: 'group' ]
+        
+        expect( q.query   ).to.be.eql [ { flow: 'group' } ]
+        expect( q.adds    ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
+        expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+      
+      it 'should not have alterned Query() parameter query', ->
+        expect( q1 ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+    # Adding query terms
+    
+    describe 'Removing query terms', ->
+      it 'Query..remove() should allow to "remove" two empty queries', ->
+        q = new Query( [] )
+        
+        expect( q.remove( [] ).query ).to.be.eql []
+        expect( q.adds    ).to.be.eql []
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..remove() should remain empty after "remove" query to empty query', ->
+        expect( q.add( [ { flow: 'group' } ] ).remove( [ { flow: 'group' } ] ).query ).to.be.eql []
+        expect( q.adds    ).to.be.eql [ { flow: 'group' } ]
+        expect( q.removes ).to.be.eql [ { flow: 'group' } ]
+      
+      it 'Query..remove() should raise a Query.Error after "remove" from empty query', ->
+        expect( () -> new Query( [] ).remove( [ { flow: 'group' } ] ).query )
+          .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
+      
+      it 'Query..remove() should raise a Query.Error after "remove" with not-found query', ->
+        expect( () -> new Query( [ { flow: 'group', id: 1 } ] ).remove( [ { flow: 'group' } ] ).query )
+          .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
+      
+      it 'Query..remove() should raise a Query.Error after "remove" with not-found query', ->
+        expect( () -> new Query( [ { flow: 'group' } ] ).remove( [ { flow: 'group', id: 1 } ] ).query )
+          .to.throwException ( e ) -> expect( e ).to.be.a Query.Error
+      
+      it 'Query..remove() should remove two queries after "remove"', ->
+        q = new Query( [
+            { flow: 'user', id: 1 }
+            { flow: 'user', id: 2 }
+            { flow: 'user', id: 3 }
+            { flow: 'user', id: 4 }
+            { flow: 'group', id: 1 }
+            { flow: 'group', id: 2 }
+            { flow: 'group', id: 3 }
+          ] ).remove [
+            { flow: 'group', id: 2 }
+            { flow: 'user', id: 3 }
+          ]
+        
+        expect( q.query ).to.be.eql [
+            { flow: 'user', id: 1 }
+            { flow: 'user', id: 2 }
+            { flow: 'user', id: 4 }
+            { flow: 'group', id: 1 }
+            { flow: 'group', id: 3 }
+          ]
+        expect( q.adds ).to.be.eql [
+            { flow: 'user', id: 1 }
+            { flow: 'user', id: 2 }
+            { flow: 'user', id: 3 }
+            { flow: 'user', id: 4 }
+            { flow: 'group', id: 1 }
+            { flow: 'group', id: 2 }
+            { flow: 'group', id: 3 }
+          ]
+        expect( q.removes ).to.be.eql [
+            { flow: 'group', id: 2 }
+            { flow: 'user', id: 3 }
+          ]
+        
+      it 'Query..remove() should remove expressions after "remove" even if removed out of order', ->
+        q1 = [
           { flow: 'user', id: 2 }
-          { flow: 'user', id: 3 }
+          { flow: 'group', id: 3 }
           { flow: 'user', id: 4 }
           { flow: 'group', id: 1 }
-          { flow: 'group', id: 2 }
-          { flow: 'group', id: 3 }
-        ]
-      expect( q.removes ).to.be.eql [
-          { flow: 'user', id: 2 }
-          { flow: 'group', id: 3 }
-          { flow: 'user', id: 4 }
-          { flow: 'group', id: 1 }
           { flow: 'user', id: 1 }
           { flow: 'user', id: 3 }
         ]
+        
+        q = new Query( [
+            { flow: 'user', id: 1 }
+            { flow: 'user', id: 2 }
+            { flow: 'user', id: 3 }
+            { flow: 'user', id: 4 }
+            { flow: 'group', id: 1 }
+            { flow: 'group', id: 2 }
+            { flow: 'group', id: 3 }
+          ] ).remove q1
+          
+        expect( q.query ).to.be.eql [
+            { flow: 'group', id: 2 }
+          ]
+        expect( q.adds ).to.be.eql [
+            { flow: 'user', id: 1 }
+            { flow: 'user', id: 2 }
+            { flow: 'user', id: 3 }
+            { flow: 'user', id: 4 }
+            { flow: 'group', id: 1 }
+            { flow: 'group', id: 2 }
+            { flow: 'group', id: 3 }
+          ]
+        expect( q.removes ).to.be.eql [
+            { flow: 'user', id: 2 }
+            { flow: 'group', id: 3 }
+            { flow: 'user', id: 4 }
+            { flow: 'group', id: 1 }
+            { flow: 'user', id: 1 }
+            { flow: 'user', id: 3 }
+          ]
+      
+      it 'should not have alterned remove() parameter query', ->
+        expect( q1 ).to.be.eql [
+            { flow: 'user', id: 2 }
+            { flow: 'group', id: 3 }
+            { flow: 'user', id: 4 }
+            { flow: 'group', id: 1 }
+            { flow: 'user', id: 1 }
+            { flow: 'user', id: 3 }
+          ]
+        
+      it 'should not remove an expression which was previously optimized-out by add()', ->
+        q.discard_operations()
+        
+        q.add    [ { flow: 'group' } ]
+        
+        expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
+        
+        q1 = [ { flow: 'group', id: 2 } ]
+        
+        q.remove q1
+        
+        expect( q.query     ).to.be.eql [ { flow: 'group' } ]
+        expect( q.adds      ).to.be.eql [ { flow: 'group' } ]
+        expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
+        expect( q.optimized ).to.be.eql []
+      
+      it 'should not have alterned remove() parameter query', ->
+        expect( q1 ).to.be.eql [ { flow: 'group', id: 2 } ]
+      
+      it 'should recover expression previously optimized-out by add() when removing the less restrictive operation', ->
+        q = new Query [ { flow: 'group', id: 2 } ]
+        
+        expect( q.query     ).to.be.eql [ { flow: 'group', id: 2 } ]
+        expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 } ]
+        expect( q.removes   ).to.be.eql []
+        expect( q.optimized ).to.be.eql []
+        
+        # add less restrictive expression than { flow: 'group', id: 2 }
+        q.add [ { flow: 'group' } ] 
+        
+        expect( q.query     ).to.be.eql [ { flow: 'group' } ]
+        expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' } ]
+        expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
+        expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
+        
+        # remove less restrictive operation
+        q1 = [ { flow: 'group' } ]
+        
+        q.remove [ { flow: 'group' } ]
+        
+        # expects more restrictive expression { flow: 'group', id: 2 } to be recovered
+        expect( q.query     ).to.be.eql [ { flow: 'group', id: 2 } ]
+        expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' }, { flow: 'group', id: 2 } ]
+        expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' } ]
+        expect( q.optimized ).to.be.eql []
+        
+      it 'should not have alterned remove() parameter query', ->
+        expect( q1 ).to.be.eql [ { flow: 'group' } ]
+    # Removing query terms
     
-    it 'should not have alterned remove() parameter query', ->
-      expect( q1 ).to.be.eql [
-          { flow: 'user', id: 2 }
-          { flow: 'group', id: 3 }
-          { flow: 'user', id: 4 }
-          { flow: 'group', id: 1 }
-          { flow: 'user', id: 1 }
-          { flow: 'user', id: 3 }
+    describe 'Generating filter() from quey', ->
+      it 'generate() should generate a filter() function', ->
+        q = new Query( [ { flow: 'group' }, { flow: 'user', id: 231 } ] ).generate()
+        
+        expect( typeof ( q.filter ) ).to.be.eql 'function'
+        
+      it 'filter() should filter an Array of Objects', ->
+        expect( q.filter [
+          { flow: 'group', id: 826 }
+          { flow: 'group', id: 295 }
+          { flow: 'user', id: 231 }
+          { flow: 'user', id: 235 }
+        ] ).to.be.eql [
+          { flow: 'group', id: 826 }
+          { flow: 'group', id: 295 }
+          { flow: 'user', id: 231 }
         ]
       
-    it 'should not remove an expression which was previously optimized-out by add()', ->
-      q.discard_operations()
+      it 'should generate a filter for a query with no or-terms', ->
+        q = new Query( [] ).generate()
+        
+        expect( typeof ( q.filter ) ).to.be.eql 'function'
       
-      q.add    [ { flow: 'group' } ]
+      it 'should filter everything, this is the nul-filter', ->
+        expect( q.filter [
+          { flow: 'group', id: 826 }
+          { flow: 'group', id: 295 }
+          { flow: 'user', id: 231 }
+          { flow: 'user', id: 235 }
+        ] ).to.be.eql []
       
-      expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
+      it 'should generate a filter for a query with one or-terms having no and terms', ->
+        q = new Query( [ {} ] ).generate()
+        
+        expect( typeof ( q.filter ) ).to.be.eql 'function'
       
-      q1 = [ { flow: 'group', id: 2 } ]
-      
-      q.remove q1
-      
-      expect( q.query     ).to.be.eql [ { flow: 'group' } ]
-      expect( q.adds      ).to.be.eql [ { flow: 'group' } ]
-      expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
-      expect( q.optimized ).to.be.eql []
+      it 'should filter nothing, this is a pass-through filter', ->
+        expect( q.filter [
+          { flow: 'group', id: 826 }
+          { flow: 'group', id: 295 }
+          { flow: 'user', id: 231 }
+          { flow: 'user', id: 235 }
+        ] ).to.be.eql [
+          { flow: 'group', id: 826 }
+          { flow: 'group', id: 295 }
+          { flow: 'user', id: 231 }
+          { flow: 'user', id: 235 }
+        ]
+    # Generating filter() from quey
     
-    it 'should not have alterned remove() parameter query', ->
-      expect( q1 ).to.be.eql [ { flow: 'group', id: 2 } ]
+    describe 'AND-ing queries', ->
+      it 'Query..and() should allow to "and" two empty queries', ->
+        q = new Query []
+        
+        expect( q.and( [] ).query ).to.be.eql []
+        expect( q.adds    ).to.be.eql []
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..and() should remain empty after "and" query to empty query', ->
+        expect( q.and( [ { flow: 'group' } ] ).query ).to.be.eql []
+        expect( q.adds    ).to.be.eql []
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..and() should not change query after "and" query with same query', ->
+        expect( q.add( [ { flow: 'group' } ] ).and( [ { flow: 'group' } ] ).query ).to.be.eql [ { flow: 'group' } ]
+        expect( q.adds    ).to.be.eql [ { flow: 'group' } ]
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..and() should AND two queries', ->
+        expect( q.and( [ { id: 26 } ] ).query ).to.be.eql [ { flow: 'group', id: 26 } ]
+        expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 } ]
+        expect( q.removes ).to.be.eql [ { flow: 'group' } ]
+      
+      it 'Query..and() with one false sub term should AND two queries', ->
+        q.add( [ { flow: 'group', id: 27 } ] ).and( [ { id: 26 } ] )
+        
+        expect( q.query ).to.be.eql [ { flow: 'group', id: 26 } ]
+        expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+        expect( q.removes ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
+        
+      it 'Query..discard_operations() should empty adds and removes', ->
+        q.discard_operations()
+        
+        expect( q.query ).to.be.eql [ { flow: 'group', id: 26 } ]
+        expect( q.adds    ).to.be.eql []
+        expect( q.removes ).to.be.eql []
+      
+      it 'Query..and() with only one false sub term should AND two queries to result in an empty query', ->
+        expect( q.and( [ { id: 27 } ] ).query ).to.be.eql []
+        expect( q.adds    ).to.be.eql []
+        expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 } ]
+      
+      it 'Query..and() with two AND propositions should AND two queries and produce two propositions', ->
+        q1 = [ { id: 26 }, { id: 27 } ]
+        q.add( [ { flow: 'group' } ] ).and q1
+        
+        expect( q.query ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+        expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 26 }, { flow: 'group', id: 27 } ]
+        expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group' } ]
+      
+      it 'should not have alterned and() parameter query', ->
+        expect( q1 ).to.be.eql [ { id: 26 }, { id: 27 } ]
+        
+      it 'Query..and() with two AND propositions with more terms than original should AND two queries and produce one proposition', ->
+        q.discard_operations()
+        
+        q1 = [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
+        q.add( [ { flow: 'group' } ] ).and q1
+        
+        expect( q.query ).to.be.eql [ { flow: 'group', id: 27 } ]
+        expect( q.adds    ).to.be.eql [ { flow: 'group' }, { flow: 'group', id: 27 } ]
+        expect( q.removes ).to.be.eql [ { flow: 'group', id: 26 }, { flow: 'group', id: 27 }, { flow: 'group' } ]
+      
+      it 'should not have alterned and() parameter query', ->
+        expect( q1 ).to.be.eql [ { flow: 'group', id: 27 }, { flow: 'user', id: 234 } ]
+    # AND-ing queries
     
-    it 'should recover expression previously optimized-out by add() when removing the less restrictive operation', ->
-      q = new Query [ { flow: 'group', id: 2 } ]
-      
-      expect( q.query     ).to.be.eql [ { flow: 'group', id: 2 } ]
-      expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 } ]
-      expect( q.removes   ).to.be.eql []
-      expect( q.optimized ).to.be.eql []
-      
-      # add less restrictive expression than { flow: 'group', id: 2 }
-      q.add [ { flow: 'group' } ] 
-      
-      expect( q.query     ).to.be.eql [ { flow: 'group' } ]
-      expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' } ]
-      expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 } ]
-      expect( q.optimized ).to.be.eql [ { flow: 'group', id: 2 } ]
-      
-      # remove less restrictive operation
-      q1 = [ { flow: 'group' } ]
-      
-      q.remove [ { flow: 'group' } ]
-      
-      # expects more restrictive expression { flow: 'group', id: 2 } to be recovered
-      expect( q.query     ).to.be.eql [ { flow: 'group', id: 2 } ]
-      expect( q.adds      ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' }, { flow: 'group', id: 2 } ]
-      expect( q.removes   ).to.be.eql [ { flow: 'group', id: 2 }, { flow: 'group' } ]
-      expect( q.optimized ).to.be.eql []
-      
-    it 'should not have alterned remove() parameter query', ->
-      expect( q1 ).to.be.eql [ { flow: 'group' } ]
-    
-    
-    
-    it 'generate() should generate a filter() function', ->
-      q = new Query( [ { flow: 'group' }, { flow: 'user', id: 231 } ] ).generate()
-      
-      expect( typeof ( q.filter ) ).to.be.eql 'function'
-      
-    it 'filter() should filter an Array of Objects', ->
-      expect( q.filter [
-        { flow: 'group', id: 826 }
-        { flow: 'group', id: 295 }
-        { flow: 'user', id: 231 }
-        { flow: 'user', id: 235 }
-      ] ).to.be.eql [
-        { flow: 'group', id: 826 }
-        { flow: 'group', id: 295 }
-        { flow: 'user', id: 231 }
-      ]
-    
-    it 'should generate a filter for a query with no or-terms', ->
-      q = new Query( [] ).generate()
-      
-      expect( typeof ( q.filter ) ).to.be.eql 'function'
-    
-    it 'should filter everything, this is the nul-filter', ->
-      expect( q.filter [
-        { flow: 'group', id: 826 }
-        { flow: 'group', id: 295 }
-        { flow: 'user', id: 231 }
-        { flow: 'user', id: 235 }
-      ] ).to.be.eql []
-    
-    it 'should generate a filter for a query with one or-terms having no and terms', ->
-      q = new Query( [ {} ] ).generate()
-      
-      expect( typeof ( q.filter ) ).to.be.eql 'function'
-    
-    it 'should filter nothing, this is a pass-through filter', ->
-      expect( q.filter [
-        { flow: 'group', id: 826 }
-        { flow: 'group', id: 295 }
-        { flow: 'user', id: 231 }
-        { flow: 'user', id: 235 }
-      ] ).to.be.eql [
-        { flow: 'group', id: 826 }
-        { flow: 'group', id: 295 }
-        { flow: 'user', id: 231 }
-        { flow: 'user', id: 235 }
-      ]
-    
-    
-    it 'differences() should returns adds and removes', ->
-      q = new Query [
-        { flow: 'stores', id: 1 }
-        { flow: 'stores', id: 2 }
-        { flow: 'stores', id: 3 }
-      ]
-      
-      q1 = [
-        { flow: 'stores', id: 3 }
-        { flow: 'stores', id: 4 }
-        { flow: 'stores', id: 5 }
-      ]
-      
-      differences = q.differences q1
-      
-      expect( q1 ).to.be.eql [
-        { flow: 'stores', id: 3 }
-        { flow: 'stores', id: 4 }
-        { flow: 'stores', id: 5 }
-      ]
-      
-      expect( q.query ).to.be.eql [
-        { flow: 'stores', id: 1 }
-        { flow: 'stores', id: 2 }
-        { flow: 'stores', id: 3 }
-      ]
-      
-      expect( differences ).to.be.eql [
-        [
+    describe 'Finding differences between two queries', ->
+      it 'differences() should returns adds and removes', ->
+        q = new Query [
           { flow: 'stores', id: 1 }
           { flow: 'stores', id: 2 }
+          { flow: 'stores', id: 3 }
         ]
         
-        [
+        q1 = [
+          { flow: 'stores', id: 3 }
           { flow: 'stores', id: 4 }
           { flow: 'stores', id: 5 }
         ]
-      ]
-    
-    
+        
+        differences = q.differences q1
+        
+        expect( q1 ).to.be.eql [
+          { flow: 'stores', id: 3 }
+          { flow: 'stores', id: 4 }
+          { flow: 'stores', id: 5 }
+        ]
+        
+        expect( q.query ).to.be.eql [
+          { flow: 'stores', id: 1 }
+          { flow: 'stores', id: 2 }
+          { flow: 'stores', id: 3 }
+        ]
+        
+        expect( differences ).to.be.eql [
+          [
+            { flow: 'stores', id: 1 }
+            { flow: 'stores', id: 2 }
+          ]
+          
+          [
+            { flow: 'stores', id: 4 }
+            { flow: 'stores', id: 5 }
+          ]
+        ]
+    # Finding differences between two queries
+  
+  # Queries
+  
   describe 'Query_Tree()', ->
     tree = null
     
