@@ -1171,6 +1171,66 @@ describe 'Query & Query_Tree test suite:', ->
           [ { flow: 'users', id: 2 } ]
           [ { flow: 'users', id: 2, name: 'Jill' } ]
         ]
+      
+      it 'should kepp q0 when shorter q1 term matches', ->
+        q = new Query [ { flow: 'users', id: 1 } ]
+        
+        q.discard_operations()
+        
+        q.and [ { flow: 'users' } ]
+        
+        expect( q.query ).to.be.eql [ { flow: 'users', id: 1 } ]
+      
+      it 'should not have produced any change', ->
+        expect( q.discard_operations() ).to.be.eql [ [], [] ]
+      
+      it 'should produce empty query when shorter q1 term does not match q0', ->
+        q = new Query [ { flow: 'users', id: 1 } ]
+        
+        q.discard_operations()
+        
+        q.and [ { flow: 'groups' } ]
+        
+        expect( q.query ).to.be.eql []
+      
+      it 'should have removed one term', ->
+        expect( q.discard_operations() ).to.be.eql [ [ { flow: 'users', id: 1 } ], [] ]
+      
+      it 'should produce empty query when same size q1 term does not match q0', ->
+        q = new Query [ { flow: 'users' } ]
+        
+        q.discard_operations()
+        
+        q.and [ { flow: 'groups' } ]
+        
+        expect( q.query ).to.be.eql []
+      
+      it 'should have removed one term', ->
+        expect( q.discard_operations() ).to.be.eql [ [ { flow: 'users' } ], [] ]
+      
+      it 'should produce a merged term when same size q1 term do not have the same attribute names', ->
+        q = new Query [ { flow: 'users' } ]
+        
+        q.discard_operations()
+        
+        q.and [ { id: 1 } ]
+        
+        expect( q.query ).to.be.eql [ { flow: 'users', id: 1 } ]
+      
+      it 'should have removed one term and added one term', ->
+        expect( q.discard_operations() ).to.be.eql [ [ { flow: 'users' } ], [ { flow: 'users', id: 1 } ] ]
+      
+      it 'should keep q0 term when same size q1 term is exact match', ->
+        q = new Query [ { flow: 'users' } ]
+        
+        q.discard_operations()
+        
+        q.and [ { flow: 'users' } ]
+        
+        expect( q.query ).to.be.eql [ { flow: 'users' } ]
+      
+      it 'should not have produced any change', ->
+        expect( q.discard_operations() ).to.be.eql [ [], [] ]
     # AND-ing queries
     
     describe 'Finding differences between two queries', ->
