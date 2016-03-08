@@ -34,8 +34,9 @@ value_equals = RS.value_equals
 log          = RS.log.bind null, 'join tests'
 
 compare_expected_values = ( expected, values ) ->
-  #log 'compare_expected_values() expected: ', expected
-  #log 'compare_expected_values() values:', values
+  if values.length != expected.length
+    log 'compare_expected_values() expected: ', expected
+    log 'compare_expected_values() values:', values
   
   expect( values.length ).to.be expected.length
   
