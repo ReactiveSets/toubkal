@@ -75,7 +75,7 @@ rs
           .flow( flow, { key: this.key || [ 'id' ] } )
           // .mysql( flow, this.columns )
           .set( [] )
-          .trace( flow )
+          //.trace( flow )
           .flow( flow )
         ;
       } )
@@ -88,7 +88,7 @@ rs
   
   .passport_profiles()
   
-  .trace( 'logged-in user profiles' )
+  //.trace( 'logged-in user profiles' )
   
   .map( function( user ) {
     // New user profile from provider profile
