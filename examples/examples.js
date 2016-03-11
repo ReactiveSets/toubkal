@@ -199,9 +199,9 @@ module.exports = function( servers ) {
       return file.path.split( '/' ).pop() == 'data.js';
     } )
     
-    .alter( function( processor ){} ) // hack to split updates into adds and removes to test dispatch cleanup on remove
-    
     .trace( 'data processors' )
+    
+    .alter( function( processor ){} ) // hack to split updates into adds and removes to test dispatch cleanup on remove
     
     .set_output( 'data_processors', scope )
   ;
