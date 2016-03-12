@@ -49,7 +49,7 @@ var http_servers = rs
   .auto_increment()
   .http_servers()
   .virtual_http_servers( [ '::1', 'localhost', '127.0.0.1', '192.168.0.36', '146.185.152.167', 'ourika.rocks' ] )
-  .trace( 'http servers' )
+  //.trace( 'http servers' )
 ;
 
 // Passport Application is described in ./passport.js
@@ -93,7 +93,7 @@ var html_tests = rs
   
   .watch_directories()
   
-  .trace( 'watch_directory test' )
+  //.trace( 'watch_directory test' )
   
   .filter( [
     { type: 'file', extension: 'html' },
@@ -214,6 +214,10 @@ function client( source, options ) {
   var user_profile_query = source
     .filter( [ { flow: 'user_sessions', id: sid } ] )
     
+    //.trace( 'client user session ' + sid, { all: true } )
+    
+    //.set()
+    
     .map( function( user_session ) {
       return { flow: 'user_profile', id: user_session.user_id }
     } )
@@ -267,16 +271,18 @@ var source_1 = rs
 
 var sessions = rs
   .session_store()
+  //.trace( 'before passport_user_sessions', { all: true } )
   .passport_user_sessions()
+  //.trace( 'after passport_user_sessions', { all: true } )
 ;
 
 rs.union( [ source_set, source_1, sessions, rs.database() ] )
   
-  .trace( 'to socket.io clients' )
+  //.trace( 'to socket.io clients' )
   
   .dispatch( clients, client, { no_encapsulate: true } )
   
-  .trace( 'from socket.io clients' )
+  //.trace( 'from socket.io clients' )
   
   .filter( client_filter )
   
