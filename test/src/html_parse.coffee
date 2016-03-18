@@ -58,9 +58,8 @@ describe 'html_parse():', ->
       expect( dom[ 0 ].prev     ).to.be null
   
   it '( <p id:myID class:my-class></p> ) should have attributes id="myID" and class="my-class"', ( done ) ->
-    source
-      ._remove [ { content: '<p></p>' } ]
-      ._add    [ { content: '<p id="myID" class="my-class"></p>' } ]
+    source._remove [ { content: '<p></p>' } ]
+    source._add    [ { content: '<p id="myID" class="my-class"></p>' } ]
     
     tree._fetch_all ( values ) -> check done, () ->
       dom = values[ 0 ].dom
@@ -68,9 +67,8 @@ describe 'html_parse():', ->
       expect( dom[ 0 ].attribs  ).to.be.eql { id: 'myID', class: 'my-class' }
   
   it '( <ul><li>first</li><li>last</li></ul> ) should have 2 children', ( done ) ->
-    source
-      ._remove [ { content: '<p id="myID" class="my-class"></p>' } ]
-      ._add    [ { content: '<ul><li>first</li><li>last</li></ul>' } ]
+    source._remove [ { content: '<p id="myID" class="my-class"></p>' } ]
+    source._add    [ { content: '<ul><li>first</li><li>last</li></ul>' } ]
     
     tree._fetch_all ( values ) -> check done, () ->
       dom = values[ 0 ].dom
