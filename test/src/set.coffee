@@ -120,22 +120,32 @@ describe 'set():', ->
   
   describe 'remove():', ->
     it 'set._remove( [ { id: 1 } ] )._add( [ { id: 2 } ] ) should have id 2', ( done ) ->
-      set._remove( [ { id: 1 } ] )._add( [ { id: 2 } ] )._fetch_all ( values ) ->
-        check done, -> expect( values ).to.be.eql [ { id: 2 } ]
+      set._remove [ { id: 1 } ]
+      set._add [ { id: 2 } ]
+      
+      set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [ { id: 2 } ]
     
     it 'should have an one value in the anti-state', ->
       expect( set.b ).to.be.eql [ { id: 1 } ]
     
     it 'adding back this element should not change the set', ( done ) ->
-      set._add( [ { id: 1 } ] )._fetch_all ( values ) ->
-        check done, -> expect( values ).to.be.eql [ { id: 2 } ]
+      set._add [ { id: 1 } ]
+      
+      set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql [ { id: 2 } ]
     
     it 'anti-state should be empty again', ->
       expect( set.b ).to.be.eql []
       
     it 'removing id 2 should left set empty again', ( done ) ->
-      set._remove( [ { id: 2 } ] )._fetch_all ( values ) ->
-        check done, -> expect( values ).to.be.eql []
+      set._remove [ { id: 2 } ]
+      
+      set._fetch_all ( values ) ->
+        check done, ->
+          expect( values ).to.be.eql []
     
     it 'employee._remove( [ { id: 15 } ] ) should be equal to employee: record with id 15 doesn\'t exist', ( done ) ->
       employee._remove( [ { id: 15 } ] )
@@ -171,9 +181,9 @@ describe 'set():', ->
       ]
     
     it 'employee._remove( [ { id: 6 } ] ) should be equal to result: last record', ( done ) ->
-      employee
-        ._remove( [ { id: 6 } ] )
-        ._fetch_all ( values ) -> check done, ->
+      employee._remove [ { id: 6 } ]
+      
+      employee._fetch_all ( values ) -> check done, ->
           expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
             { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
             { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
@@ -182,17 +192,23 @@ describe 'set():', ->
   
   describe '_update():', ->
     it 'set._update( [ [ { id: 1 }, { id: 1, v: "test" } ] ] ) should be equal to set: empty set', ( done ) ->
-      set
-        ._update( [ [ { id: 1 }, { id: 1, v: 'test' } ] ] )
-        ._fetch_all ( values ) -> check done, -> expect( values ).to.be.eql []
+      set._update [ [ { id: 1 }, { id: 1, v: 'test' } ] ]
+      
+      set._fetch_all ( values ) -> check done, -> expect( values ).to.be.eql []
     
     it 'employee with add, _update and remove inverted should end with update done', ( done ) ->
-      employee
-        ._remove(   [ { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] )
-        ._update( [ [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" }
-                     { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ] ] )
-        ._add(      [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" } ] )
-        ._fetch_all ( values ) -> check done, ->
+      employee._remove [ { id: 15, name: "Khalifa P Nassik", salary: "$2500" } ]
+      
+      employee._update [
+        [
+          { id: 15, name: "Khalifa P Nassik", salary: "$1500" }
+          { id: 15, name: "Khalifa P Nassik", salary: "$2500" }
+        ]
+      ]
+      
+      employee._add [ { id: 15, name: "Khalifa P Nassik", salary: "$1500" } ]
+      
+      employee._fetch_all ( values ) -> check done, ->
           expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
             { id:  2, name: "Josephin Tan"   , salary: "$1500", customer_id: "223", order_id: "1223" }
             { id:  3, name: "Joyce Ming"     , salary: "$2000", customer_id: "224", order_id: "1224" }
