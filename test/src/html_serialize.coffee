@@ -52,17 +52,15 @@ describe 'html_serialize():', ->
       expect( values[ 0 ].content ).to.be '<p></p>'
   
   it 'p element should have: id="myID" and class="my-class"', ( done ) ->
-    source
-      ._remove [ { content: '<p></p>' } ]
-      ._add    [ { content: '<p id="myID" class="my-class"></p>' } ]
+    source._remove [ { content: '<p></p>' } ]
+    source._add    [ { content: '<p id="myID" class="my-class"></p>' } ]
     
     result._fetch_all ( values ) -> check done, () ->
       expect( values[ 0 ].content  ).to.be.eql '<p id="myID" class="my-class"></p>'
   
   it 'should return ul li structure', ( done ) ->
-    source
-      ._remove [ { content: '<p id="myID" class="my-class"></p>' } ]
-      ._add    [ { content: '<ul><li>first</li><li>last</li></ul>' } ]
+    source._remove [ { content: '<p id="myID" class="my-class"></p>' } ]
+    source._add    [ { content: '<ul><li>first</li><li>last</li></ul>' } ]
     
     result._fetch_all ( values ) -> check done, () ->
       expect( values[ 0 ].content  ).to.be '<ul><li>first</li><li>last</li></ul>'
