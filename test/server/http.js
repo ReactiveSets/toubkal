@@ -226,19 +226,22 @@ function client( source, options ) {
   ;
   
   // Read Authorizations
-  var can_read = rs.union( [
-    // public dataflows
-    rs.set( [
-      { flow: 'client_set' },
-      { flow: 'source' }
-    ] ),
-    
-    // Current authenticated user profile, if any
-    user_profile_query
-  ] );
+  var can_read = rs
+    .union( [
+      // public dataflows
+      rs.set( [
+        { flow: 'client_set' },
+        { flow: 'source' }
+      ] ),
+      
+      // Current authenticated user profile, if any
+      user_profile_query
+    ] )
+    .trace( 'can_read-' + sid, { all: true } )
+  ;
   
   return source
-    .filter( can_read )
+    .filter( can_read, { filter_keys: [ 'flow' ] } )
     .through( input )
   ;
 } // client()
@@ -260,13 +263,14 @@ var source_set = rs
   .beat( 10000 ) // every 10 seconds
   .union( [ rs.set( [ {}, {}, {}, {} ] ) ] )
   .auto_increment()
-  .set_flow( 'source' )
+  .set_flow( 'source', { name: 'source (setflow)' } )
+  .trace( 'source data', { all: true } )
 ;
 
 var source_1 = rs
   .set( [ {}, {}, {}, {}, {} ] )
   .auto_increment()
-  .set_flow( 'source_1' )
+  .set_flow( 'source_1', { name: 'source_1 (setflow)' } )
 ;
 
 var sessions = rs
@@ -278,7 +282,7 @@ var sessions = rs
 
 rs.union( [ source_set, source_1, sessions, rs.database() ] )
   
-  //.trace( 'to socket.io clients' )
+  .trace( 'to socket.io clients', { all: true } ) // acts as the dispatcher (no_encapsulate: true)
   
   .dispatch( clients, client, { no_encapsulate: true } )
   
