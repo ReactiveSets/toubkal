@@ -76,7 +76,7 @@ rs
           // .mysql( flow, this.columns )
           .set( [] )
           //.trace( flow )
-          .flow( flow )
+          .flow( flow, { name: flow + ' (setflow)' } )
         ;
       } )
     ;
