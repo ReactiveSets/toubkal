@@ -98,20 +98,20 @@ battery life by making an optimal use of server, network and client resources.
 Toubkal is already quite reliable thanks to its comprehensive test suite and is
 currently used to deliver a complex enterprise web application.
 
-The architecture of Toubkal is now stable, with main components (pipelets, queries,
+The architecture of Toubkal is now stable, with main components (pipelets, plugs, queries,
 and transaction) well defined.
 
 Although the API may still change from time to time, we have entered a more mature phase
 where the high level API is now quite stable, while lower-level API changes much less
 often.
 
-Toubkal should provide a functionally-rich framework by version 0.6 including reasonably
+Toubkal should provide a functionally-rich framework by version 0.5 including reasonably
 complete documentation extracted from the code where it currently stands, and reasonably
 stable API.
 
 ### Our Team
 Toubkal is developped by a dedicated small team of experienced and passionate back-end
-and front-end developpers. We have enough resources to complete this project.
+and front-end developpers.
 
 If you are an experienced javascript programmer, understand the power of reactive
 programming and would like to join our team, please contact us.
@@ -396,7 +396,7 @@ dataflows need to be documented.
 A network of services sharing the same event dispatcher network enables to effectively
 separate **Toubkal Data Providers** from **Toubkal Application Providers** increasing
 business opportunities arising from the portability of reactive dataflows updated in
-real-time and as authorized by end-users.
+real-time and as authorized by end-users and data-licenses.
 
 Within a Toubkal network, end-users no longer need to duplicate their personal data
 endlessly and updates are propagated to all applications in realtime putting an end
@@ -467,7 +467,7 @@ The bulk of the core documentation is currently embedded in the code of
 and other sources for other pipelets.
 
 We plan on extracting and completing this documentation to provide the following
-manuals from version 0.6:
+manuals from version 0.5:
 
 - Toubkal Introduction
 - Toubkal Gloasary of Terms
@@ -527,7 +527,7 @@ Then browse http://localhost:8080/test/manual/
 # node examples/server.js
 ```
 
-Then browse http://localhost:8080/
+Then browse http://localhost:8081/
 
 ## Roadmap / Releases
 
@@ -540,33 +540,145 @@ Then browse http://localhost:8080/
 - Feature freeze
 - Improve documentation and tutorial
 
-### Version 0.8.0 - P2P Dataflows
+### Version 0.8.0 - Charding, P2P Dataflows
 
 #### Main Goals:
 
 - WebRTC pipelets
 - Implement Peer-To-Peer dataflows using WebRTC
-
-### Version 0.7.0 - Charding
-
-#### Main Goals:
-
 - Horizontal distribution / Charding using websocket dispatcher
 - Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
 - Implement websocket_clients() and websocket_server() pipelets as a faster alternative
   to socket_io equivalents.
 
-### Version 0.6.0 - Packaging / First Beta
+### Version 0.7.0 - Web Application Framework / Packaging / Versionning
+
+This version introduces the capability to keep historical values of objects persisted and cached.
+
+#### Main Goals:
+
+- Navigation pipelets
+- Internationalization
+- Packaging:
+  - Split This repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ... repositories
+  - Implement rs package manager
+  - Implement rs automatic pipelet patching
+- Develop additional tests, goal is at least 3000 continuous integration tests, measure test coverage
+
+- Super-state and versioning:
+  - define attribute _v for versions, allowing to manage complete anti-state and super-state
+  - super-state will contain versions of an object added after a first version is already in the state
+    - allow complete desorder between multiple adds and revmove on the same object defined by its id
+
+- Versionned persistance, i.e. 
+  - Dataflows Meta Data for key, and query indexes definition
+  - Operations log
+  - Query cache
+
+- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
+  - Bug with routing algorythm for / route
+  - Fix updates
+
+- File write:
+  - to configuration()
+  - to other files
+
+- Server-side rendering:
+  - using html_parse() to insert elements into a DOM tree
+  - using html_serialize() to rebuild modified html to server
+  - using $query_selector() to select into htmlparse2 tree
+  - using $to_dom() to modify htmlparse2 tree (not implemented)
+
+#### Work in Progress:
+
+- Dropbox file sharing for photo albums (developped and tested in demo repository)
+
+### Version 0.6.0 - Complex Queries
+
+#### Main goals:
+- Intergrate Safe Complex Query expressions into Query and Query_Tree:
+  - Query..add(): Add complex query terms
+  - Query..remove(): remove complex query terms
+  - Query..and(): AND complex queries
+  - Query..differences(): Find differences between complex queries
+  - Query..generate(): Generate filter code from complex queries
+  - Query_Tree..add(): Add complex query terms into query tree
+  - Query_Tree..remove(): Remove complex query terms from query tree
+  - Query_Tree..route(): Route operations with complex queries
+
+- Query Tree else()
+  - Emits data events not routed to any other destination input
+  - Pipelet else() captures these events
+  - May be used to detect clients attempts to submit unauthorized data
+
+- Develop additional tests, goal is at least 2500 continuous integration tests
+
+#### Work in progress:
+
+- Safe Complex Query expressions (implemented, needs integration):
+  - Sanitized for safe execution on server even when crafted by untrusted clients
+  
+  - For execution by upstream servers to reduce bandwidth, cpu usage and latency
+  
+  - JSON Objects and Arrays for any JSON transport
+  
+  - Side-effect free
+  
+  - Any depth Abstract Syntax Tree, can be limited to prevent Denial of Service attacks
+  
+  - Consistent and rich semantic, above that of SQL and MongoDB:
+    - Nested Object and Array expressions
+    
+    - Regular expressions
+    
+    - All progressive operators, e.g.:
+      ```18 <= age <= 25```
+      ```sales / ( 0 != count ) > 1000```
+  
+  - Operators:
+    - Control flow       : ```&& || ! failed```
+    - Literals           : ```$ _ __ .```
+    - Grouping           : ```[]```
+    - Comparison         : ```== != > >= < <=```
+    - Arithmetic         : ```+ - * / %```
+    - Regular expressions: ```RegExp match match_index group split```
+    - Search in Array    : ```in```
+    - Array / String     : ```length```
+    - Date               : ```Date value year month day hours minutes seconds milliseconds time```
+    - Custom operators   : defined using JavaScript functions but used as JSON Strings and Arrays to prevent code-injection
+  
+  - Example: Expression to get active users whom last logged-in before 2013:
+
+```javascript
+    {
+        flow   : 'user'
+      , active : [ '==', true ]
+      , profile: {
+            last_logged_in: [ 'year', '<', 2013 ]
+        }
+    }
+```
+
+### Version 0.5.0 - Packaging / Documentation / First Beta
+
+ETA May 15th 2016
 
 First Beta version with API almost finalized.
 
 #### Main Goals:
 
 - Extract documentation from code
+  - JavaScript parser pipelet (probably using acorn)
+  - 
+
 - Build Website, featuring documentation and tutorial
+  - Markdown parser pipelet
+
 - Implement as many ToDo as possible
-- Develop additional tests, goal is at least 3000 continuous integration tests, code coverage to 90%
+- Develop additional tests, goal is at least 2000 continuous integration tests, code coverage to 90%
 - Session Strorage Dataflow
+- Social login client pipelet
+- Client SPA navigation / routing pipelet
 
 #### Work-In-Progress:
 
@@ -622,111 +734,9 @@ First Beta version with API almost finalized.
 
   - some pipelets, functions and methods are already following this documentation format
 
-### Version 0.5.0 - Web Application Framework / Packaging / Versionning
+### Version 0.4.0 - Error Handling, Complex Authorizations, DOM Handling
 
-This version introduces the capability to keep historical values of objects persisted and cached.
-
-#### Main Goals:
-
-- Navigation pipelets
-- Internationalization
-- Packaging:
-  - Finalize module pattern
-  - Split This repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ... repositories
-  - Implement rs package manager
-  - Implement rs automatic pipelet patching
-- Develop additional tests, goal is at least 2500 continuous integration tests, measure test coverage
-
-- Super-state and versioning:
-  - define attribute _v for versions, allowing to manage complete anti-state and super-state
-  - super-state will contain versions of an object added after a first version is already in the state
-    - allow complete desorder between multiple adds and revmove on the same object defined by its id
-
-- Versionned persistance, i.e. 
-  - Refactor fetch() to provide adds, removes, updates operations instead of adds, enables versionning
-  - Dataflows Meta Data for key, and query indexes definition
-  - Operations log
-  - Query cache
-
-- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-  - Bug with routing algorythm for / route
-  - Fix updates
-
-- File write:
-  - to configuration()
-  - to other files
-
-- Server-side rendering:
-  - using html_parse() to insert elements into a DOM tree
-  - using html_serialize() to rebuild modified html to server
-  - using $query_selector() to select into htmlparse2 tree
-  - using $to_dom() to modify htmlparse2 tree (not implemented)
-
-#### Work in Progress:
-
-- Dropbox file sharing for photo albums (developped and tested in demo repository)
-
-### Version 0.4.0 - Complex Queries
-
-#### Main goals:
-- Develop additional tests, goal is at least 2000 continuous integration tests
-
-- Query Tree else()
-  - Emits data events not routed to any other destination input
-  - Pipelet else() captures these events
-  - May be used to detect clients attempts to submit un-authorize data
-
-- Intergrate Safe Complex Query expressions into Query and Query_Tree
-
-#### Work in progress:
-
-- Safe Complex Query expressions (implemented, needs integration):
-  - Sanitized for safe execution on server even when crafted by untrusted clients
-  
-  - For execution by upstream servers to reduce bandwidth, cpu usage and latency
-  
-  - JSON Objects and Arrays for any JSON transport
-  
-  - Side-effect free
-  
-  - Any depth Abstract Syntax Tree, can be limited to prevent Denial of Service attacks
-  
-  - Consistent and rich semantic, above that of SQL and MongoDB:
-    - Nested Object and Array expressions
-    
-    - Regular expressions
-    
-    - All progressive operators, e.g.:
-      ```18 <= age <= 25```
-      ```sales / ( 0 != count ) > 1000```
-  
-  - Operators:
-    - Control flow       : ```&& || ! failed```
-    - Literals           : ```$ _ __ .```
-    - Grouping           : ```[]```
-    - Comparison         : ```== != > >= < <=```
-    - Arithmetic         : ```+ - * / %```
-    - Regular expressions: ```RegExp match match_index group split```
-    - Search in Array    : ```in```
-    - Array / String     : ```length```
-    - Date               : ```Date value year month day hours minutes seconds milliseconds time```
-    - Custom operators   : defined using JavaScript functions but used as JSON Strings and Arrays to prevent code-injection
-  
-  - Example: Expression to get active users whom last logged-in before 2013:
-
-```javascript
-    {
-        flow   : 'user'
-      , active : [ '==', true ]
-      , profile: {
-            last_logged_in: [ 'year', '<', 2013 ]
-        }
-    }
-```
-
-### Version 0.3.5 - Error Handling, Complex Authorizations, DOM Handling
-
-ETA: February  29th 2016
+ETA: March 31st 2016
 
 - 1602 continuous integration tests
 
@@ -751,6 +761,8 @@ ETA: February  29th 2016
     and apply authorization rules accordingly.
   - using not_exists() to test appropriate existance on adds, removes and updates
 
+#### Completed Work:
+
 - fetch() && update_upstream_query() refactoring:
   - Implemented in Plug base class of all inputs and outputs
   - Replaces all implementations of fetch on inputs and outputs
@@ -761,8 +773,6 @@ ETA: February  29th 2016
   - Allow query transforms on all plugs
   - Filters fetch_unfiltered() if defined
   - Filters through _tranform() if defined and fetch_unfiltered() not defined
-
-#### Completed Work:
 
 - Allow automatic synchronization of all inputs of a pipelet, as long as one uses method Pipelet.._add_input() to add additional inputs.
   This relies on sharing input transactions between all inputs, and other modifications to make this work properly on controllets.
