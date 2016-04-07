@@ -900,7 +900,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a tagged input, with single tagged transaction', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input' )
+        input_transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
@@ -1076,7 +1076,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a tagged input, with single tagged transaction with another tag', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input' )
+        input_transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
@@ -1250,7 +1250,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a non-tagged input, with single tagged transaction with a tag', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input' )
+        input_transactions = new Input_Transactions( 'input', input )
         input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
@@ -1423,7 +1423,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a tagged input, with nested tagged transaction', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input' )
+        input_transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
@@ -1600,7 +1600,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions with no fork or tag', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input' )
+        input_transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
