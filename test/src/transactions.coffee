@@ -900,7 +900,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a tagged input, with single tagged transaction', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input', input )
+        input_transactions = input.transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
@@ -932,7 +932,7 @@ describe 'Transactions test suite', ->
         more_out = clone more
         delete more_out._t.forks
         
-        o = output_1_transactions.get_options input, input_transactions, more
+        o = output_1_transactions.get_options input, more
         
         it 'output_1_transactions concurrent options should be returned with more and removed forks array', ->
           expect( o ).to.be.eql more_out
@@ -981,7 +981,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options should have more even after sending no more, without forks', ->
-          o = output_1_transactions.get_options input, input_transactions, no_more
+          o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
         
@@ -1013,7 +1013,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transactions.get_from_tid tid ).to.be undefined
         
         it 'output_2_transactions concurrent options (more) without forks', ->
-          o = output_2_transactions.get_options input, input_transactions, more
+          o = output_2_transactions.get_options input, more
           
           expect( o ).to.be.eql more_out
         
@@ -1056,7 +1056,7 @@ describe 'Transactions test suite', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options for output_2_transactions should have no more after sending no more, and no forks', ->
-          o = output_2_transactions.get_options input, input_transactions, no_more
+          o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
         
@@ -1076,7 +1076,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a tagged input, with single tagged transaction with another tag', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input', input )
+        input_transactions = input.transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
@@ -1106,7 +1106,7 @@ describe 'Transactions test suite', ->
         more = clone more_origin
         more_out = clone more
         
-        o = output_1_transactions.get_options input, input_transactions, more
+        o = output_1_transactions.get_options input, more
         
         it 'output_1_transactions concurrent options should be returned with more and removed forks array', ->
           expect( o ).to.be.eql more_out
@@ -1155,7 +1155,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options should have more even after sending no more, without forks', ->
-          o = output_1_transactions.get_options input, input_transactions, no_more
+          o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
         
@@ -1187,7 +1187,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transactions.get_from_tid tid ).to.be undefined
         
         it 'output_2_transactions concurrent options (more) without forks', ->
-          o = output_2_transactions.get_options input, input_transactions, more
+          o = output_2_transactions.get_options input, more
           
           expect( o ).to.be.eql more_out
         
@@ -1230,7 +1230,7 @@ describe 'Transactions test suite', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options for output_2_transactions should have no more after sending no more, and no forks', ->
-          o = output_2_transactions.get_options input, input_transactions, no_more
+          o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
         
@@ -1250,7 +1250,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a non-tagged input, with single tagged transaction with a tag', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input', input )
+        input_transactions = input.transactions = new Input_Transactions( 'input', input )
         input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
@@ -1279,7 +1279,7 @@ describe 'Transactions test suite', ->
         more = clone more_origin
         more_out = clone more
         
-        o = output_1_transactions.get_options input, input_transactions, more
+        o = output_1_transactions.get_options input, more
         
         it 'output_1_transactions concurrent options should be returned with more and removed forks array', ->
           expect( o ).to.be.eql more_out
@@ -1328,7 +1328,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options should have more even after sending no more, without forks', ->
-          o = output_1_transactions.get_options input, input_transactions, no_more
+          o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
         
@@ -1360,7 +1360,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transactions.get_from_tid tid ).to.be undefined
         
         it 'output_2_transactions concurrent options (more) without forks', ->
-          o = output_2_transactions.get_options input, input_transactions, more
+          o = output_2_transactions.get_options input, more
           
           expect( o ).to.be.eql more_out
         
@@ -1403,7 +1403,7 @@ describe 'Transactions test suite', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options for output_2_transactions should have no more after sending no more, and no forks', ->
-          o = output_2_transactions.get_options input, input_transactions, no_more
+          o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
         
@@ -1423,7 +1423,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions on a tagged input, with nested tagged transaction', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input', input )
+        input_transactions = input.transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
@@ -1456,7 +1456,7 @@ describe 'Transactions test suite', ->
         more_out = clone more
         more_out._t.forks = [ 'top' ]
         
-        o = output_1_transactions.get_options input, input_transactions, more
+        o = output_1_transactions.get_options input, more
         
         it 'output_1_transactions concurrent options should be returned with more and removed last fork tag', ->
           expect( o ).to.be.eql more_out
@@ -1505,7 +1505,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options should have more even after sending no more, without the last fork tag', ->
-          o = output_1_transactions.get_options input, input_transactions, no_more
+          o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
         
@@ -1537,7 +1537,7 @@ describe 'Transactions test suite', ->
           expect( output_1_transactions.get_from_tid tid ).to.be undefined
         
         it 'output_2_transactions concurrent options (more) should have removed last fork', ->
-          o = output_2_transactions.get_options input, input_transactions, more
+          o = output_2_transactions.get_options input, more
           
           expect( o ).to.be.eql more_out
         
@@ -1580,7 +1580,7 @@ describe 'Transactions test suite', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
         it 'concurent options for output_2_transactions should have no more after sending no more, and removed last fork tag', ->
-          o = output_2_transactions.get_options input, input_transactions, no_more
+          o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
         
@@ -1600,7 +1600,7 @@ describe 'Transactions test suite', ->
       describe 'I/O Transactions with no fork or tag', ->
         input    = new RS.Loggable 'input'
         
-        input_transactions = new Input_Transactions( 'input', input )
+        input_transactions = input.transactions = new Input_Transactions( 'input', input )
         input_transactions.set_tag( 'source' )
         input_transactions.add_branches( 2 )
         
@@ -1620,7 +1620,7 @@ describe 'Transactions test suite', ->
         more_origin._t.more = true
         more = clone more_origin
         
-        o = output_1_transactions.get_options input, input_transactions, more
+        o = output_1_transactions.get_options input, more
         
         it 'get_options( input, input_transactions, more ) should return more', ->
           expect( o ).to.be more
