@@ -734,15 +734,17 @@ First Beta version with API almost finalized.
 
   - some pipelets, functions and methods are already following this documentation format
 
-### Version 0.4.0 - Error Handling, Complex Authorizations, DOM Handling
+### Version 0.4.0 - Transactional Operations, Complex Authorizations, DOM Handling
 
-ETA: March 31st 2016
+ETA: April 30 2016
 
 - 1612 continuous integration tests
 
 #### Main Goals:
 
-- Develop additional tests, goal is at least 1750 continuous integration tests
+- Additional tests, goal is at least 1750 continuous integration tests
+
+- Transactional design patterns and pipelets
 
 - Error routing and handling:
   - pipelet to push / pop sender, route errors
@@ -762,6 +764,9 @@ ETA: March 31st 2016
   - using not_exists() to test appropriate existance on adds, removes and updates
 
 #### Completed Work:
+
+- transactional pipelets:
+  - fetch(): Fetches the current state of a store dataflow based on source events.
 
 - fetch() && update_upstream_query() refactoring:
   - Implemented in Plug base class of all inputs and outputs
@@ -825,6 +830,7 @@ ETA: March 31st 2016
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+fetch()                             | Fetches the current state of a store dataflow based on source events.
 pick()                              | Forwards only specified attributes
 has_none()                          | Has one value if source has none, has no value if source has one.
 log_namespace()                     | Helps debug namespace issues
