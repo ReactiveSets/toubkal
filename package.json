@@ -51,7 +51,7 @@
     "express"                      : "4.13.4",
     "passport-twitter"             : "1.0.4",
     "passport-facebook"            : "2.1.0",
-    "passport-github"              : "1.0.0",
+    "passport-github"              : "1.1.0",
     "passport-linkedin"            : "1.0.0",
     "passport-linkedin-oauth2"     : "1.4.0",
     "passport-google-oauth20"      : "1.0.0"
