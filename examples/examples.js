@@ -206,7 +206,9 @@ module.exports = function( servers ) {
     .set_output( 'data_processors', scope )
   ;
   
-  rs.dispatch( rs.output( 'data_processors', scope ), function( source, options ) {
+  rs.dispatch( rs.output( 'data_processors', scope ), data_processor, { loop: true } );
+  
+  function data_processor( source, options ) {
     var data_processor = './' + this.path
       , path           = require.resolve( data_processor )
       , processor
@@ -231,7 +233,7 @@ module.exports = function( servers ) {
       
       delete require.cache[ path ];
     }
-  } );
+  } // data_processor()
   
   function hijack( that, method, f ) {
     var m =  that[ method ];
@@ -243,5 +245,5 @@ module.exports = function( servers ) {
       
       m.apply( that, parameters );
     }
-  }
+  } // hijack()
 } // module.exports
