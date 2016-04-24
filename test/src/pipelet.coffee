@@ -220,6 +220,22 @@ describe 'Pipelet', ->
           ]
       )( 'p1' )
     
+    it 'should still work if options is set to undefined', ->
+      ( ( p1, options ) ->
+          parameters = as_array( arguments )
+          
+          set_default_options( f, source_path, parameters, defaults )
+          
+          expect( parameters ).to.be.eql [
+            'p1'
+            {
+              key: [ 'path' ]
+              test: true
+              other: 'other'
+            }
+          ]
+      )( 'p1', undefined )
+    
     it 'should work if no defaults are provided', ->
       ( ( p1, options ) ->
           parameters = as_array( arguments )
