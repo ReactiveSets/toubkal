@@ -174,7 +174,10 @@ module.exports = function( servers ) {
           var flow = this.name;
           
           return source
+            .flow( flow + '_updates' )
+            
             .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
+            
             //.trace( 'table ' + flow )
             .set_flow( flow )
           ;
@@ -201,49 +204,62 @@ module.exports = function( servers ) {
     
     .trace( 'data processors' )
     
-    .alter( function( processor ){} ) // hack to split updates into adds and removes to test dispatch cleanup on remove
+    .alter( function( pipeline ) { // hack to split updates into adds and removes to test dispatch cleanup on remove
+      pipeline.pipelet = 'data_processor';
+    } )
     
     .set_output( 'data_processors', scope )
   ;
   
-  rs.dispatch( rs.output( 'data_processors', scope ), data_processor, { loop: true } );
+  rs
+    .Compose( 'data_processor', function( source, that, options ) {
+      var data_processor = './' + that.path
+        , path           = require.resolve( data_processor )
+        , processor
+        , output
+      ;
+      
+      de&&ug( 'requiring data processor:', data_processor );
+      
+      try {
+        processor = require( path );
+        
+        output = processor( rs, options );
+      } catch( e ) {
+        log( 'failed to load data processor:', data_processor, ', error:', e );
+      }
+      
+      hijack( source._input, 'remove_source', remove );
+      
+      return output;
+      
+      function remove( output, options ) {
+        de&&ug( 'removing data processor:', data_processor );
+        
+        processor && processor.remove && processor.remove( options );
+        
+        delete require.cache[ path ];
+      } // remove()
+      
+      function hijack( that, method, f ) {
+        var m =  that[ method ];
+        
+        that[ method ] = function() {
+          var parameters = Array.prototype.slice.call( arguments, 0 );
+          
+          f.apply( that, parameters );
+          
+          m.apply( that, parameters );
+        }
+      } // hijack()
+    } ) // data_processor() pipelet
+  ;
+    
+  rs
+    .dispatch( rs.output( 'data_processors', scope ), pipeline, { loop: true } )
+  ;
   
-  function data_processor( source, options ) {
-    var data_processor = './' + this.path
-      , path           = require.resolve( data_processor )
-      , processor
-    ;
-    
-    de&&ug( 'requiring data processor:', data_processor );
-    
-    try {
-      processor = require( path );
-      
-      processor( rs, options );
-    } catch( e ) {
-      log( 'failed to load data processor:', data_processor, ', error:', e );
-    }
-    
-    hijack( source._input, 'remove_source', remove );
-    
-    function remove( output, options ) {
-      de&&ug( 'removing data processor:', data_processor );
-      
-      processor && processor.remove && processor.remove( options );
-      
-      delete require.cache[ path ];
-    }
+  function pipeline( source, options ) {
+    return source[ this.pipelet ].call( source, this, options );
   } // data_processor()
-  
-  function hijack( that, method, f ) {
-    var m =  that[ method ];
-    
-    that[ method ] = function() {
-      var parameters = Array.prototype.slice.call( arguments, 0 );
-      
-      f.apply( that, parameters );
-      
-      m.apply( that, parameters );
-    }
-  } // hijack()
 } // module.exports
