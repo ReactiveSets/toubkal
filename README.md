@@ -830,6 +830,7 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+update_fetched()                    | Update fetched values in a transaction
 fetch()                             | Fetches the current state of a store dataflow based on source events.
 pick()                              | Forwards only specified attributes
 has_none()                          | Has one value if source has none, has no value if source has one.
