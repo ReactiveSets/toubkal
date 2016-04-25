@@ -48,7 +48,7 @@
           {
               id   : 'flow'
             , type : 'hidden'
-            , value: 'chat/chat_message'
+            , value: 'chat/chat_message_updates'
           },
           {
               id   : 'user_id'

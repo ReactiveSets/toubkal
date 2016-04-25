@@ -25,13 +25,21 @@
 module.exports = function( rs, options ) {
   'use strict';
   
-  var clients = rs.clients();
+  var clients = rs.clients()
+    , flow = 'chat/chat_message'
+  ;
   
   clients
     
-    .flow( 'chat/chat_message' )
+    .flow( flow + '_updates' )
+    
+    .alter( function( chat ) {
+      delete chat.flow;
+    } )
     
     .set()
+    
+    .set_flow( flow )
     
     .through( clients )
   ;
