@@ -767,6 +767,7 @@ Work In Progress.
 
 - transactional pipelets:
   - fetch(): Fetches the current state of a store dataflow based on source events.
+  - update_fetched(): Update fetched values in a transaction
 
 - fetch() && update_upstream_query() refactoring:
   - Implemented in Plug base class of all inputs and outputs
@@ -830,10 +831,11 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+throttle()                          | Throttles source events by throttle events
 update_fetched()                    | Update fetched values in a transaction
-fetch()                             | Fetches the current state of a store dataflow based on source events.
+fetch()                             | Fetches the current state of a store dataflow based on source events
 pick()                              | Forwards only specified attributes
-has_none()                          | Has one value if source has none, has no value if source has one.
+has_none()                          | Has one value if source has none, has no value if source has one
 log_namespace()                     | Helps debug namespace issues
 namespace()                         | Get namespace of current pipelet
 set_namespace()                     | Set namespace of current pipelet
