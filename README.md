@@ -832,6 +832,7 @@ Work In Progress.
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
 window_size()                       | Provide a dataflow of window size change events
+throttle_last()                     | Emit last received source value before throttle events, without throttle events
 throttle()                          | Emit last received source value before throttle events
 update_fetched()                    | Update fetched values in a transaction
 fetch()                             | Fetches the current state of a store dataflow based on source events
