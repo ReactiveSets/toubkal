@@ -37,3 +37,8 @@ body {
   font-weight: 700;
   color: #38699B;
 }
+
+span.pipelet {
+  font-style: italic;
+  color: orange;
+}
