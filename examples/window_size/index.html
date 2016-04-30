@@ -22,22 +22,54 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
   
   <title>window_size()</title>
+  
+  <style>
+    .container {
+      max-width: 800px;
+    }
+    
+    #window_size {
+      margin-top: 20px;
+      max-width: 200px;
+    }
+    
+    th {
+      background-color:lightgreen;
+    }
+    
+    pre {
+      border: none;
+      padding: 0px;
+    }
+  </style>
 </head>
 
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-sm-6 col-sm-offset-2 center-block">
-        <h2>Pipelet <span class="pipelet">window_size()</span></h2>
-        <p>
-          Resize your browser window and watch table display size
-          reactively.
-        </p>
+      <div class="col-sm-9">
+        <div class="description">
+          <h2>Pipelet <span class="pipelet">window_size()</span></h2>
+          <p>
+            Resize your browser window, watch Window Size table update
+            reactively.
+          </p>
+        </div>
+      </div>
+      
+      <div class="col-sm-3">
+        <div id="window_size" class="center-block panel panel-default">
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-sm-12">
         <p>
           Displaying is throttled using pipelets <span class="pipelet">throttle_last()</span>
-          and <span class="pipelet">animation_frames()</span> for smooth display updates.
+          and <span class="pipelet">animation_frames()</span> for smooth display
+          updates:
         </p>
-        
 <pre><code class="javascript">
   // table columns
   var columns = [
@@ -47,26 +79,19 @@
   ];
   
   rs
-    // Get a dataflow of window size events
+    // Get the dataflow of window size events
     .window_size()
     
-    // Throttle window resize events using 
-    // Window.requestAnimationFrame()
-    // for smooth display in table bellow
+    // Smooth table updates on Animation Frames
     .throttle_last( rs.animation_frames() )
     
-    // Display results in table div id "window_size"
-    .table(
-      rs.RS.$( '#window_size' ),
-      columns,
-      { class_names: 'table table-condensed' }
-    )
+    // Display results in div id "window_size"
+    .table( rs.RS.$( '#window_size' ), columns, {
+      class_names: 'table table-condensed table-bordered',
+      caption: 'Window Size'
+    } )
   ;
 </code></pre>
-      </div>
-      
-      <div class="col-sm-4 center-block">
-        <div id="window_size" />
       </div>
     </div>
   </div>

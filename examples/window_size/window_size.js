@@ -7,13 +7,16 @@ undefine()( 'window_size', [ [ 'rs', 'toubkal' ] ], function( rs ) {
   ];
   
   rs
-    // Get a dataflow of window size events
+    // Get the dataflow of window size events
     .window_size()
     
-    // Throttle window resize events using Window.requestAnimationFrame() for smooth display in table bellow
+    // Smooth table updates on Animation Frames
     .throttle_last( rs.animation_frames() )
     
-    // Display results in table div id "window_size"
-    .table( rs.RS.$( '#window_size' ), columns, { class_names: 'table table-condensed' } )
+    // Display results in div id "window_size"
+    .table( rs.RS.$( '#window_size' ), columns, {
+      class_names: 'table table-condensed table-bordered',
+      caption: 'Window Size'
+    } )
   ;
 } );
