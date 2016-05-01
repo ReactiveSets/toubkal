@@ -70,8 +70,7 @@
           and <span class="pipelet">animation_frames()</span> for smooth display
           updates:
         </p>
-<pre><code class="javascript">
-  // table columns
+<pre><code class="javascript">  // table columns
   var columns = [
     { id: 'id'    , label: '#'     , align: 'center' },
     { id: 'width' , label: 'Width' , align: 'center' },
@@ -91,6 +90,75 @@
       caption: 'Window Size'
     } )
   ;
+</code></pre>
+        <br>
+        <p>
+          The 2 lines of Toubkal code which throttle window resize
+          events with animation frame events:
+        </p>
+<pre><code class="javascript">  rs
+    // Get the dataflow of window size events
+    .window_size()
+    
+    // Throttle events on Animation Frames
+    .throttle_last( rs.animation_frames() )
+  ;
+</code></pre>
+        <p>
+          express in the minimum conceivable set of words the intention of the programmer,
+          replacing 33 lines (after removing comments and blank lines) of error-prone,
+          and much more difficult to understand, vanila Javascipt, which can be found at
+          <a href="https://developer.mozilla.org/en-US/docs/Web/Events/resize">
+            resize, Event reference | MDN
+          </a>:
+        </p>
+<pre><code class="javascript">  var optimizedResize = (function() {
+
+      var callbacks = [],
+          running = false;
+
+      // fired on resize event
+      function resize() {
+
+          if (!running) {
+              running = true;
+
+              if (window.requestAnimationFrame) {
+                  window.requestAnimationFrame(runCallbacks);
+              } else {
+                  setTimeout(runCallbacks, 66);
+              }
+          }
+      }
+
+      // run the actual callbacks
+      function runCallbacks() {
+
+          callbacks.forEach(function(callback) {
+              callback();
+          });
+
+          running = false;
+      }
+
+      // adds callback to loop
+      function addCallback(callback) {
+
+          if (callback) {
+              callbacks.push(callback);
+          }
+      }
+
+      return {
+          // public method to add additional callback
+          add: function(callback) {
+              if (!callbacks.length) {
+                  window.addEventListener('resize', resize);
+              }
+              addCallback(callback);
+          }
+      }
+  }());
 </code></pre>
       </div>
     </div>
