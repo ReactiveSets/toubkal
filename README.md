@@ -833,7 +833,7 @@ New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
 window_size()                       | Provide a dataflow of window size change events
 $window()                           | Singleton for the global Window
-$on_event()                         | Listen and emits DOM events registered using addEventListener()
+$on()                               | Listen and emits DOM events registered using addEventListener()
 throttle_last()                     | Emit last received source value before throttle events, without throttle events
 throttle()                          | Emit last received source value before throttle events
 update_fetched()                    | Update fetched values in a transaction
