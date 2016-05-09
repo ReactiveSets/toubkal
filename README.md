@@ -831,6 +831,8 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+$has_class()                        | Emits only source values which have a $node which has css_class set
+$add_class()                        | Add or remove css_class to $node attribute if not present
 window_size()                       | Provide a dataflow of window size change events
 $window()                           | Singleton for the global Window
 $on()                               | Listen and emits DOM events registered using addEventListener()
