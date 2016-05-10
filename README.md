@@ -831,7 +831,8 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
-$has_class()                        | Emits source values which have a $node attriute which has css_class set
+$has_not_class()                    | Emits source values which have a $node attriute without css_class set
+$has_class()                        | Emits source values which have a $node attriute with    css_class set
 $add_class()                        | Add or remove css_class to $node attribute if not present
 window_size()                       | Provide a dataflow of window size change events
 $window()                           | Singleton for the global Window
