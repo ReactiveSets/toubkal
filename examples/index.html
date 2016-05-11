@@ -77,7 +77,11 @@
         )
       ;
       
-      rs.socket_io_server()
+      rs
+        .socket_io_server()
+        
+        .delivers( [ 'examples' ] )
+        
         .Singleton( '$examples', function( source, options ) {
           return source
             //.trace( 'examples' )
