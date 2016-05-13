@@ -1,6 +1,6 @@
 # Toubkal
 
-**Reactive / Dataflow Programming for NodeJS and the Browser**
+**Rapid development of fully reactive applications and micro-services for Node.js and the Browser**
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
