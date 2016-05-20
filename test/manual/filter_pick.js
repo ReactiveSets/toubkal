@@ -23,7 +23,13 @@ rs
   
   .trace( 'out' )
   
-  .filter( [ { b_id: 2 }, { b_id: 1 } ] )
+  .filter( [
+    { b_id: 2 },
+    { b_id: 1 },
+    //{ id: 3 },
+    //{ id: 2 },
+    //{}
+  ] )
   
   .greedy()
 ;
