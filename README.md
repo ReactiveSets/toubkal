@@ -839,7 +839,7 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
-filter_pick()                       | Select source values matching parent dataflow values
+filter_pick()                       | Select source dataflow from matching parent dataflow values
 delivers()                          | Specifies which upstream dataflows can be subscribed-to
 $has_not_class()                    | Emits source values which have a $node attriute without css_class set
 $has_class()                        | Emits source values which have a $node attriute with    css_class set
