@@ -832,14 +832,14 @@ Work In Progress.
   - map(): allows to emit zero or 1 value for each source value
   - flat_map(): allows to emit zero to n values for each source value
   - pick()
-  - filter_map()
+  - filter_pick()
 
 - Additional functional stateful pipelets:
   - group(): emit grouped values into content attribute
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
-filter_map()                        | Select source values matching parent dataflow values
+filter_pick()                       | Select source values matching parent dataflow values
 delivers()                          | Specifies which upstream dataflows can be subscribed-to
 $has_not_class()                    | Emits source values which have a $node attriute without css_class set
 $has_class()                        | Emits source values which have a $node attriute with    css_class set

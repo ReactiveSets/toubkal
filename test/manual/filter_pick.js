@@ -9,7 +9,7 @@ rs
   
   .trace( 'source', { all: true } )
   
-  .filter_map( rs
+  .filter_pick( rs
     .set( [
       { flow: 'b', id: 1 },
       { flow: 'b', id: 2 },
