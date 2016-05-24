@@ -827,6 +827,7 @@ Work In Progress.
   - removes(): filter remove operations, useful when these have a strict Delete semantic
   - updates(): filter update operations, useful when these have a strict Update semantic
   - revert(): transforms adds into removes, removes into adds, swap remove and add into updates
+  - query_updates(): get query updates from pipelet, to build lazy pipelines, including caches
 
 - Additional functional stateless pipelets:
   - map(): allows to emit zero or 1 value for each source value
@@ -839,6 +840,7 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+cache()                             | Stateful and lazy pipelet
 query_updates()                     | Get query updates from pipelet
 filter_pick()                       | Select source dataflow from matching parent dataflow values
 delivers()                          | Specifies which upstream dataflows can be subscribed-to
