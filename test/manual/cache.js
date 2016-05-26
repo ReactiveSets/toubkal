@@ -1,18 +1,27 @@
-require( 'toubkal/lib/core' )
+rs = require( 'toubkal/lib/core' );
 
+var shema = rs
+  .set( [ { id: 'test' } ] )
+  
+  .trace( 'schema', { all: true } )
+;
+
+rs
   .set( [
     { id: 1 },
     { id: 2 },
-    { id: 3 },
+    { id: 3 }
   ] )
   
-  .trace( 'cache', { all: true } )
+  .set_flow( 'test' )
   
-  .cache()
+  .trace( 'test set', { all: true } )
   
-  .trace( 'downstream', { all: true } )
+  .database_cache( shema )
   
-  .filter( [ { id: 2 } ] )
+  .trace( 'database_cache', { all: true } )
+  
+  .filter( [ { flow: 'test', id: 2 } ] )
   
   .greedy()
 ;

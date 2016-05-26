@@ -840,6 +840,7 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+database_cache()                    | Cache for an entire database from schema
 cache()                             | Stateful and lazy pipelet
 query_updates()                     | Get query updates from pipelet
 filter_pick()                       | Select source dataflow from matching parent dataflow values
