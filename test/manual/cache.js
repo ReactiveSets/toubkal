@@ -21,7 +21,10 @@ rs
   
   .trace( 'database_cache', { all: true } )
   
-  .filter( [ { flow: 'test', id: 2 } ] )
+  .filter( [
+    { flow: 'test', id: 2 },
+    { flow: 'none', id: 1 }
+  ] )
   
   .greedy()
 ;
