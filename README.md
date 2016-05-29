@@ -838,6 +838,10 @@ Work In Progress.
 - Additional functional stateful pipelets:
   - group(): emit grouped values into content attribute
 
+- Caches (stateful lazy pipelets):
+  - cache(): Stateful and lazy pipelet
+  - database_cache(): Cache for an entire database from schema
+
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
 database_cache()                    | Cache for an entire database from schema
