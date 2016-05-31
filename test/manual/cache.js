@@ -17,7 +17,7 @@ rs
   
   .trace( 'test set', { all: true } )
   
-  .database_cache( shema )
+  .database_cache( shema, { pipelet: 'optimize' } )
   
   .trace( 'database_cache', { all: true } )
   
