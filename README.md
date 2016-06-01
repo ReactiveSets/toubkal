@@ -842,8 +842,12 @@ Work In Progress.
   - cache(): Stateful and lazy pipelet
   - database_cache(): Cache for an entire database from schema
 
+- Application-level pipelets:
+  - application_loop(): Processes an application from a dataflow of components and input dataflows
+
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+application_loop()                  | Processes an application from a dataflow of components and input dataflows.
 database_cache()                    | Cache for an entire database from schema
 cache()                             | Stateful and lazy pipelet
 query_updates()                     | Get query updates from pipelet
