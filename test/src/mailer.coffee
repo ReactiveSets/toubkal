@@ -123,8 +123,8 @@ describe 'send_mail():', ->
     sent_emails_set._fetch_all ( emails ) ->
       check done, () ->
         expect( emails ).to.be.eql [
-          { flow: 'sent_email', id: 1 }
-          { flow: 'sent_email', id: 2 }
+          { error: undefined, response: undefined, messageId: 1 }
+          { error: undefined, response: undefined, messageId: 2 }
         ]
   
   it 'should allow to update transport to default SMTP', ->
@@ -167,10 +167,10 @@ describe 'send_mail():', ->
     sent_emails_set._fetch_all ( emails ) ->
       check done, () ->
         expect( emails ).to.be.eql [
-          { flow: 'sent_email', id: 1 }
-          { flow: 'sent_email', id: 2 }
-          { flow: 'sent_email', id: 3 }
-          { flow: 'sent_email', id: 4 }
-          { flow: 'email_send_error', id: 5, error: 'fail' }
-          { flow: 'sent_email', id: 6 }
+          { error: undefined, response: undefined, messageId: 1 }
+          { error: undefined, response: undefined, messageId: 2 }
+          { error: undefined, response: undefined, messageId: 3 }
+          { error: undefined, response: undefined, messageId: 4 }
+          { error: 'fail'   , response: undefined, messageId: 5 }
+          { error: undefined, response: undefined, messageId: 6 }
         ]
