@@ -847,6 +847,7 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+acorn()                             | Parse javascript "content" attribute using the acorn library
 process_argv()                      | The set of command line arguments
 application_loop()                  | Processes an application from a dataflow of components and input dataflows.
 database_cache()                    | Cache for an entire database from schema
