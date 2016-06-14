@@ -36,7 +36,7 @@
     "passport"                     : "0.3.2",
     "compressible"                 : "2.0.8",
     "es5-shim"                     : "4.5.8",
-    "htmlparser2"                  : "3.9.0",
+    "htmlparser2"                  : "3.9.1",
     "css-select"                   : "1.2.0",
     "url-pattern"                  : "1.0.1"
   },
