@@ -682,59 +682,7 @@ First Beta version with API almost finalized.
 
 #### Work-In-Progress:
 
-- Candidate automatic documentation extraction format from source code comments:
-  - highly targeted towards Toubkal dataflow programming
-
-  - augmented github-flavored markdown
-
-  - output as dataflow, suitable for transformations to github-flavored markdown, plain html, and more
-
-  - Input format:
-    - inside any comments
-    - line-oriented
-    - indentation-sensitive
-    - can contain github-flavored markdown
-    - The "@" character is interpreted as meta-data for this format, can be escaped using the "\" character. 
-
-  - @tag: indicates a documentation sub-section, first tag in a comment indicates start of documented item:
-    - if tag is followed by a column ":", the sub-section is multiline, otherwise it is contained on a single line
-    - if an unknown tag is found, a warning is emitted
-    - plurals indicate a list of items described in paragraphs starting with a hyphen "-"
-
-    - list of currently defined tags:
-      - @pipelet     : pipelet signature
-      - @namespace   ; namespace, e.g. "rs"
-      - @flow        : a dataflow name
-      - @function    : function signature
-      - @method      : instance method signature
-      - @class       : a class constructor signature
-      - @is_a        : parent class name or list of
-      - @class_method: class method signature
-      - @term        : a term
-      - @terms       : a list of terms
-      - @short       : a short description on one line
-      - @description : a long description
-      - @parameter   : a parameter
-      - @parameters  : list of pipelet, function, method parameters
-      - @returns     : function or method returned value
-      - @throws      : list of conditions that throw errors
-      - @examples    : list of usage examples
-      - @source      : expected source values' attributes
-      - @emits       : emitted output values' attributes
-      - @todo        : suggestion for future version
-      - @coverage    : indicates automatic tests coverage
-      - @manual      : a documentation manual name this belongs-to (introduction, manual, reference, guide, programmer, internal)
-      - @section     : a section name within a manual
-      - @api         : indicates API maturity: experimental, alpha, beta, stable, deprecated
-
-  - @@keyword: indicates a link to another section of the documentation:
-    - e.g. This is @@stateless, @@synchronous, @@lazy pipelet.
-    - If keyword is a plural and no entry is found for it, attempt to locate it's singular form
-    - If it cannot be located, a warning is emitted 
-
-  - some pipelets, functions and methods are already following this documentation format
-
-### Version 0.4.0 - Transactional Operations, Complex Authorizations, DOM Handling
+### Version 0.4.0 - Transactional Operations / Complex Authorizations / DOM Handling / Documentation
 
 Work In Progress.
 
@@ -762,6 +710,58 @@ Work In Progress.
   - using adds(), removes() and updates() to differentiate between Create, Delete and Update operations
     and apply authorization rules accordingly.
   - using not_exists() to test appropriate existance on adds, removes and updates
+
+- Documentation extraction format from source code comments:
+  - highly targeted towards Toubkal dataflow programming
+
+  - augmented github-flavored markdown
+
+  - output as dataflow, suitable for transformations to github-flavored markdown, plain html, and more
+
+  - Input format:
+    - inside any comments
+    - line-oriented
+    - indentation-sensitive
+    - can contain github-flavored markdown
+    - The "@" character is interpreted as meta-data for this format, can be escaped using the "\" character. 
+
+  - @tag: indicates a documentation sub-section, first tag in a comment indicates start of documented item:
+    - if tag is followed by a column ":", the sub-section is multiline, otherwise it is contained on a single line
+    - if an unknown tag is found, a warning is emitted
+    - plurals indicate a list of items described in paragraphs starting with a hyphen "-"
+
+    - list of top-level tags:
+      - @term        : a term
+      - @namespace   ; namespace, e.g. "rs"
+      - @flow        : a dataflow name
+      - @pipelet     : pipelet signature
+      - @function    : function signature
+      - @class       : a class constructor signature
+      - @method      : instance method signature
+      - @class_method: class method signature
+
+    - documentation items attributes:
+      - @is_a        : parent class name or list of
+      - @short       : a short description on one line
+      - @description : a long description
+      - @parameters  : list of pipelet, function, method parameters
+      - @returns     : function or method returned value
+      - @throws      : list of conditions that throw errors
+      - @examples    : list of usage examples
+      - @source      : expected source values' attributes
+      - @emits       : emitted output values' attributes
+      - @todo        : suggestion for future version
+      - @coverage    : indicates automatic tests coverage
+      - @manual      : a documentation manual name this belongs-to (introduction, manual, reference, guide, programmer, internal)
+      - @section     : a section name within a manual
+      - @api         : indicates API maturity: experimental, alpha, beta, stable, deprecated
+
+  - @@keyword: indicates a link to another section of the documentation:
+    - e.g. This is @@stateless, @@synchronous, @@lazy pipelet.
+    - If keyword is a plural and no entry is found for it, attempt to locate it's singular form
+    - If it cannot be located, a warning is emitted
+
+  - some pipelets, functions and methods are already following this documentation format
 
 #### Completed Work:
 
@@ -845,8 +845,10 @@ Work In Progress.
 - Application-level pipelets:
   - application_loop(): Processes an application from a dataflow of components and input dataflows
 
+
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+parse_documentation()               | Emit documentation items from parsed "comments" attribute
 acorn()                             | Parse javascript "content" attribute using the acorn library
 process_argv()                      | The set of command line arguments
 application_loop()                  | Processes an application from a dataflow of components and input dataflows.
