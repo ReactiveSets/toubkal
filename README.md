@@ -712,6 +712,11 @@ Work In Progress.
   - using not_exists() to test appropriate existance on adds, removes and updates
 
 - Documentation extraction format from source code comments:
+  - Using pipelets:
+    - acorn()
+    - parse_documentation()
+    - markdown()
+
   - highly targeted towards Toubkal dataflow programming
 
   - augmented github-flavored markdown
@@ -845,9 +850,9 @@ Work In Progress.
 - Application-level pipelets:
   - application_loop(): Processes an application from a dataflow of components and input dataflows
 
-
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+markdown()                          | Markdown to html converter using "marked" and "highlight.js"
 parse_documentation()               | Emit documentation items from parsed "comments" attribute
 acorn()                             | Parse javascript "content" attribute using the acorn library
 process_argv()                      | The set of command line arguments
