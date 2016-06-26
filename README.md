@@ -853,6 +853,7 @@ Work In Progress.
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
 markdown()                          | Markdown to html converter using "marked" and "highlight.js"
+documentation_markdown()            | Emit documentation items from parsed "comments" attribute
 parse_documentation()               | Emit documentation items from parsed "comments" attribute
 acorn()                             | Parse javascript "content" attribute using the acorn library
 process_argv()                      | The set of command line arguments
