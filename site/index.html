@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    
+    <title>Toubkal Documentation</title>
+    <meta name="description"
+      content="JavaScript library for rapid development of fully reactive applications and micro-services for Node.js and the Browser"
+    />
+    
+    <!-- Bootstrap version 3.3.4 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic|Oswald&subset=latin,latin-ext"/>
+    <link href="css/base.css"  type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
+    
+    <!-- Socket.io library, delivered by socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <!-- Minified Toubkal library, delivered by toubkal server -->
+    <script src="/lib/toubkal-min.js"></script>
+  </head>
+  
+  <body>
+    <h1>Toubkal Documentation</h1>
+    <div id="documentation"></div>
+    
+    <script>
+      rs
+        .socket_io_server()
+        
+        .flow( 'documentation' )
+        
+        .$to_dom( rs.$query_selector( '#documentation' ) )
+      ;
+    </script>
+  </body>
+</html>

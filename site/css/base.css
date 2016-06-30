@@ -1,0 +1,44 @@
+/* base.css : Global poperties (body, common classes, etc ...) */
+/* ------------------------------------------------------------ */
+
+body {
+  font-family: 'Lato', sans-seif;
+  font-size: 20px;
+  font-weight: nomal;
+  color:#464f51;
+}
+
+.chat-form {
+  display: block;
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+}
+
+.chat-form textarea {
+  resize: none;
+}
+
+.message-container {
+  font-size: 14px;
+}
+
+.message-container span {
+  padding: 0px 5px;
+}
+
+.message-container span.timestamp {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.message-container .username {
+  font-weight: 700;
+  color: #38699B;
+}
+
+span.pipelet {
+  font-style: italic;
+  color: orange;
+}
