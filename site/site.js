@@ -32,9 +32,27 @@ module.exports = function( servers ) {
     , de          = true
     , ug          = log
     , assets      = require( 'toubkal/lib/server/client_assets.js' )
-    , toubkal_min = assets.toubkal_min()
+    , toubkal     = assets.toubkal
+    , toubkal_min // = assets.toubkal_min()
     , react_js    = assets.react.watch()
     , scope       = {}
+  ;
+  
+  toubkal_min = toubkal
+    .auto_increment()
+    .watch()
+    .order( [ { id: 'id' } ] )
+    //.uglify( 'lib/toubkal-min.js', { warnings: false } )
+    .group( function( _ ) { return {} } )
+    .map( function( _ ) {
+      return {
+        path: 'lib/toubkal-min.js',
+        
+        content: _.content
+          .map( function( file ) { return file.content } )
+          .join( '\n' )
+        }
+    } )
   ;
   
   // servers is the virtual servers used by site.js only
