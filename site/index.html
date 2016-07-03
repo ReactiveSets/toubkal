@@ -13,6 +13,10 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic|Oswald&subset=latin,latin-ext"/>
     <link href="css/base.css"  type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
     
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    
     <!-- Socket.io library, delivered by socket.io -->
     <script src="/socket.io/socket.io.js"></script>
     
@@ -30,7 +34,18 @@
         
         .flow( 'documentation' )
         
-        .$to_dom( rs.$query_selector( '#documentation' ) )
+        //.filter( [ { name: 'form' } ] )
+        
+        .alter( function( _ ) {
+          _.tag = 'div';
+          _.content = _.html;
+        } )
+        
+        .pick( { id: 'id', tag: 'tag', content: 'content' } )
+        
+        .trace()
+        
+        .$to_dom( rs.RS.$( '#documentation' ) )
       ;
     </script>
   </body>

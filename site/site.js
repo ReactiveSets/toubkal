@@ -38,11 +38,16 @@ module.exports = function( servers ) {
     , scope       = {}
   ;
   
-  toubkal_min = toubkal
+  toubkal = toubkal
     .auto_increment()
     .watch()
     .order( [ { id: 'id' } ] )
-    //.uglify( 'lib/toubkal-min.js', { warnings: false } )
+  ;
+  
+  toubkal_min = toubkal
+    .uglify( 'lib/toubkal-min.js', { warnings: false } )
+    
+    /*
     .group( function( _ ) { return {} } )
     .map( function( _ ) {
       return {
@@ -53,6 +58,17 @@ module.exports = function( servers ) {
           .join( '\n' )
         }
     } )
+    */
+  ;
+  
+  var documentation = toubkal
+    .acorn()
+    .parse_documentation()
+    .optimize()
+    //.trace()
+    .documentation_markdown()
+    .markdown()
+    .set_flow( 'documentation' )
   ;
   
   // servers is the virtual servers used by site.js only
@@ -141,7 +157,7 @@ module.exports = function( servers ) {
       return source
         .optimize( { key: [ 'flow', 'id' ] } )
         
-        .trace( 'to clients' )
+        //.trace( 'to clients' )
         
         .dispatch( servers.socket_io_clients(), function( source, options ) {
           
@@ -183,6 +199,8 @@ module.exports = function( servers ) {
     
     .clients()
   ;
+  
+  documentation.through( rs.clients() );
   
   // Serve database to socket.io clients
   rs
