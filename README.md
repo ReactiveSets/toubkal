@@ -850,8 +850,15 @@ Work In Progress.
 - Application-level pipelets:
   - application_loop(): Processes an application from a dataflow of components and input dataflows
 
+- Server pipelets:
+  - Based on the piexif library, handling JPEG EXIF:
+    - piexif_parse(): Parses content EXIF using the piexifjs library
+    - piexif_insert(): Inserts EXIF into content, using the piexif library
+
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+piexif_insert()                     | Inserts EXIF into content, using the piexif library
+piexif_parse()                      | Parses content EXIF using the piexif library
 markdown()                          | Markdown to html converter using "remarkable" and "highlight.js"
 documentation_markdown()            | Emit documentation items from parsed "comments" attribute
 parse_documentation()               | Emit documentation items from parsed "comments" attribute
