@@ -1,11 +1,12 @@
 require("toubkal")
   .set( [
-    { path:"/Users/Public/Pictures/Sample\ Pictures/Desert.jpg" },
-    { path: "/Users/User/Documents/ourika/screenshots/Comments.png" }
+    { path:"../ourika/uploads" },
   ] )
+  .watch_directories()
+  .filter( [ { extension: 'jpg' } ] )
   .watch()
   .piexif_parse()
-  .pick(["exif"])
+  .pick( [ "path", "exif" ] )
   .trace()
   .greedy()
 ;
