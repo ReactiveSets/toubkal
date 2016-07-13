@@ -41,9 +41,9 @@
           _.content = _.html;
         } )
         
-        .pick( { id: 'id', tag: 'tag', content: 'content' } )
-        
         .trace()
+        
+        .pick( { id: 'id', tag: 'tag', content: 'content' } )
         
         .$to_dom( rs.RS.$( '#documentation' ) )
       ;
