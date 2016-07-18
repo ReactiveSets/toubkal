@@ -111,9 +111,9 @@ stable API.
 
 ### Our Team
 Toubkal is developped by a dedicated small team of experienced and passionate back-end
-and front-end developpers.
+and front-end developers.
 
-If you are an experienced javascript programmer, understand the power of reactive
+If you are an experienced JavaScript programmer, understand the power of reactive
 programming and would like to join our team, please contact us.
 
 ### Why yet-another JavaScript Web Application Library?
@@ -475,8 +475,8 @@ manuals from version 0.5:
 - Toubkal Application Architect Manual
 - Toubkal Application Architect Reference
 
-- Toubkal Pipelet Programer's Guide
-- Toubkal Pipelet Programer's Reference
+- Toubkal Pipelet Programmer's Guide
+- Toubkal Pipelet Programmer's Reference
 
 - Toubkal Internals
 
@@ -487,7 +487,7 @@ pipelets that run after every commit on Travis CI under node version 0.10. We no
 0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
 tested for a problem with the zombie headless test framework.
 
-Our continuous integration process also requires that before each commit the developper
+Our continuous integration process also requires that before each commit the developer
 runs these tests so travis usually passes all tests. In the event that a test does not
 pass the top priority is to fix the test before anything else.
 
