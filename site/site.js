@@ -65,9 +65,9 @@ module.exports = function( servers ) {
     .acorn()
     .parse_documentation()
     .optimize()
-    //.trace()
     .documentation_markdown()
     .markdown()
+    .trace()
     .set_flow( 'documentation' )
   ;
   
