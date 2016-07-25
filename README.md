@@ -857,6 +857,7 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+modules_files()                     | Singleton dataflow of toubkal modules' files from toubkal/lib/modules.json
 piexif_insert()                     | Inserts EXIF into content, using the piexif library
 piexif_parse()                      | Parses content EXIF using the piexif library
 markdown()                          | Markdown to html converter using "remarkable" and "highlight.js"

@@ -1,0 +1,32 @@
+[
+  {
+    "id": ".",
+    
+    "files": [ "modules_files" ]
+  },
+  
+  {
+    "id": "server",
+
+    "files": [
+      "file",
+      "exif",
+      "require_resolve",
+      "toubkal_acorn",
+      "parse_documentation",
+      "markdown.js",
+      "uglify",
+      "http",
+      { "module": "mailer", "dependencies": [ "nodemailer" ] },
+      "passport",
+      "express",
+      "thumbnails"
+    ]
+  },
+  
+  {
+    "id": "socket_io",
+    
+    "files": [ "socket_io_clients", "socket_io_server" ]
+  }
+]
