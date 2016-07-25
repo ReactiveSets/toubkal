@@ -41,10 +41,10 @@ module.exports = function( servers ) {
   toubkal = toubkal
     .auto_increment()
     .watch()
-    .order( [ { id: 'id' } ] )
   ;
   
   toubkal_min = toubkal
+    .order( [ { id: 'id' } ] )
     .uglify( 'lib/toubkal-min.js', { warnings: false } )
     
     /*
@@ -61,13 +61,20 @@ module.exports = function( servers ) {
     */
   ;
   
-  var documentation = toubkal
-    .acorn()
+  var client_parsed = toubkal.acorn()
+    
+    , server_parsed = require( 'toubkal/lib/modules_files' )
+        .modules_files()
+        .require_resolve()
+        .watch()
+        .acorn()
+  ;
+  
+  var documentation = client_parsed.union( [ server_parsed ] )
     .parse_documentation()
     .optimize()
     .documentation_markdown()
     .markdown()
-    .trace()
     .set_flow( 'documentation' )
   ;
   
