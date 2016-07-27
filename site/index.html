@@ -15,7 +15,6 @@
     
     <!-- Highlight.js -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     
     <!-- Socket.io library, delivered by socket.io -->
     <script src="/socket.io/socket.io.js"></script>
@@ -26,26 +25,42 @@
   
   <body>
     <h1>Toubkal Documentation</h1>
-    <div id="documentation"></div>
+    <div id="documentation">
+      <div id="documentation-toc"></div>
+      <div id="documentation-content"></div>
+    </div>
     
     <script>
-      rs
+      var documentation = rs
         .socket_io_server()
         
         .flow( 'documentation' )
-        
-        //.filter( [ { name: 'form' } ] )
-        
-        .alter( function( _ ) {
-          _.tag = 'div';
-          _.content = _.html;
+      ;
+      
+      documentation
+      
+        .map( function( item ) {
+          var id        = item.id.replace( /[^_\-0-9a-zA-Z]/g, '_' )
+            , signature = item.signature || ''
+          ;
+          
+          return {
+            id: 'toc-entry-' + id,
+            
+            classes: '',
+            
+            content: '<a href="#' + id + '">' + item.type + ' ' + item.name + signature + '</a>'
+          }
         } )
         
-        .trace()
+        .$to_dom( rs.RS.$( '#documentation-toc' ) )
+      ;
+      
+      documentation
+      
+        .pick( { id: 'id', content: 'html' } )
         
-        .pick( { id: 'id', tag: 'tag', content: 'content' } )
-        
-        .$to_dom( rs.RS.$( '#documentation' ) )
+        .$to_dom( rs.RS.$( '#documentation-content' ) )
       ;
     </script>
   </body>
