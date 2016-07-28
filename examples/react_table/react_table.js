@@ -35,6 +35,8 @@
     
     .flow( 'react_table/persons' )
     
+    .order( [ { id: 'id' } ] )
+    
     .react_table( document.querySelector( '#react-table' ), columns, { class_name: 'table table-condensed' } )
   ;
   
