@@ -757,7 +757,7 @@ Work In Progress.
       - @emits       : emitted output values' attributes
       - @todo        : suggestion for future version
       - @coverage    : indicates automatic tests coverage
-      - @manual      : a documentation manual name this belongs-to (introduction, manual, reference, guide, programmer, internal)
+      - @manual      : a documentation manual name this belongs-to (introduction, glossary, architect, reference, guide, programmer, internal)
       - @section     : a section name within a manual
       - @api         : indicates API maturity: experimental, alpha, beta, stable, deprecated
 
