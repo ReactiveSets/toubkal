@@ -26,7 +26,22 @@
   <body>
     <h1>Toubkal Documentation</h1>
     <div id="documentation">
-      <div id="documentation-toc"></div>
+      <div id="documentation-toc">
+        <h2>Toubkal Introduction</h2>
+        <div id="toubkal_introduction"></div>
+        <h2 >Toubkal Glossary of Terms</h2>
+        <div id="toubkal_glossary"></div>
+        <h2 >Toubkal Application Architect Manual</h2>
+        <div id="toubkal_architect"></div>
+        <h2 >Toubkal Application Architect Reference</h2>
+        <div id="toubkal_reference"></div>
+        <h2 >Toubkal Pipelet Programmer's Guide</h2>
+        <div id="toubkal_guide"></div>
+        <h2 >Toubkal Pipelet Programmer's Reference</h2>
+        <div id="toubkal_programmer"></div>
+        <h2 >Toubkal Internals</h2>
+        <div id="toubkal_internal"></div>
+      </div>
       <div id="documentation-content"></div>
     </div>
     
@@ -41,19 +56,31 @@
       
         .map( function( item ) {
           var id        = item.id.replace( /[^_\-0-9a-zA-Z]/g, '_' )
+            , type      = item.type
             , signature = item.signature || ''
+            , manual    = item.manual
+              ||
+                {
+                  'term'    : 'glossary',
+                  'class'   : 'programmer',
+                  'method'  : 'programmer',
+                  'function': 'internal'
+                }[ type ]
+              || 'reference'
           ;
           
           return {
             id: 'toc-entry-' + id,
             
+            $node: rs.RS.$( '#toubkal_' + manual ),
+            
             classes: '',
             
-            content: '<a href="#' + id + '">' + item.type + ' ' + item.name + signature + '</a>'
+            content: '<a href="#' + id + '">' + type + ' ' + item.name + signature + '</a>'
           }
         } )
         
-        .$to_dom( rs.RS.$( '#documentation-toc' ) )
+        .$to_dom()
       ;
       
       documentation
