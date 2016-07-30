@@ -978,10 +978,10 @@ Pipelet API has been significantly refactored and getting close to version 1.0 A
     - code (String): the error code
     - message (String): an optional error message
     - operation (String): 'add' or 'remove', the operation that caused the error
-    - error_flow (String): the flow for which the error occured
+    - error_flow (String): the flow for which the error occurred
     - sender (String): an identification of the sender of the operation to allow
       routing back to sender. Sender's valued comes from operations option 'sender'
-    - values (Array of Objects): the values for which the error occured
+    - values (Array of Objects): the values for which the error occurred
   
   - Allows downstream pipelets to handle errors by reverting failed operations:
     - a failed add is reverted by remove
