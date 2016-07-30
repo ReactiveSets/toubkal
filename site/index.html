@@ -24,7 +24,7 @@
   </head>
   
   <body>
-    <h1>Toubkal Documentation</h1>
+    <h1>Toubkal Manuals</h1>
     <div id="documentation">
       <div id="documentation-toc">
         <h2>Toubkal Introduction</h2>
@@ -54,30 +54,29 @@
       
       documentation
       
-        .map( function( item ) {
+        .flat_map( function( item ) {
           var id        = item.id.replace( /[^_\-0-9a-zA-Z]/g, '_' )
             , type      = item.type
             , signature = item.signature || ''
-            , manual    = item.manual
-              ||
-                {
-                  'term'    : 'glossary',
-                  'class'   : 'programmer',
-                  'method'  : 'programmer',
-                  'function': 'internal'
-                }[ type ]
-              || 'reference'
+            , manuals   = item.manual
           ;
           
-          return {
-            id: 'toc-entry-' + id,
+          if ( typeof manuals != 'string' )
+            return console.log( 'manual is not a string', manuals )
+          ;
+          
+          return manuals.split( /, ?/ ).map( function( manual ) {
             
-            $node: rs.RS.$( '#toubkal_' + manual ),
-            
-            classes: '',
-            
-            content: '<a href="#' + id + '">' + type + ' ' + item.name + signature + '</a>'
-          }
+            return {
+              id: 'toc-entry-' + id,
+              
+              $node: rs.RS.$( '#toubkal_' + manual ),
+              
+              classes: '',
+              
+              content: '<a href="#' + id + '">' + type + ' ' + item.name + signature + '</a>'
+            } 
+          } )
         } )
         
         .$to_dom()
