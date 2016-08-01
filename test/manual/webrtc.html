@@ -200,7 +200,7 @@
         ;
         
         if ( ! get_user_media ) {
-          this._error( 'User_Media', 'get_user_media() not supported in this browser' );
+          this._emergency( 'User_Media', 'get_user_media() not supported in this browser' );
           // ToDo: this error will be a dataflow that can be captured to send an error message to
           // end-users
         }
@@ -214,7 +214,7 @@
       } // User_Media()
       
       Set.Build( 'user_media', User_Media, function( Super ) { return {
-        _error: function( f, m ) {
+        _emergency: function( f, m ) {
           log( m = this._get_name( f ) + 'Error: ' + m );
           
           throw new Error( m );
@@ -226,7 +226,7 @@
             , constraints = this._options.constraints
           ;
           
-          if ( this.a.length ) this._error( '_add_value', 'already set' );
+          if ( this.a.length ) this._emergency( '_add_value', 'already set' );
           
           de&&ug( this._get_name( '_add_value' ) + 'constraints: ' + log.s( constraints ) );
           
@@ -251,7 +251,7 @@
             
             // ToDo: check error value for permission denied
             // ToDo: explanation to unlock should be driven by downstream pipelet
-            that._error( '_add_value', 'To reset permission denied you need to go to chrome://settings/content # Media, Manage Exceptions' )
+            that._emergency( '_add_value', 'To reset permission denied you need to go to chrome://settings/content # Media, Manage Exceptions' )
           }
         }, // _add_value()
         
