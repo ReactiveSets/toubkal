@@ -26,30 +26,37 @@
   <body>
     <h1>Toubkal Manuals</h1>
     <div id="documentation">
-      <div id="documentation-toc">
-        <h2>Toubkal Introduction</h2>
-        <div id="toubkal_introduction"></div>
-        <h2 >Toubkal Glossary of Terms</h2>
-        <div id="toubkal_glossary"></div>
-        <h2 >Toubkal Application Architect Manual</h2>
-        <div id="toubkal_architect"></div>
-        <h2 >Toubkal Application Architect Reference</h2>
-        <div id="toubkal_reference"></div>
-        <h2 >Toubkal Pipelet Programmer's Guide</h2>
-        <div id="toubkal_guide"></div>
-        <h2 >Toubkal Pipelet Programmer's Reference</h2>
-        <div id="toubkal_programmer"></div>
-        <h2 >Toubkal Internals</h2>
-        <div id="toubkal_internal"></div>
-      </div>
+      <div id="documentation-toc"></div>
       <div id="documentation-content"></div>
     </div>
     
     <script>
       var documentation = rs
         .socket_io_server()
-        
         .flow( 'documentation' )
+        .cache()
+      ;
+      
+      var manuals = rs
+        .socket_io_server()
+        .flow( 'documentation_manuals' )
+        .cache()
+      ;
+      
+      manuals
+        .map( function( manual ) {
+          var id = manual.id;
+          
+          return {
+            id: 'toubkal_' + id + '_container',
+            
+            content:
+              '<h2>Toubkal ' + manual.name + '</h2>' +
+              '<div id="toubkal_' + id + '"></div>'
+          };
+        } )
+        
+        .$to_dom( rs.RS.$( '#documentation-toc' ) )
       ;
       
       documentation
@@ -62,13 +69,17 @@
           ;
           
           if ( typeof manuals != 'string' )
-            return console.log( 'manual is not a string', manuals )
+            return console.log( 'Error, manual is not a string', manuals )
           ;
           
           return manuals.split( /, ?/ ).map( function( manual ) {
             
             return {
               id: 'toc-entry-' + id,
+              
+              manual: manual,
+              
+              order: item.order,
               
               $node: rs.RS.$( '#toubkal_' + manual ),
               
@@ -79,7 +90,16 @@
           } )
         } )
         
-        .$to_dom()
+        .dispatch( manuals, function( source, options ) {
+          var manual = this;
+          
+          return source
+            .filter( [ { manual: manual.id } ] )
+            
+            .order( [ { id: 'order' } ] )
+            
+            .$to_dom()
+        } )
       ;
       
       documentation
