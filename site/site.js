@@ -73,6 +73,7 @@ module.exports = function( servers ) {
   var documentation = client_parsed.union( [ server_parsed ] )
     .parse_documentation()
     .optimize()
+    .auto_increment( { attribute: 'order' } )
     .documentation_markdown()
     .markdown()
     .set_flow( 'documentation' )
@@ -174,6 +175,13 @@ module.exports = function( servers ) {
         }, { single: true } )
       ;
     } )
+    
+    .clients()
+  ;
+  
+  // Send documentation manuals to clients
+  rs
+    .documentation_manuals()
     
     .clients()
   ;
