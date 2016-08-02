@@ -861,6 +861,7 @@ modules_files()                     | Singleton dataflow of toubkal modules' fil
 piexif_insert()                     | Inserts EXIF into content, using the piexif library
 piexif_parse()                      | Parses content EXIF using the piexif library
 markdown()                          | Markdown to html converter using "remarkable" and "highlight.js"
+documentation_manuals()             | Toubkal documentation manuals metadata (not content)
 documentation_markdown()            | Emit documentation items from parsed "comments" attribute
 parse_documentation()               | Emit documentation items from parsed "comments" attribute
 acorn()                             | Parse javascript "content" attribute using the acorn library
