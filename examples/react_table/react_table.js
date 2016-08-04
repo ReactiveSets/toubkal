@@ -8,12 +8,12 @@
     , log = RS.log
   ;
   
-  rs.Compose( 'auto_increment_order', function( source, options ) {
-    var input = source.namespace().auto_increment( options )
-      , output = input.order( [ { id: options.attribute || 'id' } ] )
+  rs.Compose( 'auto_increment_order', { union: true }, function( source, options ) {
+    return source
+      .auto_increment( options )
+      
+      .order( [ { id: options.attribute || 'id' } ] )
     ;
-    
-    return source.encapsulate( input, output, options );
   } )
   
   var de = true, ug = log.bind( null, 'react table' );
