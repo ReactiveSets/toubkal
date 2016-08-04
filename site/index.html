@@ -64,6 +64,7 @@
         .flat_map( function( item ) {
           var id        = item.id.replace( /[^_\-0-9a-zA-Z]/g, '_' )
             , type      = item.type
+            , name      = item.name
             , signature = item.signature || ''
             , manuals   = item.manual
           ;
@@ -73,6 +74,20 @@
           ;
           
           return manuals.split( /, ?/ ).map( function( manual ) {
+            var content = '<a href="#' + id + '">' + type + ' ' + name + signature + '</a>'
+              , node    = 'toubkal_' + manual
+            ;
+            
+            switch ( type ) {
+              case 'class':
+                content += '<div id="' + manual + '_class_' + name + '"></div>';
+              break;
+              
+              case 'method':
+              case 'class_method':
+                // console.log( manual + '_class_' + name.match( /^[^\.]+/ )[0] );
+              break;
+            }
             
             return {
               id: 'toc-entry-' + id,
@@ -81,11 +96,11 @@
               
               order: item.order,
               
-              $node: rs.RS.$( '#toubkal_' + manual ),
+              $node: rs.RS.$( '#' + node ),
               
               classes: '',
               
-              content: '<a href="#' + id + '">' + type + ' ' + item.name + signature + '</a>'
+              content: content
             } 
           } )
         } )
@@ -98,13 +113,19 @@
             
             .order( [ { id: 'order' } ] )
             
+            //.trace( 'toc' )
+            
             .$to_dom()
         } )
       ;
       
       documentation
       
-        .pick( { id: 'id', content: 'html' } )
+        .pick( { id: 'id', order: 'order', content: 'html' } )
+        
+        .order( [ { id: 'order' } ] )
+        
+        //.trace( 'content' )
         
         .$to_dom( rs.RS.$( '#documentation-content' ) )
       ;
