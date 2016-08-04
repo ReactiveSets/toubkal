@@ -8,6 +8,14 @@
     , log = RS.log
   ;
   
+  rs.Compose( 'auto_increment_order', function( source, options ) {
+    var input = source.namespace().auto_increment( options )
+      , output = input.order( [ { id: options.attribute || 'id' } ] )
+    ;
+    
+    return source.encapsulate( input, output, options );
+  } )
+  
   var de = true, ug = log.bind( null, 'react table' );
   
   var columns_array = [
@@ -21,7 +29,7 @@
         { id: 'first_name', label: 'First Name' },
         { id: 'last_name' , label: 'Last Name'  },
         { id: 'country'   , label: 'Country'    } 
-      ] )
+      ] ).auto_increment_order( { attribute: 'order' } )
       
     , by_country = rs.set( [ {} ] )
     
