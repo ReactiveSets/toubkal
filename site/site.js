@@ -40,7 +40,7 @@ module.exports = function( servers ) {
   
   toubkal = toubkal
     .auto_increment()
-    .watch()
+    .watch( { name: 'toubkal assets' } )
   ;
   
   toubkal_min = toubkal
