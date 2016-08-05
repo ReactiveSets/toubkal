@@ -3,10 +3,7 @@
 !function( exports ) {
   "use strict";
   
-  var rs  = exports.rs
-    , RS  = rs.RS
-    , log = RS.log
-  ;
+  var rs  = exports.rs;
   
   rs.Compose( 'auto_increment_order', { union: true }, function( source, options ) {
     return source
@@ -16,26 +13,25 @@
     ;
   } )
   
-  var de = true, ug = log.bind( null, 'react table' );
-  
-  var columns_array = [
+  var all_columns   = [
+        { id: 'id'        , label: '#'          },
+        { id: 'first_name', label: 'First Name' },
+        { id: 'last_name' , label: 'Last Name'  },
+        { id: 'country'   , label: 'Country'    },
         { id: 'company'   , label: 'Company'    },
         { id: 'email'     , label: 'Email'      },
         { id: 'phone'     , label: 'Phone'      }
       ]
     
-    , columns = rs.set( [
-        { id: 'id'        , label: '#'          },
-        { id: 'first_name', label: 'First Name' },
-        { id: 'last_name' , label: 'Last Name'  },
-        { id: 'country'   , label: 'Country'    } 
-      ] ).auto_increment_order( { attribute: 'order' } )
-      
-    , by_country = rs.set( [ {} ] )
+    , columns_count = all_columns.length  
+    , columns_shown = 4
     
-    , add_btn    = document.querySelector( '#add-value'    )
-    , delete_btn = document.querySelector( '#remove-value' )
-    , count      = -1, cl = columns_array.length  
+    , columns       = rs
+        .set( all_columns.slice( 0, columns_shown ) )
+        .auto_increment_order( { attribute: 'order' } )
+    
+    , add_btn       = document.querySelector( '#add-value'    )
+    , delete_btn    = document.querySelector( '#remove-value' )
   ;
   
   rs
@@ -49,11 +45,10 @@
   ;
   
   add_btn.onclick = function() {
-    if( count < cl -1 ) columns._add( [ columns_array[ ++count ] ] );
+    columns_shown < columns_count && columns._add( [ all_columns[ columns_shown++ ] ] );
   };
   
   delete_btn.onclick = function() {
-    if( count >= 0 ) columns._remove( [ columns_array[ count-- ] ] );
+    columns_shown && columns._remove( [ all_columns[ --columns_shown ] ] );
   };
-  
 }( this );
