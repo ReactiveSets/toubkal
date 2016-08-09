@@ -51,7 +51,7 @@
             id: 'toubkal_' + id + '_container',
             
             content:
-              '<h2>Toubkal ' + manual.name + '</h2>' +
+              '<h2><a href="#manual_' + id + '">' + manual.name + '</a></h2>' +
               '<div id="toubkal_' + id + '"></div>'
           };
         } )
@@ -59,6 +59,7 @@
         .$to_dom( rs.RS.$( '#documentation-toc' ) )
       ;
       
+      // Table of contents
       documentation
       
         .flat_map( function( item ) {
@@ -119,6 +120,7 @@
         } )
       ;
       
+      // Content
       documentation
       
         .pick( { id: 'id', order: 'order', content: 'html' } )
