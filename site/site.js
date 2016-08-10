@@ -61,6 +61,13 @@ module.exports = function( servers ) {
     */
   ;
   
+  var manuals_parsed = rs
+    .set( [ { name: 'toubkal/documentation/manuals.js' } ] )
+    .require_resolve()
+    .watch()
+    .acorn()
+  ;
+  
   var client_parsed = toubkal.acorn()
     
     , server_parsed = require( 'toubkal/lib/modules_files' )
@@ -70,7 +77,7 @@ module.exports = function( servers ) {
         .acorn()
   ;
   
-  var documentation = client_parsed.union( [ server_parsed ] )
+  var documentation = client_parsed.union( [ manuals_parsed, server_parsed ] )
     .parse_documentation()
     .optimize()
     .auto_increment( { attribute: 'order' } )
