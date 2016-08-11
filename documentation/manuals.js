@@ -16,109 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* ----------------------------------------------------------------------------
-    @term pipelet
-    
-    @short A @@dataflow processor
-    
-    @description:
-    
-    A pipelet is the basic building block for a @@(pipeline).
-    
-    From a programming standpoint a pipelet is a factory function creating
-    @@class:Pipelet instances, connecting such instances to @@upstream
-    and @@downstream pipelets.
-    
-    A pipelet instance processes @@[operations](operation) (data change
-    events) from an @@upstream Pipelet instance and emits data change events
-    to @@dowstream Pipelet instances.
-*/
-
-/* ----------------------------------------------------------------------------
-    @term dataflow
-    
-    @short A stream of @@[operations]operation (dataset change events)
-    
-    @description:
-    
-    A Toubkal dataflow is a stream of events on a dataset.
-    
-    These change events can be either an @@add, @@remove, or @@update
-    @@(operation).
-    
-    A Toubkal dataflow has synchronization points marked by the boundaries
-    of @@transaction objects grouping multiple operations as changes that
-    are related to a source cause.
-    
-    A dataflow flows from an @@upstream @@pipelet to a @@downstream pipelet.
-    
-    Toubkal dataflows are requested by @@fetch and @@subscribe operations
-    from @@downstream pipelets to @@upstream pipelets.
-*/
-
-/* ----------------------------------------------------------------------------
-    @term pipeline
-    
-    @short A JavaScript expression assembling @@pipelet instances.
-    
-    @examples:
-    
-    ```javascript
-      // Start with the root rs namespace
-      rs
-        // Call the socket_io_server() pipelet factory
-        .socket_io_server()
-        
-        // Call the flow() pipelet factory
-        .flow( 'sales' )
-        
-        // Call the $to_dom() pipelet factory
-        .$to_dom( '#sales' )
-      ;
-    ```
-    
-    @description:
-    A pipeline is a JavaScript expression starting with a @@namespace,
-    typically @@namespace:rs, followed by pipelet factory calls.
-    
-    Executing a pipeline instanciates pipelets that stay connected and
-    process a @@dataflow until either the end of the process or the
-    explicit tear-down of the pipeline in whole or in parts.
-    
-    A Toubkal program is composed of one or more pipelines.
-*/
-
-/* ----------------------------------------------------------------------------
-    @term namespace
-    
-    @short:
-    A repository of @@pipelets, @@singletons, @@multitons, and @@outputs names
-    
-    @description:
-    
-    A namespace such as @@namespace:rs, the root namespace, allows to start
-    a @@(pipeline).
-    
-    A namespace can have children namespaces which can access its names, but
-    are isolated from each other in scope-tree fashion.
-    
-    To create a child namespace use the @@method:Pipelet..create_namespace()
-    method.
-    
-    All @@pipelet instances are associated with a namespace. To retrieve this
-    namespace use the @@method:Pipelet..namespace() method.
-    
-    To set the namespace at a pipelet instance in a pipeline, use the
-    @@method:Pipelet..set_namespace() method.
-    
-    To debug issues with namespaces use
-    @@method:Pipelet..log_namespace( name ).
-*/
-
 /* ------------------------------------------------------------------------------------------------
     @manual introduction
     
-    @short Toubkal Introduction
+    @short Introduction
     
     @description:
     ## What is Toubkal?
@@ -703,10 +604,48 @@
     During snapshots, compaction must be delayed.   
 */
 
-/* -------------------------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------
+    @manual glossary
+    
+    @short Glossary of Terms
+    
+    @description:
+    Terms required to understand Toubkal concepts and documentation.
+    
+    Most important terms:
+    - @@pipelet
+    - @@dataflow
+    - @@pipelet
+    - @@namespace
+*/
+
+/* ----------------------------------------------------------------------------
+    @manual architect
+    
+    @short Architect Manual
+    
+    @description:
+    This manual is for application developpers using existing
+    @@[pipelets](pipelet).
+    
+    For the developpement of pipelets, refer to the
+    @@[Pipelet Programer's Guide](manual:guide).
+*/
+
+/* ----------------------------------------------------------------------------
+    @manual reference
+    
+    @short Application Architect Reference
+    
+    @description:
+    This manual contains the detailed documentation of all
+    @@[pipelets](pipelet).
+*/
+
+/* ----------------------------------------------------------------------------
     @manual guide
     
-    @short Toubkal Pipelet Programer's Guide
+    @short Pipelet Programer's Guide
     
     @description:
     
@@ -778,3 +717,123 @@
         - the description of the expected incoming dataflow
         - the description of outgoing dataflow
 */
+
+/* ----------------------------------------------------------------------------
+    @manual programmer
+    
+    @short Pipelet Programmer's Reference
+    
+    @description:
+    This manual contains the detailed documentation of all
+    classes methods to help program @@[pipelets](pipelet).
+*/
+
+/* ----------------------------------------------------------------------------
+    @manual internal
+    
+    @short Internals
+    
+    @description:
+    This manual contains internals classes, methods and functions used for
+    the implementation of Toubkal.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term pipelet
+    
+    @short A @@dataflow processor
+    
+    @description:
+    
+    A pipelet is the basic building block for a @@(pipeline).
+    
+    From a programming standpoint a pipelet is a factory function creating
+    @@class:Pipelet instances, connecting such instances to @@upstream
+    and @@downstream pipelets.
+    
+    A pipelet instance processes @@[operations](operation) (data change
+    events) from an @@upstream Pipelet instance and emits data change events
+    to @@dowstream Pipelet instances.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term dataflow
+    
+    @short A stream of @@[operations]operation (dataset change events)
+    
+    @description:
+    
+    A Toubkal dataflow is a stream of events on a dataset.
+    
+    These change events can be either an @@add, @@remove, or @@update
+    @@(operation).
+    
+    A Toubkal dataflow has synchronization points marked by the boundaries
+    of @@transaction objects grouping multiple operations as changes that
+    are related to a source cause.
+    
+    A dataflow flows from an @@upstream @@pipelet to a @@downstream pipelet.
+    
+    Toubkal dataflows are requested by @@fetch and @@subscribe operations
+    from @@downstream pipelets to @@upstream pipelets.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term pipeline
+    
+    @short A JavaScript expression assembling @@pipelet instances.
+    
+    @examples:
+    
+    ```javascript
+      // Start with the root rs namespace
+      rs
+        // Call the socket_io_server() pipelet factory
+        .socket_io_server()
+        
+        // Call the flow() pipelet factory
+        .flow( 'sales' )
+        
+        // Call the $to_dom() pipelet factory
+        .$to_dom( '#sales' )
+      ;
+    ```
+    
+    @description:
+    A pipeline is a JavaScript expression starting with a @@namespace,
+    typically @@namespace:rs, followed by pipelet factory calls.
+    
+    Executing a pipeline instanciates pipelets that stay connected and
+    process a @@dataflow until either the end of the process or the
+    explicit tear-down of the pipeline in whole or in parts.
+    
+    A Toubkal program is composed of one or more pipelines.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term namespace
+    
+    @short:
+    A repository of @@pipelets, @@singletons, @@multitons, and @@outputs names
+    
+    @description:
+    
+    A namespace such as @@namespace:rs, the root namespace, allows to start
+    a @@(pipeline).
+    
+    A namespace can have children namespaces which can access its names, but
+    are isolated from each other in scope-tree fashion.
+    
+    To create a child namespace use the @@method:Pipelet..create_namespace()
+    method.
+    
+    All @@pipelet instances are associated with a namespace. To retrieve this
+    namespace use the @@method:Pipelet..namespace() method.
+    
+    To set the namespace at a pipelet instance in a pipeline, use the
+    @@method:Pipelet..set_namespace() method.
+    
+    To debug issues with namespaces use
+    @@method:Pipelet..log_namespace( name ).
+*/
+
