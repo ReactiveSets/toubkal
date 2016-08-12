@@ -50,11 +50,17 @@
           return {
             id: 'toubkal_' + id + '_container',
             
+            start: manual.range[ 0 ],
+            
             content:
               '<h2><a href="#manual_' + id + '">' + manual.name + '</a></h2>' +
               '<div id="toubkal_' + id + '"></div>'
           };
         } )
+        
+        .optimize()
+        
+        .order( [ { id: 'start' } ] )
         
         .$to_dom( rs.RS.$( '#documentation-toc' ) )
       ;
