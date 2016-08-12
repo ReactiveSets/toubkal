@@ -38,6 +38,13 @@ module.exports = function( servers ) {
     , scope       = {}
   ;
   
+  var manuals_parsed = rs
+    .set( [ { name: 'toubkal/documentation/manuals.js' } ] )
+    .require_resolve()
+    .watch()
+    .acorn()
+  ;
+  
   toubkal = toubkal
     .auto_increment()
     .watch( { name: 'toubkal assets' } )
@@ -61,13 +68,6 @@ module.exports = function( servers ) {
     */
   ;
   
-  var manuals_parsed = rs
-    .set( [ { name: 'toubkal/documentation/manuals.js' } ] )
-    .require_resolve()
-    .watch()
-    .acorn()
-  ;
-  
   var client_parsed = toubkal.acorn()
     
     , server_parsed = require( 'toubkal/lib/modules_files' )
@@ -81,6 +81,7 @@ module.exports = function( servers ) {
     .parse_documentation()
     .optimize()
     .auto_increment( { attribute: 'order' } )
+    // .trace( 'documentation', { pick: { id: '.id', range: '.range', order: '.order' } } )
     .documentation_markdown()
     .markdown()
     .set_flow( 'documentation' )
