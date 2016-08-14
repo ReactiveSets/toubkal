@@ -44,12 +44,6 @@
     - Concurent Dataflow Synchronization using Transactions
     - Error Routing and Reverting
     
-    #### Pipelets
-    
-    
-    #### Pipelines
-    
-    
     #### Reactive Sets
     
     Toubkal programs handle reactive sets of values. This allows to define an general purpose
@@ -459,71 +453,20 @@
     Consistency of distributed sets is 'eventual' and performed by conflict resolution agents,
     i.e. Toubkal provides high availability and partition tolerence by delaying consistency.
     
-    Stateless and Stateful Pipelets:
-    -------------------------------
-    There are two main types of pipelets: stateless pipelets that do not hold the state of
-    sets, and stateful pipelets that do hold a state.
+    #### Stateless and Stateful Pipelets:
     
-    Stateless pipelets are very simple to implement while stateful pipelets are more complex. 
+    There are two main types of pipelets: @@stateless pipelets that do not
+    hold the state of sets, and @@stateful pipelets that do hold a state.
     
-    Stateless Pipelet:
-    -----------------
-    A Stateless pipelet does not hold any state between operations and can be seen as purely
-    functional.
+    Stateless pipelets are very simple to implement, typically by @@composition
+    of other stateless pipelets such as @@pipelet:alter(), @@pipelet:map(),
+    @@pipelet:flat_map().
     
-    The state of these pipelets is therefore virtual and does not require any memory to store
-    objects.
-    
-    The memory footprint of a stateless pipelet does not depend on the size of the set it
-    describes, implying that these pipelets are for the most part CPU-bound.
-    
-    The order in which operations are processed does not matter and it can therefore be
-    distributed horizontally at any time.
-    
-    Examples of stateful pipelets include Fork, Union, and Filter.
-    
-    Forks and Union can be distributed in hierarchical trees.
-    
-    A Fork can be distributed into a head fork, connected to many indepedent forks.
-    Likewise a Union can be distributed into many independent unions connected to a tail
-    union. This hierarchy can have any depth allowing scalability to billions of branches
-    over as many processes and machines as required.
-    
-    Stateless pipelets must implement the __transform( values ) method that returns values
-    as transformed or filtered. This method is then used by _add(), _remove(), and _update()
-    operation methods to produce the desintation set plus the _fetch() method invoqued when
-    a destination pipelet connects its source to a stateless pipelet.
-    
-    Stateless pipelets managing many sets simultaneously, may use the 'flow' attribute
-    to process operations differently for each set.
-    
-    Stateful Pipelet:
-    ----------------
-    A Stateful pipelet maintains the state of the set either in memory, in mass storage,
-    or any other API that provides a storage behavior.
-    
-    A stateful pipelet may be distributed horizontally if it has at least two stages: a
-    map stage and a merge stage. The map stage must be able to work on a subset of the set
-    accepting operations in any order. The merge stage reduces results of subsets into
-    a new subset that may be further reduced in a hierachical merge until a tail merge
-    produces the output set of the pipelet.
-    
-    Sateful pipelets must implement fetch_unfiltered(), _add(), _remove(), _update(), and
-    _clear() and propagate their state forward using __emit_xxx() methods where xxx is one
-    of add, remove, update, or clear.
-    
-    Furthermore, stateful pipelets must set '_input.query' to a non-null query so that
-    their source content is fetched upon connection with source pipelets.
-    
-    This can be achieved by deriving from 'Set', a base class provided for stateful
-    pipelet.
-    
-    Stateful pipelets must either implement an antistate or memorize all operations. The
-    Set base class implements an antistate in memory.
-    
-    Stateful pipelets managing many sets simultaneously should manage as many anistates as
-    there are sets. Each set is associated with a 'flow' and a key that allows to manage these
-    antistates.
+    Stateful pipelets may be more complex to implement if they cannot be
+    @@[composed](@@composition), and may require to derive from a class
+    such as @@class:Pipelet which is stateless but is the base of all
+    pipelets, or @@class:Set which is the base class for stateful
+    pipelets and the class of pipelet @@pipelet:set().
     
     Conflict Resolution / Convergence:
     ---------------------------------
@@ -837,3 +780,67 @@
     @@method:Pipelet..log_namespace( name ).
 */
 
+/* ----------------------------------------------------------------------------
+    @term stateless
+    
+    @short A @@pipelet holding no state information in memory
+    
+    @description:
+    
+    A stateless pipelet does not hold any state between @@(operation)s
+    and can be seen as purely functional, i.e. the same input value will
+    always result in the same emitted value.
+    
+    The state of these pipelets is therefore virtual and does not require
+    any memory to store values.
+    
+    The memory footprint of a stateless pipelet does not depend on the
+    size of the set it describes, implying that these pipelets are for
+    the most part CPU-bound.
+    
+    The order in which operations are processed does not matter and it
+    can therefore be distributed horizontally.
+    
+    Examples of stateless pipelets include @@pipelet:union(),
+    @@pipelet:filter(), @@pipelet:alter(), @@pipelet:map(),
+    @@pipelet:flat_map().
+    
+    Stateless pipelets are typically built by @@composition of other
+    stateless pipelets.
+    
+    Stateless pipelets may also be built by deriving the @@class:Pipelet
+    class an must then implement the @@method:Pipelet..__transform()
+    method that returns values as transformed or filtered. This method
+    is then used by @@method:Pipelet.._add(), @@method:Pipelet.._remove(),
+    and @@method:Pipelet.._update() @@operation methods to produce the
+    desintation set plus the @@method:Plug.._fetch() method invoqued when
+    a destination pipelet connects its source to a stateless pipelet.
+    
+    Stateless pipelets managing mulitple sets simultaneously, are
+    encouraged to the "flow" attribute to differentiate between sets.
+    Pipelets @@pipelet:flow() and @@pipelet:set_flow(), respectively
+    filter and set the "flow" attribute.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term stateful
+    
+    @short A @@pipelet holding its state in memory or other storage
+    
+    @description:
+    
+    A stateful pipelet maintains the state of the set either in memory, in
+    mass storage, or any other API that provides a storage behavior.
+    
+    Stateful pipelets must implement @@method:Plug..fetch_unfiltered(),
+    @@method:Pipelet.._add(), @@method:Pipelet.._remove(),
+    @@method:Pipelet.._update(), and @@method:Pipelet.._clear() and
+    propagate their state forward using __emit_xxx() methods where xxx is
+    one of "add", "remove", "update", or "clear".
+    
+    This can be achieved by deriving from the stateful base class
+    @@(class:Set).
+    
+    Stateful pipelets must either implement an @@antistate or memorize
+    all operations. The Set base class implements an antistate in memory.
+*/    
