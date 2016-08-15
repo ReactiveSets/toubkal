@@ -345,7 +345,7 @@ generate code that may be executed optimally in microprocessors' pipelines.
 #### Toubkal Low-Level Pipelet Programming
 
 At the lower level, Toubkal **Pipelets** use a JavaScript functional programming model
-eliminating the typical callback hell of assynchronous request-response programming
+eliminating the typical callback hell of asynchronous request-response programming
 models.
 
 Error and log dataflows originating on clients can easily be routed to servers to allow
