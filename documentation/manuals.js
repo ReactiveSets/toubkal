@@ -88,7 +88,7 @@
       - the impedance mismatch between front-end, back-end programming, and the SQL language,
       - backend scalability to serve millions of users, or more,
       - high availability,
-      - assynchronous programming callback hell
+      - asynchronous programming callback hell
       - many bugs difficult to reproduce and fix due to the complexity of asynchronous
         operations.
     
@@ -843,4 +843,47 @@
     
     Stateful pipelets must either implement an @@antistate or memorize
     all operations. The Set base class implements an antistate in memory.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term synchronous
+    
+    @short A @@pipelet that emits data synchronously on source events
+    
+    @description:
+    Synchronous operation implies that when an @@operation is called, the
+    pipelet will call internal methods then calling @@downstream pipelets
+    operations before returning.
+    
+    Synchronous pipelets therfore offer the lowest latency, but increase
+    stack usage.
+    
+    Examples of synchronous pipelets are @@pipelet:pass_through(),
+    @@pipelet:alter(), @@pipelet:map(), @@pipelet:trace().
+    
+    @@[Composition](composition) of two synchronous pipelets results in
+    a synchronous pipelet,
+    
+    Composition of a synchronous pipelet with an @@asynchronous pipelet
+    results in an asynchronous pipelet.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term asynchronous
+    
+    @short A @@pipelet that enits data asynchronously on source events
+    
+    @description:
+    An asynchronous @@operation waits for some function to call back the
+    pipelet before it emits data to @@downstream pipelets.
+    
+    Therefore an asynchronous pipelet does not increase stack usage to
+    perform its operations while its latency depends on the underlying
+    asynchronous function called.
+    
+    An example of asynchronous pipelet is @@pipelet:delay().
+    
+    @@[Composition](composition) of an asynchronous pipelet with any other
+    pipelet, @@synchronous or asynchronous, always results in an
+    asynchronous pipelet.
 */    
