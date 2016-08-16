@@ -887,3 +887,113 @@
     pipelet, @@synchronous or asynchronous, always results in an
     asynchronous pipelet.
 */    
+
+/* ----------------------------------------------------------------------------
+    @term greedy
+    
+    @short A @@pipelet that @@(subscribe)s to all its @@upstream events
+    
+    @description:
+    
+    Pipelets @@subscribe to @@upstream events using a @@query to limit the
+    amount of data received from upstream.
+    
+    Greedy pipelets subscribe to upstream events as soon as they
+    are instanciated in a @@(pipeline).
+    
+    Examples of greedy pipelets are @@pipelet:alter(), @@pipelet:map(),
+    @@pipelet:set(), @@pipelet:greedy().
+    
+    @@[Composition](composition) of a greedy pipelet with any other
+    pipelet, @@lazy or greedy, always results in a greedy pipelet.
+*/
+
+/* ----------------------------------------------------------------------------
+    @term lazy
+    
+    @short A @@pipelet that @@(subscribe)s to no @@upstream events
+    
+    @description:
+    
+    Pipelets @@subscribe to @@upstream events using a @@query to limit the
+    amount of data received from upstream.
+    
+    Lazy pipelets do not subscribe to upstream events when they are
+    instanciated in a @@(pipeline). They only start subscribing to upstream
+    events when @@downstream pipelets subscribe to some events.
+    
+    Lazy pipelets are essential when building efficient applications as
+    they allow to control the amount of data processed by pipelines and
+    limit to amount of data transmitted over networks, reducing both
+    bandwidth usage and latency.
+    
+    The most efficient Toubkal networks are typically composed of @@greedy
+    pipelets at edges and lazy pipelets withing the network, interconnecting
+    greedy pipelets.
+    
+    Examples of lazy pipelets are @@pipelet:filter(), @@pipelet:flow(),
+    @@pipelet:pass_through(), @@pipelet:union(), @@pipelet:cache(),
+    @@pipelet:trace().
+    
+    @@[Composition](composition) of a lazy pipelet with another lazy pipelet
+    results in a lazy pipelet. @@[Composition](composition) of a lazy pipelet
+    with a @@greedy pipelet results in a greedy pipelet.
+    
+    When a lazy pipelet at the end of a pipeline is not connected to a
+    downstream pipelet, it will never receive any events. This typically
+    happens when one wants to trace events at the end of a pipeline.
+    Because @@pipelet:trace() is lazy, it will not trace anything
+    until connected to a downstream greedy pipelet. This is typically
+    done by using the @@pipelet:greedy() pipelet.
+    
+    In the example bellow, a pipeline requests all documentation items
+    from a server:
+    
+    ```javascript
+    rs
+      // Connect to server (lazily):
+      .socket_io_server()
+      
+      // Limit subscription to documentation events (lazily):
+      .flow( 'documentation' )
+      
+      // Trace all events going through here (lazily):
+      .trace( 'all documentation events' )
+      
+      // Request everything (greedily) which is limited by flow():
+      .greedy()
+    ;
+    ```
+    
+    Lazy pipelets are commutative because subscription @@[queries](query)
+    are combined to subscribe to minimum number of upstream events.
+    So the above can also be written:
+    
+    ```javascript
+    rs
+      // Connect to server (lazily):
+      .socket_io_server()
+      
+      // Trace all events going through here (lazily):
+      .trace( 'all documentation events' )
+      
+      // Limit subscription to documentation events (lazily):
+      .flow( 'documentation' )
+      
+      // Request everything (greedily) which is limited by flow():
+      .greedy()
+    ;
+    ```
+    
+    From an efficiency standpoint both versions are perfectly
+    equivalent. The first one is easier to understand because
+    the @@pipelet:flow() filter shows what @@pipelet:trace() will
+    actually display.
+*/
+
+/* ----------------------------------------------------------------------------
+*/
+
+/* ----------------------------------------------------------------------------
+*/
+
