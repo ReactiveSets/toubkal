@@ -901,6 +901,7 @@ $to_dom()                           | Updates DOM from dataflow for a DOM node, 
 through()                           | Getting dataflow through another pipelet (implemented a Pipelet method)
 not_exists()                        | Existence validation for dataflow adds (no-exists), removes and updates (exists)
 fetch_flow_key()                    | Fetch dataflow key from flows metadata
+split_updates()                     | Split update operations into remove plus add in a transaction
 adds()                              | Selects "add" operations only, operations that create objects
 removes()                           | Selects "remove" operations only, operations that remove objects
 updates()                           | Selects "update" operations only, operations that modify existing objects
