@@ -47,9 +47,13 @@
         
         .local_storage( 'source' )
         
-        .order( [ { id: 'id', descending: true } ] )
+        .order( [ { id: 'timestamp', descending: true } ] )
         
-        .table( $( '#source' ), [ { id: 'flow' }, { id: 'id' } ] )
+        .table( $( '#source' ), [
+          { id: 'timestamp' },
+          { id: 'id' },
+          { id: 'order' }
+        ] )
       ;
       
       var columns = [ 'photo', 'message', 'name', 'provider_name', 'provider_id' ]
