@@ -31,9 +31,12 @@
       rs
         .local_storage( 'source' )
         
-        .order( [ { id: 'id', descending: true } ] )
+        .order( [
+          { id: 'timestamp', descending: true },
+          { id: 'order'    , descending: true }
+        ] )
         
-        .table( $( '#source' ), [ { id: 'flow' }, { id: 'id' } ] )
+        .table( $( '#source' ), [ { id: 'timestamp' }, { id: 'order' } ] )
       ;
     </script>
   </body>
