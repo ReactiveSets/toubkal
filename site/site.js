@@ -80,6 +80,7 @@ module.exports = function( servers ) {
   var documentation = client_parsed.union( [ manuals_parsed, server_parsed ] )
     .parse_documentation()
     .optimize()
+    .trace( 'parsed documentation', { counts: true } )
     .auto_increment( { attribute: 'order' } )
     // .trace( 'documentation', { pick: { id: '.id', range: '.range', order: '.order' } } )
     .documentation_markdown()
@@ -162,7 +163,7 @@ module.exports = function( servers ) {
     
     .optimize()
     
-    .trace( 'database tables' )
+    .trace( 'database tables', { counts: true } )
     
     .flow( '/table' )
     
@@ -173,7 +174,7 @@ module.exports = function( servers ) {
       return source
         .optimize( { key: [ 'flow', 'id' ] } )
         
-        //.trace( 'to clients' )
+        .trace( 'to clients', { counts: true } )
         
         .dispatch( servers.socket_io_clients(), function( source, options ) {
           
@@ -237,7 +238,7 @@ module.exports = function( servers ) {
             
             .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
             
-            //.trace( 'table ' + flow )
+            //.trace( 'table ' + flow, { counts: true } )
             .set_flow( flow )
           ;
         } )
@@ -261,7 +262,7 @@ module.exports = function( servers ) {
       return file.path.split( '/' ).pop() == 'data.js';
     } )
     
-    .trace( 'data processors' )
+    .trace( 'data processors', { pick: { path: '.path' } } )
     
     .alter( function( pipeline ) { // hack to split updates into adds and removes to test dispatch cleanup on remove
       pipeline.pipelet = 'data_processor';
