@@ -110,11 +110,11 @@ module.exports = function( servers ) {
       return { flow: '/table', 'name': flow, 'path': path };
     } )
     
-    .optimize()
+    .set()
     
     .trace( 'database tables' )
     
-    .flow( '/table' )
+    .delivers( '/table' )
     
     .set_output( 'tables', scope )
     
@@ -158,10 +158,10 @@ module.exports = function( servers ) {
       }
     }, { key: [ 'id' ] } )
     
-    .optimize() // make updates
+    .set()
     
     // filter-out non-assets fetches
-    .flow( 'assets' )
+    .delivers( 'assets' )
     
     .clients()
   ;
