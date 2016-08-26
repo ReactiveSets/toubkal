@@ -85,6 +85,7 @@ module.exports = function( servers ) {
     // .trace( 'documentation', { pick: { id: '.id', range: '.range', order: '.order' } } )
     .documentation_markdown()
     .markdown()
+    .set()
     .set_flow( 'documentation' )
   ;
   
@@ -161,11 +162,11 @@ module.exports = function( servers ) {
       return { flow: '/table', 'name': flow, 'path': path };
     } )
     
-    .optimize()
+    .set()
     
     .trace( 'database tables', { counts: true } )
     
-    .flow( '/table' )
+    .delivers( '/table' )
     
     .set_output( 'tables', scope )
     
@@ -216,10 +217,10 @@ module.exports = function( servers ) {
       }
     }, { key: [ 'id' ] } )
     
-    .optimize() // make updates
+    .set()
     
     // filter-out non-assets fetches
-    .flow( 'assets' )
+    .delivers( 'assets' )
     
     .clients()
   ;
