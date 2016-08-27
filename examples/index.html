@@ -16,8 +16,7 @@
   </head>
   
   <body>
-    <h4>Connection State:</h4>
-    <ul id="connection_state"></ul>
+    <div id="connection_state"></div>
     
     <h4>Toubkal Examples:</h4>
     
@@ -44,17 +43,31 @@
         //.trace( 'socket_io_state_changes' )
         
         .map( function( v ) {
+          var content = v.connected ? 'Connected' : 'Disconnected';
+          
+          switch( v.same_id ) {
+            case true:
+              content = 'Reconnected, synchronized';
+            break;
+            
+            case false:
+              content = 'Reconnected, re-synchronizing';
+            break;
+          }
+          
           return {
             id : 1,
             
-            content: v.connected ? 'On' : 'Off',
+            content: content,
             
             attributes: {
+              tag: 'p',
+              
               title: v.state + ' @' + v.timestamp + ' (' + v.address + ')',
               
               // ToDo: allow attribute values to be functions, called in
               // some context with events
-              onclick: "alert( 'clicked' )",
+              // onclick: "alert( 'clicked' )",
               
               style: {
                 'color': v.connected ? 'green' : 'red'
