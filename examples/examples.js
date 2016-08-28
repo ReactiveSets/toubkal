@@ -110,6 +110,8 @@ module.exports = function( servers ) {
       return { flow: '/table', 'name': flow, 'path': path };
     } )
     
+    .optimize()
+    
     .set()
     
     .trace( 'database tables' )
