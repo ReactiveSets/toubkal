@@ -10,6 +10,9 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic|Oswald&subset=latin,latin-ext"/>
     <link href="css/base.css"  type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
     
+    <!-- Font Awesome 4.4.0 -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+    
     <script src="/socket.io/socket.io.js"></script>
     
     <script src="/lib/toubkal-min.js"></script>
@@ -43,15 +46,15 @@
         //.trace( 'socket_io_state_changes' )
         
         .map( function( v ) {
-          var content = v.connected ? 'Connected' : 'Disconnected';
+          var content = '';
           
           switch( v.same_id ) {
             case true:
-              content = 'Reconnected, synchronized';
+              content = 'synchronized';
             break;
             
             case false:
-              content = 'Reconnected, re-synchronizing';
+              content = 're-synchronizing';
             break;
           }
           
@@ -61,22 +64,28 @@
             content: content,
             
             attributes: {
-              tag: 'p',
+              tag: 'i',
               
               title: v.state + ' @' + v.timestamp + ' (' + v.address + ')',
               
               // ToDo: allow attribute values to be functions, called in
               // some context with events
               // onclick: "alert( 'clicked' )",
+              'class': "fa fa-circle",
+              
+              'aria-hidden': "true",
               
               style: {
-                'color': v.connected ? 'green' : 'red'
+                'color': v.connected ? 'limegreen' : 'red',
+                'font-size': '50%'
               }
             }
           }
         } )
         
         .last()
+        
+        //.trace( 'connection state' )
         
         .$to_dom( rs
           .socket_io_state_changes()
