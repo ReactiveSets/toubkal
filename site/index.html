@@ -76,14 +76,18 @@
             , manuals   = item.manual
           ;
           
-          if ( typeof manuals != 'string' )
+          if( type == 'manual' ) return;
+          
+          if( typeof manuals != 'string' )
             return console.log( 'Error, manual is not a string', manuals )
           ;
           
           return manuals.split( /, ?/ ).map( function( manual ) {
-            var content = '<a href="#' + id + '">' + type + ' ' + name + signature + '</a>'
+            var content =  type == 'chapter' ? item.title : type + ' ' + name + signature
               , node    = 'toubkal_' + manual
             ;
+            
+            content = '<a href="#' + id + '">' + content + '</a>';
             
             switch ( type ) {
               case 'class':
