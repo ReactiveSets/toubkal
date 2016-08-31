@@ -86,6 +86,7 @@ module.exports = function( servers ) {
     .documentation_markdown()
     .markdown()
     .set()
+    //.trace( 'documentation', { counts: true } )
     .set_flow( 'documentation' )
   ;
   
