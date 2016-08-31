@@ -21,40 +21,50 @@
     
     <!-- Minified Toubkal library, delivered by toubkal server -->
     <script src="/lib/toubkal-min.js"></script>
+    
+    <script>
+      var documentation = rs
+        .socket_io_server()
+        //.trace( 'documentation', { all: true, counts: true } )
+        .cache()
+        .flow( 'documentation' )
+      ;
+      
+      var manuals = rs
+        .socket_io_server()
+        //.trace( 'documentation_manuals', { all: true, counts: true } )
+        .cache()
+        .flow( 'documentation_manuals' )
+      ;
+    </script>
   </head>
   
   <body>
-    <h1>Toubkal Manuals</h1>
     <div id="documentation">
+      <h1>Toubkal Manuals</h1>
       <div id="documentation-toc"></div>
       <div id="documentation-content"></div>
     </div>
     
     <script>
-      var documentation = rs
-        .socket_io_server()
-        .flow( 'documentation' )
-        .cache()
-      ;
+      // ----------------------------------------------------------------------
+      // Table of contents
       
-      var manuals = rs
-        .socket_io_server()
-        .flow( 'documentation_manuals' )
-        .cache()
-      ;
-      
-      manuals
+      // TOC top-level, toc-manual_<manual.id>
+      var manuals_toc = manuals
         .map( function( manual ) {
           var id = manual.id;
           
           return {
-            id: 'toubkal_' + id + '_container',
+            id: 'toc_' + id + '_container',
             
             start: manual.range[ 0 ],
             
             content:
-              '<h2><a href="#manual_' + id + '">' + manual.name + '</a></h2>' +
-              '<div id="toubkal_' + id + '"></div>'
+              '<h2>' +
+                '<a href="#manual_' + id + '">' + manual.name + '</a>' +
+              '</h2>' +
+              '<div id="toc-manual_' + id + '"></div>'
           };
         } )
         
@@ -65,81 +75,114 @@
         .$to_dom( rs.RS.$( '#documentation-toc' ) )
       ;
       
-      // Table of contents
+      // TOC second-level, entries toc-entry_<item.id>
       documentation
       
-        .flat_map( function( item ) {
-          var id        = item.id.replace( /[^_\-0-9a-zA-Z]/g, '_' )
-            , type      = item.type
-            , name      = item.name
-            , signature = item.signature || ''
-            , manuals   = item.manual
-          ;
-          
-          if( type == 'manual' ) return;
-          
-          if( typeof manuals != 'string' )
-            return console.log( 'Error, manual is not a string', manuals )
-          ;
-          
-          return manuals.split( /, ?/ ).map( function( manual ) {
-            var content =  type == 'chapter' ? item.title : type + ' ' + name + signature
-              , node    = 'toubkal_' + manual
-            ;
-            
-            content = '<a href="#' + id + '">' + content + '</a>';
-            
-            switch ( type ) {
-              case 'class':
-                content += '<div id="' + manual + '_class_' + name + '"></div>';
-              break;
-              
-              case 'method':
-              case 'class_method':
-                // console.log( manual + '_class_' + name.match( /^[^\.]+/ )[0] );
-              break;
-            }
-            
-            return {
-              id: 'toc-entry-' + id,
-              
-              manual: manual,
-              
-              order: item.order,
-              
-              $node: rs.RS.$( '#' + node ),
-              
-              classes: '',
-              
-              content: content
-            } 
-          } )
-        } )
-        
         .dispatch( manuals, function( source, options ) {
           var manual = this;
           
           return source
             .filter( [ { manual: manual.id } ] )
             
+            .flat_map( function( item ) {
+              var id        = item.id.replace( /[^_\-0-9a-zA-Z]/g, '_' )
+                , type      = item.type
+                , name      = item.name
+                , signature = item.signature || ''
+                , manuals   = item.manual
+              ;
+              
+              if( type == 'manual' ) return;
+              
+              if( typeof manuals != 'string' )
+                return console.log( 'Error, manual is not a string', manuals )
+              ;
+              
+              return manuals.split( /, ?/ ).slice( 0, 1 ).map( function( manual ) {
+                var content =  type == 'chapter'
+                      ? item.title
+                      : type + ' ' + name + signature
+                ;
+                
+                content = '<a href="#' + id + '">' + content + '</a>';
+                
+                switch ( type ) {
+                  case 'class':
+                    content += '<div id="' + manual + '_class_' + name + '"></div>';
+                  break;
+                  
+                  case 'method':
+                  case 'class_method':
+                    // console.log( manual + '_class_' + name.match( /^[^\.]+/ )[0] );
+                  break;
+                }
+                
+                return {
+                  id: 'toc-entry_' + id,
+                  
+                  manual: manual,
+                  
+                  order: item.order,
+                  
+                  $node: rs.RS.$( '#toc-manual_' + manual ),
+                  
+                  classes: '',
+                  
+                  content: content
+                } 
+              } )
+            } )
+            
             .order( [ { id: 'order' } ] )
             
             //.trace( 'toc' )
             
             .$to_dom()
-        } )
+        }, { name: 'manuals-toc' } )
       ;
       
-      // Content
-      documentation
+      // ----------------------------------------------------------------------
+      // Documentation content
       
+      // Manuals content manual_<manual.id>
+      var manuals_content = documentation
+        
+        //.trace( 'manuals content', { counts: true,
+        //  pick: { id:'.id', content: '.html.length' }
+        // } )
+        
+        .filter( [ { type: 'manual' } ] )
+        
         .pick( { id: 'id', order: 'order', content: 'html' } )
         
         .order( [ { id: 'order' } ] )
         
-        //.trace( 'content' )
-        
         .$to_dom( rs.RS.$( '#documentation-content' ) )
+      ;
+      
+      // Content, organized as TOC, <item.type>_<item.id>
+      documentation
+        
+        .dispatch( manuals_content, function( source, options ) {
+          var manual = this
+            , id     = manual.id.replace( 'manual#', '' )
+          ;
+          
+          return source
+            .filter( [ { manual: id } ] )
+            
+            .alter( function add_node( _ ) {
+              _.$node = manual.$node;
+              _.content = _.html;
+              delete _.html;
+            } )
+            
+            .order( [ { id: 'order' } ] )
+            
+            //.trace( 'content of manual ' + id, { counts: true } )
+            
+            .$to_dom()
+        }, { name: 'manuals-content' } )
       ;
     </script>
   </body>

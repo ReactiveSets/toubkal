@@ -555,7 +555,7 @@
     @description:
     Terms required to understand Toubkal concepts and documentation.
     
-    Most important terms:
+    The most important terms are:
     - @@pipelet
     - @@dataflow
     - @@pipelet
