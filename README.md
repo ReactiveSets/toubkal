@@ -857,6 +857,7 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------------------------------
+emit_operations()                   | Emits remove, update, and add operations in a transaction
 modules_files()                     | Singleton dataflow of toubkal modules' files from toubkal/lib/modules.json
 piexif_insert()                     | Inserts EXIF into content, using the piexif library
 piexif_parse()                      | Parses content EXIF using the piexif library
