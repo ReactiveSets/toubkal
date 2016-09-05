@@ -531,26 +531,6 @@ Then browse http://localhost:8081/
 
 ## Roadmap / Releases
 
-### Version 0.9.0 - Finalize API
-
-#### Main Goals:
-
-- Finalize API, in view of 1.0 release
-- Implement all remaining ToDo, code coverage to 99+%
-- Feature freeze
-- Improve documentation and tutorial
-
-### Version 0.8.0 - Charding, P2P Dataflows
-
-#### Main Goals:
-
-- WebRTC pipelets
-- Implement Peer-To-Peer dataflows using WebRTC
-- Horizontal distribution / Charding using websocket dispatcher
-- Implement Phantom.js pipelet to deliver public content to search engines w/out JavaScript and improve SEO
-- Implement websocket_clients() and websocket_server() pipelets as a faster alternative
-  to socket_io equivalents.
-
 ### Version 0.7.0 - Web Application Framework / Packaging / Versionning
 
 This version introduces the capability to keep historical values of objects persisted and cached.
@@ -558,11 +538,14 @@ This version introduces the capability to keep historical values of objects pers
 #### Main Goals:
 
 - Navigation pipelets
+
 - Internationalization
+
 - Packaging:
   - Split This repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ... repositories
   - Implement rs package manager
   - Implement rs automatic pipelet patching
+
 - Develop additional tests, goal is at least 3000 continuous integration tests, measure test coverage
 
 - Super-state and versioning:
@@ -659,20 +642,11 @@ This version introduces the capability to keep historical values of objects pers
     }
 ```
 
-### Version 0.5.0 - Packaging / Documentation / First Beta
-
-ETA May 15th 2016
+### Version 0.5.0 - Packaging / First Beta
 
 First Beta version with API almost finalized.
 
 #### Main Goals:
-
-- Extract documentation from code
-  - JavaScript parser pipelet (probably using acorn)
-  - 
-
-- Build Website, featuring documentation and tutorial
-  - Markdown parser pipelet
 
 - Implement as many ToDo as possible
 - Develop additional tests, goal is at least 2000 continuous integration tests, code coverage to 90%
@@ -692,8 +666,6 @@ Work In Progress.
 
 - Additional tests, goal is at least 1750 continuous integration tests
 
-- Transactional design patterns and pipelets
-
 - Error routing and handling:
   - pipelet to push / pop sender, route errors
   - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
@@ -704,25 +676,44 @@ Work In Progress.
 #### Work in progress:
 
 - Error handling:
-  - Using revert() to recover from errors, by reverting add, remove, and update operations.
+  - Rollback transactions to recover from errors:
+    - Using revert(), reverting add into remove, remove into add, and swapping update operations.
 
 - Complex authorizations and validation:
   - using adds(), removes() and updates() to differentiate between Create, Delete and Update operations
     and apply authorization rules accordingly.
+  - use pipelet fetch() to check authorizations
   - using not_exists() to test appropriate existance on adds, removes and updates
+
+- Plug.._fetch() && ..update_upstream_query() refactoring, completed but not turned on, needs more testing:
+  - Implemented in Plug base class of all inputs and outputs
+  - Replaces all implementations of fetch on inputs and outputs
+  - Forward compatible with fetch() API, the API may be deprecated once migration to new API is complete
+  - All plugs now have a source, enables plugs pipelines for fetch() && update_upstream_query()
+  - Allow synchronization between update_upstream_query() and fetch()
+  - Receivers can now receive removes, updates and operations' options
+  - Allow query transforms on all plugs
+  - Filters fetch_unfiltered() if defined
+  - Filters through _tranform() if defined and fetch_unfiltered() not defined
+
+- Build Toubkal site, featuring documentation and examples
+
+#### Completed Work:
 
 - Documentation extraction format from source code comments:
   - Using pipelets:
     - acorn()
+    - documentation_manuals()
     - parse_documentation()
+    - documentation_markdown()
     - markdown()
-
+  
   - highly targeted towards Toubkal dataflow programming
-
+  
   - augmented github-flavored markdown
-
+  
   - output as dataflow, suitable for transformations to github-flavored markdown, plain html, and more
-
+  
   - Input format:
     - inside any comments
     - line-oriented
@@ -757,33 +748,22 @@ Work In Progress.
       - @emits       : emitted output values' attributes
       - @todo        : suggestion for future version
       - @coverage    : indicates automatic tests coverage
-      - @manual      : a documentation manual name this belongs-to (introduction, glossary, architect, reference, guide, programmer, internal)
+      - @manual      : a documentation manual name this belongs-to
       - @section     : a section name within a manual
       - @api         : indicates API maturity: experimental, alpha, beta, stable, deprecated
-
+  
   - @@keyword: indicates a link to another section of the documentation:
     - e.g. This is @@stateless, @@synchronous, @@lazy pipelet.
     - If keyword is a plural and no entry is found for it, attempt to locate it's singular form
     - If it cannot be located, a warning is emitted
 
-  - some pipelets, functions and methods are already following this documentation format
+  - many pipelets, functions and methods are already following this documentation format
 
-#### Completed Work:
-
-- transactional pipelets:
+- Transactional design patterns and pipelets
   - fetch(): Fetches the current state of a store dataflow based on source events.
   - update_fetched(): Update fetched values in a transaction
-
-- fetch() && update_upstream_query() refactoring:
-  - Implemented in Plug base class of all inputs and outputs
-  - Replaces all implementations of fetch on inputs and outputs
-  - Forward compatible with fetch() API, the API may be deprecated once migration to new API is complete
-  - All plugs now have a source, enables plugs pipelines for fetch() && update_upstream_query()
-  - Allow synchronization between update_upstream_query() and fetch()
-  - Receivers can now receive removes, updates and operations' options
-  - Allow query transforms on all plugs
-  - Filters fetch_unfiltered() if defined
-  - Filters through _tranform() if defined and fetch_unfiltered() not defined
+  - fetched_differences(): Emits differences (A - B) between two fetched sets A then B
+  - emit_operations(): Emits remove, update, and add operations in a transaction
 
 - Allow automatic synchronization of all inputs of a pipelet, as long as one uses method Pipelet.._add_input() to add additional inputs.
   This relies on sharing input transactions between all inputs, and other modifications to make this work properly on controllets.
@@ -831,6 +811,7 @@ Work In Progress.
   - adds(): filter add operations, useful when these have a strict Create semantic
   - removes(): filter remove operations, useful when these have a strict Delete semantic
   - updates(): filter update operations, useful when these have a strict Update semantic
+  - split_updates(): Split update operations into remove plus add in a transaction
   - revert(): transforms adds into removes, removes into adds, swap remove and add into updates
   - query_updates(): get query updates from pipelet, to build lazy pipelines, including caches
 
@@ -856,7 +837,8 @@ Work In Progress.
     - piexif_insert(): Inserts EXIF into content, using the piexif library
 
 New Pipelets                        | Short Description
-------------------------------------|--------------------------------------------------------------------------------------
+------------------------------------|--------------------------------------------------------------
+fetched_differences()               | Emits differences (A - B) between two fetched sets A then B
 emit_operations()                   | Emits remove, update, and add operations in a transaction
 modules_files()                     | Singleton dataflow of toubkal modules' files from toubkal/lib/modules.json
 piexif_insert()                     | Inserts EXIF into content, using the piexif library
