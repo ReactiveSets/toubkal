@@ -37,6 +37,8 @@
     // Connect to socket.io server to exchange dataflows
     .socket_io_server()
     
+    .cache( { synchronize: rs.socket_io_state_changes().filter( [ { same_id: false } ] ) } )
+    
     // Pull teaser/sales dataflow
     .flow( 'teaser/sales_year' )
     
