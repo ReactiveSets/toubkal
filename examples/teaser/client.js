@@ -32,12 +32,21 @@
     { id: 'quantity', label: 'Quantity' }  // Third column
   ];
   
+  var synchronize = rs
+  
+    .socket_io_state_changes()
+    
+    .trace( 'socket.io state changes' )
+    
+    .filter( [ { same_id: false } ] )
+  ;
+  
   // Use the global object rs, to start a dataflow
   rs
     // Connect to socket.io server to exchange dataflows
     .socket_io_server()
     
-    .cache( { synchronize: rs.socket_io_state_changes().filter( [ { same_id: false } ] ) } )
+    .cache( { synchronize: synchronize } )
     
     // Pull teaser/sales dataflow
     .flow( 'teaser/sales_year' )
