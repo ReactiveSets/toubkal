@@ -43,20 +43,28 @@
     
     <script>
       rs.socket_io_state_changes()
-        //.trace( 'socket_io_state_changes' )
+        .trace( 'socket_io_state_changes' )
         
-        .map( function( v ) {
-          var content = '';
+        .group( function() { return { id: 1 } } )
+        
+        .map( function( _ ) {
+          var values  = _.content
+            , last    = values[ values.length - 1 ]
+            , same_id = last.same_id
+            , content = ''
+          ;
           
-          switch( v.same_id ) {
-            case true:
-              content = 'synchronized';
-            break;
+          if( typeof same_id == 'boolean' )
+            content = same_id ? 'synchronized': 're-synchronizing'
+          ;
+          
+          var title = values
+            .map( function( v ) {
+              return ( v.connected ? '' : 'dis' ) + 'connected' + ' @' + v.timestamp + ' (' + v.address + ')';
+            } )
             
-            case false:
-              content = 're-synchronizing';
-            break;
-          }
+            .join( '\r' )
+          ;
           
           return {
             id : 1,
@@ -66,7 +74,7 @@
             attributes: {
               tag: 'i',
               
-              title: v.state + ' @' + v.timestamp + ' (' + v.address + ')',
+              title: title,
               
               // ToDo: allow attribute values to be functions, called in
               // some context with events
@@ -76,14 +84,12 @@
               'aria-hidden': "true",
               
               style: {
-                'color': v.connected ? 'limegreen' : 'red',
+                'color': last.connected ? 'limegreen' : 'red',
                 'font-size': '50%'
               }
             }
           }
         } )
-        
-        .last()
         
         //.trace( 'connection state' )
         
