@@ -60,7 +60,10 @@
           
           var title = values
             .map( function( v ) {
-              return ( v.connected ? '' : 'dis' ) + 'connected' + ' @' + v.timestamp + ' (' + v.address + ')';
+              return v.timestamp
+                + ', ' + v.address
+                + ', ' + ( v.connected ? '' : 'dis' ) + 'connected'
+              ;
             } )
             
             .join( '\r' )
@@ -105,10 +108,26 @@
         )
       ;
       
+      var synchronize = rs
+        .socket_io_state_changes()
+        
+        .filter( [ { same_id: false } ] )
+      ;
+      
+      synchronize  
+        .delay( 2000 )
+        
+        .alter( function( state ) { delete state.same_id } )
+        
+        .socket_io_state_changes()
+      ;
+      
       rs
         .socket_io_server()
         
-        .delivers( [ 'examples' ] )
+        .trace( 'before cache' )
+        
+        .cache( { synchronize: synchronize } )
         
         .Singleton( '$examples', function( source, options ) {
           return source
@@ -125,7 +144,7 @@
         
         .order( [ { id: 'title' } ] )
         
-        .trace( 'before examples' )
+        //.trace( 'before examples' )
         
         .$to_dom( rs.$examples() )
         
