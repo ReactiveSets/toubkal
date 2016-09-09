@@ -26,7 +26,7 @@
     "node-uuid"                    : "1.4.7",
     "socket.io"                    : "1.4.8",
     "socket.io-client"             : "1.4.8",
-    "acorn"                        : "4.0.0",
+    "acorn"                        : "4.0.1",
     "remarkable"                   : "1.6.2",
     "highlight.js"                 : "9.6.0",
     "uglify-js"                    : "2.7.3",
