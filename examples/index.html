@@ -47,43 +47,39 @@
         
         .group( function() { return { id: 1 } } )
         
-        .map( function( _ ) {
-          var values = _.content
-            , l      = values.length
+        .map( function( states ) {
+          states = states.content;
+          
+          var l            = states.length
+            , max_states   = 10
+            , extra_states = l > max_states ? l - max_states : 0
           ;
           
-          var title = values
-            .slice( l > 10 ? l - 10 : 0 ) // display maximum 10 last states
+          var displayed_states = states
+            // Shallow copy and limit to max_states last states
+            .slice( extra_states )
             
-            .reverse() // last state first
+            // Get last state first
+            // Do not reverse first, it would alter source value
+            .reverse()
             
             .map( function( v ) {
-              return v.timestamp
-                + ', ' + v.address
-                + ', ' + state( v )
-              ;
+              return v.timestamp + ' (' + v.address + ') ' + v.state
             } )
-            
-            .join( '\r' )
           ;
+          
+          extra_states && displayed_states.push(
+            '' + extra_states + ' additional state change(s) not displayed'
+          );
           
           return {
             id : 1,
             
             attributes: {
-              title: title,
+              title: displayed_states.join( '\r' ),
               
-              'class': 'fa fa-circle ' + state( values[ l - 1 ] ),
+              'class': 'fa fa-circle ' + states[ l - 1 ].state
             }
-          }
-          
-          function state( v ) {
-            var same_id = v.same_id;
-            
-            return typeof same_id == 'boolean' && ! same_id
-              ? 'synchronizing'
-              : v.connected ? 'connected' : 'disconnected'
-            ;
           }
         } )
         
@@ -194,7 +190,7 @@
       }
       
       .synchronizing {
-        color                    : limegreen;
+        color                    : green;
         animation-duration       : 30ms;
         animation-name           : synchronizing;
         animation-iteration-count: infinite;
