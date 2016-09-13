@@ -48,21 +48,19 @@
         .group( function() { return { id: 1 } } )
         
         .map( function( _ ) {
-          var values  = _.content
-            , last    = values[ values.length - 1 ]
-            , same_id = last.same_id
-            , content = ''
-          ;
-          
-          if( typeof same_id == 'boolean' )
-            content = same_id ? 'synchronized': 're-synchronizing'
+          var values = _.content
+            , l      = values.length
           ;
           
           var title = values
+            .slice( l > 10 ? l - 10 : 0 ) // display maximum 10 last states
+            
+            .reverse() // last state first
+            
             .map( function( v ) {
               return v.timestamp
                 + ', ' + v.address
-                + ', ' + ( v.connected ? '' : 'dis' ) + 'connected'
+                + ', ' + state( v )
               ;
             } )
             
@@ -72,25 +70,20 @@
           return {
             id : 1,
             
-            content: content,
-            
             attributes: {
-              tag: 'i',
-              
               title: title,
               
-              // ToDo: allow attribute values to be functions, called in
-              // some context with events
-              // onclick: "alert( 'clicked' )",
-              'class': "fa fa-circle",
-              
-              'aria-hidden': "true",
-              
-              style: {
-                'color': last.connected ? 'limegreen' : 'red',
-                'font-size': '50%'
-              }
+              'class': 'fa fa-circle ' + state( values[ l - 1 ] ),
             }
+          }
+          
+          function state( v ) {
+            var same_id = v.same_id;
+            
+            return typeof same_id == 'boolean' && ! same_id
+              ? 'synchronizing'
+              : v.connected ? 'connected' : 'disconnected'
+            ;
           }
         } )
         
@@ -115,7 +108,7 @@
       ;
       
       synchronize  
-        .delay( 2000 )
+        .delay( 1000 )
         
         .alter( function( state ) { delete state.same_id } )
         
@@ -185,5 +178,33 @@
         .$examples()
       ;
     </script>
+    
+    <style>
+      .connected, .disconnected, .synchronizing {
+        font-size: 50%;
+        aria-hidden: true;
+      }
+      
+      .connected {
+        color: limegreen;
+      }
+      
+      .disconnected {
+        color: red;
+      }
+      
+      .synchronizing {
+        color                    : limegreen;
+        animation-duration       : 30ms;
+        animation-name           : synchronizing;
+        animation-iteration-count: infinite;
+        animation-direction      : alternate;
+      }
+      
+      @keyframes synchronizing {
+        from { opacity: 1; }
+        to   { opacity: 0; }
+      }
+    </style>
   </body>
 </html>
