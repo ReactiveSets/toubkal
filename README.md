@@ -838,6 +838,8 @@ Work In Progress.
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------
+socket_io_synchronizing()           | Emits start of synchronization events, collects synchronized events
+socket_io_state_changes()           | Pipelet socket_io_server() connections' state changes
 fetched_differences()               | Emits differences (A - B) between two fetched sets A then B
 emit_operations()                   | Emits remove, update, and add operations in a transaction
 modules_files()                     | Singleton dataflow of toubkal modules' files from toubkal/lib/modules.json
