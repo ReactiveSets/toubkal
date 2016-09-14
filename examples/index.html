@@ -33,17 +33,13 @@
       // live reload
       rs.socket_io_server()
         .flow( 'assets' )
-        .trace( 'assets' )
-        .delay( 500 )
-        .alter( function( asset ) {
-          window.location.reload()
-        } )
+        .map( function( asset ) { window.location.reload() } )
       ;
     </script>
     
     <script>
       rs.socket_io_state_changes()
-        .trace( 'socket_io_state_changes' )
+        //.trace( 'socket_io_state_changes' )
         
         .group( function() { return { id: 1 } } )
         
@@ -83,95 +79,36 @@
           }
         } )
         
-        //.trace( 'connection state' )
+        .$query_selector( '#connection_state' )
         
-        .$to_dom( rs
-          .socket_io_state_changes()
-          .filter( [ { connected: true } ] )
-          .last()
-          // last() does not emit remove operations, so query selector 
-          // remains valid when disconnected, until a new connected state
-          // updates the output
-          .$query_selector( '#connection_state' )
-          //.trace( '#connection_state' )
-        )
-      ;
-      
-      var synchronize = rs
-        .socket_io_state_changes()
-        
-        .filter( [ { same_id: false } ] )
-      ;
-      
-      synchronize  
-        .delay( 1000 )
-        
-        .alter( function( state ) { delete state.same_id } )
-        
-        .socket_io_state_changes()
+        .$to_dom()
       ;
       
       rs
         .socket_io_server()
         
-        .trace( 'before cache' )
+        .cache( { synchronizing: rs.socket_io_synchronizing() } )
         
-        .cache( { synchronize: synchronize } )
-        
-        .Singleton( '$examples', function( source, options ) {
-          return source
-            //.trace( 'examples' )
-            .$query_selector( '#examples' )
-          ;
-        } )
+        // Remove "synchronizing" fork tag added by rs.socket_io_synchronizing()
+        .pass_through( { tag: 'synchronizing' } )
         
         .flow( 'examples', { key: [ 'id' ] } )
         
         .optimize()
         
-        //.trace( 'before order' )
-        
+        // Order examples by title and render their <li>
         .order( [ { id: 'title' } ] )
         
-        //.trace( 'before examples' )
+        .$to_dom( rs.once().$query_selector( '#examples' ) )
         
-        .$to_dom( rs.$examples() )
-        
-        //.trace( 'after examples' )
-        
-        .set_output( '$li' )
-      ;
-      
-      rs.once( 1000 )
-        .alter( function( v ) {
-          rs.output( '$li' )
-            .alter( function( v ) {
-              v.tag = 'a';
-              v.content = v.title;
-              v.attributes = rs.RS.extend( { href: v.path }, v.attributes );
-            } )
-            
-            //.trace( 'before a' )
-            
-            .$to_dom()
-            //.trace( 'after a' )
-            .greedy()
-          ;
+        // Render links to each example
+        .alter( function( _ ) {
+          _.tag        = 'a';
+          _.content    = _.title;
+          _.attributes = rs.RS.extend( { href: _.path }, _.attributes );
         } )
-      ;
-      
-      var beat = 20000;
-      
-      rs//.beat( beat )
-        .once( 0 )
-        .$examples()
-      ;
-      
-      rs//.once( beat * 0.9 )
-        .map( function( v ) { return { interval: beat } } )
-        .beat()
-        .revert()
-        .$examples()
+        
+        .$to_dom()
       ;
     </script>
     
