@@ -1028,8 +1028,8 @@
     @short An @@operation adding @@[values]value into a @@set
     
     @description
-    An add operation is described as an JavaScript Array of Objects where
-    each object holds a value to add.
+    An add operation is described as a JavaScript Array of Objects where
+    each Object holds a value to add.
     
     ```javascript
     [
@@ -1053,12 +1053,47 @@
     @term remove
     
     @short An @@operation removing @@[values]value from a @@set
+    
+    @description
+    A remove operation is described as a JavaScript Array of Objects where
+    each Object holds a value to remove.
+    
+    ```javascript
+    [
+      { id: 1, name: 'New York'    },
+      { id: 2, name: 'Los Angeles' }
+    ]
+    ```
+    Each value is the same as the added value, i.e. it contains all the
+    attributes of added values. This allows to calculate aggregates
+    increntally and statelessly.
+    
+    In some cases, removed values only need to specify the @@identity of
+    removed values, if it known that removed values are not used by any
+    @@downstream pipelet that require all attributes. The safe choice
+    is therefore to always provide all the attributes of removed values.
+    
+    Removing a value which identity is not already in a set, adds it
+    to its @@antistate, allowing a later @@add to cancel a previous
+    removed from the antistate.
+    
+    Removed values added to the antistate are not forwarded @@(downstream).
+    
+    @@[Stateless pipelets do not have a state and therefore do not have
+    an antistate either, will forward removed values even if these
+    are not present in the virtual set they represent.
+    
+    In @@strict @@transactional semantic, removing a @@value means
+    @@delete an @@object from a set.
 */
 
 /* --------------------------------------------------------------------------
     @term update
     
-    @short
+    @short An @@operation modifying @@[values]value from a @@set
+    
+    @description
+    
 */
 
 /* --------------------------------------------------------------------------
