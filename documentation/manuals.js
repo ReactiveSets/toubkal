@@ -1029,7 +1029,7 @@
     
     @description
     An add operation is described as a JavaScript Array of Objects where
-    each Object holds a value to add.
+    each Object holds a value to add into a set.
     
     ```javascript
     [
@@ -1056,7 +1056,7 @@
     
     @description
     A remove operation is described as a JavaScript Array of Objects where
-    each Object holds a value to remove.
+    each Object holds a value to remove from a set.
     
     ```javascript
     [
@@ -1073,15 +1073,19 @@
     @@downstream pipelet that require all attributes. The safe choice
     is therefore to always provide all the attributes of removed values.
     
-    Removing a value which identity is not already in a set, adds it
-    to its @@antistate, allowing a later @@add to cancel a previous
-    removed from the antistate.
+    Removing a value which identity is not in a @@stateful set, adds it
+    to its @@antistate, allowing a later @@add to cancel a previously
+    removed value in the antistate.
     
-    Removed values added to the antistate are not forwarded @@(downstream).
+    Removed values added to the antistate of @@stateful pipelets are
+    not emited @@(downstream).
     
-    @@[Stateless pipelets do not have a state and therefore do not have
-    an antistate either, will forward removed values even if these
-    are not present in the virtual set they represent.
+    Added values canceling removed values in the antistate of stateful
+    pipelets are not emitted downstream.
+    
+    @@[Stateless]stateless pipelets, do not have a state or antistate,
+    always emit removed and added values regardless of the virtual state
+    of the set they represent.
     
     In @@strict @@transactional semantic, removing a @@value means
     @@delete an @@object from a set.
@@ -1093,7 +1097,56 @@
     @short An @@operation modifying @@[values]value from a @@set
     
     @description
+    An update operation is described as a JavaScript Array of value
+    updates where each value update is represented by an Array of
+    two values, the first one being the previous value and the second
+    one being the new value replacing the previous value.
     
+    ```javascript
+    [
+      // first updated value
+      [
+        { id: 13, count: 3 }, // previous value
+        { id: 13, count: 4 }  // new value
+      ],
+      
+      // other updated values ...
+      
+      // last updated value
+      [
+        { id: 5, count: 45 }, // prebious value
+        { id: 5, count: 44 }  // new value
+      ]
+    ]
+    ```
+    
+    In the above example, the ```"count"``` attribute of value
+    wich @@identity is ```13``` is updated from ```3``` to ```4```,
+    while that of the value with identity ```5``` is updated from
+    ```45``` to ```44```.
+    
+    In @@strict @@transactional semantic, each update must apply to
+    a single identity, i.e. removed and added values of each update
+    must have the same identity.
+    
+    An update is semantically equivalent to a @@remove and an @@add
+    operation in the same @@(transaction). Pipelet split_updates()
+    splits updates into remove and add operations, while
+    pipelet optimize() groups removes and adds pertaining to same
+    value identities in a transaction into updates.
+    
+    Although an update operation can therefore be viewed as an
+    optimization of a remove plus an add operation, in many cases
+    code complexity involved in dealing with updates is much higher
+    when splitted and therefore many pipelets require strict
+    updates to operate properly.
+    
+    Yet it is always possible to use pipelet optimize() to make
+    updates for pipelets requiring a strict semantic.
+    
+    See also pipelet last() which transform a stream of
+    @@adds-only operations into a stream of one add followed by
+    updates operations.
 */
 
 /* --------------------------------------------------------------------------
