@@ -23,17 +23,28 @@
     <script src="/lib/toubkal-min.js"></script>
     
     <script>
-      var documentation = rs
+      var database_schema = rs.set( [
+        { id: 'documentation'         },
+        { id: 'documentation_manuals' }
+      ] );
+      
+      var cached = rs
         .socket_io_server()
+        
+        .database_cache( database_schema, { synchronizing: rs.socket_io_synchronizing() } )
+        
+        .pass_through( { tag: 'synchronizing' } )
+        
+        //.trace( 'cached', { counts: true } )
+      ;
+      
+      var documentation = cached
         //.trace( 'documentation', { all: true, counts: true } )
-        .cache()
         .flow( 'documentation' )
       ;
       
-      var manuals = rs
-        .socket_io_server()
+      var manuals = cached
         //.trace( 'documentation_manuals', { all: true, counts: true } )
-        .cache()
         .flow( 'documentation_manuals' )
       ;
     </script>
