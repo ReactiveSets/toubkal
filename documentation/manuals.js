@@ -1152,109 +1152,121 @@
 /* --------------------------------------------------------------------------
     @term strict
     
-    @short
+    @short @@[Operations]operation where @@add means @@create and @@remove means @@delete
 */
 
 /* --------------------------------------------------------------------------
     @term fetch
     
-    @short
+    @short Asynchronous function to retrieve @@upstream state
 */
 
 /* --------------------------------------------------------------------------
     @term subscription
     
-    @short
+    @short An @@upstream @@query to @@subscribe to upstream events
 */
 
 /* --------------------------------------------------------------------------
     @term subscribe
     
-    @short
+    @short A function submitting an @@upstream @@(subscription)
 */
 
 /* --------------------------------------------------------------------------
     @term create
     
-    @short
+    @short A @@strict @@add @@operation that creates an @@object
 */
 
 /* --------------------------------------------------------------------------
     @term delete
     
-    @short
+    @short A @@strict @@remove @@operation that deletes an @@object
 */
 
 /* --------------------------------------------------------------------------
     @term reactive
     
-    @short
+    @short That processes on @@upstream @@[events](event)
 */
 
 /* --------------------------------------------------------------------------
     @term singleton
     
-    @short
+    @short A @@pipelet which can have one instance at most
 */
 
 /* --------------------------------------------------------------------------
     @term multiton
     
-    @short
+    @short A @@pipelet which number of instances depends on its parameters
 */
 
 /* --------------------------------------------------------------------------
     @term key
     
-    @short
+    @short Attributes which concatenated values are unique for a @@dataflow
 */
 
 /* --------------------------------------------------------------------------
     @term identity
     
-    @short
+    @short Concatenaned values of @@key attributes
 */
 
 /* --------------------------------------------------------------------------
     @term duplicate
     
-    @short
+    @short A @@value which @@identity is the same as an existing value
 */
 
 /* --------------------------------------------------------------------------
     @term value
     
-    @short
+    @short A JavaScript Object defining an element of a set
 */
 
 /* --------------------------------------------------------------------------
     @term object
     
-    @short
+    @short A @@value in a @@stateful @@pipelet
 */
 
 /* --------------------------------------------------------------------------
     @term clear
     
-    @short
+    @short Deprecated @@operation to clear the content of a pipeline
 */
 
 /* --------------------------------------------------------------------------
     @term synchronization
     
-    @short
+    @short The coordination of @@concurent @@[pipelines]pipeline @@events
+*/
+
+/* --------------------------------------------------------------------------
+    @term concurent
+    
+    @short Re-uniting from a @@[forked]fork @@upstream @@transaction
+*/
+
+/* --------------------------------------------------------------------------
+    @term fork
+    
+    @short Where a @@pipeline splits into multiple @@downstream pipelines
 */
 
 /* --------------------------------------------------------------------------
     @term emit
     
-    @short
+    @short The action of @@pipelet emitting an @@operation @@event
 */
 
 /* --------------------------------------------------------------------------
     @term event
     
-    @short
+    @short Emitted @@downstream by a @@pipelet @@output to a pipelet @@input
 */
 
 /* --------------------------------------------------------------------------
@@ -1290,13 +1302,13 @@
 /* --------------------------------------------------------------------------
     @term composition
     
-    @short
+    @short A function returning a composed @@(pipeline)
 */
 
 /* --------------------------------------------------------------------------
     @term antistate
     
-    @short
+    @short State holding @@remove operations
 */
 
 /* --------------------------------------------------------------------------
@@ -1308,19 +1320,19 @@
 /* --------------------------------------------------------------------------
     @term JIT
     
-    @short
+    @short Just-In-Time code generation
 */
 
 /* --------------------------------------------------------------------------
     @term uuid
     
-    @short
+    @short A universally unique identifier
 */
 
 /* --------------------------------------------------------------------------
     @term adds-only
     
-    @short
+    @short A @@dataflow with only @@add @@[operations](operation)
 */
 
 /* --------------------------------------------------------------------------
