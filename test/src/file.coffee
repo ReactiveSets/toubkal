@@ -28,6 +28,15 @@ expect = utils.expect
 check  = utils.check
 rs     = utils.rs
 clone  = rs.RS.extend.clone
+win32  = process.platform == 'win32'
+
+fix_path_string = ( path ) -> if win32 then path.replace( /\//g, "\\" ) else path
+
+fix_path = ( o ) ->
+  if win32
+    o.path = fix_path_string o.path
+  
+  return o
 
 require '../../lib/server/file.js'
 
@@ -106,7 +115,7 @@ describe 'file', ->
       'directories/lib/client/index'
       'directories/lib/server'
       'directories/lib/server/index'
-    ]
+    ].map fix_path_string
     
     css = entries
       .filter( [ { type: 'file', extension: 'css' } ] )  
@@ -135,10 +144,10 @@ describe 'file', ->
       expect( entries._directories[ 'directories' ].count ).to.be.eql 3
     
     it '"directories/css" directory should have a count of 1', ->
-      expect( entries._directories[ 'directories/css' ].count ).to.be.eql 1
+      expect( entries._directories[ fix_path_string 'directories/css' ].count ).to.be.eql 1
     
     it '"directories/lib/client/index" directory should have a count of 1', ->
-      expect( entries._directories[ 'directories/lib/client/index' ].count ).to.be.eql 1
+      expect( entries._directories[ fix_path_string 'directories/lib/client/index' ].count ).to.be.eql 1
     
     it 'should have javascript files', ( done ) ->
       javascript._fetch_all ( values ) -> check done, () ->
@@ -156,7 +165,7 @@ describe 'file', ->
             "extension": "js"
             "depth": 4
           }
-        ]
+        ].map fix_path
     
     it 'should have css files', ( done ) ->
       css._fetch_all ( values ) -> check done, () ->
@@ -167,7 +176,7 @@ describe 'file', ->
             "extension": "css"
             "depth": 2
           }
-        ]
+        ].map fix_path
     
     it 'should have an html file', ( done ) ->
       html._fetch_all ( values ) -> check done, () ->
@@ -178,7 +187,7 @@ describe 'file', ->
             "extension": "html"
             "depth": 2
           }
-        ]
+        ].map fix_path
     
     it 'should have 11 entries', ( done ) ->
       entries._fetch_all ( values ) -> check done, () ->
@@ -235,7 +244,7 @@ describe 'file', ->
             "extension": ""
             "depth": 3
           }
-        ]
+        ].map fix_path
     
     it 'should not remove "directories" directory after removing 2 extra path from directories_source', ->
       entries._remove [
@@ -283,23 +292,23 @@ describe 'file', ->
         from_empty_directory_path._fetch_all ( values ) -> check done, () ->
           expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
             {
-              "path": "css"
+              "path": "./css"
               "type": "directory"
               "extension": ""
               "depth": 1
             }
             
             {
-              "path": "html"
+              "path": "./html"
               "type": "directory"
               "extension": ""
               "depth": 1
             }
             
             {
-              "path": "lib"
+              "path": "./lib"
               "type": "directory"
               "extension": ""
               "depth": 1
             }
-          ]
+          ].map fix_path
