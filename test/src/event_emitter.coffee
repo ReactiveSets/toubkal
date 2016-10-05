@@ -81,7 +81,7 @@ describe 'Event_Emitter test suite:', ->
       expect( emitter.listeners_count( 'complete' ) ).to.be 1
       
     it 'should allow to emit the "complete" event', ->
-      expect( emitter._emit_event( "complete", [ { _t: { more: false } } ] ) ).to.be emitter
+      expect( emitter.emit_apply( "complete", [ { _t: { more: false } } ] ) ).to.be emitter
       expect( data ).to.be.eql [ { a: 1 } ]
       expect( complete ).to.be.eql [ { _t: { more: false } } ]
     
@@ -92,7 +92,7 @@ describe 'Event_Emitter test suite:', ->
       expect( emitter_2.listeners_count( 'data' ) ).to.be 1
     
     it 'should then allow to emit the "complete" event with calling the complete listener with no effect', ->
-      expect( emitter._emit_event( "complete", [ { id: 1 } ] ) ).to.be emitter
+      expect( emitter.emit_apply( "complete", [ { id: 1 } ] ) ).to.be emitter
       expect( data ).to.be.eql [ { a: 1 } ]
       expect( complete ).to.be.eql [ { _t: { more: false } } ]
     
