@@ -98,9 +98,11 @@ module.exports = function( servers ) {
     
     .filter( [ { extension: 'json' } ] )
     
+    .to_uri()
+    
     .map( function( table ) {
       var path = table.path
-        , flow = path.split( '.' )
+        , flow = table.uri.slice( 1 ).split( '.' )
       ;
       
       flow.pop(); // remove 'json' extension
@@ -200,8 +202,10 @@ module.exports = function( servers ) {
     
     .filter( [ { extension: 'js', depth: 2 } ] )
     
+    .to_uri()
+    
     .filter( function( file ) {
-      return file.path.split( '/' ).pop() == 'data.js';
+      return file.uri.split( '/' ).pop() == 'data.js';
     } )
     
     .trace( 'data processors' )
@@ -215,7 +219,7 @@ module.exports = function( servers ) {
   
   rs
     .Compose( 'data_processor', function( source, that, options ) {
-      var data_processor = './' + that.path
+      var data_processor = './' + that.uri
         , path           = require.resolve( data_processor )
         , processor
         , output
@@ -256,7 +260,7 @@ module.exports = function( servers ) {
       } // hijack()
     } ) // data_processor() pipelet
   ;
-    
+  
   rs
     .dispatch( rs.output( 'data_processors', scope ), pipeline, { loop: true } )
   ;
