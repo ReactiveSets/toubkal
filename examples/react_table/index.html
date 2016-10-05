@@ -24,6 +24,46 @@
   <script src="/node_modules/toubkal/lib/react/react.js" type="text/javascript"></script>
   
   <title>React Table</title>
+  <style>
+  table {
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  table tr {
+    padding: .35em;
+  }
+  
+  table th,
+  table td {
+    padding: .625em;
+  }
+  
+  @media screen and (max-width: 600px) {
+    table thead {
+      display: none;
+    }
+    
+    table tr {
+      display: block;
+      margin-bottom: 15px;
+    }
+    
+    table td {
+      -border-bottom: 1px solid #ddd;
+      display: block;
+      text-align: right;
+    }
+    
+    table td:before {
+      content: attr(aria-label);
+      float: left;
+    }
+  }
+  </style>
   
 </head>
 
