@@ -210,16 +210,12 @@ module.exports = function( servers ) {
     
     .trace( 'data processors' )
     
-    .alter( function( pipeline ) { // hack to split updates into adds and removes to test dispatch cleanup on remove
-      pipeline.pipelet = 'data_processor';
-    } )
-    
     .set_output( 'data_processors', scope )
   ;
   
   rs
     .Compose( 'data_processor', function( source, that, options ) {
-      var data_processor = './' + that.uri
+      var data_processor = '.' + that.uri
         , path           = require.resolve( data_processor )
         , processor
         , output
@@ -235,30 +231,21 @@ module.exports = function( servers ) {
         log( 'failed to load data processor:', data_processor, ', error:', e );
       }
       
-      hijack( source._input, 'remove_source', remove );
+      // Remove processor on source disconnection from dispatcher
+      source._input.once( 'remove_source', remove_processor );
       
       return output;
       
-      function remove( output, options ) {
+      function remove_processor( output, options ) {
         de&&ug( 'removing data processor:', data_processor );
         
+        // processor cleanup
         processor && processor.remove && processor.remove( options );
         
+        // remove from require cache to allow reload
         delete require.cache[ path ];
-      } // remove()
-      
-      function hijack( that, method, f ) {
-        var m =  that[ method ];
-        
-        that[ method ] = function() {
-          var parameters = Array.prototype.slice.call( arguments, 0 );
-          
-          f.apply( that, parameters );
-          
-          m.apply( that, parameters );
-        }
-      } // hijack()
-    } ) // data_processor() pipelet
+      } // remove_processor()
+    } ) // data_processor()
   ;
   
   rs
@@ -266,6 +253,6 @@ module.exports = function( servers ) {
   ;
   
   function pipeline( source, options ) {
-    return source[ this.pipelet ].call( source, this, options );
+    return source.data_processor( this, options );
   } // data_processor()
 } // module.exports
