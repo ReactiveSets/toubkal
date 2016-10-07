@@ -1272,19 +1272,30 @@
 /* --------------------------------------------------------------------------
     @term input
     
-    @short
+    @short @@[Plug]plug processing @@upstream @@[events]event
+    
+    @description
+    Implemented using base class Input().
 */
 
 /* --------------------------------------------------------------------------
     @term output
     
-    @short
+    @short @@[Plug]plug @@[emitting]emit @@downstream @@[events]event
+    
+    @description
+    Implemented using base class Output().
 */
 
 /* --------------------------------------------------------------------------
     @term plug
     
-    @short
+    @short Processes or @@[emits]emit @@[events]event
+    
+    @description
+    Can be an @@input or @@output plug.
+    
+    Implemented using base class Plug().
 */
 
 /* --------------------------------------------------------------------------
