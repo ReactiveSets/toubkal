@@ -1,5 +1,5 @@
 ###
-    require_resolve.coffee
+    require.coffee
 
     Copyright (c) 2013-2016, Reactive Sets
 
@@ -29,11 +29,11 @@ check  = utils.check
 rs     = utils.rs
 clone  = rs.RS.extend.clone
 
-require '../../lib/server/require_resolve.js'
+require '../../lib/server/require.js'
 
 # ----------------------------------------------------------------------------------------------
-# Test File pipelets
-# ------------------
+# Test require pipelets
+# ---------------------
 
 describe 'require_resolve():', ->
   modules = rs
