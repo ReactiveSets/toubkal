@@ -45,7 +45,7 @@ require './join'
 
 require './json'
 require './transforms'
-require './require_resolve'
+require './require'
 require './file'
 require './html_parse'
 require './html_serialize'
