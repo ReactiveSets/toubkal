@@ -11,7 +11,7 @@
     "files": [
       "file",
       "exif",
-      "require_resolve",
+      "require",
       "toubkal_acorn",
       "parse_documentation",
       "markdown.js",
