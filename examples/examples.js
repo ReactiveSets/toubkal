@@ -196,8 +196,6 @@ module.exports = function( servers ) {
     
     .filter( [ { base: 'data.js', depth: 2 } ] )
     
-    .to_uri()
-    
     .alter( function( _ ) { _.module = 'require_pipeline' } )
     
     .trace( 'required pipelines' )
@@ -208,23 +206,30 @@ module.exports = function( servers ) {
     
     // ToDo: move require_pipeline() to lib/server/require.js
     .Compose( 'require_pipeline', function( source, module, options ) {
-      var name      = '.' + module.uri
+      var uri  = RS.path_to_uri( module.path )
+        , name
         , path
       ;
       
-      de&&ug( 'require_pipeline(),', name, 'options:', options );
-      
-      try {
-        path = require.resolve( name );
+      if( uri ) {
+        name = '.' + uri;
         
-        // Clear require cache on source disconnection from dispatcher
-        source._input.once( 'remove_source', clear_require_cache );
+        de&&ug( 'require_pipeline(),', name, 'options:', options );
         
-        // Require and create pipeline
-        return require( path )( source, options );
-      } catch( e ) {
-        // ToDo: emit error to global error dataflow
-        log( 'failed to load pipeline module:', name, ', error:', e, e.stack );
+        try {
+          path = require.resolve( name );
+          
+          console.log( path, module.path );
+          
+          // Clear require cache on source disconnection from dispatcher
+          source._input.once( 'remove_source', clear_require_cache );
+          
+          // Require and create pipeline
+          return require( path )( source, module, options );
+        } catch( e ) {
+          // ToDo: emit error to global error dataflow
+          log( 'failed to load pipeline module:', name, ', error:', e, e.stack );
+        }
       }
       
       function clear_require_cache() {

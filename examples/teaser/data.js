@@ -22,14 +22,14 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.    
 */
-module.exports = function processor( source, options ) {
+module.exports = function processor( source ) {
   'use strict';
   
   return source
     .flow( 'teaser/sales' )
     
     .alter( function( sale ) {
-      sale.year = parseInt( sale.date.substr( 0, 4 ), 10 ) + 1;
+      sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
     }, { name: 'alter teaser/sales_year' } )
     
     //.trace( 'teaser/sales_year' )

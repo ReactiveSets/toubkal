@@ -22,7 +22,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.    
 */
-module.exports = function( source, options ) {
+module.exports = function( source ) {
   'use strict';
   
   var flow = 'chat/chat_message';
