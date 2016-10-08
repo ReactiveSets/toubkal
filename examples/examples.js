@@ -120,10 +120,12 @@ module.exports = function( servers ) {
     
     .delivers( '/table' )
     
+    .alter( function( _ ) { _.module = 'table' } )
+    
     .set_output( 'tables', scope )
     
     // socket.io clients
-    .Singleton( 'clients', function( source, options ) {
+    .Singleton( 'clients', function( source, module, options ) {
       return source
         .optimize( { key: [ 'flow', 'id' ] } )
         
@@ -135,6 +137,8 @@ module.exports = function( servers ) {
             .through( this.socket, options )
           ;
         }, { single: true } )
+        
+        .delivers( 'chat/chat_message_updates' )
       ;
     } )
     
@@ -170,89 +174,76 @@ module.exports = function( servers ) {
     .clients()
   ;
   
-  // Serve database to socket.io clients
+  // Define table module
   rs
-    .Singleton( 'database', function( source, tables, options ) {
+    .Compose( 'table', function( source, table, options ) {
+      var flow = table.name;
+      
       return source
-        .dispatch( tables, function( source, options ) {
-          var flow = this.name;
-          
-          return source
-            .flow( flow + '_updates' )
-            
-            .configuration( { 'filepath': this.path, 'flow': flow, 'base_directory': __dirname  } )
-            
-            //.trace( 'table ' + flow )
-            .set_flow( flow )
-          ;
-        } )
+        .flow( flow + '_updates' )
+        
+        .configuration( { 'filepath': table.path, 'flow': flow, 'base_directory': __dirname  } )
+        
+        .trace( 'table ' + flow )
+        .set_flow( flow )
       ;
     } )
-    
-    .log_namespace( 'after singleton' )
-    
-    .database( rs.output( 'tables', scope ) )
-    
-    .clients()
   ;
   
   // Require examples' data processors
   rs
     .directory_entries()
     
-    .filter( [ { extension: 'js', depth: 2 } ] )
+    .filter( [ { base: 'data.js', depth: 2 } ] )
     
     .to_uri()
     
-    .filter( function( file ) {
-      return file.uri.split( '/' ).pop() == 'data.js';
-    } )
+    .alter( function( _ ) { _.module = 'require_pipeline' } )
     
-    .trace( 'data processors' )
+    .trace( 'required pipelines' )
     
-    .set_output( 'data_processors', scope )
-  ;
-  
-  rs
-    .Compose( 'data_processor', function( source, that, options ) {
-      var data_processor = '.' + that.uri
-        , path           = require.resolve( data_processor )
-        , processor
-        , output
+    .union( [ rs.output( 'tables', scope ), rs.set( [ { path: 'clients', module: 'clients' } ] ) ] )
+    
+    .set_output( 'modules', scope )
+    
+    // ToDo: move require_pipeline() to lib/server/require.js
+    .Compose( 'require_pipeline', function( source, module, options ) {
+      var name      = '.' + module.uri
+        , path
       ;
       
-      de&&ug( 'requiring data processor:', data_processor );
+      de&&ug( 'require_pipeline(),', name, 'options:', options );
       
       try {
-        processor = require( path );
+        path = require.resolve( name );
         
-        output = processor( rs, options );
+        // Clear require cache on source disconnection from dispatcher
+        source._input.once( 'remove_source', clear_require_cache );
+        
+        // Require and create pipeline
+        return require( path )( source, options );
       } catch( e ) {
-        log( 'failed to load data processor:', data_processor, ', error:', e );
+        // ToDo: emit error to global error dataflow
+        log( 'failed to load pipeline module:', name, ', error:', e, e.stack );
       }
       
-      // Remove processor on source disconnection from dispatcher
-      source._input.once( 'remove_source', remove_processor );
-      
-      return output;
-      
-      function remove_processor( output, options ) {
-        de&&ug( 'removing data processor:', data_processor );
-        
-        // processor cleanup
-        processor && processor.remove && processor.remove( options );
+      function clear_require_cache() {
+        de&&ug( 'clear_require_cache()', name );
         
         // remove from require cache to allow reload
         delete require.cache[ path ];
-      } // remove_processor()
-    } ) // data_processor()
+      } // clear_require_cache()
+    } ) // require_pipeline()
   ;
   
+  // Application loop
   rs
-    .dispatch( rs.output( 'data_processors', scope ), pipeline, { loop: true } )
+    .dispatch( rs.output( 'modules', scope ), module, { loop: true } )
   ;
   
-  function pipeline( source, options ) {
-    return source.data_processor( this, options );
-  } // data_processor()
+  function module( source, options ) {
+    de&&ug( 'start module:', this, 'options:', options );
+    
+    return source[ this.module ].call( source, this, options );
+  } // module()
 } // module.exports

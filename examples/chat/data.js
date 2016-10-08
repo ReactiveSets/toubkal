@@ -22,25 +22,19 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.    
 */
-module.exports = function( rs, options ) {
+module.exports = function( source, options ) {
   'use strict';
   
-  var clients = rs.clients()
-    , flow = 'chat/chat_message'
-  ;
+  var flow = 'chat/chat_message';
   
-  clients
+  return source
     
     .flow( flow + '_updates' )
     
-    .alter( function( chat ) {
-      delete chat.flow;
-    } )
+    .alter( function( chat ) { delete chat.flow } )
     
     .set()
     
     .set_flow( flow )
-    
-    .through( clients )
   ;
 };

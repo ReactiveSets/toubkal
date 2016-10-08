@@ -22,42 +22,18 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.    
 */
-module.exports = function processor( rs, options ) {
+module.exports = function processor( source, options ) {
   'use strict';
   
-  var scope = {} // a local scope, automatically discarded when processor is removed
-    , database = rs.database()
-    , clients  = rs.clients()
-  ;
-  
-  database
+  return source
     .flow( 'teaser/sales' )
     
-    .set_output( 'from_database', scope ) // keep track of connection to database for removal
-    
     .alter( function( sale ) {
-      sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
+      sale.year = parseInt( sale.date.substr( 0, 4 ), 10 ) + 1;
     }, { name: 'alter teaser/sales_year' } )
     
     //.trace( 'teaser/sales_year' )
     
     .set_flow( 'teaser/sales_year' )
-    
-    .set_output( 'to_clients', scope ) // keep track of connection to clients for removal
-    
-    .through( clients, options )
   ;
-  
-  processor.remove = function( options ) {
-    rs
-      .output( 'from_database', scope )
-      ._remove_source( database, options, function() { // will remove data to clients
-        // Disconnected from database, clients updated with removed data
-        
-        rs.output( 'to_clients', scope )
-          ._remove_destination( clients, options ); // fetching will return nothing because we are disconnected from database
-        ;
-      } )
-    ;
-  };
 }; // processor()
