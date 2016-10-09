@@ -833,12 +833,16 @@ Work In Progress.
 
 - Server pipelets:
   - require_pipeline(): Load, and auto-unload, a module exporting a Toubkal pipeline
+  - path_relative(): Alter path using node path.relative()
+  - path_base(): Prepend base directory to relative ```"path"```, resolve ```"~"``` to home directory
   - Based on the piexif library, handling JPEG EXIF:
     - piexif_parse(): Parses content EXIF using the piexifjs library
     - piexif_insert(): Inserts EXIF into content, using the piexif library
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------
+path_relative()                     | Alter path using node path.relative()
+path_base()                         | Prepend base directory to relative ```"path"```, resolve ```"~"``` to home directory
 require_pipeline()                  | Load, and auto-unload, a module exporting a Toubkal pipeline
 socket_io_synchronizing()           | Emits start of synchronization events, collects synchronized events
 socket_io_state_changes()           | Pipelet socket_io_server() connections' state changes
