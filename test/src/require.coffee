@@ -78,7 +78,14 @@ describe 'require_resolve():', ->
       expect( name     ).to.be.eql 'node-uuid/uuid'
       expect( uuid.uri ).to.be.eql '/node_modules/node-uuid/uuid.js'
   
-  it 'should throw when adding a module which cannot be resolved', ->
-    f = -> modules._add [ { name: 'not-exists' } ]
+  it 'should emit nothing when adding a module which cannot be resolved', ( done ) ->
+    modules._add [ { name: 'not-exists' } ]
     
-    expect( f ).to.throwException()
+    resolved._fetch_all ( values ) -> check done, () ->
+      expect( values.length ).to.be.eql 1
+      
+      uuid = values[ 0 ]
+      name = uuid.name
+      path = uuid.path.replace( /\\/g, '/' )
+      
+      expect( name     ).to.be.eql 'node-uuid/uuid'
