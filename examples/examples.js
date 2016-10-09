@@ -198,47 +198,14 @@ module.exports = function( servers ) {
     
     .alter( function( _ ) { _.module = 'require_pipeline' } )
     
+    // Make absolute path for pipelet require_pipeline()
+    .path_base( __dirname )
+    
     .trace( 'required pipelines' )
     
     .union( [ rs.output( 'tables', scope ), rs.set( [ { path: 'clients', module: 'clients' } ] ) ] )
     
     .set_output( 'modules', scope )
-    
-    // ToDo: move require_pipeline() to lib/server/require.js
-    .Compose( 'require_pipeline', function( source, module, options ) {
-      var uri  = RS.path_to_uri( module.path )
-        , name
-        , path
-      ;
-      
-      if( uri ) {
-        name = '.' + uri;
-        
-        de&&ug( 'require_pipeline(),', name, 'options:', options );
-        
-        try {
-          path = require.resolve( name );
-          
-          console.log( path, module.path );
-          
-          // Clear require cache on source disconnection from dispatcher
-          source._input.once( 'remove_source', clear_require_cache );
-          
-          // Require and create pipeline
-          return require( path )( source, module, options );
-        } catch( e ) {
-          // ToDo: emit error to global error dataflow
-          log( 'failed to load pipeline module:', name, ', error:', e, e.stack );
-        }
-      }
-      
-      function clear_require_cache() {
-        de&&ug( 'clear_require_cache()', name );
-        
-        // remove from require cache to allow reload
-        delete require.cache[ path ];
-      } // clear_require_cache()
-    } ) // require_pipeline()
   ;
   
   // Application loop
