@@ -832,12 +832,14 @@ Work In Progress.
   - application_loop(): Processes an application from a dataflow of components and input dataflows
 
 - Server pipelets:
+  - require_pipeline(): Load, and auto-unload, a module exporting a Toubkal pipeline
   - Based on the piexif library, handling JPEG EXIF:
     - piexif_parse(): Parses content EXIF using the piexifjs library
     - piexif_insert(): Inserts EXIF into content, using the piexif library
 
 New Pipelets                        | Short Description
 ------------------------------------|--------------------------------------------------------------
+require_pipeline()                  | Load, and auto-unload, a module exporting a Toubkal pipeline
 socket_io_synchronizing()           | Emits start of synchronization events, collects synchronized events
 socket_io_state_changes()           | Pipelet socket_io_server() connections' state changes
 fetched_differences()               | Emits differences (A - B) between two fetched sets A then B
