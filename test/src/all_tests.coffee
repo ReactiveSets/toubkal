@@ -55,6 +55,8 @@ require './query_selector'
 require './mailer'
 require './server'
 
+###
 try
   require.resolve 'zombie'
   require './ui'
+###
