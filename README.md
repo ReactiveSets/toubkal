@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1619 automated tests*
+*1620 automated tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -452,9 +452,9 @@ front-end, or as a full-stack framework.
 
 #### Integrated database and model
 
-Persistance is being implemented in version 0.3 while charding will be in version 0.7.
+Persistance was implemented in version 0.3.
 
-Toubkal features a chardable document database with joins, aggregates, filters and
+Toubkal features a document database model with joins, aggregates, filters and
 transactions with eventual consistency allowing both normalized and denormalized
 schemes.
 
@@ -467,7 +467,7 @@ The bulk of the core documentation is currently embedded in the code of
 and other sources for other pipelets.
 
 We plan on extracting and completing this documentation to provide the following
-manuals from version 0.5:
+manuals from version 0.4:
 
 - Toubkal Introduction
 - Toubkal Gloasary of Terms
@@ -480,19 +480,35 @@ manuals from version 0.5:
 
 - Toubkal Internals
 
+To view this work in progress:
+```bash
+  node site/server.js > site.out
+```
+
+Then point a web browser at [localhost on port 8082](http://localhost:8082/).
+
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1619 continuous integration tests for the Toubkal core and framework
-pipelets that run after every commit on Travis CI under node version 0.10. We no longer test version
-0.6 and 0.8 since Travis seems to have issues with these. Version 0.12 is not currently
-tested for a problem with the zombie headless test framework.
+We have curently developped 1620 continuous integration tests for the Toubkal
+core and framework pipelets that run after every commit on Travis CI under
+node version 4.6.0 which is the current LTS version.
 
-Our continuous integration process also requires that before each commit the developer
-runs these tests so travis usually passes all tests. In the event that a test does not
-pass the top priority is to fix the test before anything else.
+Our continuous integration process also requires that before each commit the
+developer runs these tests so travis usually passes all tests. In the event
+that a test does not pass the top priority is to fix the test before anything
+else.
 
-We also do manual testing on the following web browsers: Chrome (latest), Firefox
-(latest), IE 9, 10, and 11.
+These tests also pass on Windows under [Cygwin](https://www.cygwin.com/)
+which although not officially supported by node, works with some caveats.
+In any case, one should expect Toubkal applications to run equally well
+on Windows and Linux.
+
+We also do manual testing on the following web browsers:
+- Chrome (latest),
+- Firefox (latest),
+- IE 11.
+
+We also update dependencies soon after new versions are released.
 
 ## Installation
 
@@ -510,7 +526,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1619 of 1619 tests
+-> passed 1620 of 1620 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -660,7 +676,7 @@ First Beta version with API almost finalized.
 
 Work In Progress.
 
-- 1619 continuous integration tests
+- 1620 continuous integration tests
 
 #### Main Goals:
 
