@@ -251,7 +251,7 @@ describe 'Controls Test Suite', ->
         expect( values ).to.be.eql [ { id: 4, label: 'Rastafari', selected: true } ]
     
     it 'after "Christianity" radio check, religions should be equal to  { id: 2, label: "Christianity"  }', ( done ) ->
-      browser.choose( '#religions input[value="2"]' )
+      browser.choose( '#religions-2' )
       
       browser.window.religions._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [ { id: 2, label: 'Christianity'  } ]
@@ -347,8 +347,8 @@ describe 'Controls Test Suite', ->
     
     it 'after "Cooking" check and "Stamp / Coin Collection" uncheck, hobbies should be equal to result', ( done ) ->
       browser
-        .check  ( '#hobbies input[value="5"]' )
-        .uncheck( '#hobbies input[value="6"]' )
+        .check  ( '#hobbies-5' )
+        .uncheck( '#hobbies-6' )
       
       browser.window.hobbies._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [
