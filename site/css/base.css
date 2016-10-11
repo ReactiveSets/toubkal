@@ -8,6 +8,11 @@ body {
   color:#464f51;
 }
 
+pre {
+  color: white;
+  background-color: #333;
+}
+
 .chat-form {
   display: block;
   position: fixed;
