@@ -60,7 +60,7 @@ module.exports = function( servers ) {
             && entry.base.substring( 0, 2 ) != '.#'
         ;
       }
-    } )
+    } ) // directory_entries()
     
     .set( [ { path: '' } ] )
     
@@ -89,6 +89,21 @@ module.exports = function( servers ) {
     // Serve assets to http servers
     .serve( servers )
   ;
+  
+  // Socket.io client
+  var client = {};
+  
+  var client_module = rs
+    .directory_entries()
+    .filter( [ { base: 'client.js', depth: 1 } ] )
+    .path_join( __dirname )
+    .alter( function( _ ) { _.client = client } )
+    .trace( 'client module' )
+  ;
+  
+  rs.dispatch( client_module, function( source, options ) {
+    source.require_pipeline( this, options );
+  } );
   
   /* ------------------------------------------------------------------------------------
      The database, made of all found json files
@@ -133,9 +148,7 @@ module.exports = function( servers ) {
         
         .dispatch( servers.socket_io_clients(), function( source, options ) {
           
-          return source
-            .through( this.socket, options )
-          ;
+          return client.handler( source, this, options );
         }, { single: true } )
         
         .delivers( 'chat/chat_message_updates' )
@@ -194,16 +207,17 @@ module.exports = function( servers ) {
   rs
     .directory_entries()
     
-    .filter( [ { base: 'data.js', depth: 2 } ] )
-    
-    .alter( function( _ ) { _.module = 'require_pipeline' } )
+    .filter( [
+      { base: 'data.js', depth: 2 },
+      { type: 'file', directory: 'pipelines', extension: 'js' }
+    ] )
     
     // Make absolute path for pipelet require_pipeline()
-    .path_base( __dirname )
-    
-    .trace( 'required pipelines' )
+    .path_join( __dirname )
     
     .union( [ rs.output( 'tables', scope ), rs.set( [ { path: 'clients', module: 'clients' } ] ) ] )
+    
+    .trace( 'required pipelines' )
     
     .set_output( 'modules', scope )
   ;
@@ -216,6 +230,6 @@ module.exports = function( servers ) {
   function module( source, options ) {
     de&&ug( 'start module:', this, 'options:', options );
     
-    return source[ this.module ].call( source, this, options );
+    return source[ this.module || 'require_pipeline' ].call( source, this, options );
   } // module()
 } // module.exports
