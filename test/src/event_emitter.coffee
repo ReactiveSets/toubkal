@@ -68,7 +68,8 @@ describe 'Event_Emitter test suite:', ->
       expect( emitter_2.listeners( 'data' ) ).to.be.eql [ data_listener ]
     
     it 'should allow to emit a "data" event that sends values to the listener', ->
-      expect( emitter.emit( 'data', { a: 1 } ) ).to.be emitter
+      emitter.emit 'data', { a: 1 }
+      
       expect( data ).to.be.eql [ { a: 1 } ]
     
     it 'should allow to set a "complete" listener once', ->
@@ -81,7 +82,8 @@ describe 'Event_Emitter test suite:', ->
       expect( emitter.listeners_count( 'complete' ) ).to.be 1
       
     it 'should allow to emit the "complete" event', ->
-      expect( emitter.emit_apply( "complete", [ { _t: { more: false } } ] ) ).to.be emitter
+      emitter.emit_apply "complete", [ { _t: { more: false } } ]
+      
       expect( data ).to.be.eql [ { a: 1 } ]
       expect( complete ).to.be.eql [ { _t: { more: false } } ]
     
@@ -92,8 +94,53 @@ describe 'Event_Emitter test suite:', ->
       expect( emitter_2.listeners_count( 'data' ) ).to.be 1
     
     it 'should then allow to emit the "complete" event with calling the complete listener with no effect', ->
-      expect( emitter.emit_apply( "complete", [ { id: 1 } ] ) ).to.be emitter
+      emitter.emit_apply "complete", [ { id: 1 } ]
+      
       expect( data ).to.be.eql [ { a: 1 } ]
       expect( complete ).to.be.eql [ { _t: { more: false } } ]
     
+    it 'should allow to remove an event listener', ->
+      expect( emitter_2.listeners_count( 'data' ) ).to.be 1
+      
+      emitter_2.remove_listener 'data', data_listener
+      
+      expect( emitter_2.listeners_count( 'data' ) ).to.be 0
+    
+    it 'should allow to add and remove event listeners in listener functions', ->
+      data = 0
+      
+      listener_1 = () ->
+        data += 10
+        
+        emitter.on "test", listener_5
+        
+        emitter.remove_listener "test", listener_4
+      
+      listener_2 = () ->
+        data *= 2
+        
+        emitter.remove_listener "test", listener_2
+      
+      listener_3 = () ->
+        data += 1
+        
+        emitter.remove_listener "test", listener_1
+      
+      listener_4 = () -> data /= 0 # removed by listener_1, should never run
+      
+      listener_5 = () -> data *= 3 # added by listener_1
+      
+      emitter.on "test", listener_1
+      emitter.on "test", listener_2
+      emitter.on "test", listener_3
+      emitter.on "test", listener_4
+      
+      expect( emitter.listeners_count( 'test' ) ).to.be 4
+      
+      emitter.emit "test"
+      
+      expect( data ).to.be 63
+      
+      expect( emitter.listeners_count( 'test' ) ).to.be 2
+      
   # RS.Event_Emitter()
