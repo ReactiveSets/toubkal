@@ -819,9 +819,11 @@ Work In Progress.
   - Compose()
   - Singleton()
   - Multiton()
-  - trough()
+  - through()
   - set_output()
   - output()
+  - remove_source_with()
+  - remove_destination_with()
 
 - Pipelets manipulating operations:
   - adds(): filter add operations, useful when these have a strict Create semantic
@@ -855,8 +857,10 @@ Work In Progress.
     - piexif_parse(): Parses content EXIF using the piexifjs library
     - piexif_insert(): Inserts EXIF into content, using the piexif library
 
-New Pipelets                        | Short Description
+New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+remove_destination_with()           | Disconnect pipelet's first destination when source disconnects
+remove_source_with()                | Disconnect pipelet's input when source disconnects
 path_relative()                     | Alter path using node path.relative()
 path_join()                         | Prepend base directories to relative ```"path"```, resolve ```"~"``` to home directory
 require_pipeline()                  | Load, and auto-unload, a module exporting a Toubkal pipeline
