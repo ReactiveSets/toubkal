@@ -25,16 +25,17 @@
 module.exports = function( servers ) {
   'use strict';
   
-  var rs          = servers.create_namespace( 'examples', true ) // child namespace
-    , RS          = rs.RS
-    , extend      = RS.extend
-    , log         = RS.log.bind( null, 'examples' )
-    , de          = true
-    , ug          = log
-    , assets      = require( 'toubkal/lib/server/client_assets.js' )
-    , toubkal_min = assets.toubkal_min()
-    , react_js    = assets.react.watch()
-    , scope       = {}
+  var rs                 = servers.create_namespace( 'examples', true ) // child namespace
+    , RS                 = rs.RS
+    , extend             = RS.extend
+    , log                = RS.log.bind( null, 'examples' )
+    , de                 = true
+    , ug                 = log
+    , assets             = require( 'toubkal/lib/server/client_assets.js' )
+    , toubkal_min        = rs.toubkal_min()
+    , react_js           = assets.react.watch()
+    , source_map_support = rs.source_map_support_min()
+    , scope              = {}
   ;
   
   // servers is the virtual servers used by examples.js only
@@ -84,7 +85,7 @@ module.exports = function( servers ) {
     
     .watch( { base_directory: __dirname } )
     
-    .union( [ toubkal_min, react_js ] )
+    .union( [ toubkal_min, source_map_support, react_js ] )
     
     // Serve assets to http servers
     .serve( servers )
