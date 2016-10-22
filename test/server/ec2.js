@@ -178,9 +178,8 @@ var spot_prices_stats = zones
   
   // ._on( 'complete', function() { de&&ug( 'complete after delay()' ) } )
   
-  .alter( function( price, i ) {
-    if ( i
-      && previous.AvailabilityZone   == price.AvailabilityZone
+  .alter( function( price ) {
+    if ( previous.AvailabilityZone   == price.AvailabilityZone
       && previous.ProductDescription == price.ProductDescription
       && previous.InstanceType       == price.InstanceType
     ) {
