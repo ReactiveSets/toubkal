@@ -41,7 +41,7 @@
     "es5-shim"                     : "4.5.9",
     "htmlparser2"                  : "3.9.2",
     "css-select"                   : "1.2.0",
-    "url-pattern"                  : "1.0.1",
+    "url-pattern"                  : "1.0.2",
     "piexifjs"                     : "1.0.0"
   },
   
