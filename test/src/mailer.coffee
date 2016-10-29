@@ -135,8 +135,8 @@ describe 'send_mail():', ->
     } ] ]
     
     expect( transport ).to.be.eql {
-      transport: 'SMTP'
-      options: { password: '*' }
+      transport: { password: '*' }
+      options: null
     }
   
   it 'should have closed previous transport', ->
