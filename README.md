@@ -859,6 +859,7 @@ Work In Progress.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+debug()                             | Conditional trace()
 source_map_support_min()            | Provides minified asset for browser source map support
 remove_destination_with()           | Disconnect pipelet's first destination when source disconnects
 remove_source_with()                | Disconnect pipelet's input when source disconnects
