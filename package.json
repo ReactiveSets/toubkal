@@ -52,7 +52,7 @@
     "expect.js"                    : "0.3.1",
     "zombie"                       : "4.2.1",
     "mocha-unfunk-reporter"        : "0.4.0",
-    "forever"                      : "0.15.2",
+    "forever"                      : "0.15.3",
     "express"                      : "4.14.0",
     "passport-twitter"             : "1.0.4",
     "passport-facebook"            : "2.1.1",
