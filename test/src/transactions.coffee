@@ -167,28 +167,25 @@ describe 'Transactions test suite', ->
     
     describe 'Options.last_fork_tag( options )', ->
       last_fork_tag = Options.last_fork_tag
-    
-      it 'should return undefined if options is undefined', ->
+      
+      it 'should return undefined if there is no transaction', ->
         expect( last_fork_tag() ).to.be undefined
       
-      it 'should return undefined if options has no transaction', ->
+      it 'should return undefined there is a transaction with no forks', ->
         expect( last_fork_tag( {} ) ).to.be undefined
       
-      it 'should return undefined if options has a transaction but no forks', ->
-        expect( last_fork_tag( { _t: {} } ) ).to.be undefined
-      
-      it 'should return 0 if options has a transaction with empty forks', ->
-        expect( last_fork_tag( { _t: { forks: [] } } ) ).to.be 0
+      it 'should return 0 if there is a transaction with empty forks', ->
+        expect( last_fork_tag( { forks: [] } ) ).to.be 0
       
       it 'should return fork tag if options has a transaction with a fork tag', ->
         fork_tag = 'a tag';
         
-        expect( last_fork_tag( { _t: { forks: [ fork_tag ] } } ) ).to.be fork_tag
+        expect( last_fork_tag( { forks: [ fork_tag ] } ) ).to.be fork_tag
       
-      it 'should return last fork tag if options has a transaction with more than one fork tag', ->
+      it 'should return last fork tag if there is a transaction with more than one fork tag', ->
         fork_tag = 'a tag';
         
-        expect( last_fork_tag( { _t: { forks: [ '', '', fork_tag ] } } ) ).to.be fork_tag
+        expect( last_fork_tag( { forks: [ 'a first tag', 'a second tag', fork_tag ] } ) ).to.be fork_tag
      # last_fork_tag( options )
      
      describe 'Options.add_fork_tag( options, tag )', ->
