@@ -957,8 +957,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should have no source terminated', ->
           expect( input_transaction.terminated_count ).to.be 0
         
-        it 'input_transaction should be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'input_transaction should be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
           
         it 'output_1_transactions should have one input', ->
           expect( output_1_transactions.count ).to.be 1
@@ -1000,8 +1000,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should now have one terminated source output', ->
           expect( input_transaction.terminated_count ).to.be 1
         
-        it 'should still be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'should still be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
         
         it 'output_1_transactions should have zero inputs', ->
           expect( output_1_transactions.count ).to.be 0
@@ -1131,8 +1131,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should have no source terminated', ->
           expect( input_transaction.terminated_count ).to.be 0
         
-        it 'input_transaction should be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'input_transaction should be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
           
         it 'output_1_transactions should have one input', ->
           expect( output_1_transactions.count ).to.be 1
@@ -1174,8 +1174,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should now have one terminated source output', ->
           expect( input_transaction.terminated_count ).to.be 1
         
-        it 'should still be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'should still be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
         
         it 'output_1_transactions should have zero inputs', ->
           expect( output_1_transactions.count ).to.be 0
@@ -1304,8 +1304,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should have no source terminated', ->
           expect( input_transaction.terminated_count ).to.be 0
         
-        it 'input_transaction should be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'input_transaction should be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
           
         it 'output_1_transactions should have one input', ->
           expect( output_1_transactions.count ).to.be 1
@@ -1347,8 +1347,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should now have one terminated source output', ->
           expect( input_transaction.terminated_count ).to.be 1
         
-        it 'should still be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'should still be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
         
         it 'output_1_transactions should have zero inputs', ->
           expect( output_1_transactions.count ).to.be 0
@@ -1481,8 +1481,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should have no source terminated', ->
           expect( input_transaction.terminated_count ).to.be 0
         
-        it 'input_transaction should be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'input_transaction should be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
           
         it 'output_1_transactions should have one input', ->
           expect( output_1_transactions.count ).to.be 1
@@ -1524,8 +1524,8 @@ describe 'Transactions test suite', ->
         it 'input_transaction should now have one terminated source output', ->
           expect( input_transaction.terminated_count ).to.be 1
         
-        it 'should still be tagged', ->
-          expect( input_transaction.tagged ).to.be true
+        it 'should still be concurrent', ->
+          expect( input_transaction.concurrent ).to.be true
         
         it 'output_1_transactions should have zero inputs', ->
           expect( output_1_transactions.count ).to.be 0
