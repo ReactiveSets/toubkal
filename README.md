@@ -127,7 +127,7 @@ consumption growth.
 
 The power of Internet server is now mostly increasing through the addition of CPU cores,
 meaning that the key to efficient usage of server resources must shift from
-raw-single-thread performence to high concurency and parallelism performance. This in
+raw-single-thread performence to high concurrency and parallelism performance. This in
 turn requires new programming patterns to keep, or increase programmers' productivity.
 
 Also, one must realize that the bulk of the vast majorty of today's web applications is

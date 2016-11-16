@@ -41,7 +41,7 @@
     - Pipelines
     - Reactive Sets
     - Reactive Queries
-    - Concurent Dataflow Synchronization using Transactions
+    - Concurrent Dataflow Synchronization using Transactions
     - Error Routing and Reverting
     
     #### Reactive Sets
@@ -65,10 +65,10 @@
     as dataflows.
     
     
-    #### Concurent Dataflow Synchronization using Transactions
+    #### Concurrent Dataflow Synchronization using Transactions
     
     Transactions are a unique and essential feature of Toubkal allowing synchronization
-    of concurent dataflows and providing consistency information to downstream pipelets.
+    of concurrent dataflows and providing consistency information to downstream pipelets.
     
     The ending of transactions provide an equivalent to imperative programming end-of-loop
     information.
@@ -362,7 +362,7 @@
     terminates more than once, an Error may be thrown. This error can be due to either:
     - improper handling of transactions by a pipelet which should never happen if transactions
     are handled using the transactions API.
-    - untagged forks when concurent transactions reunite downstream at a @@union()
+    - untagged forks when concurrent transactions reunite downstream at a @@union()
     
     Transactions must all terminate as non-terminated transactions could cause memory leaks.
     A future pipelet may force-terminate transactions on timeout, possibly generating errors
@@ -1242,11 +1242,11 @@
 /* --------------------------------------------------------------------------
     @term synchronization
     
-    @short The coordination of @@concurent @@[pipelines]pipeline @@events
+    @short The coordination of @@concurrent @@[pipelines]pipeline @@events
 */
 
 /* --------------------------------------------------------------------------
-    @term concurent
+    @term concurrent
     
     @short Re-uniting from a @@[forked]fork @@upstream @@transaction
 */

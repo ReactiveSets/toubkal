@@ -977,7 +977,7 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have input_transactions', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options should have more even after sending no more, without forks', ->
+        it 'concurrent options should have more even after sending no more, without forks', ->
           o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
@@ -1052,7 +1052,7 @@ describe 'Transactions test suite', ->
         it 'this counterpart should be input_transactions', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options for output_2_transactions should have no more after sending no more, and no forks', ->
+        it 'concurrent options for output_2_transactions should have no more after sending no more, and no forks', ->
           o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
@@ -1151,7 +1151,7 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have input_transactions', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options should have more even after sending no more, without forks', ->
+        it 'concurrent options should have more even after sending no more, without forks', ->
           o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
@@ -1226,7 +1226,7 @@ describe 'Transactions test suite', ->
         it 'this counterpart should be input_transactions', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options for output_2_transactions should have no more after sending no more, and no forks', ->
+        it 'concurrent options for output_2_transactions should have no more after sending no more, and no forks', ->
           o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
@@ -1324,7 +1324,7 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have input_transactions', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options should have more even after sending no more, without forks', ->
+        it 'concurrent options should have more even after sending no more, without forks', ->
           o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
@@ -1399,7 +1399,7 @@ describe 'Transactions test suite', ->
         it 'this counterpart should be input_transactions', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options for output_2_transactions should have no more after sending no more, and no forks', ->
+        it 'concurrent options for output_2_transactions should have no more after sending no more, and no forks', ->
           o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
@@ -1501,7 +1501,7 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have input_transactions', ->
           expect( output_1_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options should have more even after sending no more, without the last fork tag', ->
+        it 'concurrent options should have more even after sending no more, without the last fork tag', ->
           o = output_1_transactions.get_options input, no_more
           
           expect( o ).to.be.eql more_out
@@ -1576,7 +1576,7 @@ describe 'Transactions test suite', ->
         it 'this counterpart should be input_transactions', ->
           expect( output_2_transaction.get input_transactions ).to.be input_transactions
         
-        it 'concurent options for output_2_transactions should have no more after sending no more, and removed last fork tag', ->
+        it 'concurrent options for output_2_transactions should have no more after sending no more, and removed last fork tag', ->
           o = output_2_transactions.get_options input, no_more
           
           expect( o ).to.be.eql no_more_out
