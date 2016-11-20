@@ -55,7 +55,7 @@ describe 'file', ->
         } )
       
       configuration._output.on 'complete', () ->
-        configuration._fetch_all ( values ) -> check done, () ->
+        receiver = ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             {
               flow: "configuration"
@@ -86,6 +86,8 @@ describe 'file', ->
               ]
             }
           ]
+        
+        configuration._fetch_all receiver
   
   describe 'watch_directories():', ->
     directories_source = rs
