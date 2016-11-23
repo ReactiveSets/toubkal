@@ -2213,6 +2213,43 @@ join_tests = ( options ) ->
       
       no_other_operations()
     
+    describe 'updating an image with the same value', ->
+      it 'should do a remove plus add yielding no change (inner join)', ( done ) ->
+        reset()
+        
+        images._update [
+          [
+            { project_id: '1', view_id: 2, id: 3, name: 'Project 1 view 2 image 3' }
+            { project_id: '1', view_id: 2, id: 3, name: 'Project 1 view 2 image 3' }
+          ]
+        ]
+        
+        remove = removes.shift()
+        
+        compare_expected_values remove[ 0 ], [
+          { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        ]
+        
+        id = remove[ 1 ]._t.id
+        
+        expect( remove[ 1 ] ).to.be.eql { _t: { id: id, more: true } }
+        
+        add = adds.shift()
+        
+        compare_expected_values add[ 0 ], [
+          { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
+        ]
+        
+        expect( add[ 1 ] ).to.be.eql { _t: { id: id } }
+        
+        done()
+      
+      it 'should not change final state (inner join)', ( done ) ->
+        views_and_images._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected, values
+      
+      0 && no_other_operations()
+    
     describe 'removing 2 views' + flavor, ->
       it 'should remove 5 images (inner join) in one operation', ( done ) ->
         reset()
@@ -2649,7 +2686,7 @@ join_tests = ( options ) ->
       no_other_operations()
     
     describe 'removing last 2 images' + flavor, ->
-      it 'do nothing (inner join)', ( done ) ->
+      it 'should do nothing (inner join)', ( done ) ->
         reset()
         
         images._remove [
@@ -2658,13 +2695,6 @@ join_tests = ( options ) ->
         ]
         
         views_and_images._fetch_all ( values ) -> check done, ->
-          if ! no_filter
-            add = adds.shift()
-            
-            id = add[1]._t.id
-            
-            expect( add ).to.be.eql [ [], { _t: { id: id } } ]
-          
           compare_expected_values expected, values
       
       it 'should do nothing (inner join) downstream set', ( done ) ->
