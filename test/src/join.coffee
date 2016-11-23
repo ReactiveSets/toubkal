@@ -2213,8 +2213,8 @@ join_tests = ( options ) ->
       
       no_other_operations()
     
-    describe 'updating an image with the same value', ->
-      it 'should do a remove plus add yielding no change (inner join)', ( done ) ->
+    describe 'updating an image with the same value' + flavor, ->
+      it 'should do a remove plus add of the same value (inner join)', ( done ) ->
         reset()
         
         images._update [
@@ -2236,11 +2236,9 @@ join_tests = ( options ) ->
         
         add = adds.shift()
         
-        compare_expected_values add[ 0 ], [
-          { project_id: '1', id: 2, name: 'Project 1 view 2', image_id: 3, image_name: 'Project 1 view 2 image 3' }
-        ]
-        
         expect( add[ 1 ] ).to.be.eql { _t: { id: id } }
+        
+        expect( remove[ 0 ] ).to.be.eql add[ 0 ]
         
         done()
       
@@ -2248,7 +2246,80 @@ join_tests = ( options ) ->
         views_and_images._fetch_all ( values ) -> check done, ->
           compare_expected_values expected, values
       
-      0 && no_other_operations()
+      it 'should not change final state (inner join) downstream set', ( done ) ->
+        views_and_images_set._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected, values
+      
+      it 'should do a remove plus add of the same value (left join)', ( done ) ->
+        remove = removes.shift()
+        
+        id = remove[ 1 ]._t.id
+        
+        expect( remove[ 1 ] ).to.be.eql { _t: { id: id, more: true } }
+        
+        add = adds.shift()
+        
+        expect( add[ 1 ] ).to.be.eql { _t: { id: id } }
+        
+        expect( remove[ 0 ] ).to.be.eql add[ 0 ]
+        
+        done()
+      
+      it 'should not change final state (left join)', ( done ) ->
+        views_images._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected_left, values
+      
+      it 'should not change final state (left join) downstream set', ( done ) ->
+        views_images_set._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected_left, values
+      
+      it 'should do a remove plus add of the same value (right join)', ( done ) ->
+        remove = removes.shift()
+        
+        id = remove[ 1 ]._t.id
+        
+        expect( remove[ 1 ] ).to.be.eql { _t: { id: id, more: true } }
+        
+        add = adds.shift()
+        
+        expect( add[ 1 ] ).to.be.eql { _t: { id: id } }
+        
+        expect( remove[ 0 ] ).to.be.eql add[ 0 ]
+        
+        done()
+      
+      it 'should not change final state (right join)', ( done ) ->
+        images_views._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected_right, values
+      
+      it 'should not change final state (right join) downstream set', ( done ) ->
+        images_views_set._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected_right, values
+      
+      it 'should do a remove plus add of the same value (full outer join)', ( done ) ->
+        remove = removes.shift()
+        
+        id = remove[ 1 ]._t.id
+        
+        expect( remove[ 1 ] ).to.be.eql { _t: { id: id, more: true } }
+        
+        add = adds.shift()
+        
+        expect( add[ 1 ] ).to.be.eql { _t: { id: id } }
+        
+        expect( remove[ 0 ] ).to.be.eql add[ 0 ]
+        
+        done()
+      
+      it 'should not change final state (full outer join)', ( done ) ->
+        views_or_images._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected_full, values
+      
+      it 'should not change final state (full outer join) downstream set', ( done ) ->
+        views_or_images_set._fetch_all ( values ) -> check done, ->
+          compare_expected_values expected_full, values
+      
+      no_other_operations()
     
     describe 'removing 2 views' + flavor, ->
       it 'should remove 5 images (inner join) in one operation', ( done ) ->
