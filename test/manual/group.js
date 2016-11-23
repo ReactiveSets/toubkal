@@ -10,7 +10,7 @@ var cities = rs
     { country: 'France' , city: 'Lille'       },
     { country: 'France' , city: 'Caen'        },
     { country: 'England', city: 'Southampton' }
-  ] )
+  ], { key: [ 'country', 'city' ] } )
 ;
  
 cities
@@ -18,6 +18,9 @@ cities
   
   .trace( 'cities by country' ).greedy()
 ;
+
+cities._add   ( [ { country: 'Germany', city: 'Berlin' } ] );
+cities._remove( [ { country: 'Germany', city: 'Berlin' } ] );
 
 function by_country( city ) {
   return { country: city.country }
