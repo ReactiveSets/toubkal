@@ -134,8 +134,6 @@ module.exports = function( servers ) {
     
     .trace( 'database tables' )
     
-    .delivers( '/table' )
-    
     .alter( function( _ ) { _.module = 'table' } )
     
     .set_output( 'tables', scope )
@@ -150,7 +148,7 @@ module.exports = function( servers ) {
         .dispatch( servers.socket_io_clients(), function( source, options ) {
           
           return client.handler( source, this, options );
-        }, { single: true } )
+        } )
         
         .delivers( 'chat/chat_message_updates' )
       ;
