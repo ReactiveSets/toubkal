@@ -1,4 +1,4 @@
-var rs = require( 'toubkal' );
+var rs = require( 'toubkal/lib/core' );
 
 var friends = [
   [ 1, 2 ],
@@ -65,10 +65,10 @@ var friends_of_friends = friends
       }
     },
     
-    { key: [ 'id', 'friend_of_friend_id' ], _no_filter: true, concurrent: { 'friends': true } }
+    { key: [ 'id', 'friend_of_friend_id' ], no_filter: true, concurrent: { 'friends': true } }
   )
   
-  .unique( [], { tag : 'firends' } )
+  .unique( [], { tag : 'friends' } )
   
   //.filter( [ { id: 10 } ] )
   
@@ -85,3 +85,15 @@ friends._add( [
   { id: 10, friend_id: 4  }
 ] );
 
+friends._remove( [
+  { id: 4 , friend_id: 10 },
+  { id: 10, friend_id: 4  }
+] );
+
+
+0 && friends._update[
+  [
+    { id: 7, friend_id: 3 },
+    { id: 7, friend_id: 4 }
+  ]
+]
