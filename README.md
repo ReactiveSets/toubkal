@@ -831,7 +831,7 @@ Work In Progress.
   - updates(): filter update operations, useful when these have a strict Update semantic
   - split_updates(): Split update operations into remove plus add in a transaction
   - revert(): transforms adds into removes, removes into adds, swap remove and add into updates
-  - query_updates(): get query updates from pipelet, to build lazy pipelines, including caches
+  - query_updates(): Emit query updates from pipelet
 
 - Additional functional stateless pipelets:
   - map(): allows to emit zero or 1 value for each source value
@@ -882,7 +882,7 @@ process_argv()                      | The set of command line arguments
 application_loop()                  | Processes an application from a dataflow of components and input dataflows.
 database_cache()                    | Cache for an entire database from schema
 cache()                             | Stateful and lazy pipelet
-query_updates()                     | Get query updates from pipelet
+query_updates()                     | Emit query updates from pipelet
 filter_pick()                       | Select source dataflow from matching parent dataflow values
 delivers()                          | Specifies which upstream dataflows can be subscribed-to
 $has_not_class()                    | Emits source values which have a $node attriute without css_class set
