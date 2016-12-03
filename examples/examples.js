@@ -148,7 +148,7 @@ module.exports = function( servers ) {
         .dispatch( servers.socket_io_clients(), function( source, options ) {
           
           return client.handler( source, this, options );
-        } )
+        }, { name: 'clients' } )
         
         .delivers( 'chat/chat_message_updates' )
       ;
@@ -223,7 +223,7 @@ module.exports = function( servers ) {
   
   // Application loop
   rs
-    .dispatch( rs.output( 'modules', scope ), module, { loop: true } )
+    .dispatch( rs.output( 'modules', scope ), module, { name: 'application loop', loop: true } )
   ;
   
   function module( source, options ) {
