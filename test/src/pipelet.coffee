@@ -170,6 +170,16 @@ describe 'Pipelet', ->
     f                   = null
     defaults            = null
     
+    expect_name = ( parameters, defaults, position ) ->
+      name = parameters[ position ].name
+      
+      if defaults.name
+        expect( name.slice( 0, defaults.name.length ) ).to.be.eql defaults.name
+        
+        expect( name.length ).to.be.above defaults.name.length
+      
+      name
+    
     it 'should return parameters with all default options set', ->
       set_default_options = Pipelet.set_default_options
       
@@ -187,6 +197,7 @@ describe 'Pipelet', ->
       
       defaults = {
         other: 'other'
+        name: 'default_name'
       }
       
       ( ( p1, options ) ->
@@ -200,6 +211,7 @@ describe 'Pipelet', ->
               key: [ 'id' ]
               test: true
               other: 'other'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'p1' )
@@ -216,6 +228,7 @@ describe 'Pipelet', ->
               key: [ 'path' ]
               test: true
               other: 'other'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'p1' )
@@ -232,6 +245,7 @@ describe 'Pipelet', ->
               key: [ 'path' ]
               test: true
               other: 'other'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'p1', undefined )
@@ -247,6 +261,7 @@ describe 'Pipelet', ->
             {
               key: [ 'path' ]
               test: true
+              name: expect_name parameters, {}, 1
             }
           ]
       )( 'p1' )
@@ -263,6 +278,7 @@ describe 'Pipelet', ->
             'p1'
             {
               key: [ 'path' ]
+              name: expect_name parameters, {}, 1
             }
           ]
       )( 'p1' )
@@ -279,6 +295,7 @@ describe 'Pipelet', ->
             'p1'
             {
               key: [ 'path' ]
+              name: expect_name parameters, {}, 1
             }
           ]
       )( 'p1' )
@@ -296,6 +313,7 @@ describe 'Pipelet', ->
             {
               key: [ 'path' ]
               p1: 'test p1'
+              name: expect_name parameters, {}, 1
             }
           ]
       )( 'p1' )
@@ -323,6 +341,7 @@ describe 'Pipelet', ->
               key: [ 'path' ]
               p1: 'test p1'
               from_caller: 1
+              name: expect_name parameters, {}, 1
             }
           ]
       )( 'p1', { from_caller: 1 } )
@@ -343,6 +362,7 @@ describe 'Pipelet', ->
               key: [ 'path' ]
               p1: 'test p1'
               from_caller: 1
+              name: expect_name parameters, {}, 1
             }
           ]
           
@@ -360,9 +380,10 @@ describe 'Pipelet', ->
             {
               key: [ 'path' ]
               p1: 'from caller'
+              name: 'caller name'
             }
           ]
-      )( 'p1', { p1: 'from caller' } )
+      )( 'p1', { p1: 'from caller', name: 'caller name' } )
     
     it 'caller options should supercede other default options', ->
       ( ( p1, options ) ->
@@ -376,6 +397,7 @@ describe 'Pipelet', ->
               key: [ 'path' ]
               p1: 'test p1'
               other: 'from caller'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'p1', { other: 'from caller' } )
@@ -392,6 +414,7 @@ describe 'Pipelet', ->
               key: [ 'node-id', 'id' ]
               p1: 'test p1'
               other: 'other'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'p1', { key: [ 'node-id', 'id' ] } )
@@ -410,6 +433,7 @@ describe 'Pipelet', ->
               key: [ 'uuid' ]
               p1: 'test p1'
               other: 'other'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'p1' )
@@ -428,6 +452,7 @@ describe 'Pipelet', ->
               key: [ 'path' ]
               p1: 'test path'
               other: 'other'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'path' )
@@ -458,6 +483,7 @@ describe 'Pipelet', ->
               key: [ 'path' ]
               p1: 'test path'
               other: 'other'
+              name: expect_name parameters, defaults, 1
             }
           ]
       )( 'path', null )
@@ -475,6 +501,7 @@ describe 'Pipelet', ->
           expect( parameters[ 1 ] ).to.be.eql {
             key: [ 'uuid' ]
             other: 'other'
+            name: expect_name parameters, defaults, 1
           }
       )()
     
