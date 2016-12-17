@@ -34,6 +34,8 @@ var servers = require( 'toubkal' )
   .http_servers()
 ;
 
+servers.RS.Serve.max_age = 10;
+
 require( './site' )( servers.virtual_http_servers( [ 'localhost', '127.0.0.1', '192.168.1.10', '192.168.0.22' ] ) );
 
 module.export = servers;
