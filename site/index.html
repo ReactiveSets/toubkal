@@ -44,7 +44,7 @@
       ;
       
       var manuals = cached
-        //.trace( 'documentation_manuals', { all: true, counts: true } )
+        //.trace( 'documentation_manuals', { all: true, pick: { name: '.name' }, _counts: true } )
         .flow( 'documentation_manuals' )
       ;
     </script>
@@ -77,7 +77,7 @@
               '</h2>' +
               '<div id="toc-manual_' + id + '"></div>'
           };
-        } )
+        }, { query_transform: function( term ) { return term } } )
         
         .optimize()
         
