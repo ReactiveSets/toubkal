@@ -904,6 +904,7 @@ describe 'Transactions test suite', ->
         output_1_transactions = new Output_Transactions 'output_1'
         output_2_transactions = new Output_Transactions 'output_2'
         
+        returned_input = null
         input_transaction = null
         output_1_transaction = null
         output_2_transaction = null
@@ -940,7 +941,7 @@ describe 'Transactions test suite', ->
         it 'input transactions should have one transaction waiting for another output to terminate', ->
           expect( input_transactions.count ).to.be 1
         
-        it 'should be an Input_Transaction', ->
+        it 'should be an Input Transaction', ->
           input_transaction = input_transactions.get_from_tid tid
           
           expect( input_transaction ).to.be.a Input_Transaction
@@ -974,8 +975,8 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have one counterpart', ->
           expect( output_1_transaction.count ).to.be 1
         
-        it 'output_1_transaction should have input_transactions', ->
-          expect( output_1_transaction.get input_transactions ).to.be input_transactions
+        it 'output_1_transaction should have input', ->
+          expect( output_1_transaction.get input ).to.be input
         
         it 'concurrent options should have more even after sending no more, without forks', ->
           o = output_1_transactions.get_options input, no_more
@@ -1049,8 +1050,8 @@ describe 'Transactions test suite', ->
         it 'it should have one input transactions counterpart', ->
           expect( output_2_transaction.count ).to.be 1
         
-        it 'this counterpart should be input_transactions', ->
-          expect( output_2_transaction.get input_transactions ).to.be input_transactions
+        it 'this counterpart should be input', ->
+          expect( output_2_transaction.get input ).to.be input
         
         it 'concurrent options for output_2_transactions should have no more after sending no more, and no forks', ->
           o = output_2_transactions.get_options input, no_more
@@ -1148,8 +1149,8 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have one counterpart', ->
           expect( output_1_transaction.count ).to.be 1
         
-        it 'output_1_transaction should have input_transactions', ->
-          expect( output_1_transaction.get input_transactions ).to.be input_transactions
+        it 'output_1_transaction should have input', ->
+          expect( output_1_transaction.get input ).to.be input
         
         it 'concurrent options should have more even after sending no more, without forks', ->
           o = output_1_transactions.get_options input, no_more
@@ -1223,8 +1224,8 @@ describe 'Transactions test suite', ->
         it 'it should have one input transactions counterpart', ->
           expect( output_2_transaction.count ).to.be 1
         
-        it 'this counterpart should be input_transactions', ->
-          expect( output_2_transaction.get input_transactions ).to.be input_transactions
+        it 'this counterpart should be input', ->
+          expect( output_2_transaction.get input ).to.be input
         
         it 'concurrent options for output_2_transactions should have no more after sending no more, and no forks', ->
           o = output_2_transactions.get_options input, no_more
@@ -1321,8 +1322,8 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have one counterpart', ->
           expect( output_1_transaction.count ).to.be 1
         
-        it 'output_1_transaction should have input_transactions', ->
-          expect( output_1_transaction.get input_transactions ).to.be input_transactions
+        it 'output_1_transaction should have input', ->
+          expect( output_1_transaction.get input ).to.be input
         
         it 'concurrent options should have more even after sending no more, without forks', ->
           o = output_1_transactions.get_options input, no_more
@@ -1396,8 +1397,8 @@ describe 'Transactions test suite', ->
         it 'it should have one input transactions counterpart', ->
           expect( output_2_transaction.count ).to.be 1
         
-        it 'this counterpart should be input_transactions', ->
-          expect( output_2_transaction.get input_transactions ).to.be input_transactions
+        it 'this counterpart should be input', ->
+          expect( output_2_transaction.get input ).to.be input
         
         it 'concurrent options for output_2_transactions should have no more after sending no more, and no forks', ->
           o = output_2_transactions.get_options input, no_more
@@ -1498,8 +1499,8 @@ describe 'Transactions test suite', ->
         it 'output_1_transaction should have one counterpart', ->
           expect( output_1_transaction.count ).to.be 1
         
-        it 'output_1_transaction should have input_transactions', ->
-          expect( output_1_transaction.get input_transactions ).to.be input_transactions
+        it 'output_1_transaction should have input', ->
+          expect( output_1_transaction.get input ).to.be input
         
         it 'concurrent options should have more even after sending no more, without the last fork tag', ->
           o = output_1_transactions.get_options input, no_more
@@ -1573,8 +1574,8 @@ describe 'Transactions test suite', ->
         it 'it should have one input transactions counterpart', ->
           expect( output_2_transaction.count ).to.be 1
         
-        it 'this counterpart should be input_transactions', ->
-          expect( output_2_transaction.get input_transactions ).to.be input_transactions
+        it 'this counterpart should be input', ->
+          expect( output_2_transaction.get input ).to.be input
         
         it 'concurrent options for output_2_transactions should have no more after sending no more, and removed last fork tag', ->
           o = output_2_transactions.get_options input, no_more
@@ -1634,8 +1635,8 @@ describe 'Transactions test suite', ->
         it 'should have one input transactions countrerpart', ->
           expect( output_1_transaction.count ).to.be 1
         
-        it 'should have input_transactions as a counterpart', ->
-          expect( output_1_transaction.get input_transactions ).to.be input_transactions
+        it 'should have input as a counterpart', ->
+          expect( output_1_transaction.get input ).to.be input
         
         it 'input_transactions should have one input transaction', ->
           expect( input_transactions.count ).to.be 1
