@@ -9,10 +9,16 @@ module.exports = function client_handler( source, module, options ) {
   
   // Set client handler for next connection by a client
   module.client.handler = function client( source, that, options ) {
-    log( 'new client' );
+    var socket = that.socket
+      , name   = socket._get_name()
+    ;
+    
+    log( 'new client:', name );
     
     return source
-      .through( that.socket, options )
+      .trace( 'to ' + name, { all: true } )
+      
+      .through( socket, options )
     ;
   } // client()
 } // client_handler()
