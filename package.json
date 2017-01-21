@@ -3,7 +3,7 @@
   
   "version": "0.3.7",
   
-  "description": "Rapid development of fully reactive applications and micro-services for Node.js and the Browser",
+  "description": "Transactional Reactive Programming for Node.js and the Browser",
   
   "main": "lib/server.js",
   
