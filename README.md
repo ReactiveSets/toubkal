@@ -1,6 +1,6 @@
 # Toubkal
 
-**Rapid development of fully reactive applications and micro-services for Node.js and the Browser**
+**Transactional Reactive Programming for Nodejs and the Browser**
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
