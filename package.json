@@ -75,9 +75,10 @@
   },
   
   "keywords": [
+    "transactional reactive programming",
+    "transactional",
     "reactive",
-    "dataflow",
-    "functional reactive programming"
+    "dataflow"
   ],
   
   "author": "Reactive Sets",
