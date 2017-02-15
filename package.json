@@ -35,7 +35,7 @@
     "nodemailer2"                  : "2.7.1",
     "nodemailer-sendmail-transport": "1.0.0",
     "easyimage"                    : "2.1.0",
-    "express-session"              : "1.15.0",
+    "express-session"              : "1.15.1",
     "passport"                     : "0.3.2",
     "compressible"                 : "2.0.9",
     "es5-shim"                     : "4.5.9",
