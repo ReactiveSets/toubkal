@@ -1153,6 +1153,21 @@
     @term strict
     
     @short @@[Operations]operation where @@add means @@create and @@remove means @@delete
+    
+    @description
+    
+    This is typically enforced by @@transactional operations that create,
+    delete or update the state of the system.
+    
+    Toubkal pipelets are free to use a non-strict semantic, and can emit
+    updates as removes plus adds in a @@transaction.
+    
+    ### See Also:
+    - Pipelet optimize() that emits strict operations
+    - Pipelet split_updates() that breaks strict semantic
+    - Pipelet adds()
+    - Pipelet removes()
+    - Pipelet updates()
 */
 
 /* --------------------------------------------------------------------------
