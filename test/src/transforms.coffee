@@ -294,7 +294,7 @@ describe 'transforms', ->
         ]
     
     it 'should be lazy', ->
-      expect( picked._input.query.query ).to.be.eql [ { name: 'Jill' } ]
+      expect( picked._input.future_query.query ).to.be.eql [ { name: 'Jill' } ]
     
     it 'should allow to remove user 3 and Jill, unfiltered', ( done ) ->
       source._remove [
