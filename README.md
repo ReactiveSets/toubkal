@@ -701,16 +701,18 @@ Work In Progress.
   - use pipelet fetch() to check authorizations
   - using not_exists() to test appropriate existance on adds, removes and updates
 
-- Plug.._fetch() && ..update_upstream_query() refactoring, completed but not turned on, needs more testing:
+- Redesign of Plug.._fetch() && ..update_upstream_query(), almost completed and needs more testing:
   - Implemented in Plug base class of all inputs and outputs
   - Replaces all implementations of fetch on inputs and outputs
   - Forward compatible with fetch() API, the API may be deprecated once migration to new API is complete
   - All plugs now have a source, enables plugs pipelines for fetch() && update_upstream_query()
-  - Allow synchronization between update_upstream_query() and fetch()
-  - Receivers can now receive removes, updates and operations' options
+  - Synchronize update_upstream_query() and fetch() for data consistency
+  - Fetch receivers can now receive removes, updates and operations options
   - Allow query transforms on all plugs
   - Filters fetch_unfiltered() if defined
-  - Filters through _tranform() if defined and fetch_unfiltered() not defined
+  - Filters through _transform() if defined and fetch_unfiltered() not defined
+  - Cancel ongoing fetches when pipelet disconnects (still needs to revert previously fetched values)
+  - Union support for adding and removing sources while fetching
 
 - Build Toubkal site, featuring documentation and examples
 

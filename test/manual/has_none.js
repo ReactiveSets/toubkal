@@ -3,8 +3,9 @@
  
   2016/03/23 11:42:05.728 - Trace( has_none )..fetched(),  {
     "no_more": true,
-    "adds": [],
-    "source": "Set.Output( has_none #11 )",
+    "operation": "add",
+    "values": [],
+    "destination": "Greedy.Input( greedy (at Object.<anonymous> (...has_none.js:39:4) ) #15 )",
     "query": [
       {}
     ],
