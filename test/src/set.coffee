@@ -76,8 +76,8 @@ describe 'set():', ->
     { id:  6, name: "Tim Hancook"    , salary: "$1500", customer_id: "227", order_id: "1227" }
   ]
   
-  describe 'Delayed set:', ->
-    it 'Delayed set (100 ms) should eventually equal its source values', ( done ) ->
+  describe 'delayed set (100 ms)', ->
+    it 'should eventually equal its source values', ( done ) ->
       delayed_set._fetch_all ( values ) -> check done, -> expect( values ).to.be.eql [
         { id:1, value: 'delayed' }
       ]
@@ -93,6 +93,21 @@ describe 'set():', ->
         { flow: "car", id: 3, brand: "BMW"     , model: "M Serie" }
         { flow: 'error', error: 'not found' }
       ]
+  
+  describe 'fetch (using fetch_unfiltered) with query', ->
+    it 'should emit one city when query is { country: "France" }', ( done ) ->
+      rx = ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          { id: 3, name: "Paris"        , country: "France"                       }
+        ]
+      
+      cities._output._fetch rx, [ { country: "France" } ]
+  
+  describe 'nul query fetch (using fetch_unfiltered)', ->
+    it 'should emit no cities', ( done ) ->
+      rx = ( values ) -> check done, -> expect( values ).to.be.eql []
+      
+      cities._output._fetch rx, []
   
   describe 'add():', ->
     it 'should contain Berlin after adding it', ( done ) ->
