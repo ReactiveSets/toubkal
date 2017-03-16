@@ -70,8 +70,10 @@ describe 'aggregate()', ->
     by_author = rs.set [ { id: "author" } ]
     by_year   = rs.set [ { id: "year"   } ]
     
-    books_sales_by_author = books_sales.aggregate( sales, by_author ).order( by_author ).ordered()
-    books_sales_by_year   = books_sales.aggregate( sales, by_year ).order( by_year ).ordered()
+    de = false
+    
+    books_sales_by_author = books_sales.aggregate( sales, by_author ).debug( de && 'sales by author' ).order( by_author ).ordered()
+    books_sales_by_year   = books_sales.aggregate( sales, by_year   ).debug( de && 'sales by year'   ).order( by_year   ).ordered()
     
     aggregate_from = ( source, from, measures, dimensions, options ) ->
       return source
