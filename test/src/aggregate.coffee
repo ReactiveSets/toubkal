@@ -441,7 +441,7 @@ describe 'aggregate()', ->
         expect( sales ).to.be.eql expected
   
   describe 'remove "sales" from measures', ->
-    it 'should remove all sales figures from books_sales_by_author', ( done ) ->
+    it 'should update all groups to remove all sales figures from books_sales_by_author', ( done ) ->
       sales._remove [ { id: "sales" } ]
       
       books_sales_by_author._fetch_all ( sales ) -> check done, () ->
@@ -466,7 +466,7 @@ describe 'aggregate()', ->
       books_sales_by_author_ordered._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
     
-    it 'should remove all sales figures books_sales_by_year', ( done ) ->
+    it 'should update all groups to remove all sales figures from books_sales_by_year', ( done ) ->
       books_sales_by_year._fetch_all ( sales ) -> check done, () ->
         sales.sort by_year_sorter
         
@@ -484,6 +484,56 @@ describe 'aggregate()', ->
           { year: 2004, _count: 1 }
           { year: 2005, _count: 1 }
           { year: 2009, _count: 1 }
+        ]
+    
+    it 'should do the same for books_sales_by_year_ordered', ( done ) ->
+      books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
+  
+  describe 'add back "sales" from measures', ->
+    it 'should update all groups to add back all sales figures from books_sales_by_author', ( done ) ->
+      sales._add [ { id: "sales" } ]
+      
+      books_sales_by_author._fetch_all ( sales ) -> check done, () ->
+        sales.sort by_author_sorter
+        
+        expect( sales ).to.be.eql expected = [
+          { author: "Agatha Christie"        , sales: 100, _count: 1 }
+          { author: "Charles Dickens"        , sales: 251, _count: 1 }
+          { author: "Dan Brown"              , sales: 244, _count: 3 }
+          { author: "Ellen G. White"         , sales:  60, _count: 1 }
+          { author: "J. R. R. Tolkien"       , sales: 266, _count: 2 }
+          { author: "J.K. Rowling"           , sales:   0, _count: 1 }
+          { author: "Paulo Coelho"           , sales:  65, _count: 1 }
+          { author: "Roald Dahl"             , sales:  13, _count: 1 }
+          { author: "Stieg Larsson"          , sales:  30, _count: 1 }
+          { author: "Suzanne Collins"        , sales:  22, _count: 1 }
+          { author: "Vladimir Nabokov"       , sales:  50, _count: 1 }
+          { author: "William Holmes McGuffey", sales: 125, _count: 1 }
+        ]
+    
+    it 'should do the same for books_sales_by_author_ordered', ( done ) ->
+      books_sales_by_author_ordered._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
+    
+    it 'should update all groups to add back all sales figures from books_sales_by_year', ( done ) ->
+      books_sales_by_year._fetch_all ( sales ) -> check done, () ->
+        sales.sort by_year_sorter
+        
+        expect( sales ).to.be.eql expected = [
+          { sales:       113, year: undefined, _count: 2 }
+          { sales:        60, year: null, _count: 1 }
+          { sales:       125, year: 1853, _count: 1 }
+          { sales:       251, year: 1859, _count: 1 }
+          { sales:       116, year: 1937, _count: 1 }
+          { sales:       200, year: 1955, _count: 2 }
+          { sales:        65, year: 1988, _count: 1 }
+          { sales:         0, year: 1999, _count: 1 }
+          { sales:        39, year: 2000, _count: 1 }
+          { sales:        80, year: 2003, _count: 1 }
+          { sales:       125, year: 2004, _count: 1 }
+          { sales:        30, year: 2005, _count: 1 }
+          { sales:        22, year: 2009, _count: 1 }
         ]
     
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
