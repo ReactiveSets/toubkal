@@ -48,7 +48,7 @@
   
   "devDependencies": {
     "coffee-script"                : "1.12.4",
-    "source-map-support"           : "0.4.11",
+    "source-map-support"           : "0.4.14",
     "mocha"                        : "3.2.0",
     "expect.js"                    : "0.3.1",
     "zombie"                       : "4.3.0",
