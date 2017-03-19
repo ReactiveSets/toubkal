@@ -83,6 +83,8 @@ describe 'aggregate()', ->
     books_sales_by_author_ordered = books_sales_by_author.order( by_author ).ordered()
     books_sales_by_year_ordered   = books_sales_by_year  .order( by_year   ).ordered()
     
+    all_book_sales = books_sales.aggregate( sales ).debug( de && 'all sales' ).greedy()
+    
     by_author_sorter = ( a, b ) ->
       if a.author < b.author then -1 else if a.author > b.author then 1 else 0
     
