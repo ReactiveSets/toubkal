@@ -57,7 +57,7 @@ describe 'aggregate()', ->
   by_year_sorter                = null
   expected                      = null
   
-  it 'should group and order books_sales_by_author by author', ( done ) ->
+  it 'should not throw during initialization of books sales set', ->
     books_sales_through = rs.pass_through()
     
     books_sales = rs.set [
@@ -80,20 +80,19 @@ describe 'aggregate()', ->
     ]
     
     books_sales_union = books_sales.union( [ books_sales_through ] )
-    
+  
+  it 'should not throw while initializing books_sales_by_author aggregates', ->
     sales     = rs.set [ { id: "sales"  } ]
     by_author = rs.set [ { id: "author" } ]
-    by_year   = rs.set [ { id: "year"   } ]
     
     books_sales_by_author = books_sales_union.aggregate( sales, by_author ).debug( de && 'sales by author' )
+  
+  it 'should not throw while initializing books_sales_by_year aggregates', ->
+    by_year   = rs.set [ { id: "year"   } ]
+    
     books_sales_by_year   = books_sales_union.aggregate( sales, by_year   ).debug( de && 'sales by year'   )
-    
-    books_sales_by_author_ordered = books_sales_by_author.order( by_author ).ordered()
-    books_sales_by_year_ordered   = books_sales_by_year  .order( by_year   ).ordered()
-    
-    all_book_sales = books_sales_union.aggregate( sales ).debug( de && 'all sales' )
-    all_book_sales_set = all_book_sales.set()
-    
+  
+  it 'should not throw while initializing ordered aggregates aggregates', ->
     by_author_sorter = ( a, b ) ->
       if a.author < b.author then -1 else if a.author > b.author then 1 else 0
     
@@ -109,6 +108,14 @@ describe 'aggregate()', ->
       else if a > b          then  1
       else                         0
     
+    books_sales_by_author_ordered = books_sales_by_author.order( by_author ).ordered()
+    books_sales_by_year_ordered   = books_sales_by_year  .order( by_year   ).ordered()
+  
+  it 'should not throw while initializing all_book_sales aggregates', ->
+    all_book_sales = books_sales_union.aggregate( sales ).debug( de && 'all sales' )
+    all_book_sales_set = all_book_sales.set()
+  
+  it 'should not throw while initializing aggregates from aggregate_from composition', ->
     aggregate_from = ( source, from, measures, dimensions, options ) ->
       return source
         .filter( from, options )
@@ -122,7 +129,23 @@ describe 'aggregate()', ->
       return book.author is 'J. R. R. Tolkien'
     
     tolkien_sales_by_year = books_sales_union.through rs.aggregate_from tolkien_books, sales, by_year
-    
+  
+  it 'should not throw while initializing aggregates with injection attempts', ->
+    books_sales_union.aggregate(
+      # measures
+      [
+        { id: "measure includes a single quote \", an escape \\, and ends with another escape \\" }
+        { id: "a second measure ending with an escape \\" }
+      ]
+      
+      # dimensions
+      [
+        { id: "0dimension starts with zero" }
+        { id: "second dimension ending with an escape \\" }
+      ]
+    )
+  
+  it 'should group and order books_sales_by_author by author', ( done ) ->
     books_sales_by_author._fetch_all ( sales ) -> check done, () ->
       sales.sort by_author_sorter
       
