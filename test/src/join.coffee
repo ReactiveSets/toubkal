@@ -22,6 +22,8 @@
 # test utils
 # ----------
 
+de = false
+
 utils  = require( './tests_utils.js' ) unless this.expect
 
 expect = this.expect || utils.expect
@@ -230,7 +232,9 @@ join_tests = ( options ) ->
           
           extend { key: [ 'id', 'author_id' ], right: true, name: 'authors_on_books' }, options
           
-        ) #.trace 'authors_on_books trace'
+        )
+        
+        .debug( de && 'authors_on_books' )
         
         authors_on_books_set = authors_on_books.set()
         
@@ -244,7 +248,9 @@ join_tests = ( options ) ->
           
           extend { key: [ 'id', 'author_id' ], outer: true, name: 'books_or_authors' }, options
           
-        )#.trace 'authors_or_books trace'
+        )
+        
+        .debug( de && 'authors_or_books' )
         
         books_or_authors_set = books_or_authors.set()
         
@@ -1515,7 +1521,12 @@ join_tests = ( options ) ->
             
             extend { left: true }, options
             
-          ).trace 'users profiles trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+          )
+          
+          # Note: cannot put _on() on union output of join(), using pass_through() for that
+          .pass_through()
+          
+          .debug( de && 'users profiles' )
         
         users_profiles_set = users_profiles.set()
         
@@ -1770,7 +1781,12 @@ join_tests = ( options ) ->
             
             extend { key: [ 'project_id', 'id', 'image_id' ] }, options
             
-          ).trace 'views and images trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+          )
+          
+          # Note: cannot put _on() on union output of join(), using pass_through() for that
+          .pass_through()
+          
+          .debug( de && 'views and images' )
         
         views_and_images_set = views_and_images.set()
         
@@ -1808,7 +1824,12 @@ join_tests = ( options ) ->
             
             extend { left: true, key: [ 'project_id', 'id', 'image_id' ] }, options
             
-          ).trace 'views images trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+          )
+          
+          # Note: cannot put _on() on union output of join(), using pass_through() for that
+          .pass_through()
+          
+          .debug( de && 'views images' )
         
         views_images_set = views_images.set()
         
@@ -1841,7 +1862,12 @@ join_tests = ( options ) ->
             
             extend { right: true, key: [ 'project_id', 'id', 'image_id' ] }, options
             
-          ).trace 'images views trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+          )
+          
+          # Note: cannot put _on() on union output of join(), using pass_through() for that
+          .pass_through()
+          
+          .debug( de && 'images views' )
         
         images_views_set = images_views.set()
         
@@ -1874,7 +1900,12 @@ join_tests = ( options ) ->
             
             extend { outer: true, key: [ 'project_id', 'id', 'image_id' ] }, options
             
-          ).trace 'views or images trace' # Note: cannot put _on() on union output of join(), trace() or other pipelet is required for that
+          )
+          
+          # Note: cannot put _on() on union output of join(), using pass_through() for that
+          .pass_through()
+          
+          .debug( de && 'views or images' )
         
         views_or_images_set = views_or_images.set()
         
