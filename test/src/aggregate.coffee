@@ -82,7 +82,7 @@ describe 'aggregate()', ->
     books_sales_union = books_sales.union( [ books_sales_through ] )
   
   it 'should not throw while initializing books_sales_by_author aggregates', ->
-    sales     = rs.set [ { id: "sales"  } ]
+    sales     = rs.set [ { id: "author", type: "unsupported measure type" }, { id: "sales"  } ]
     by_author = rs.set [ { id: "author" } ]
     
     books_sales_by_author = books_sales_union.aggregate( sales, by_author ).debug( de && 'sales by author' )
