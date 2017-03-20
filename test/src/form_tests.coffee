@@ -22,6 +22,8 @@
 # Create a form dataflow connected to socket_io_server
 # ----------------------------------------------------
 
+de = false
+
 rs = this.rs
 
 organizer = rs.set( [ id: 'label' ] )
@@ -83,6 +85,6 @@ fields = rs
   .order( [ { id: 'order' } ] )
 
 rs.form( document.getElementById( 'form' ), 'user_profile', fields )
-  .trace( 'form' )
+  .debug( de && 'form' )
   .greedy()
   .socket_io_server()
