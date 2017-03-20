@@ -40,6 +40,8 @@ fix_path = ( o ) ->
 
 require '../../lib/server/file.js'
 
+de = false
+
 # ----------------------------------------------------------------------------------------------
 # Test File pipelets
 # ------------------
@@ -104,7 +106,7 @@ describe 'file', ->
     
     directories = entries
       .filter [ { type: 'directory' } ]
-      .trace( 'directories' )
+      .debug( de && 'directories' )
     
     directories_source._add_source directories
     
@@ -121,12 +123,12 @@ describe 'file', ->
     
     css = entries
       .filter( [ { type: 'file', extension: 'css' } ] )  
-      .trace( 'css files' )
+      .debug( de && 'css files' )
       .set()
       
     html = entries
       .filter( [ { type: 'file', extension: 'html' } ] )  
-      .trace( 'html files' )
+      .debug( de && 'html files' )
       .set()
       
     javascript = entries
