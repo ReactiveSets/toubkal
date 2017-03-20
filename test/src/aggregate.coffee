@@ -82,7 +82,7 @@ describe 'aggregate()', ->
     books_sales_union = books_sales.union( [ books_sales_through ] )
   
   it 'should not throw while initializing books_sales_by_author aggregates', ->
-    sales     = rs.set [ { id: "author", type: "unsupported measure type" }, { id: "sales"  } ]
+    sales     = rs.set [ { id: "author", type: "unsupported measure type" }, { id: "sales", "default": "invalid default, should be ignored" } ]
     by_author = rs.set [ { id: "author" } ]
     
     books_sales_by_author = books_sales_union.aggregate( sales, by_author ).debug( de && 'sales by author' )
@@ -128,7 +128,7 @@ describe 'aggregate()', ->
     tolkien_books = ( book, options ) ->
       return book.author is 'J. R. R. Tolkien'
     
-    tolkien_sales_by_year = books_sales_union.through rs.aggregate_from tolkien_books, sales, by_year
+    tolkien_sales_by_year = books_sales_union.through rs.aggregate_from tolkien_books, [ { id: "tolkien_sales", of: "sales" } ], by_year
   
   it 'should not throw while initializing aggregates with injection attempts', ->
     books_sales_union.aggregate(
@@ -198,8 +198,8 @@ describe 'aggregate()', ->
       sales.sort by_year_sorter
       
       expect( sales ).to.be.eql [
-        { sales:       100, year: 1937, _count: 1 }
-        { sales:       150, year: 1955, _count: 1 }
+        { tolkien_sales:       100, year: 1937, _count: 1 }
+        { tolkien_sales:       150, year: 1955, _count: 1 }
       ]
   
   it 'should add up all sales to all_book_sales', ( done ) ->
