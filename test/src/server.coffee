@@ -22,6 +22,8 @@
 # rs test utils
 # -------------
 
+de = false
+
 utils  = require './tests_utils.js'
 
 expect = utils.expect
@@ -63,9 +65,9 @@ describe 'in-memory database with dispatch()', ->
 
         source
           .flow( flow, { key: this.key || [ 'id' ] } )
-          .trace( flow + ' in' )
+          .debug( de && flow + ' in' )
           .set( [] )
-          .trace( flow + ' out', { all: true } )
+          .debug( de && flow + ' out', { all: true } )
           .flow( flow )
     
     database_cache = database
