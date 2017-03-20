@@ -31,6 +31,8 @@ rs = this.rs || require '../../lib/core.js'
 
 Pipelet = rs.RS.Pipelet
 
+de = false
+
 # ----------------------------------------------------------------------------------------------
 # aggregate() test suite
 # ----------------------
@@ -39,6 +41,8 @@ describe 'aggregate()', ->
   books_sales                   = null
   books_sales_through           = null
   books_sales_union             = null
+  all_book_sales                = null
+  all_book_sales_set            = null
   sales                         = null
   by_author                     = null
   by_year                       = null
@@ -81,15 +85,14 @@ describe 'aggregate()', ->
     by_author = rs.set [ { id: "author" } ]
     by_year   = rs.set [ { id: "year"   } ]
     
-    de = false
-    
     books_sales_by_author = books_sales_union.aggregate( sales, by_author ).debug( de && 'sales by author' )
     books_sales_by_year   = books_sales_union.aggregate( sales, by_year   ).debug( de && 'sales by year'   )
     
     books_sales_by_author_ordered = books_sales_by_author.order( by_author ).ordered()
     books_sales_by_year_ordered   = books_sales_by_year  .order( by_year   ).ordered()
     
-    all_book_sales = books_sales_union.aggregate( sales ).debug( de && 'all sales' ).greedy()
+    all_book_sales = books_sales_union.aggregate( sales ).debug( de && 'all sales' )
+    all_book_sales_set = all_book_sales.set()
     
     by_author_sorter = ( a, b ) ->
       if a.author < b.author then -1 else if a.author > b.author then 1 else 0
@@ -175,9 +178,19 @@ describe 'aggregate()', ->
         { sales:       100, year: 1937, _count: 1 }
         { sales:       150, year: 1955, _count: 1 }
       ]
-
-  describe 'add sales for "Dan Brown" in 2004', ->
-    it 'should increase books_sales_by_author for "Dan Brown"', ( done ) ->
+  
+  it 'should add up all sales to all_book_sales', ( done ) ->
+    all_book_sales._fetch_all ( sales ) -> check done, () ->
+      expect( sales ).to.be.eql expected = [
+        { id: 1, sales: 1045, _count: 16 }
+      ]
+  
+  it 'should do the same all_book_sales set', ( done ) ->
+    all_book_sales_set._fetch_all ( sales ) -> check done, () ->
+      expect( sales ).to.be.eql expected
+  
+  describe 'add sales for "The Da Vinci Code" of "Dan Brown" in 2004', ->
+    it 'should add sales of "The Da Vinci Code" to books_sales_by_author for "Dan Brown"', ( done ) ->
       books_sales._add [
         { id: 17, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        125, year: 2004 }
       ]
@@ -206,7 +219,7 @@ describe 'aggregate()', ->
       books_sales_by_author_ordered._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
     
-    it 'should add books_sales_by_year for 2004', ( done ) ->
+    it 'should add sales of "The Da Vinci Code" to books_sales_by_year for 2004', ( done ) ->
       books_sales_by_year._fetch_all ( sales ) -> check done, () ->
         sales.sort by_year_sorter
         
@@ -228,6 +241,16 @@ describe 'aggregate()', ->
     
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
+    
+    it 'should add sales of "The Da Vinci Code" to all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1170, _count: 17 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
   
   describe "remove Stephenie Meyer's sales in 2008 and Pierre Dukan's sales in 2000", ->
@@ -281,6 +304,16 @@ describe 'aggregate()', ->
     
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
+    
+    it 'should remove sales off all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1160, _count: 15 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
 
   describe 'update sales for "A Tale of Two Cities", adding 51 sales', ->
@@ -337,6 +370,16 @@ describe 'aggregate()', ->
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
+    
+    it 'should add 51 sales to all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1211, _count: 15 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
 
   describe 'update sales for "The Hobbit", adding 16 sales', ->
     it 'should update sales for "J. R. R. Tolkien", adding 16 sales from books_sales_by_author', ( done ) ->
@@ -391,6 +434,16 @@ describe 'aggregate()', ->
     
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
+    
+    it 'should add 16 sales to all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1227, _count: 15 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
 
   describe 'update "The Hunger Games", removing 1 sale, changing year to 2009', ->
@@ -447,6 +500,16 @@ describe 'aggregate()', ->
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
+    
+    it 'should remove 1 sale to all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1226, _count: 15 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
   
   describe 'remove "sales" from measures', ->
     it 'should update all groups to remove all sales figures from books_sales_by_author', ( done ) ->
@@ -497,6 +560,16 @@ describe 'aggregate()', ->
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
+    
+    it 'should remove sale figures from all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, _count: 15 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
   
   describe 'add back "sales" from measures', ->
     it 'should update all groups to add back all sales figures from books_sales_by_author', ( done ) ->
@@ -546,6 +619,16 @@ describe 'aggregate()', ->
     
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
+    
+    it 'should add back sales figures to all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1226, _count: 15 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
   
   describe "anti-remove Pierre Dukan's sales in 2000", ->
@@ -600,6 +683,16 @@ describe 'aggregate()', ->
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
+    
+    it 'should remove 10 sales and one count from all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1216, _count: 14 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
   
   describe "add-back Pierre Dukan's sales in 2000", ->
     it 'should cancel previous anti-remove from books_sales_by_author', ( done ) ->
@@ -651,4 +744,14 @@ describe 'aggregate()', ->
     
     it 'should do the same for books_sales_by_year_ordered', ( done ) ->
       books_sales_by_year_ordered._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected
+    
+    it 'should add-back 10 sales from all_book_sales', ( done ) ->
+      all_book_sales._fetch_all ( sales ) -> check done, () ->
+        expect( sales ).to.be.eql expected = [
+          { id: 1, sales: 1226, _count: 15 }
+        ]
+    
+    it 'should do the same all_book_sales set', ( done ) ->
+      all_book_sales_set._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
