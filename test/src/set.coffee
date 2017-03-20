@@ -22,6 +22,8 @@
 # rs test utils
 # -------------
 
+de = false
+
 utils  = require( './tests_utils.js' ) unless this.expect
 
 expect = this.expect || utils.expect
@@ -52,7 +54,7 @@ describe 'set():', ->
   delayed_set = rs
     .set( [ { id:1, value: 'delayed' } ] )
     .delay( 100 )
-    .trace( 'Delayed Set' )
+    .debug( de && 'Delayed Set' )
     .filter( () -> true )
   
   cars = rs
