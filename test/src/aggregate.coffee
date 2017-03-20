@@ -128,7 +128,15 @@ describe 'aggregate()', ->
     tolkien_books = ( book, options ) ->
       return book.author is 'J. R. R. Tolkien'
     
-    tolkien_sales_by_year = books_sales_union.through rs.aggregate_from tolkien_books, [ { id: "Tolkien Sales", of: "sales" } ], by_year
+    tolkien_sales_by_year = books_sales_union.through(
+      rs.aggregate_from(
+        tolkien_books
+        
+        [ { id: "Tolkien Sales", of: "sales" }, { id: "sales" } ]
+        
+        [ { id: "author" }, { id: "year" } ]
+      )
+    )
   
   it 'should not throw while initializing aggregates with injection attempts', ->
     books_sales_union.aggregate(
@@ -198,8 +206,8 @@ describe 'aggregate()', ->
       sales.sort by_year_sorter
       
       expect( sales ).to.be.eql [
-        { "Tolkien Sales":       100, year: 1937, _count: 1 }
-        { "Tolkien Sales":       150, year: 1955, _count: 1 }
+        { "Tolkien Sales": 100, sales: 100, author: "J. R. R. Tolkien", year: 1937, _count: 1 }
+        { "Tolkien Sales": 150, sales: 150, author: "J. R. R. Tolkien", year: 1955, _count: 1 }
       ]
   
   it 'should add up all sales to all_book_sales', ( done ) ->
