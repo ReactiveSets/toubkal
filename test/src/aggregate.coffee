@@ -108,7 +108,7 @@ describe 'aggregate()', ->
       else if a > b          then  1
       else                         0
     
-    books_sales_by_author_ordered = books_sales_by_author.order( by_author ).ordered()
+    books_sales_by_author_ordered = books_sales_by_author.set().order( by_author ).ordered()
     books_sales_by_year_ordered   = books_sales_by_year  .order( by_year   ).ordered()
   
   it 'should not throw while initializing all_book_sales aggregates', ->
