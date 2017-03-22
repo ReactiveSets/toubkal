@@ -23,7 +23,7 @@
   
   "dependencies": {
     "undefine"                     : "0.2.8",
-    "node-uuid"                    : "1.4.7",
+    "node-uuid"                    : "1.4.8",
     "socket.io"                    : "1.7.3",
     "socket.io-client"             : "1.7.3",
     "acorn"                        : "4.0.11",
