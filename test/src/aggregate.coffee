@@ -47,8 +47,10 @@ describe 'aggregate()', ->
   by_author                     = null
   by_year                       = null
   books_sales_by_author         = null
+  books_sales_by_author_order   = null
   books_sales_by_author_ordered = null
   books_sales_by_year           = null
+  books_sales_by_year_order     = null
   books_sales_by_year_ordered   = null
   aggregate_from                = null
   tolkien_books                 = null
@@ -100,7 +102,8 @@ describe 'aggregate()', ->
       a = a.year
       b = b.year
       
-      if      a == undefined then -1
+      if      a == b         then  0
+      else if a == undefined then -1
       else if b == undefined then  1
       else if a == null      then -1
       else if b == null      then  1
@@ -108,9 +111,15 @@ describe 'aggregate()', ->
       else if a > b          then  1
       else                         0
     
-    books_sales_by_author_ordered = books_sales_by_author.set().order( by_author ).ordered()
-    books_sales_by_year_ordered   = books_sales_by_year  .order( by_year   ).ordered()
-  
+    books_sales_by_author_order = books_sales_by_author.set().order( by_author )
+    books_sales_by_year_order   = books_sales_by_year        .order( by_year   )
+    
+    by_author_sorter = books_sales_by_author_order._sorter
+    by_year_sorter   = books_sales_by_year_order._sorter
+    
+    books_sales_by_author_ordered = books_sales_by_author_order.ordered()
+    books_sales_by_year_ordered   = books_sales_by_year_order  .ordered()
+    
   it 'should not throw while initializing all_book_sales aggregates', ->
     all_book_sales = books_sales_union.aggregate( sales ).debug( de && 'all sales' )
     all_book_sales_set = all_book_sales.set()
@@ -786,3 +795,31 @@ describe 'aggregate()', ->
     it 'should do the same all_book_sales set', ( done ) ->
       all_book_sales_set._fetch_all ( sales ) -> check done, () ->
         expect( sales ).to.be.eql expected
+  
+  describe 'changing by_author dimensions, adding year', ->
+    it 'should update books_sales_by_author', ( done ) ->
+      
+      by_author._add [ { id: "year" } ]
+      
+      by_author_year_sorter = books_sales_by_author_order._sorter
+      
+      books_sales_by_author._fetch_all ( sales ) -> check done, () ->
+        sales.sort by_author_year_sorter
+        
+        expect( sales ).to.be.eql expected = [
+          { author: "Agatha Christie"        , sales: 100, _count: 1, year: undefined }
+          { author: "Charles Dickens"        , sales: 251, _count: 1, year: 1859 }
+          { author: "Dan Brown"              , sales:  39, _count: 1, year: 2000 }
+          { author: "Dan Brown"              , sales:  80, _count: 1, year: 2003 }
+          { author: "Dan Brown"              , sales: 125, _count: 1, year: 2004 }
+          { author: "Ellen G. White"         , sales:  60, _count: 1, year: null }
+          { author: "J. R. R. Tolkien"       , sales: 116, _count: 1, year: 1937 }
+          { author: "J. R. R. Tolkien"       , sales: 150, _count: 1, year: 1955 }
+          { author: "J.K. Rowling"           , sales:   0, _count: 1, year: 1999 }
+          { author: "Paulo Coelho"           , sales:  65, _count: 1, year: 1988 }
+          { author: "Roald Dahl"             , sales:  13, _count: 1, year: undefined }
+          { author: "Stieg Larsson"          , sales:  30, _count: 1, year: 2005 }
+          { author: "Suzanne Collins"        , sales:  22, _count: 1, year: 2009 }
+          { author: "Vladimir Nabokov"       , sales:  50, _count: 1, year: 1955 }
+          { author: "William Holmes McGuffey", sales: 125, _count: 1, year: 1853 }
+        ]
