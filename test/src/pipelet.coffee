@@ -86,6 +86,54 @@ describe 'Pipelet', ->
     it 'should not allow a factory function wih more than 2 parameters', ->
       expect( -> Pipelet.Add 'ab_0c3', ( source, parameters, extra_parameter ) -> ).to.throwException()
   
+  describe 'Pipelet.safe_identity_code()', ->
+    code = null
+    
+    it 'should return valid code with no parameter', ->
+      code = Pipelet.safe_identity_code()
+      
+      expect( code ).to.be.eql '"#" + o.id'
+    
+    it 'should return valid code with a string parameter', ->
+      code = Pipelet.safe_identity_code( 'a string' )
+      
+      expect( code ).to.be.eql '"#" + o.id'
+    
+    it 'should return valid code with an object parameter', ->
+      code = Pipelet.safe_identity_code( { length: 1 } )
+      
+      expect( code ).to.be.eql '"#" + o.id'
+    
+    it 'should return valid code with an empty array', ->
+      code = Pipelet.safe_identity_code( [] )
+      
+      expect( code ).to.be.eql '"#" + o.id'
+    
+    it 'should return valid code with an array of one element', ->
+      code = Pipelet.safe_identity_code( [ 'year' ] )
+      
+      expect( code ).to.be.eql '"#" + o.year'
+    
+    it 'should return valid code with an array of one element including a space', ->
+      code = Pipelet.safe_identity_code( [ 'birth year' ] )
+      
+      expect( code ).to.be.eql '"#" + o[ "birth year" ]'
+    
+    it 'should return valid code with an array of two elements', ->
+      code = Pipelet.safe_identity_code( [ 'birth year', 'author' ] )
+      
+      expect( code ).to.be.eql '"#" + o[ "birth year" ] + "#" + o.author'
+    
+    it 'should return valid code with an array of three elements including a code injection attempt', ->
+      code = Pipelet.safe_identity_code( [ 'birth year', 'author', 'ending " \\with escape\\' ] )
+      
+      expect( code ).to.be.eql '"#" + o[ "birth year" ] + "#" + o.author + "#" + o[ "ending \\" \\\\with escape\\\\" ]'
+    
+    it 'should allow to build a function that returns an expected string from an Object', ->  
+      f = new Function 'o', 'return ' + code
+      
+      expect( f { "birth year": 1934, "ending \" \\with escape\\": 4 } ).to.be.eql "#1934#undefined#4"
+  
   describe 'create_namespace()', ->
     child = null
     grandchild = null
