@@ -460,9 +460,9 @@ describe 'Transactions test suite', ->
           removed_length: 0
         }
       
-      it 'should continue to provide "more" and the same "transaction_id" after next().get_emit_options()', ->
-        expect( t.next().get_emit_options() ).to.be     options
-        expect( options                     ).to.be.eql { _t: {
+      it 'should continue to provide "more" and the same "transaction_id" after next_options()', ->
+        expect( t.next_options() ).to.be     options
+        expect( options          ).to.be.eql { _t: {
           id: tid
           more: true
         } }
