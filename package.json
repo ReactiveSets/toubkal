@@ -37,7 +37,7 @@
     "easyimage"                    : "2.1.0",
     "express-session"              : "1.15.1",
     "passport"                     : "0.3.2",
-    "compressible"                 : "2.0.9",
+    "compressible"                 : "2.0.10",
     "es5-shim"                     : "4.5.9",
     "domutils"                     : "1.5.1",
     "htmlparser2"                  : "3.9.2",
