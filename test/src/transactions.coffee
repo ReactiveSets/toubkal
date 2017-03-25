@@ -662,22 +662,6 @@ describe 'Transactions test suite', ->
           updates_length: 0
           removes_length: 0
         }
-        
-      it 'should not terinate the transaction after transactions.end_transaction( t ) because of more from upstream', ->
-        transactions.end_transaction( t )
-        
-        expect( t.toJSON() ).to.be.eql {
-          number        : start_count + 2
-          name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
-          tid           : tid
-          count         : 0
-          source_more   : true
-          need_close    : true
-          closed        : false
-          adds_length   : 1
-          updates_length: 0
-          removes_length: 0
-        }
       
       it 'should not have removed the transaction from transactions', ->
         expect( transactions.get_tids() ).to.be.eql [ tid ]
