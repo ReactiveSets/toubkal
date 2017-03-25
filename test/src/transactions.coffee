@@ -431,9 +431,6 @@ describe 'Transactions test suite', ->
           removed_length: 0
         }
       
-      it 't.get_options() should set more', ->
-        expect( t.get_options() ).to.be.eql { more: true } # , __t: t }
-      
       it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
         options = t.get_emit_options()
         _t = options._t
@@ -495,9 +492,6 @@ describe 'Transactions test suite', ->
           removed_length: 1
         }
       
-      it 'should return more with t.get_options()', ->
-        expect( t.get_options() ).to.be.eql { more: true } # { __t: t, more: true }
-      
       it 'should return more with transaction id with t.get_emit_options()', ->
         expect( t.get_emit_options() ).to.be.eql { _t: {
           id: tid
@@ -539,7 +533,7 @@ describe 'Transactions test suite', ->
         }
       
       it 'should throw an exception after 1 more t.next()', ->
-        expect( () -> return t.next() ).to.throwException()
+        expect( () -> t.next() ).to.throwException()
     
     describe 'Transactions()..get_transaction() for four operations with pseudo pipelet, options with more', ->
       transactions = new Transactions()
