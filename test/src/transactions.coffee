@@ -412,9 +412,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : false
           closed        : false
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'after t.next(), count should be 3', ->
@@ -426,9 +426,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : false
           closed        : false
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
       
       it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
@@ -452,9 +452,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should continue to provide "more" and the same "transaction_id" after next_options()', ->
@@ -464,7 +464,7 @@ describe 'Transactions test suite', ->
           more: true
         } }
       
-      it 'should decrease count to 1 and set added_length to 2 after t.__emit_add( [{}{}] )', ->
+      it 'should decrease count to 1 and set adds_length to 2 after t.__emit_add( [{}{}] )', ->
         expect( t.__emit_add( [{},{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
           name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
@@ -473,12 +473,12 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 2
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 2
+          updates_length: 0
+          removes_length: 0
         }
       
-      it 'should decrease count to zero and set removed_length to 1 after t.__emit_remove( [{}] )', ->
+      it 'should decrease count to zero and set removes_length to 1 after t.__emit_remove( [{}] )', ->
         expect( t.__emit_remove( [{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
           name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
@@ -487,9 +487,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 2
-          updated_length: 0
-          removed_length: 1
+          adds_length   : 2
+          updates_length: 0
+          removes_length: 1
         }
       
       it 'should return more with transaction id with t.get_emit_options()', ->
@@ -507,9 +507,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 2
-          updated_length: 0
-          removed_length: 1
+          adds_length   : 2
+          updates_length: 0
+          removes_length: 1
         }
       
       it 'should allow to retrieve options with t.get_emit_options()', ->
@@ -527,9 +527,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 2
-          updated_length: 0
-          removed_length: 1
+          adds_length   : 2
+          updates_length: 0
+          removes_length: 1
         }
       
       it 'should throw an exception after 1 more t.next()', ->
@@ -569,9 +569,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should set one transaction in transactions', ->
@@ -589,9 +589,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should decrease count after t.__emit_add( [] )', ->
@@ -605,12 +605,12 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
         
-      it 'should decrease count and increse added_length after t.__emit_add( [ { id: 1 } ] )', ->
+      it 'should decrease count and increse adds_length after t.__emit_add( [ { id: 1 } ] )', ->
         t.__emit_add( [ { id: 1 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
@@ -621,9 +621,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 1
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 1
+          updates_length: 0
+          removes_length: 0
         }
         
       it 'should decrease count and need close after t.__emit_add( [ { id: 2 } ], true )', ->
@@ -637,9 +637,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : true
           closed        : false
-          added_length  : 1
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 1
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should have emited an add operation to the pipelet', ->
@@ -658,9 +658,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : true
           closed        : false
-          added_length  : 1
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 1
+          updates_length: 0
+          removes_length: 0
         }
         
       it 'should not terinate the transaction after transactions.end_transaction( t ) because of more from upstream', ->
@@ -674,9 +674,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : true
           closed        : false
-          added_length  : 1
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 1
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should not have removed the transaction from transactions', ->
@@ -701,12 +701,12 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 1
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 1
+          updates_length: 0
+          removes_length: 0
         }
       
-      it 'should increase removed_length to 2 after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
+      it 'should increase removes_length to 2 after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
         t.__emit_remove( [ { id:1 }, { id: 2 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
@@ -717,9 +717,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 1
-          updated_length: 0
-          removed_length: 2
+          adds_length   : 1
+          updates_length: 0
+          removes_length: 2
         }
       
       it 'should close the transaction after t.__emit_add( [ { id:4 }, { id: 5 } ] )', ->
@@ -733,9 +733,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : false
           closed        : true
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should have emitted all operations', ->
@@ -784,12 +784,12 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
       
-      it 'should decrease count and increse added_length after t.__emit_add( [ { id: 1 }, { id: 2 }  ] )', ->
+      it 'should decrease count and increse adds_length after t.__emit_add( [ { id: 1 }, { id: 2 }  ] )', ->
         t.__emit_add( [ { id: 1 }, { id: 2 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
@@ -800,9 +800,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 2
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 2
+          updates_length: 0
+          removes_length: 0
         }
         
       it 'should decrease count and need close after t.__emit_add( [ { id: 3 } ] )', ->
@@ -816,9 +816,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 3
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 3
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should have emited no add operation to the pipelet', ->
@@ -837,9 +837,9 @@ describe 'Transactions test suite', ->
           source_more   : true
           need_close    : false
           closed        : false
-          added_length  : 3
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 3
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should return the same transaction after follow-up transactions.get_transaction() with no more', ->
@@ -860,9 +860,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : true
           closed        : false
-          added_length  : 3
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 3
+          updates_length: 0
+          removes_length: 0
         }
       
       it 'should close the transaction after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
@@ -876,9 +876,9 @@ describe 'Transactions test suite', ->
           source_more   : false
           need_close    : false
           closed        : true
-          added_length  : 0
-          updated_length: 0
-          removed_length: 0
+          adds_length   : 0
+          updates_length: 0
+          removes_length: 0
         }
         
       it 'should have output two operations', ->
