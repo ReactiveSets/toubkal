@@ -479,6 +479,8 @@ describe 'Transactions test suite', ->
         }
       
       it 'should decrease count to zero and close the transaction and flush after t.__emit_remove( [{}] )', ->
+        t.end()
+        
         expect( t.__emit_remove( [{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
           name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
