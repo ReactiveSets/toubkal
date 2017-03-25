@@ -478,58 +478,18 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
       
-      it 'should decrease count to zero and set removes_length to 1 after t.__emit_remove( [{}] )', ->
+      it 'should decrease count to zero and close the transaction and flush after t.__emit_remove( [{}] )', ->
         expect( t.__emit_remove( [{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
           name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
           count         : 0
           source_more   : false
-          need_close    : true
-          closed        : false
-          adds_length   : 2
+          need_close    : false
+          closed        : true
+          adds_length   : 0
           updates_length: 0
-          removes_length: 1
-        }
-      
-      it 'should return more with transaction id with t.get_emit_options()', ->
-        expect( t.get_emit_options() ).to.be.eql { _t: {
-          id: tid
-          more: true
-        } }
-      
-      it 'should no longer need close but it should now be closed', ->
-        expect( t.toJSON() ).to.be.eql {
-          number        : start_count + 1
-          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
-          tid           : tid
-          count         : 0
-          source_more   : false
-          need_close    : true
-          closed        : false
-          adds_length   : 2
-          updates_length: 0
-          removes_length: 1
-        }
-      
-      it 'should allow to retrieve options with t.get_emit_options()', ->
-        expect( options = t.get_emit_options() ).to.be.eql { _t: {
-          id: tid
-          more: true
-        } }
-        
-      it 'should not change the state of the transaction', ->
-        expect( t.toJSON() ).to.be.eql {
-          number        : start_count + 1
-          name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
-          tid           : tid
-          count         : 0
-          source_more   : false
-          need_close    : true
-          closed        : false
-          adds_length   : 2
-          updates_length: 0
-          removes_length: 1
+          removes_length: 0
         }
       
       it 'should throw an exception after 1 more t.next()', ->
@@ -676,7 +636,7 @@ describe 'Transactions test suite', ->
         
         expect( t1 ).to.be t
         
-      it 'should have increased transaction\'s operations count by 2', ->
+      it 'should have increased transaction\'s operations count by 2 and source_more should not be false', ->
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
           name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
@@ -728,6 +688,9 @@ describe 'Transactions test suite', ->
           [ 'remove', [ { id: 1 }, { id: 2 } ], options ]
           [ 'add', [  { id: 1 }, { id: 4 }, { id: 5 } ], no_more ]
         ]
+      
+      it 'should have removed the transaction from transactions', ->
+        expect( transactions.get_tids() ).to.be.eql []
     
     describe 'Transactions()..get_transaction() with a fork tag', ->
       transactions = new Transactions()
@@ -807,24 +770,6 @@ describe 'Transactions test suite', ->
       
       it 'should have emited no add operation to the pipelet', ->
         expect( output._operations ).to.be.eql []
-      
-      it 'after ending transaction it should have emited nothing because there is more expected upstream', ->
-        t.end()
-        
-        expect( output._operations ).to.be.eql []
-        
-        expect( t.toJSON()    ).to.be.eql {
-          number        : start_count + 3
-          name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
-          tid           : tid
-          count         : 0
-          source_more   : true
-          need_close    : false
-          closed        : false
-          adds_length   : 3
-          updates_length: 0
-          removes_length: 0
-        }
       
       it 'should return the same transaction after follow-up transactions.get_transaction() with no more', ->
         delete options._t.more
