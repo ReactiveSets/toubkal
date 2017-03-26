@@ -47,6 +47,7 @@ describe 'aggregate()', ->
   by_author                     = null
   by_year                       = null
   books_sales_by_author         = null
+  books_sales_by_author_set     = null
   books_sales_by_author_order   = null
   books_sales_by_author_ordered = null
   books_sales_by_year           = null
@@ -57,6 +58,7 @@ describe 'aggregate()', ->
   tolkien_sales_by_year         = null
   by_author_sorter              = null
   by_year_sorter                = null
+  by_author_year_sorter         = null
   expected                      = null
   
   it 'should not throw during initialization of books sales set', ->
@@ -95,23 +97,8 @@ describe 'aggregate()', ->
     books_sales_by_year   = books_sales_union.aggregate( sales, by_year   ).debug( de && 'sales by year'   )
   
   it 'should not throw while initializing ordered aggregates aggregates', ->
-    by_author_sorter = ( a, b ) ->
-      if a.author < b.author then -1 else if a.author > b.author then 1 else 0
-    
-    by_year_sorter   = ( a, b ) ->
-      a = a.year
-      b = b.year
-      
-      if      a == b         then  0
-      else if a == undefined then -1
-      else if b == undefined then  1
-      else if a == null      then -1
-      else if b == null      then  1
-      else if a < b          then -1
-      else if a > b          then  1
-      else                         0
-    
-    books_sales_by_author_order = books_sales_by_author.set().order( by_author )
+    books_sales_by_author_set   = books_sales_by_author.pass_through().set()
+    books_sales_by_author_order = books_sales_by_author_set.order( by_author )
     books_sales_by_year_order   = books_sales_by_year        .order( by_year   )
     
     by_author_sorter = books_sales_by_author_order._sorter
@@ -823,3 +810,16 @@ describe 'aggregate()', ->
           { author: "Vladimir Nabokov"       , sales:  50, _count: 1, year: 1955 }
           { author: "William Holmes McGuffey", sales: 125, _count: 1, year: 1853 }
         ]
+    
+    it 'should do the same for books_sales_by_author_set', ( done ) ->
+      books_sales_by_author_set._fetch_all ( sales ) -> check done, () ->
+        sales.sort by_author_year_sorter
+        
+        expect( sales ).to.be.eql expected
+    
+    it 'should have an empty anti-state', ->
+      expect( books_sales_by_author_set.b ).to.be.eql []
+    
+    it 'should have a key of [ "author", "year" ]', ->
+      expect( books_sales_by_author_set._key ).to.be.eql [ "author", "year" ]
+    
