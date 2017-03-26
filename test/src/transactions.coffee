@@ -400,7 +400,7 @@ describe 'Transactions test suite', ->
       it 'should be a Transaction with a count of 4', ->
         expect( t ).to.be.a Transaction
         expect( t.source_options ).to.be undefined
-        expect( t.emit_options ).to.be undefined
+        expect( t.options ).to.be undefined
         #expect( t.o.__t ).to.be t
         
       it 't.toJSON() should return a representation of the new transaction', ->
