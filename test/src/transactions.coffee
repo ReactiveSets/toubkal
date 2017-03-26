@@ -431,8 +431,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
       
-      it 't.get_emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
-        options = t.get_emit_options()
+      it 't.emit_options() should provide "more" and a uuid v4 "transaction_id"', ->
+        options = t.emit_options()
         _t = options._t
         tid = _t.id
         
