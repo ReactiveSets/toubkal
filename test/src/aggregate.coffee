@@ -823,3 +823,33 @@ describe 'aggregate()', ->
     it 'should have a key of [ "author", "year" ]', ->
       expect( books_sales_by_author_set._key ).to.be.eql [ "author", "year" ]
     
+    it 'should allow to remove sales for "Dan Brown" in 2004', ( done ) ->
+      books_sales._remove [
+        { id: 17, title: "The Da Vinci Code"                       , author: "Dan Brown"              , sales:        125, year: 2004 }
+      ]
+      
+      books_sales_by_author._fetch_all ( sales ) -> check done, () ->
+        sales.sort by_author_year_sorter
+        
+        expect( sales ).to.be.eql expected = [
+          { author: "Agatha Christie"        , sales: 100, _count: 1, year: undefined }
+          { author: "Charles Dickens"        , sales: 251, _count: 1, year: 1859 }
+          { author: "Dan Brown"              , sales:  39, _count: 1, year: 2000 }
+          { author: "Dan Brown"              , sales:  80, _count: 1, year: 2003 }
+          { author: "Ellen G. White"         , sales:  60, _count: 1, year: null }
+          { author: "J. R. R. Tolkien"       , sales: 116, _count: 1, year: 1937 }
+          { author: "J. R. R. Tolkien"       , sales: 150, _count: 1, year: 1955 }
+          { author: "J.K. Rowling"           , sales:   0, _count: 1, year: 1999 }
+          { author: "Paulo Coelho"           , sales:  65, _count: 1, year: 1988 }
+          { author: "Roald Dahl"             , sales:  13, _count: 1, year: undefined }
+          { author: "Stieg Larsson"          , sales:  30, _count: 1, year: 2005 }
+          { author: "Suzanne Collins"        , sales:  22, _count: 1, year: 2009 }
+          { author: "Vladimir Nabokov"       , sales:  50, _count: 1, year: 1955 }
+          { author: "William Holmes McGuffey", sales: 125, _count: 1, year: 1853 }
+        ]
+    
+    it 'should do the same for books_sales_by_author_set', ( done ) ->
+      books_sales_by_author_set._fetch_all ( sales ) -> check done, () ->
+        sales.sort by_author_year_sorter
+        
+        expect( sales ).to.be.eql expected
