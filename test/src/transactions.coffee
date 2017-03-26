@@ -464,8 +464,8 @@ describe 'Transactions test suite', ->
           more: true
         } }
       
-      it 'should decrease count to 1 and set adds_length to 2 after t.__emit_add( [{}{}] )', ->
-        expect( t.__emit_add( [{},{}] ).toJSON() ).to.be.eql {
+      it 'should decrease count to 1 and set adds_length to 2 after t.add( [{}{}] )', ->
+        expect( t.add( [{},{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
           name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
@@ -478,8 +478,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
       
-      it 'should decrease count to zero and close the transaction and flush after t.__emit_remove( [{}] )', ->
-        expect( t.__emit_remove( [{}] ).toJSON() ).to.be.eql {
+      it 'should decrease count to zero and close the transaction and flush after t.remove( [{}] )', ->
+        expect( t.remove( [{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
           name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
           tid           : tid
@@ -554,8 +554,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
       
-      it 'should decrease count after t.__emit_add( [] )', ->
-        t.__emit_add( [] )
+      it 'should decrease count after t.add( [] )', ->
+        t.add( [] )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
@@ -570,8 +570,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
         
-      it 'should decrease count and increse adds_length after t.__emit_add( [ { id: 1 } ] )', ->
-        t.__emit_add( [ { id: 1 } ] )
+      it 'should decrease count and increse adds_length after t.add( [ { id: 1 } ] )', ->
+        t.add( [ { id: 1 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
@@ -586,8 +586,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
         
-      it 'should decrease count and need close after t.__emit_add( [ { id: 2 } ], true )', ->
-        t.__emit_add( [ { id: 2 } ], true )
+      it 'should decrease count and need close after t.add( [ { id: 2 } ], true )', ->
+        t.add( [ { id: 2 } ], true )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
@@ -607,8 +607,8 @@ describe 'Transactions test suite', ->
           [ 'add', [ { id: 2 } ], options ]
         ]
       
-      it 'should raise an exception on extra t.__emit_add( [ { id: 1 } ], true )', ->
-        expect( -> t.__emit_add( [ { id: 3 } ], true ) ).to.throwException()
+      it 'should raise an exception on extra t.add( [ { id: 1 } ], true )', ->
+        expect( -> t.add( [ { id: 3 } ], true ) ).to.throwException()
       
       it 'should still be not closed, have a count set to zero and adds_length to 1', ->
         expect( t.toJSON()    ).to.be.eql {
@@ -651,8 +651,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
       
-      it 'should increase removes_length to 2 after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
-        t.__emit_remove( [ { id:1 }, { id: 2 } ] )
+      it 'should increase removes_length to 2 after t.remove( [ { id:1 }, { id: 2 } ] )', ->
+        t.remove( [ { id:1 }, { id: 2 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
@@ -667,8 +667,8 @@ describe 'Transactions test suite', ->
           removes_length: 2
         }
       
-      it 'should close the transaction after t.__emit_add( [ { id:4 }, { id: 5 } ] )', ->
-        t.__emit_add( [ { id: 4 }, { id: 5 } ] )
+      it 'should close the transaction after t.add( [ { id:4 }, { id: 5 } ] )', ->
+        t.add( [ { id: 4 }, { id: 5 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
@@ -737,8 +737,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
       
-      it 'should decrease count and increse adds_length after t.__emit_add( [ { id: 1 }, { id: 2 }  ] )', ->
-        t.__emit_add( [ { id: 1 }, { id: 2 } ] )
+      it 'should decrease count and increse adds_length after t.add( [ { id: 1 }, { id: 2 }  ] )', ->
+        t.add( [ { id: 1 }, { id: 2 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
@@ -753,8 +753,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
         
-      it 'should decrease count and need close after t.__emit_add( [ { id: 3 } ] )', ->
-        t.__emit_add( [ { id: 3 } ] )
+      it 'should decrease count and need close after t.add( [ { id: 3 } ] )', ->
+        t.add( [ { id: 3 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
@@ -795,8 +795,8 @@ describe 'Transactions test suite', ->
           removes_length: 0
         }
       
-      it 'should close the transaction after t.__emit_remove( [ { id:1 }, { id: 2 } ] )', ->
-        t.__emit_remove( [ { id:1 }, { id: 2 } ] )
+      it 'should close the transaction after t.remove( [ { id:1 }, { id: 2 } ] )', ->
+        t.remove( [ { id:1 }, { id: 2 } ] )
         
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
