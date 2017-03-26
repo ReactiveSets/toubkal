@@ -479,8 +479,6 @@ describe 'Transactions test suite', ->
         }
       
       it 'should decrease count to zero and close the transaction and flush after t.__emit_remove( [{}] )', ->
-        t.end()
-        
         expect( t.__emit_remove( [{}] ).toJSON() ).to.be.eql {
           number        : start_count + 1
           name          : 'Transaction(  #' + ( start_count + 1 ) + ' )'
@@ -608,10 +606,11 @@ describe 'Transactions test suite', ->
         expect( output._operations ).to.be.eql [
           [ 'add', [ { id: 2 } ], options ]
         ]
-        
+      
       it 'should raise an exception on extra t.__emit_add( [ { id: 1 } ], true )', ->
         expect( -> t.__emit_add( [ { id: 3 } ], true ) ).to.throwException()
-        
+      
+      it 'should still be not closed, have a count set to zero and adds_length to 1', ->
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 2
           name          : 'Transaction( output #' + ( start_count + 2 ) + ' )'
@@ -628,12 +627,12 @@ describe 'Transactions test suite', ->
       it 'should not have removed the transaction from transactions', ->
         expect( transactions.get_tids() ).to.be.eql [ tid ]
       
-      it 'should have emited two operations in total to the pipelet', ->
+      it 'should have emited one operation in total to the pipelet', ->
         expect( output._operations ).to.be.eql [
           [ 'add', [ { id: 2 } ], options ]
         ]
-        
-      it 'should return the same transaction after follow-up transactions.get_transaction()', ->
+      
+      it 'should return the same transaction after follow-up transactions.get_transaction() for 2 more operations', ->
         t1 = transactions.get_transaction 2, no_more, output
         
         expect( t1 ).to.be t
@@ -686,9 +685,9 @@ describe 'Transactions test suite', ->
       
       it 'should have emitted all operations', ->
         expect( output._operations ).to.be.eql [
-          [ 'add', [ { id: 2 } ], options ]
-          [ 'remove', [ { id: 1 }, { id: 2 } ], options ]
-          [ 'add', [  { id: 1 }, { id: 4 }, { id: 5 } ], no_more ]
+          [ 'add'   , [ { id: 2 }                       ], options ]
+          [ 'remove', [ { id: 1 }, { id: 2 }            ], options ]
+          [ 'add'   , [ { id: 1 }, { id: 4 }, { id: 5 } ], no_more ]
         ]
       
       it 'should have removed the transaction from transactions', ->
