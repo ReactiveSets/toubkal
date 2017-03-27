@@ -256,7 +256,7 @@ describe 'Pipelet', ->
           expect( parameters  ).to.be.eql [
             'p1'
             {
-              key: [ 'id' ]
+              source_key: [ 'id' ]
               test: true
               other: 'other'
               name: expect_name parameters, defaults, 1
@@ -264,7 +264,7 @@ describe 'Pipelet', ->
           ]
       )( 'p1' )
     
-    it 'should use source _key if provided', ->
+    it 'should use source._key if provided', ->
       ( ( p1, options ) ->
           parameters = as_array( arguments )
           
@@ -273,7 +273,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               test: true
               other: 'other'
               name: expect_name parameters, defaults, 1
@@ -290,7 +290,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               test: true
               other: 'other'
               name: expect_name parameters, defaults, 1
@@ -307,7 +307,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               test: true
               name: expect_name parameters, {}, 1
             }
@@ -325,7 +325,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               name: expect_name parameters, {}, 1
             }
           ]
@@ -342,7 +342,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               name: expect_name parameters, {}, 1
             }
           ]
@@ -359,7 +359,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               p1: 'test p1'
               name: expect_name parameters, {}, 1
             }
@@ -386,7 +386,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               p1: 'test p1'
               from_caller: 1
               name: expect_name parameters, {}, 1
@@ -407,7 +407,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               p1: 'test p1'
               from_caller: 1
               name: expect_name parameters, {}, 1
@@ -426,7 +426,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               p1: 'from caller'
               name: 'caller name'
             }
@@ -442,7 +442,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
               p1: 'test p1'
               other: 'from caller'
               name: expect_name parameters, defaults, 1
@@ -459,6 +459,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
+              source_key: [ 'path' ]
               key: [ 'node-id', 'id' ]
               p1: 'test p1'
               other: 'other'
@@ -478,6 +479,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'p1'
             {
+              source_key: [ 'path' ]
               key: [ 'uuid' ]
               p1: 'test p1'
               other: 'other'
@@ -497,7 +499,8 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'path'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
+              key: [ p1 ]
               p1: 'test path'
               other: 'other'
               name: expect_name parameters, defaults, 1
@@ -528,7 +531,8 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.eql [
             'path'
             {
-              key: [ 'path' ]
+              source_key: [ 'path' ]
+              key: [ p1 ]
               p1: 'test path'
               other: 'other'
               name: expect_name parameters, defaults, 1
@@ -547,6 +551,7 @@ describe 'Pipelet', ->
           expect( parameters ).to.be.an Array
           expect( parameters[ 0 ] ).to.be.eql undefined
           expect( parameters[ 1 ] ).to.be.eql {
+            source_key: [ 'path' ]
             key: [ 'uuid' ]
             other: 'other'
             name: expect_name parameters, defaults, 1
