@@ -1334,7 +1334,25 @@
 /* --------------------------------------------------------------------------
     @term antistate
     
-    @short State holding @@remove operations
+    @short State of pipelets holding @@[removes]remove before matching @@[adds]add
+    
+    @description
+    In some cases, @@[removes]remove may be emitted before corresponding adds:
+    - Using pipelet revert() to build complementary sets.
+    - When chards emit assynchronously, operations may be received
+    out-of-order by subscribing pipelets.
+    
+    As much as @@stateless pipelets can handle these removes as any other,
+    this poses a special challenge to stateful pipelets which would not
+    find these values to remove in their current state.
+    
+    To handle this issue, some stateful pipelets such as pipelet set()
+    implement an anti-state that holds removed values with no matching adds.
+    When subsequent @@add operations are received, added values are first
+    looked-up into the anti-state and if found are removed from it.
+    
+    Stateful pipelets that do not support an anti-state can be preceded
+    by a @@pipelet:set() pipelet to handle anti-removes.
 */
 
 /* --------------------------------------------------------------------------
