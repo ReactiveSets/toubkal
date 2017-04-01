@@ -1319,7 +1319,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
     
     it 'should have subscriber_1 with a count of 1 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_1, count: 1 }
       ]
     
@@ -1342,7 +1342,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
     
     it 'should now have subscriber_1 and subscriber_2 both with a count of 1 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_1, count: 1 }
         { input: subscriber_2, count: 1 }
       ]
@@ -1401,7 +1401,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
     it 'should now have subscriber_1, subscriber_2, and subscriber_3 with a count of 4 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_1, count: 1 }
         { input: subscriber_2, count: 1 }
         { input: subscriber_3, count: 4 }
@@ -1454,7 +1454,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
     it 'should now have subscriber_1, and subscriber_3 with a count of 4 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_1, count: 1 }
         { input: subscriber_3, count: 4 }
       ]
@@ -1506,7 +1506,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
       
     it 'should now have subscriber_1, and subscriber_3 with a count of 3 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_1, count: 1 }
         { input: subscriber_3, count: 3 }
       ]
@@ -1552,7 +1552,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
     
     it 'should now have subscriber_3 with a count of 3 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_3, count: 3 }
       ]
     
@@ -1597,7 +1597,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
     
     it 'should still have subscriber_3 with a count of 3 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_3, count: 3 }
       ]
     
@@ -1625,7 +1625,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
     
     it 'should now have subscriber_3 with a count of 1 in list of all subscribers', ->
-      expect( tree.get_all_subscribers() ).to.be.eql [
+      expect( tree.subscribers ).to.be.eql [
         { input: subscriber_3, count: 1 }
       ]
     
@@ -1640,7 +1640,7 @@ describe 'Query & Query_Tree test suite:', ->
       }
     
     it 'list of all subscribers should now be empty', ->
-      expect( tree.get_all_subscribers() ).to.be.eql []
+      expect( tree.subscribers ).to.be.eql []
   
   describe 'Query_Tree routing:', ->
     source = null
