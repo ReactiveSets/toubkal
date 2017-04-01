@@ -1300,7 +1300,7 @@ describe 'Query & Query_Tree test suite:', ->
         subscribers: []
       }
     
-    it 'Adding a query should generate a query tree', ->
+    it 'Adding a query to subscriber_1 should generate a query tree', ->
       expect( tree
         .add( [ { flow: 'user' } ], subscriber_1 )
         .top
@@ -1317,8 +1317,13 @@ describe 'Query & Query_Tree test suite:', ->
         keys       : [ "flow" ]
         subscribers: []
       }
-      
-    it 'Adding an empty OR-term should add subscriber to the root of the tree - i.e. unfiltered', ->
+    
+    it 'should have subscriber_1 with a count of 1 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_1, count: 1 }
+      ]
+    
+    it 'Adding an empty OR-term should add subscriber_2 to the root of the tree - i.e. unfiltered', ->
       expect( tree
         .add( [ {} ], subscriber_2 )
         .top
@@ -1335,8 +1340,14 @@ describe 'Query & Query_Tree test suite:', ->
         keys       : [ "flow" ]
         subscribers: [ subscriber_2 ]
       }
-      
-    it 'Adding an additional query should expand the query tree', ->
+    
+    it 'should now have subscriber_1 and subscriber_2 both with a count of 1 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_1, count: 1 }
+        { input: subscriber_2, count: 1 }
+      ]
+    
+    it 'Adding an additional query with 4 distinct terns to subscriber_3 should expand the query tree', ->
       expect( tree
         
         .add( [
@@ -1389,7 +1400,14 @@ describe 'Query & Query_Tree test suite:', ->
         subscribers: [ subscriber_2 ]
       }
       
-    it 'Remove a query should shrink the query tree', ->
+    it 'should now have subscriber_1, subscriber_2, and subscriber_3 with a count of 4 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_1, count: 1 }
+        { input: subscriber_2, count: 1 }
+        { input: subscriber_3, count: 4 }
+      ]
+    
+    it 'Remove query to subscriber_2 should shrink the query tree', ->
       expect( tree
         .remove( [ {} ], subscriber_2 )
         .top
@@ -1435,7 +1453,13 @@ describe 'Query & Query_Tree test suite:', ->
         subscribers: []
       }
       
-    it 'Remove another query should shrink the query tree further', ->
+    it 'should now have subscriber_1, and subscriber_3 with a count of 4 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_1, count: 1 }
+        { input: subscriber_3, count: 4 }
+      ]
+    
+    it 'Remove one part of query to subscriber_3 should shrink the query tree further', ->
       expect( tree
         .remove( [ { flow: 'user' } ], subscriber_3 )
         .top
@@ -1481,7 +1505,13 @@ describe 'Query & Query_Tree test suite:', ->
         subscribers: []
       }
       
-    it 'Remove another query should shrink the query tree even further', ->
+    it 'should now have subscriber_1, and subscriber_3 with a count of 3 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_1, count: 1 }
+        { input: subscriber_3, count: 3 }
+      ]
+    
+    it 'Remove query to subscriber_1 should shrink the query tree even further', ->
       expect( tree
         .remove( [ { flow: 'user' } ], subscriber_1 )
         .top
@@ -1520,7 +1550,12 @@ describe 'Query & Query_Tree test suite:', ->
         keys      : [ "flow", "id" ]
         subscribers: []
       }
-      
+    
+    it 'should now have subscriber_3 with a count of 3 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_3, count: 3 }
+      ]
+    
     it 'Add and Remove empty queries should not change anything', ->
       expect( tree
         .add( [] ).remove( [] )
@@ -1560,8 +1595,13 @@ describe 'Query & Query_Tree test suite:', ->
         keys      : [ "flow", "id" ]
         subscribers: []
       }
-      
-    it 'Remove another query should shrink the query tree even further', ->
+    
+    it 'should still have subscriber_3 with a count of 3 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_3, count: 3 }
+      ]
+    
+    it 'Remove 2 more sub-expression from query to subscriber_3 should shrink the query tree even further', ->
       expect( tree
         
         .remove( [
@@ -1583,8 +1623,13 @@ describe 'Query & Query_Tree test suite:', ->
         keys      : [ "id" ]
         subscribers: []
       }
-      
-    it 'Remove the last record, should empty the query tree', ->
+    
+    it 'should now have subscriber_3 with a count of 1 in list of all subscribers', ->
+      expect( tree.get_all_subscribers() ).to.be.eql [
+        { input: subscriber_3, count: 1 }
+      ]
+    
+    it 'Remove the last sub-expression to subscriber_3 should empty the query tree', ->
       expect( tree
         .remove( [ { id: 425 } ], subscriber_3 )
         .top
@@ -1593,7 +1638,10 @@ describe 'Query & Query_Tree test suite:', ->
         keys      : []
         subscribers: []
       }
-      
+    
+    it 'list of all subscribers should now be empty', ->
+      expect( tree.get_all_subscribers() ).to.be.eql []
+  
   describe 'Query_Tree routing:', ->
     source = null
     output = null
