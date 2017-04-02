@@ -390,9 +390,6 @@
     There is currently no meachanism to abort or rollback a transaction but any operation can
     be reverted using a 'remove' for each 'add' and an 'add' for each 'remove'.
     
-    Helper function help manage options:
-      - RS.options_forward( options ): get transaction options from options
-    
     Vertical and Horizontal Distribution:
     ------------------------------------
     Pipelets can be distributed vertically or horizontally.
