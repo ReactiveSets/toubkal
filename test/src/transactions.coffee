@@ -110,9 +110,6 @@ describe 'Transactions test suite', ->
       it 'should return {} with options { a: 1, _t: { more: "" } }', ->
         expect( options_forward { a: 1, _t: { more: "" } } ).to.be.eql {}
       
-      it 'should throw an exception for missing transaction id with options { a: 1, _t: { more: true } }', ->
-        expect( () -> options_forward { a: 1, b: {}, _t: { more: true } } ).to.throwException()
-
       it 'should return { _t: { more: true, id: uuid } } with options { a: 1, _t: { more: true, id: uuid } }', ->
         more = { a: 1, _t: { more: true, id: uuid } }
         
