@@ -98,17 +98,14 @@ describe 'Transactions test suite', ->
         expect( options_forward ).to.be.a( 'function' ) &&
         expect( options_forward.length ).to.be.eql 1
       
-      it 'should return {} when called with no source options', ->
-        expect( options_forward() ).to.be.eql {}
+      it 'should return undefined when called with no source options', ->
+        expect( options_forward() ).to.be.eql undefined
       
-      it 'should return {} with options { a: 1, b: {}, _t: { more: false } }', ->
-        expect( options_forward { a: 1, b: {}, _t: { more: false } } ).to.be.eql {}
+      it 'should return { _t: { more: false } } with options { a: 1, b: {}, _t: { more: false } }', ->
+        expect( options_forward { a: 1, b: {}, _t: { more: false } } ).to.be.eql { _t: { more: false } }
       
-      it 'should return {} with options { a: 1; b: {} }', ->
-        expect( options_forward { a: 1, b: {} } ).to.be.eql {}
-      
-      it 'should return {} with options { a: 1, _t: { more: "" } }', ->
-        expect( options_forward { a: 1, _t: { more: "" } } ).to.be.eql {}
+      it 'should return undefined with options { a: 1; b: {} }', ->
+        expect( options_forward { a: 1, b: {} } ).to.be.eql undefined
       
       it 'should return { _t: { more: true, id: uuid } } with options { a: 1, _t: { more: true, id: uuid } }', ->
         more = { a: 1, _t: { more: true, id: uuid } }
@@ -121,7 +118,7 @@ describe 'Transactions test suite', ->
         more = { _t: { more: false, id: uuid } }
         
         expect( options_forward more ).to.be.eql {
-          _t: { id: uuid }
+          _t: { id: uuid, more: false }
         }
         
       it 'should return { _t: { more: true, id: uuid } } with options { _t: { more: 1, id: uuid } }', ->
@@ -131,13 +128,6 @@ describe 'Transactions test suite', ->
           _t: { more: true, id: uuid }
         }
         
-      it 'should return { _t: { id: uuid } } with options { _t: { more: 0, id: uuid } }', ->
-        more = { _t: { more: 0, id: uuid } }
-        
-        expect( options_forward( more ) ).to.be.eql {
-          _t: { id: uuid }
-        }
-      
       it 'should return { _t: { id: uuid } } with options { _t: { id: uuid } }', ->
         more = { _t : { id: uuid } }
         
