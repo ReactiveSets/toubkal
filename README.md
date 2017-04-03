@@ -858,9 +858,11 @@ Work In Progress.
   - Based on the piexif library, handling JPEG EXIF:
     - piexif_parse(): Parses content EXIF using the piexifjs library
     - piexif_insert(): Inserts EXIF into content, using the piexif library
+  - json_hide(): Hide attribute values in downstream pipelets using JSON.stringify()
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+json_hide()                         | Hide attribute values in downstream pipelets using JSON.stringify()
 debug()                             | Conditional trace()
 source_map_support_min()            | Provides minified asset for browser source map support
 remove_destination_with()           | Disconnect pipelet's first destination when source disconnects

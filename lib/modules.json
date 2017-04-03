@@ -20,7 +20,8 @@
       { "module": "mailer", "dependencies": [ "nodemailer" ] },
       "passport",
       "express",
-      "thumbnails"
+      "thumbnails",
+      "json_hide"
     ]
   },
   
