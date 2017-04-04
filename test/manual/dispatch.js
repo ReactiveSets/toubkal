@@ -10,8 +10,8 @@ var rs     = require( 'toubkal' )
   , c      = a.debug( de && 'a', { all: true, pick: { id: '.id', a: '.a.a' } } )
   
               .dispatch( b.debug( de && 'b' ), function( a ) {
-                return a //.debug( de && 'in' )
-              }, { branches_tag: 'branches tag', name: 'c' } )
+                return a.debug( de && 'in' )
+              }, { branches_tag: 'branches tag', name: 'c', single: true } )
               
               //.pass_through()
               .debug( de && 'c', { tag: 'b' } )
@@ -26,6 +26,13 @@ var rs     = require( 'toubkal' )
 
 c.greedy();
 
+// add in a transaction
 b_in.listen( 0, [ { id: 2 } ], o_more )
 b_in.listen( 0, [           ], o      )
+
+// remove plus add in a transaction
+b_in.listen( 1, [ { id: 2 } ], o_more )
+b_in.listen( 0, [ { id: 2 } ], o_more )
+b_in.listen( 0, [           ], o      )
+
 //a_in.listen( 0, [           ], o      )
