@@ -14,7 +14,7 @@ var rs     = require( 'toubkal' )
               }, { branches_tag: 'branches tag', name: 'c', single: true } )
               
               //.pass_through()
-              .debug( de && 'c', { tag: 'b' } )
+              .debug( de && 'c-trace', { tag: 'b' } )
               .greedy()
               
   , forks  //= [ 'b' ]
