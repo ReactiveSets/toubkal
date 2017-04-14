@@ -32,7 +32,6 @@ rs     = this.rs     || utils.rs
 RS      = rs.RS
 extend  = RS.extend
 clone   = extend.clone
-uuid_v4 = RS.uuid_v4
 
 slice = Array.prototype.slice
 
