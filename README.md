@@ -696,27 +696,28 @@ Work In Progress.
     - Using revert(), reverting add into remove, remove into add, and swapping update operations.
 
 - Complex authorizations and validation:
-  - using adds(), removes() and updates() to differentiate between Create, Delete and Update operations
-    and apply authorization rules accordingly.
-  - use pipelet fetch() to check authorizations
-  - using not_exists() to test appropriate existance on adds, removes and updates
-
-- Redesign of Plug.._fetch() && ..update_upstream_query(), almost completed and needs more testing:
-  - Implemented in Plug base class of all inputs and outputs
-  - Replaces all implementations of fetch on inputs and outputs
-  - Forward compatible with fetch() API, the API may be deprecated once migration to new API is complete
-  - All plugs now have a source, enables plugs pipelines for fetch() && update_upstream_query()
-  - Synchronize update_upstream_query() and fetch() for data consistency
-  - Fetch receivers can now receive removes, updates and operations options
-  - Allow query transforms on all plugs
-  - Filters fetch_unfiltered() if defined
-  - Filters through _transform() if defined and fetch_unfiltered() not defined
-  - Cancel ongoing fetches when pipelet disconnects (still needs to revert previously fetched values)
-  - Union support for adding and removing sources while fetching
+  - using adds(), removes() and updates() to differentiate between Create,
+  Delete and Update operations and apply authorization rules accordingly.
+  - use pipelet fetch() to check authorizations.
+  - using not_exists() to test appropriate existance on adds, removes and updates.
 
 - Build Toubkal site, featuring documentation and examples
 
 #### Completed Work:
+
+- Redesign of Plug.._fetch() && ..update_upstream_query():
+  - Synchronize update_upstream_query() and fetch() to guaranty data consistency
+  - Fetch receivers can now receive removes, updates and operations options, allows complementary sets
+  - Allow query transforms on all plugs
+  - Filters fetch_unfiltered() if defined
+  - Filters through _transform() if defined
+  - Cancel ongoing fetches when pipelet disconnects (still needs to revert previously fetched values)
+  - Union support for adding and removing sources while fetching
+  - Union fetch signals terminated sources downstream allowing to listen to these source while other sources terminate
+  - All plugs now have a source, enables plugs pipelines for fetch() && update_upstream_query()
+  - Implemented in Plug base class of all inputs and outputs
+  - Replaces all implementations of fetch on inputs and outputs
+  - Forward compatible with fetch() API, the API may be deprecated once migration to new API is complete
 
 - Documentation extraction format from source code comments:
   - Using pipelets:
@@ -737,7 +738,7 @@ Work In Progress.
     - line-oriented
     - indentation-sensitive
     - can contain github-flavored markdown
-    - The "@" character is interpreted as meta-data for this format, can be escaped using the "\" character. 
+    - The "@" character is interpreted as meta-data for this format, can be escaped using the "\\" character. 
 
   - @tag: indicates a documentation sub-section, first tag in a comment indicates start of documented item:
     - if tag is followed by a column ":", the sub-section is multiline, otherwise it is contained on a single line
