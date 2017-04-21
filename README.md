@@ -719,6 +719,15 @@ Work In Progress.
   - Replaces all implementations of fetch on inputs and outputs
   - Forward compatible with fetch() API, the API may be deprecated once migration to new API is complete
 
+- Allow automatic synchronization of all inputs of a pipelet, as long as one
+  uses method Pipelet.._add_input() to add additional inputs. This relies on
+  sharing input transactions between all inputs, and other modifications to
+  make this work properly on controllets. Implemented in filter() and
+  $to_dom().
+
+- Reinstate update as a first-class operation, making it easier to handle updates
+
+
 - Documentation extraction format from source code comments:
   - Using pipelets:
     - acorn()
@@ -746,30 +755,36 @@ Work In Progress.
     - plurals indicate a list of items described in paragraphs starting with a hyphen "-"
 
     - list of top-level tags:
-      - @term        : a term
-      - @namespace   ; namespace, e.g. "rs"
-      - @flow        : a dataflow name
-      - @pipelet     : pipelet signature
-      - @function    : function signature
-      - @class       : a class constructor signature
-      - @method      : instance method signature
-      - @class_method: class method signature
+    
+      Tag           | Description
+      --------------|---------------------------------
+      @term         | a term
+      @namespace    | namespace, e.g. "rs"
+      @flow         | a dataflow name
+      @pipelet      | pipelet signature
+      @function     | function signature
+      @class        | a class constructor signature
+      @method       | instance method signature
+      @class_method | class method signature
 
     - documentation items attributes:
-      - @is_a        : parent class name or list of
-      - @short       : a short description on one line
-      - @description : a long description
-      - @parameters  : list of pipelet, function, method parameters
-      - @returns     : function or method returned value
-      - @throws      : list of conditions that throw errors
-      - @examples    : list of usage examples
-      - @source      : expected source values' attributes
-      - @emits       : emitted output values' attributes
-      - @todo        : suggestion for future version
-      - @coverage    : indicates automatic tests coverage
-      - @manual      : a documentation manual name this belongs-to
-      - @section     : a section name within a manual
-      - @api         : indicates API maturity: experimental, alpha, beta, stable, deprecated
+    
+      Attribute     | Desciption
+      --------------|--------------------------------------------------------
+      @is_a         | parent class name or list of
+      @short        | a short description on one line
+      @description  | a long description
+      @parameters   | list of pipelet, function, method parameters
+      @returns      | function or method returned value
+      @throws       | list of conditions that throw errors
+      @examples     | list of usage examples
+      @source       | expected source values' attributes
+      @emits        | emitted output values' attributes
+      @todo         | suggestion for future version
+      @coverage     | indicates automatic tests coverage
+      @manual       | a documentation manual name this belongs-to
+      @section      | a section name within a manual
+      @api          | indicates API maturity: experimental, alpha, beta, stable, deprecated
   
   - @@keyword: indicates a link to another section of the documentation:
     - e.g. This is @@stateless, @@synchronous, @@lazy pipelet.
@@ -783,12 +798,6 @@ Work In Progress.
   - update_fetched(): Update fetched values in a transaction
   - fetched_differences(): Emits differences (A - B) between two fetched sets A then B
   - emit_operations(): Emits remove, update, and add operations in a transaction
-
-- Allow automatic synchronization of all inputs of a pipelet, as long as one uses method Pipelet.._add_input() to add additional inputs.
-  This relies on sharing input transactions between all inputs, and other modifications to make this work properly on controllets.
-  Implemented in filter() and $to_dom()
-
-- Reinstate update as a first-class operation, making it easier to handle updates
 
 - Hot server-code reloading:
   - on required module file update
