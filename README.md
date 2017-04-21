@@ -712,6 +712,7 @@ Work In Progress.
   - Filters fetch_unfiltered() if defined
   - Filters through _transform() if defined
   - Cancel ongoing fetches when pipelet disconnects (still needs to revert previously fetched values)
+  - Abort cancelled fetches upstream for which fetched values will be ignored
   - Union support for adding and removing sources while fetching
   - Union fetch signals terminated sources downstream allowing to listen to these source while other sources terminate
   - All plugs now have a source, enables plugs pipelines for fetch() && update_upstream_query()
