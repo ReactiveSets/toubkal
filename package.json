@@ -39,7 +39,7 @@
     "passport"                     : "0.3.2",
     "compressible"                 : "2.0.10",
     "es5-shim"                     : "4.5.9",
-    "domutils"                     : "1.6.0",
+    "domutils"                     : "1.6.2",
     "htmlparser2"                  : "3.9.2",
     "css-select"                   : "1.3.0-rc0",
     "url-pattern"                  : "1.0.3",
