@@ -32,7 +32,7 @@ require './transactions'
 require './extend'
 require './subclass'
 require './code'
-require '/picker'
+require './picker'
 
 # core
 require './RS'
