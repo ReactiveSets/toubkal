@@ -48,7 +48,7 @@ remove = ( property, removed ) ->
 
 describe 'Walking though differences using object_diff()', ->
   it 'should allow to add all attributes, when removed is undefined', ->
-    diff { a: 1, c: 1, d: 2 }
+    diff undefined, { a: 1, c: 1, d: 2 }
     
     expect( result ).to.be.eql [
       [ "set", "a", 1, undefined ]
@@ -57,7 +57,7 @@ describe 'Walking though differences using object_diff()', ->
     ]
   
   it 'should remove all attributes if added is undefined', ->
-    diff undefined, { a: 1, b: 1, d: 1 }
+    diff { a: 1, b: 1, d: 1 }
     
     expect( result ).to.be.eql [
       [ "remove", "a", 1 ]
@@ -66,7 +66,7 @@ describe 'Walking though differences using object_diff()', ->
     ]
   
   it 'should allow to remove and set attributes', ->
-    diff { a: 1, c: 1, d: 2 }, { a: 1, b: 1, d: 1 }
+    diff { a: 1, b: 1, d: 1 }, { a: 1, c: 1, d: 2 }
     
     expect( result ).to.be.eql [
       [ "remove", "b", 1 ]
@@ -77,7 +77,7 @@ describe 'Walking though differences using object_diff()', ->
   it 'should allow to set attributes if remove function is undefined', ->
     remove = undefined
     
-    diff { a: 1, c: 1, d: 2 }, { a: 1, b: 1, d: 1 }
+    diff { a: 1, b: 1, d: 1 }, { a: 1, c: 1, d: 2 }
     
     expect( result ).to.be.eql [
       [ "set", "c", 1, undefined ]
@@ -87,6 +87,6 @@ describe 'Walking though differences using object_diff()', ->
   it 'should allow to set attributes if remove function is undefined', ->
     set = undefined
     
-    diff { a: 1, c: 1, d: 2 }, { a: 1, b: 1, d: 1 }
+    diff { a: 1, b: 1, d: 1 }, { a: 1, c: 1, d: 2 }
     
     expect( result ).to.be.eql []
