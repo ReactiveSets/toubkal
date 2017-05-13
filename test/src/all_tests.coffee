@@ -25,6 +25,7 @@
 # utils
 require './clone'
 require './value_equals'
+require './object_diff'
 require './lazy_logger'
 require './query'
 require './event_emitter'
