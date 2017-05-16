@@ -1,3 +1,4 @@
+
 ###
     all_tests.coffee
     
@@ -51,7 +52,7 @@ require './require'
 require './file'
 require './html_parse'
 require './html_serialize'
-require './url_pattern'
+require './url'
 require './query_selector'
 
 require './mailer'
