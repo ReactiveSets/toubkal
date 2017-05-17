@@ -1,7 +1,7 @@
 ###
     store.coffee
 
-    Copyright (c) 2013-2016, Reactive Sets
+    Copyright (c) 2013-2017, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -22,17 +22,14 @@
 # rs test utils
 # -------------
 
-de = false
+utils           = require( './tests_utils.js' ) unless this.expect
 
-utils  = require( './tests_utils.js' ) unless this.expect
-
-expect = this.expect || utils.expect
-check  = this.check  || utils.check
-rs     = this.rs     || utils.rs
-RS     = rs.RS
-Store  = RS.Store
-
-expect_receiver = utils.expect_receiver
+expect          = this.expect          || utils.expect
+check           = this.check           || utils.check
+expect_receiver = this.expect_receiver || utils.expect_receiver
+rs              = this.rs              || utils.rs
+RS              = rs.RS
+Store           = RS.Store
 
 # ----------------------------------------------------------------------------------------------
 # store test suite
