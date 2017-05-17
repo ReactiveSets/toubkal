@@ -32,22 +32,11 @@ rs     = this.rs     || utils.rs
 RS     = rs.RS
 Store  = RS.Store
 
+expect_receiver = utils.expect_receiver
+
 # ----------------------------------------------------------------------------------------------
 # store test suite
 # ----------------
-
-expect_receiver = ( expected, l  ) ->
-  if typeof l != 'undefined'
-    expect( expected.length ).to.be l
-  
-  i =  -1
-  ( values, no_more, operation ) ->
-    ++i
-    
-    expect( [ i, operation, values ] ).to.be.eql expected[ i ]
-    
-    if no_more
-      expect( i ).to.be expected.length - 1
 
 describe 'store():', ->
   input    = null
