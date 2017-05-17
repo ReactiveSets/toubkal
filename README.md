@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1774 Continuous Integration Tests*
+*1788 Continuous Integration Tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -489,7 +489,7 @@ Then point a web browser at [localhost on port 8082](http://localhost:8082/).
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1774 continuous integration tests for the Toubkal
+We have curently developped 1788 continuous integration tests for the Toubkal
 core and framework pipelets that run after every commit on Travis CI under
 node version 4.6.0 which is the current LTS version.
 
@@ -526,7 +526,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1774 of 1774 tests
+-> passed 1788 of 1788 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -676,7 +676,7 @@ First Beta version with API almost finalized.
 
 Work In Progress.
 
-- 1774 Continuous Integration tests
+- 1788 Continuous Integration tests
 
 #### Main Goals:
 
@@ -727,7 +727,6 @@ Work In Progress.
   $to_dom().
 
 - Reinstate update as a first-class operation, making it easier to handle updates
-
 
 - Documentation extraction format from source code comments:
   - Using pipelets:
@@ -839,6 +838,7 @@ Work In Progress.
   - remove_destination_with()
 
 - Pipelets manipulating operations:
+  - store(): Store operations history
   - creates(): Discard remove and update operations.
   - deletes(): Only forward remove operations
   - updates(): Only forward update operations
@@ -875,6 +875,7 @@ Work In Progress.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+store()                             | Store operations history
 json_hide()                         | Hide attribute values in downstream pipelets using JSON.stringify()
 debug()                             | Conditional trace()
 source_map_support_min()            | Provides minified asset for browser source map support
