@@ -839,10 +839,12 @@ Work In Progress.
   - remove_destination_with()
 
 - Pipelets manipulating operations:
+  - creates(): Discard remove and update operations.
+  - deletes(): Only forward remove operations
+  - updates(): Only forward update operations
+  - split_updates(): Split update operations into remove plus add in a transaction
   - adds(): filter add operations, useful when these have a strict Create semantic
   - removes(): filter remove operations, useful when these have a strict Delete semantic
-  - updates(): filter update operations, useful when these have a strict Update semantic
-  - split_updates(): Split update operations into remove plus add in a transaction
   - revert(): transforms adds into removes, removes into adds, swap remove and add into updates
   - query_updates(): Emit query updates from pipelet
 
@@ -930,9 +932,11 @@ through()                           | Getting dataflow through another pipelet (
 not_exists()                        | Existence validation for dataflow adds (no-exists), removes and updates (exists)
 fetch_flow_key()                    | Fetch dataflow key from flows metadata
 split_updates()                     | Split update operations into remove plus add in a transaction
+creates()                           | Discard remove and update operations.
+deletes()                           | Only forward remove operations
+updates()                           | Only forward update operations
 adds()                              | Selects "add" operations only, operations that create objects
 removes()                           | Selects "remove" operations only, operations that remove objects
-updates()                           | Selects "update" operations only, operations that modify existing objects
 group()                             | Group input values by function into content attribute
 map()                               | Maps input values to function returning a single value or falsy
 flat_map()                          | Maps input values to function returning an Array of output values

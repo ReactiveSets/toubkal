@@ -1161,10 +1161,12 @@
     
     ### See Also:
     - Pipelet optimize() that emits strict operations
-    - Pipelet split_updates() that breaks strict semantic
-    - Pipelet adds()
-    - Pipelet removes()
-    - Pipelet updates()
+    - Pipelet creates() emits strict creates
+    - Pipelet deletes() emits strict deletes
+    - Pipelet updates() emits strict updates
+    - Pipelet adds(), breaks strict semantic to emit a flow change events
+    - Pipelet removes(), breaks strict semantic to emit a flow of anti-change
+      events.
 */
 
 /* --------------------------------------------------------------------------
