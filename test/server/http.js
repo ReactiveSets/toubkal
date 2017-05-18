@@ -60,7 +60,9 @@ var session_options = require( './passport.js' )( http_servers );
 */
 
 // lib/toubkal-min.js
-var toubkal_min = client_assets.toubkal_min();
+var toubkal_min = client_assets.toubkal_min()
+  , map_support = rs.source_map_support_min()
+;
 
 // Listen when lib/toubkal-min.js is ready
 http_servers.http_listen( toubkal_min );
@@ -188,9 +190,8 @@ rs.union( [ mocha_css, mocha_expect ] )
 // rs.union( [ toubkal_core_min, toubkal_ui_min, toubkal_min ] )
 rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ], session_options: session_options } )
   ._input
-  .insert_source_union()     // adding a union as the source of rs.serve() input
-//  ._add_source( toubkal_core_min ) // now adding sources to that union
-//  ._add_source( toubkal_ui_min )
+  .insert_source_union()     // adding a union as the source of rs.serve() input, for testing purposes
+  ._add_source( map_support )
   ._add_source( toubkal_min )
 ;
 
