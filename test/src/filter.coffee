@@ -479,7 +479,7 @@ describe 'filter()', ->
       wait_if_upstream_filter_delay = () ->
         if upstream_filter_delay
           ( done ) ->
-            setTimeout done, upstream_filter_delay * 3
+            setTimeout done, upstream_filter_delay * 6
         else
           ( done ) ->
             done()
