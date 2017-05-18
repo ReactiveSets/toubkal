@@ -44,41 +44,72 @@ this.check = ( done, test ) ->
   catch e
     done e
 
-# ----------------------------------------------------------------------------------------------
-# expect_receiver( expected, l ) ->
-#
-# Fetch receiver for testing expected operations
-#
-# Parameters:
-# - expected (Array): operations, each operation is an Array:
-#   - 0 (Number): position of operation in expected, starts at 0
-#   - 1 (Number): operation:
-#     - 0: add
-#     - 1: remove
-#     - 2: update
-#   - 2 (Array): added or removed values or updates
-#
-# - l (Number): optional, if provided, it is expected to equal expected.length
-#
-# Returns: fetch reveiver, signature: ( values, no_more, operation ) ->
-#
-# Throws if:
-# - l is defined and not expected.length
-# - operation does not match expected operation
-# - expected.length does not match the number of operations received by receiver
-#
-this.expect_receiver = ( expected, l  ) ->
-  if typeof l != 'undefined'
-    expect( expected.length ).to.be l
+### ---------------------------------------------------------------------------
+  @class Expected_Operations()
   
-  i =  -1
-  ( values, no_more, operation ) ->
-    ++i
+  @short Expected operations to be test using fetch
+  
+  @internals
+  - expected (Array): operations, each operation is an Array:
+    - 0 (Number): position of operation in expected, starts at 0
+    - 1 (Number): operation:
+      - 0: add
+      - 1: remove
+      - 2: update
+    - 2 (Array): added or removed values or updates
+###
+
+### ---------------------------------------------------------------------------
+  @method Expected_Operations..add( operation, values ) ->
+  
+  @short Add expected operation
+  
+  @parameters
+  - operation (Number):
+    - 0: add
+    - 1: remove
+    - 2: update
+  - values (Array): added or removed values or updates
+###
+
+### ---------------------------------------------------------------------------
+  @method Expected_Operations..receiver( l ) ->
+  
+  @short Fetch receiver for testing expected operations
+  
+  @parameters
+  - l (Number): optional, if provided, it is expected to equal expected.length
+  
+  @returns fetch reveiver, signature: ( values, no_more, operation ) ->
+  
+  @throws
+  - l is defined and not expected.length
+  - operation does not match expected operation
+  - expected.length does not match the number of operations received by receiver
+###
+
+this.Expected_Operations = () ->
+  that = {}
+  
+  expected = []
+  
+  that.add = ( operation, values ) ->
+    expected.push( [ expected.length, operation, values ] )
+  
+  that.receiver = ( l ) ->
+    if typeof l != 'undefined'
+      expect( expected.length ).to.be l
     
-    expect( [ i, operation, values ] ).to.be.eql expected[ i ]
-    
-    if no_more
-      expect( i ).to.be expected.length - 1
+    i =  -1
+    ( values, no_more, operation ) ->
+      ++i
+      
+      expect( [ i, operation, values ] ).to.be.eql expected[ i ]
+      
+      if no_more
+        expect( i ).to.be expected.length - 1
+  
+  return that
 
 # ----------------------------------------------------------------------------------------------
 # rs and log

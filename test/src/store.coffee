@@ -22,14 +22,14 @@
 # rs test utils
 # -------------
 
-utils           = require( './tests_utils.js' ) unless this.expect
+utils               = require( './tests_utils.js' ) unless this.expect
 
-expect          = this.expect          || utils.expect
-check           = this.check           || utils.check
-expect_receiver = this.expect_receiver || utils.expect_receiver
-rs              = this.rs              || utils.rs
-RS              = rs.RS
-Store           = RS.Store
+expect              = this.expect              || utils.expect
+check               = this.check               || utils.check
+Expected_Operations = this.Expected_Operations || utils.Expected_Operations
+rs                  = this.rs                  || utils.rs
+RS                  = rs.RS
+Store               = RS.Store
 
 # ----------------------------------------------------------------------------------------------
 # store test suite
@@ -40,10 +40,7 @@ describe 'store():', ->
   store    = null
   output   = null
   set      = null
-  
-  expected = []
-  expected.add = ( values, operation ) ->
-    expected.push [ expected.length, values, operation ]
+  expected = Expected_Operations()
   
   it 'store should be a Store', ->
     input = rs.pass_through()
@@ -75,7 +72,7 @@ describe 'store():', ->
     expected.add 0, [ { id : 1 } ]
   
   it 'should allow to fetch one add operation with the correct values', ->
-    output._fetch expect_receiver expected, 1
+    output._fetch expected.receiver 1
   
   it 'downstream set should hold the same value', ->
     set._fetch_all ( values ) ->
@@ -86,7 +83,7 @@ describe 'store():', ->
     expected.add 1, [ { id : 1 } ]
   
   it 'should allow to fetch two operations', ->
-    output._fetch expect_receiver expected, 2
+    output._fetch expected.receiver 2
   
   it 'downstream set should hold no values', ->
     set._fetch_all ( values ) ->
@@ -100,7 +97,7 @@ describe 'store():', ->
     expected.add 2, [ [ { id : 1 }, { id: 2 } ] ]
   
   it 'should allow to fetch 4 operations', ->
-    output._fetch expect_receiver expected, 4
+    output._fetch expected.receiver 4
   
   it 'downstream set should hold one updated value', ->
     set._fetch_all ( values ) ->
