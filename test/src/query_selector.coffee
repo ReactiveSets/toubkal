@@ -28,7 +28,7 @@ expect = this.expect || utils.expect
 check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
 
-unless rs.query_selector?
+unless rs.$query_selector
   require '../../lib/html/html_parse.js'
   require '../../lib/client/query_selector.js'
 
