@@ -178,7 +178,7 @@ module.exports = function( servers ) {
         
         .trace( 'to clients', { counts: true } )
         
-        .dispatch( servers.socket_io_clients(), function( source, options ) {
+        .dispatch( servers.socket_io_clients().pick( [ 'id', 'socket' ] ).optimize(), function( source, options ) {
           
           return source
             .through( this.socket, options )

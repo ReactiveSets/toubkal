@@ -145,7 +145,7 @@ module.exports = function( servers ) {
         
         .trace( 'to clients' )
         
-        .dispatch( servers.socket_io_clients(), function( source, options ) {
+        .dispatch( servers.socket_io_clients().pick( [ 'id', 'socket' ] ).optimize(), function( source, options ) {
           
           return client.handler( source, this, options );
         }, { name: 'clients' } )
