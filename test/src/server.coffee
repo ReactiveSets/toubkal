@@ -60,7 +60,7 @@ describe 'in-memory database with dispatch()', ->
     ]
     
     database = rs
-      .dispatch schemas, ( source, options ) ->
+      .dispatch schemas.pick( [ 'id' ] ).optimize(), ( source, options ) ->
         flow = this.id
 
         source
