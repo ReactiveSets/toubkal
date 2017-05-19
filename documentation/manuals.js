@@ -1126,24 +1126,18 @@
     a single identity, i.e. removed and added values of each update
     must have the same identity.
     
-    An update is semantically equivalent to a @@remove and an @@add
-    operation in the same @@(transaction). Pipelet split_updates()
-    splits updates into remove and add operations, while
-    pipelet optimize() groups removes and adds pertaining to same
-    value identities in a transaction into updates.
+    An update is equivalent to a @@remove and an @@add in the same
+    @@(transaction). Pipelet optimize() groups removes and adds of
+    values having the same identity in a transaction into updates.
     
     Although an update operation can therefore be viewed as an
-    optimization of a remove plus an add operation, in many cases
-    code complexity involved in dealing with updates is much higher
-    when splitted and therefore many pipelets require strict
-    updates to operate properly.
-    
-    Yet it is always possible to use pipelet optimize() to make
-    updates for pipelets requiring a strict semantic.
+    optimization of a remove plus an add operation, many pipelets
+    require @@strict semantic to operate. Using pipelet optimize()
+    allows to enforce this requirement.
     
     See also pipelet last() which transform a stream of
-    @@adds-only operations into a stream of one add followed by
-    updates operations.
+    @@adds-only operations into a stream of one @@add followed by
+    updates.
 */
 
 /* --------------------------------------------------------------------------

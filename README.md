@@ -842,7 +842,6 @@ Work In Progress.
   - creates(): Discard remove and update operations.
   - deletes(): Only forward remove operations
   - updates(): Only forward update operations
-  - split_updates(): Split update operations into remove plus add in a transaction
   - adds(): filter add operations, useful when these have a strict Create semantic
   - removes(): filter remove operations, useful when these have a strict Delete semantic
   - revert(): transforms adds into removes, removes into adds, swap remove and add into updates
@@ -932,7 +931,6 @@ $to_dom()                           | Updates DOM from dataflow for a DOM node, 
 through()                           | Getting dataflow through another pipelet (implemented a Pipelet method)
 not_exists()                        | Existence validation for dataflow adds (no-exists), removes and updates (exists)
 fetch_flow_key()                    | Fetch dataflow key from flows metadata
-split_updates()                     | Split update operations into remove plus add in a transaction
 creates()                           | Discard remove and update operations.
 deletes()                           | Only forward remove operations
 updates()                           | Only forward update operations

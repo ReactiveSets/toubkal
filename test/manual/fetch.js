@@ -24,7 +24,6 @@ rs
   //.map( function( _ ) { return _ } )
   //.alter( function( _ ) {} )
   //.filter( function( v ) { return false } )
-  //.split_updates()
   //.optimize()
   .trace( 'fetch_and_update' )
   
