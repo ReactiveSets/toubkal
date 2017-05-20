@@ -70,16 +70,16 @@ describe 'order()', ->
   
   by_descending_year = rs
     .set( [ { id: "year", descending: true } ], { name: 'by_descending_year' } )
-    .debug( de && 'By Descending Year Organizer, before delay' )
+    .debug( de, 'By Descending Year Organizer, before delay' )
     .delay( by_descending_year_delay )
-    .debug( de && 'By Descending Year Organizer, after delay' )
+    .debug( de, 'By Descending Year Organizer, after delay' )
   
   books_ordered_by_descending_year = books
     .order( by_descending_year, { name: 'books_ordered_by_descending_year', insert_before: true } )
     .ordered()
     .ordered()
     .delay( by_descending_year_delay + 5 ) # needs to be a bit higher to prevent race condition that would fail test 2
-    .debug( de && 'By Descending Year, after delay' ) # debug only works if organizer is greedy
+    .debug( de, 'By Descending Year, after delay' ) # debug only works if organizer is greedy
   
   books_ordered_by_ascending_author  = books
     .order( by_ascending_author , { name: 'books_ordered_by_ascending_author'  } )

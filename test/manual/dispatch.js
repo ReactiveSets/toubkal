@@ -8,14 +8,14 @@ var rs     = require( 'toubkal' )
   , a_in   = a._input
   , b_in   = b._input
   
-  , c      = a.debug( 1 && 'a', { pick: { id: '.id', a: '.a.a' } } )
+  , c      = a.debug( 1, 'a', { pick: { id: '.id', a: '.a.a' } } )
   
-              .dispatch( b.debug( 1 && 'b' ), function( a ) {
-                return a.debug( de && 'in' )
+              .dispatch( b.debug( 1, 'b' ), function( a ) {
+                return a.debug( de, 'in' )
               }, { name: 'c', single: de } )
               
               //.pass_through()
-              .debug( 1 && 'c-trace', { tag: 'b' } )
+              .debug( 1, 'c-trace', { tag: 'b' } )
               .greedy()
               
   , forks  //= [ 'b' ]

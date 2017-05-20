@@ -106,7 +106,7 @@ describe 'file', ->
     
     directories = entries
       .filter [ { type: 'directory' } ]
-      .debug( de && 'directories' )
+      .debug( de, 'directories' )
     
     directories_source._add_source directories
     
@@ -123,12 +123,12 @@ describe 'file', ->
     
     css = entries
       .filter( [ { type: 'file', extension: 'css' } ] )  
-      .debug( de && 'css files' )
+      .debug( de, 'css files' )
       .set()
       
     html = entries
       .filter( [ { type: 'file', extension: 'html' } ] )  
-      .debug( de && 'html files' )
+      .debug( de, 'html files' )
       .set()
       
     javascript = entries

@@ -65,9 +65,9 @@ describe 'in-memory database with dispatch()', ->
 
         source
           .flow( flow, { key: this.key || [ 'id' ] } )
-          .debug( de && flow + ' in' )
+          .debug( de, flow + ' in' )
           .set( [] )
-          .debug( de && flow + ' out', { all: true } )
+          .debug( de, flow + ' out', { all: true } )
           .flow( flow )
     
     database_cache = database

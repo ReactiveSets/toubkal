@@ -166,10 +166,10 @@ describe 'filter()', ->
     ]
     
     it 'should contain no city when no country is provided', ( done ) ->
-      check_set_content done, cities.filter( [] ).debug( de && 'filter_no_country' ).set(), []
+      check_set_content done, cities.filter( [] ).debug( de, 'filter_no_country' ).set(), []
     
     it 'should contain all cities when an empty or-term is provided', ( done ) ->
-      check_set_content done, cities.filter( [ {} ] ).debug( de && 'filter_no_country' ).set(), [
+      check_set_content done, cities.filter( [ {} ] ).debug( de, 'filter_no_country' ).set(), [
           { id: 1, name: "Marrakech"    , country: "Morocco"                      }
           { id: 4, name: "Berlin"       , country: "Germany"                      }
           { id: 5, name: "New York City", country: "USA", state: "New York"       }
@@ -332,7 +332,7 @@ describe 'filter()', ->
     cities_from_countries = null
     
     it 'cities_from_countries should be a Pipelet', ->
-      cities_from_countries = cities.filter( countries ).debug( de && 'cities from countries' ).set( [] )
+      cities_from_countries = cities.filter( countries ).debug( de, 'cities from countries' ).set( [] )
       
       expect( cities_from_countries ).to.be.a Pipelet
     
@@ -498,7 +498,7 @@ describe 'filter()', ->
             { flow: 'users', id: 2 }
           ], { id: filter_keys }
           
-          .debug( de && 'upstream filter', { all: true } )
+          .debug( de, 'upstream filter', { all: true } )
         
         filter = rs.set []
         
@@ -506,11 +506,11 @@ describe 'filter()', ->
           upstream_filter = upstream_filter.delay( upstream_filter_delay )
         
         output = source
-          .debug( de && 'source', { all: true } )
+          .debug( de, 'source', { all: true } )
           .filter( upstream_filter, { filter_keys: filter_keys, name: 'upstream_filter' } )
-          .debug( de && 'between upstream and downstream filters', { all: true } )
+          .debug( de, 'between upstream and downstream filters', { all: true } )
           .filter( filter, { name: 'downstream_filter' } )
-          .debug( de && 'after filter' )
+          .debug( de, 'after filter' )
         
         output_set = output.set()
         

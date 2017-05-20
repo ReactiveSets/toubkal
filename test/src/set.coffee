@@ -54,7 +54,7 @@ describe 'set():', ->
   delayed_set = rs
     .set( [ { id:1, value: 'delayed' } ] )
     .delay( 100 )
-    .debug( de && 'Delayed Set' )
+    .debug( de, 'Delayed Set' )
     .filter( () -> true )
   
   cars = rs

@@ -89,12 +89,12 @@ describe 'aggregate()', ->
     sales     = rs.set [ { id: "author", type: "unsupported measure type" }, { id: "sales", "default": "invalid default, should be ignored" } ]
     by_author = rs.set [ { id: "author" } ]
     
-    books_sales_by_author = books_sales_union.aggregate( sales, by_author ).debug( de && 'sales by author' )
+    books_sales_by_author = books_sales_union.aggregate( sales, by_author ).debug( de, 'sales by author' )
   
   it 'should not throw while initializing books_sales_by_year aggregates', ->
     by_year   = rs.set [ { id: "year"   } ]
     
-    books_sales_by_year   = books_sales_union.aggregate( sales, by_year   ).debug( de && 'sales by year'   )
+    books_sales_by_year   = books_sales_union.aggregate( sales, by_year   ).debug( de, 'sales by year'   )
   
   it 'should not throw while initializing ordered aggregates aggregates', ->
     books_sales_by_author_set   = books_sales_by_author.pass_through().set()
@@ -108,7 +108,7 @@ describe 'aggregate()', ->
     books_sales_by_year_ordered   = books_sales_by_year_order  .ordered()
     
   it 'should not throw while initializing all_book_sales aggregates', ->
-    all_book_sales = books_sales_union.aggregate( sales ).debug( de && 'all sales' )
+    all_book_sales = books_sales_union.aggregate( sales ).debug( de, 'all sales' )
     all_book_sales_set = all_book_sales.set()
   
   it 'should not throw while initializing aggregates from aggregate_from composition', ->
