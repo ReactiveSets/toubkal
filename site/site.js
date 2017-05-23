@@ -137,7 +137,7 @@ module.exports = function( servers ) {
     
     .watch( { base_directory: __dirname } )
     
-    .union( [ toubkal_min, react_js ] )
+    .union( [ toubkal_min, rs.source_map_support_min(), react_js ] )
     
     // Serve assets to http servers
     .serve( servers )
