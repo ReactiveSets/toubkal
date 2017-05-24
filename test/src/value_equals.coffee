@@ -1,7 +1,7 @@
 ###
     value_equals.coffee
 
-    Copyright (c) 2013-2016, Reactive Sets
+    Copyright (c) 2013-2017, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
