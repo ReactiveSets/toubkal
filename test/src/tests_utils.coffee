@@ -97,17 +97,27 @@ this.Expected_Operations = () ->
     expected.push( [ expected.length, operation, values ] )
   
   that.receiver = ( l ) ->
-    if typeof l != 'undefined'
+    if typeof l == 'undefined'
+      l = expected.length
+    
+    else
       expect( expected.length ).to.be l
     
-    i =  -1
+    i = -1
+    
     ( values, no_more, operation ) ->
-      ++i
+      if l
+        if values.length or ! no_more #ignore last empty operation
+          ++i
+          
+          expect( [ i, operation, values ] ).to.be.eql expected[ i ]
+        
+        if no_more
+          expect( i ).to.be l - 1
       
-      expect( [ i, operation, values ] ).to.be.eql expected[ i ]
-      
-      if no_more
-        expect( i ).to.be expected.length - 1
+      else
+        expect( no_more ).to.be true
+        expect( [ operation, values ] ).to.be.eql [ 0, [] ]
   
   return that
 
