@@ -54,6 +54,7 @@ require './file'
 require './html_parse'
 require './html_serialize'
 require './url'
+require './to_uri'
 require './query_selector'
 
 require './mailer'
