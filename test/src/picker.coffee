@@ -77,3 +77,20 @@ describe 'RS.picker()', ->
     
     it 'pick() should return { id: 3 } from { id: 3 }', ->
       expect( pick { id: 3 } ).to.be.eql { id: 3 }
+    
+    it 'pick() should return {} from {}', ->
+      expect( pick {} ).to.be.eql {}
+    
+    it 'should return a Function from expression [ "id", [ "user", "view.user_id" ] ]', ->
+      pick = picker [ "id", [ "user", "view.user_id" ] ]
+      
+      expect( pick ).to.be.a Function
+    
+    it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 }', ->
+      expect( pick { id: 1, view: { user_id: 5 } } ).to.be.eql { id: 1, user: 5 }
+    
+    it 'pick() should return { id: 2 } from { id: 2, view: {} }', ->
+      expect( pick { id: 2, view: {} } ).to.be.eql { id: 2 }
+    
+    it 'pick() should return { id: 3 } from { id: 3 }', ->
+      expect( pick { id: 3 } ).to.be.eql { id: 3 }
