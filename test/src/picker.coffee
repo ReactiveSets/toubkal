@@ -69,7 +69,7 @@ describe 'RS.picker()', ->
       
       expect( pick ).to.be.a Function
     
-    it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 }', ->
+    it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 } }', ->
       expect( pick { id: 1, view: { user_id: 5 } } ).to.be.eql { id: 1, user_id: 5 }
     
     it 'pick() should return { id: 2 } from { id: 2, view: {} }', ->
@@ -86,7 +86,7 @@ describe 'RS.picker()', ->
       
       expect( pick ).to.be.a Function
     
-    it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 }', ->
+    it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 } }', ->
       expect( pick { id: 1, view: { user_id: 5 } } ).to.be.eql { id: 1, user: 5 }
     
     it 'pick() should return { id: 2 } from { id: 2, view: {} }', ->
@@ -94,3 +94,103 @@ describe 'RS.picker()', ->
     
     it 'pick() should return { id: 3 } from { id: 3 }', ->
       expect( pick { id: 3 } ).to.be.eql { id: 3 }
+
+describe 'RS.picker.inverse_expression()', ->
+  inverse_picker_expression = picker.inverse_expression
+  
+  describe 'From Object expression', ->
+    it 'should return undefined from expression {}', ->
+      expect( inverse_picker_expression {} ).to.be undefined
+    
+    it 'should return undefined from expression { flow: "users", id: ".view.user_id", present: true }', ->
+      expect( inverse_picker_expression { flow: "users", id: ".view.user_id", present: true } ).to.be undefined
+    
+    it 'should return { id: ".id", user_id: ".user" } from expression { id: ".id", user: ".user_id" }', ->
+      expect( inverse_picker_expression { id: ".id", user: ".user_id" } ).to.be.eql { id: ".id", user_id: ".user" }
+    
+    it 'should return { id: ".id" } from expression { flow: "user", id: ".id", user: ".view.user_id" }', ->
+      expect( inverse_picker_expression { flow: "user", id: ".id", user: ".view.user_id" } ).to.be.eql { id: ".id" }
+  
+  describe 'From Array expression', ->
+    it 'should return undefined from expression []', ->
+      expect( inverse_picker_expression [] ).to.be undefined
+    
+    it 'should return { id: ".id" } from expression [ "id", "view.user_id" ]', ->
+      expect( inverse_picker_expression [ "id", "view.user_id" ] ).to.be.eql { id: ".id" }
+    
+    it 'should return a { id: ".id", user_id: ".user" } from expression [ "id", [ "user", "user_id" ] ]', ->
+      expect( inverse_picker_expression [ "id", [ "user", "user_id" ] ] ).to.be.eql { id: ".id", user_id: ".user" }
+
+describe 'RS.picker.filter_pick_keys()', ->
+  inverse_picker_expression = picker.inverse_expression
+  filter_pick_keys          = picker.filter_pick_keys
+  
+  describe 'From Object expression', ->
+    it 'should return [ "id", "user" ] from piker expression { id: ".id", user: ".user_id" }', ->
+      expect( filter_pick_keys inverse_picker_expression { id: ".id", user: ".user_id" } ).to.be.eql [ "id", "user" ]
+    
+    it 'should return [ "id" ] from picker expression { flow: "user", id: ".id", user: ".view.user_id" }', ->
+      expect( filter_pick_keys inverse_picker_expression { flow: "user", id: ".id", user: ".view.user_id" } ).to.be.eql [ "id" ]
+  
+  describe 'From Array expression', ->
+    it 'should return [ "id" ] from expression [ "id", "view.user_id" ]', ->
+      expect( filter_pick_keys inverse_picker_expression [ "id", "view.user_id" ] ).to.be.eql [ "id" ]
+    
+    it 'should return a [ "id", "user" ] from expression [ "id", [ "user", "user_id" ] ]', ->
+      expect( filter_pick_keys inverse_picker_expression [ "id", [ "user", "user_id" ] ] ).to.be.eql [ "id", "user" ]
+
+describe 'RS.picker.inverse()', ->
+  pick = null
+  inverse_picker = picker.inverse
+  
+  describe 'From Object expression', ->
+    it 'should return undefined from expression {}', ->
+      expect( pick = inverse_picker {} ).to.be undefined
+    
+    it 'should return undefined from expression { flow: "users", id: ".view.user_id", present: true }', ->
+      pick = inverse_picker { flow: "users", id: ".view.user_id", present: true }
+      
+      expect( pick ).to.be undefined
+    
+    it 'should return a pick function from expression { id: ".id", user: ".user_id" }', ->
+      pick = inverse_picker { id: ".id", user: ".user_id" }
+      
+      expect( pick ).to.be.a Function
+    
+    it 'pick() should return { id: 1 } from { id: 1, user_id: 1 }', ->
+      expect( pick { id: 1, user_id: 1 } ).to.be.eql { id: 1 }
+    
+    it 'pick() should return { user_id: 1 } from { user: 1, a: 1 }', ->
+      expect( pick { user: 1, a: 1 } ).to.be.eql { user_id: 1 }
+    
+    it 'pick() should return { id: 2, user_id: 3 } from { id: 2, user: 3, a: 4 }', ->
+      expect( pick { id: 2, user: 3, a: 4 } ).to.be.eql { id: 2, user_id: 3 }
+  
+  describe 'From Array expression', ->
+    it 'should return undefined from expression []', ->
+      expect( pick = inverse_picker [] ).to.be undefined
+    
+    it 'should return a pick function from expression [ "id", "view.user_id" ]', ->
+      pick = inverse_picker [ "id", "view.user_id" ]
+      
+      expect( pick ).to.be.a Function
+    
+    it 'pick() should return { id: 1 } from { id: 1, user_id: 5 }', ->
+      expect( pick { id: 1, user_id: 5 } ).to.be.eql { id: 1 }
+    
+    it 'pick() should return { id: 2 } from { id: 2 }', ->
+      expect( pick { id: 2 } ).to.be.eql { id: 2 }
+    
+    it 'pick() should return {} from {}', ->
+      expect( pick {} ).to.be.eql {}
+    
+    it 'should return a Function from expression [ "id", [ "user", "user_id" ] ]', ->
+      pick = inverse_picker [ "id", [ "user", "user_id" ] ]
+      
+      expect( pick ).to.be.a Function
+    
+    it 'pick() should return { id: 1, user_id: 5 } from { id: 1, user: 5, a: 1 }', ->
+      expect( pick { id: 1, user: 5, a: 1 } ).to.be.eql { id: 1, user_id: 5 }
+    
+    it 'pick() should return { id: 2 } from { id: 2 }', ->
+      expect( pick { id: 2 } ).to.be.eql { id: 2 }
