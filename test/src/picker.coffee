@@ -42,7 +42,7 @@ describe 'RS.picker()', ->
     
     it 'pick() should return an empty object from { a: 1, view: { user_id: 1 } }', ->
       expect( pick { a: 1, view: { user_id: 1 } } ).to.be.eql {}
-      
+    
     it 'should return a Function from expression { flow: "users", id: ".view.user_id", present: true }', ->
       pick = picker { flow: "users", id: ".view.user_id", present: true }
       
@@ -59,7 +59,7 @@ describe 'RS.picker()', ->
   
   describe 'From Array expression', ->
     it 'should return a pick() function from expression []', ->
-      expect( pick = picker {} ).to.be.a Function
+      expect( pick = picker [] ).to.be.a Function
     
     it 'pick() should return an empty object', ->
       expect( pick {} ).to.be.eql {}
@@ -68,7 +68,7 @@ describe 'RS.picker()', ->
       pick = picker [ "id", "view.user_id" ]
       
       expect( pick ).to.be.a Function
-      
+    
     it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 }', ->
       expect( pick { id: 1, view: { user_id: 5 } } ).to.be.eql { id: 1, user_id: 5 }
     
