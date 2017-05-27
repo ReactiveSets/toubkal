@@ -40,8 +40,8 @@ describe 'RS.picker()', ->
     it 'should return a pick() function from expression {}', ->
       expect( pick = picker {} ).to.be.a Function
     
-    it 'pick() should return an empty object from { a: 1, view: { user_id: 1 } }', ->
-      expect( pick { a: 1, view: { user_id: 1 } } ).to.be.eql {}
+    it 'pick() should return undefined from { a: 1, view: { user_id: 1 } }', ->
+      expect( pick { a: 1, view: { user_id: 1 } } ).to.be undefined
     
     it 'should return a Function from expression { flow: "users", id: ".view.user_id", present: true }', ->
       pick = picker { flow: "users", id: ".view.user_id", present: true }
@@ -61,8 +61,8 @@ describe 'RS.picker()', ->
     it 'should return a pick() function from expression []', ->
       expect( pick = picker [] ).to.be.a Function
     
-    it 'pick() should return an empty object', ->
-      expect( pick {} ).to.be.eql {}
+    it 'pick() should return undefined from {}', ->
+      expect( pick {} ).to.be undefined
     
     it 'should return a Function from expression [ "id", "view.user_id" ]', ->
       pick = picker [ "id", "view.user_id" ]
@@ -78,8 +78,8 @@ describe 'RS.picker()', ->
     it 'pick() should return { id: 3 } from { id: 3 }', ->
       expect( pick { id: 3 } ).to.be.eql { id: 3 }
     
-    it 'pick() should return {} from {}', ->
-      expect( pick {} ).to.be.eql {}
+    it 'pick() should return undefined from {}', ->
+      expect( pick {} ).to.be undefined
     
     it 'should return a Function from expression [ "id", [ "user", "view.user_id" ] ]', ->
       pick = picker [ "id", [ "user", "view.user_id" ] ]
@@ -181,8 +181,8 @@ describe 'RS.picker.inverse()', ->
     it 'pick() should return { id: 2 } from { id: 2 }', ->
       expect( pick { id: 2 } ).to.be.eql { id: 2 }
     
-    it 'pick() should return {} from {}', ->
-      expect( pick {} ).to.be.eql {}
+    it 'pick() should return undefined from {}', ->
+      expect( pick {} ).to.be undefined
     
     it 'should return a Function from expression [ "id", [ "user", "user_id" ] ]', ->
       pick = inverse_picker [ "id", [ "user", "user_id" ] ]
