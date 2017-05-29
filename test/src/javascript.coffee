@@ -27,13 +27,47 @@ utils  = require( './tests_utils.js' ) unless this.expect
 expect = this.expect || utils.expect
 check  = this.check  || utils.check
 
-javascript = this.rs && this.rs.RS || require '../../lib/util/javascript.js'
+javascript = '../../lib/util/javascript'
 
-is_array = javascript.is_array
+if this.rs
+  # using undefine
+  require [ javascript ], ( js ) -> javascript = js
+
+else
+  # under node
+  javascript = require javascript
+
+is_array  = javascript.is_array
+is_object = javascript.is_object
 
 # ----------------------------------------------------------------------------------------------
 # javascript test suite
 # ---------------------
+
+describe 'javascript.is_object', ->
+  it 'should return true for an empty Object', ->
+    expect( is_object( {} ) ).to.be true
+  
+  it 'should return true for an Object with one property', ->
+    expect( is_object( { a: false } ) ).to.be true
+  
+  it 'should return false for undefined', ->
+    expect( is_object( undefined ) ).to.be false
+  
+  it 'should return false for null', ->
+    expect( is_object( null ) ).to.be false
+  
+  it 'should return false for boolean value true', ->
+    expect( is_object( true ) ).to.be false
+  
+  it 'should return false for number 1', ->
+    expect( is_object( 1 ) ).to.be false
+  
+  it 'should return false for an empty Array', ->
+    expect( is_object( [] ) ).to.be false
+  
+  it 'should return false for an Array of two values', ->
+    expect( is_object( [ 1, "test" ] ) ).to.be false
 
 describe 'javascript.is_array', ->
   it 'should return false for undefined', ->
