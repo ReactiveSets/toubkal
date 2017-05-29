@@ -263,9 +263,11 @@ describe 'transforms', ->
   describe 'pick()', ->
     source   = null
     picked   = null
+    filter   = null
     filtered = null
+    set      = null
     
-    describe 'lazy pick( [ "name", "age" ] )', ->
+    describe 'Array expression pick( [ "name", "age" ] )', ->
       it 'should pick name and age from source set', ( done ) ->
         source = rs.set [
           { flow: 'users', id: 1, name: 'Joe' , age: 76 }
@@ -281,20 +283,21 @@ describe 'transforms', ->
             { name: 'Joe' , age: 76 }
             { name: 'Jill', age: 45 }
             {               age: 56 }
-            {                       }
           ]
       
-      it 'filtered for name: "Jill", should emit only one value', ( done ) ->
-        filtered = picked
-          .filter( [ { name: 'Jill' } ] )
-          .greedy()
+      it 'should have picked input lazy', ->
+        expect( picked._input.future_query ).to.be null
+      
+      it 'should emit only one value when filtered for name: "Jill"', ( done ) ->
+        filter   = picked.filter( [ { name: 'Jill' } ] )
+        filtered = filter.greedy()
         
         filtered._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             { name: 'Jill', age: 45 }
           ]
       
-      it 'should be lazy', ->
+      it 'should have made picked input subscribing to Jill only', ->
         expect( picked._input.future_query.query ).to.be.eql [ { name: 'Jill' } ]
       
       it 'should allow to remove user 3 and Jill, unfiltered', ( done ) ->
@@ -306,13 +309,11 @@ describe 'transforms', ->
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             { name: 'Joe' , age: 76 }
-            {                       }
           ]
       
-      it 'should remove Jill from filtered set', ( done ) ->
+      it 'should have removed Jill from filtered set', ( done ) ->
         filtered._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql []
-      
       
       it 'should allow to add Jill back with a new age', ( done ) ->
         source._add [
@@ -322,7 +323,6 @@ describe 'transforms', ->
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             { name: 'Joe' , age: 76 }
-            {                       }
             { name: 'Jill', age: 46 }
           ]
       
@@ -342,7 +342,6 @@ describe 'transforms', ->
         
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
-            {                       }
             { name: 'Jill', age: 46 }
             { name: 'Joe' , age: 77 }
           ]
@@ -352,3 +351,59 @@ describe 'transforms', ->
           expect( values ).to.be.eql [
             { name: 'Jill', age: 46 }
           ]
+      
+      it 'should get all values when connected to greedy set destination ', ( done ) ->
+        set = picked.set()
+        
+        set._fetch_all ( values ) -> check done, () ->
+          expect( values ).to.be.eql [
+            { name: 'Jill', age: 46 }
+            { name: 'Joe' , age: 77 }
+          ]
+      
+      it 'should have made picked input greedy', ->
+        expect( picked._input.future_query.query ).to.be.eql [ {} ]
+      
+      it 'should allow to disconnect greedy set', ->
+        set._remove_source( picked )
+      
+      it 'should have emptied the set', (done) ->
+        set._fetch_all ( values ) -> check done, () ->
+          expect( values ).to.be.eql []
+      
+      it 'should have made picked input subscribing to Jill only again', ->
+        expect( picked._input.future_query.query ).to.be.eql [ { name: 'Jill' } ]
+      
+      it 'should allow to disconnect filter', ->
+        filter._remove_source( picked )
+      
+      it 'should filtered should now return an empty set when fetched', (done) ->
+        filtered._fetch_all ( values ) -> check done, () ->
+          expect( values ).to.be.eql []
+      
+      it 'should have made picked input lazy again', ->
+        expect( picked._input.future_query.query ).to.be.eql []
+    
+### Upcomming tests, WIP
+    describe 'Object expression, pick( { id: ".user.id", order: ".order_id", name: ".user.name" } )', ->
+      it 'should pick 3 values, with id and name from user object in values', ( done ) ->
+        source = rs.set [
+          { flow: 'users', order_id: 10, user: { id: 1, name: 'Joe' , age: 76 } }
+          { flow: 'users', order_id: 11, user: { id: 2, name: 'Jill', age: 45 } }
+          { flow: 'users', order_id: 12, user: { id: 3              , age: 56 } }
+          { flow: 'users', order_id: 13, user: {                              } }
+          { flow: 'users', order_id: 14                                         }
+          { flow: 'users'                                                       }
+        ]
+        
+        picked = source.pick( { id: ".user.id", order: ".order_id", name: ".user.name" } )
+        
+        picked._fetch_all ( values ) -> check done, () ->
+          expect( values ).to.be.eql [
+            { id: 1, order: 10, name: 'Joe'  }
+            { id: 2, order: 11, name: 'Jill' }
+            { id: 3, order: 12               }
+            {        order: 13               }
+            {        order: 14               }
+          ]
+###
