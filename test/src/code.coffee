@@ -29,8 +29,6 @@ check  = this.check  || utils.check
 
 Code = this.rs && this.rs.RS.Code || require '../../lib/util/code.js'
 
-is_array = Code.is_array
-
 # ----------------------------------------------------------------------------------------------
 # Code test suite
 # ---------------
