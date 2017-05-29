@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic|Oswald&subset=latin,latin-ext"/>
     <link href="css/base.css"  type="text/css" rel="stylesheet" /> <!-- base css style for all web pages -->
+
+    <!-- Source Map Support -->
+    <script src="/lib/browser-source-map-support.min.js" type="text/javascript"></script>
+    <script>sourceMapSupport.install();</script>
     
     <!-- Highlight.js -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/agate.min.css">
@@ -23,6 +27,8 @@
     <script src="/lib/toubkal-min.js"></script>
     
     <script>
+      var de = 0;
+      
       var database_schema = rs.set( [
         { id: 'documentation'         },
         { id: 'documentation_manuals' }
@@ -35,16 +41,17 @@
         
         .pass_through( { tag: 'synchronizing' } )
         
-        //.trace( 'cached', { counts: true } )
+        //.debug( de, 'cached', { counts: true } )
       ;
       
       var documentation = cached
-        //.trace( 'documentation', { all: true, counts: true } )
         .flow( 'documentation' )
+        
+        .debug( de, 'documentation', { all: true, counts: true, _pick: { id:'.id', manual: '.manual', html_length: '.html.length' } } )
       ;
       
       var manuals = cached
-        //.trace( 'documentation_manuals', { all: true, pick: { name: '.name' }, _counts: true } )
+        //.debug( 0, 'documentation_manuals', { all: true, pick: { name: '.name' }, _counts: true } )
         .flow( 'documentation_manuals' )
       ;
     </script>
@@ -146,7 +153,7 @@
             
             .order( [ { id: 'order' } ] )
             
-            //.trace( 'toc' )
+            //.debug( de, 'toc' )
             
             .$to_dom()
         }, { name: 'manuals-toc' } )
@@ -158,13 +165,11 @@
       // Manuals content manual_<manual.id>
       var manuals_content = documentation
         
-        //.trace( 'manuals content', { counts: true,
-        //  pick: { id:'.id', content: '.html.length' }
-        // } )
+        .debug( de, 'manuals content', { pick: { id:'.id', html_length: '.html.length' } } )
         
         .filter( [ { type: 'manual' } ] )
         
-        .pick( { id: 'id', order: 'order', content: 'html' } )
+        .pick( [ 'id', 'order', 'html' ] )
         
         .order( [ { id: 'order' } ] )
         
@@ -174,12 +179,16 @@
       // Content, organized as TOC, <item.type>_<item.id>
       documentation
         
+        .debug( de, 'documentation content', { all: true, pick: { id: '.id', manual: '.manual' } } )
+        
         .dispatch( manuals_content, function( source, options ) {
           var manual = this
             , id     = manual.id.replace( 'manual#', '' )
           ;
           
           return source
+            .debug( de, 'content of manual ' + id, { pick: { id: '.id', manual: '.manual', node: '.$node' } } )
+            
             .filter( [ { manual: id } ] )
             
             .alter( function add_node( _ ) {
@@ -190,10 +199,12 @@
             
             .order( [ { id: 'order' } ] )
             
-            //.trace( 'content of manual ' + id, { counts: true } )
-            
             .$to_dom()
         }, { name: 'manuals-content' } )
+        
+        .greedy()
+        
+        ._output.on( 'complete', function() { console.log( document.location.href = document.location.href ) } )
       ;
     </script>
   </body>
