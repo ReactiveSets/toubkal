@@ -35,28 +35,6 @@ is_array = Code.is_array
 # Code test suite
 # ---------------
 
-describe 'Code.is_array', ->
-  it 'should return false for undefined', ->
-    expect( is_array( undefined ) ).to.be false
-  
-  it 'should return false for null', ->
-    expect( is_array( null ) ).to.be false
-  
-  it 'should return false for boolean value true', ->
-    expect( is_array( true ) ).to.be false
-  
-  it 'should return false for number 1', ->
-    expect( is_array( 1 ) ).to.be false
-  
-  it 'should return false for an Object', ->
-    expect( is_array( {} ) ).to.be false
-  
-  it 'should return true for an empty Array', ->
-    expect( is_array( [] ) ).to.be true
-  
-  it 'should return true for an Array of two values', ->
-    expect( is_array( [ 1, "test" ] ) ).to.be true
-
 describe 'Code():', ->
   f = code = new Code( 'Code Test' )
     ._function( 'f', null, [] )
