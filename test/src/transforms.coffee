@@ -276,13 +276,14 @@ describe 'transforms', ->
           { flow: 'users', id: 4                        }
         ]
         
-        picked = source.pick( [ 'name', 'age' ], { key: [ 'name', 'age' ] } )
+        picked = source.pick( [ 'name', 'age' ], { key: [ 'name', 'age' ], allow_empty: true } )
         
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             { name: 'Joe' , age: 76 }
             { name: 'Jill', age: 45 }
             {               age: 56 }
+            {                       }
           ]
       
       it 'should have picked input lazy', ->
@@ -309,6 +310,7 @@ describe 'transforms', ->
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             { name: 'Joe' , age: 76 }
+            {                       }
           ]
       
       it 'should have removed Jill from filtered set', ( done ) ->
@@ -323,6 +325,7 @@ describe 'transforms', ->
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
             { name: 'Joe' , age: 76 }
+            {                       }
             { name: 'Jill', age: 46 }
           ]
       
@@ -342,6 +345,7 @@ describe 'transforms', ->
         
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
+            {                       }
             { name: 'Jill', age: 46 }
             { name: 'Joe' , age: 77 }
           ]
@@ -357,6 +361,7 @@ describe 'transforms', ->
         
         set._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
+            {                       }
             { name: 'Jill', age: 46 }
             { name: 'Joe' , age: 77 }
           ]
