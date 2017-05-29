@@ -59,10 +59,10 @@ describe 'RS.picker()', ->
   
   describe 'From Array expression', ->
     it 'should return a pick() function from expression []', ->
-      expect( pick = picker [] ).to.be.a Function
+      expect( pick = picker [], { allow_empty: true } ).to.be.a Function
     
     it 'pick() should return undefined from {}', ->
-      expect( pick {} ).to.be undefined
+      expect( pick {} ).to.be.eql {}
     
     it 'should return a Function from expression [ "id", "view.user_id" ]', ->
       pick = picker [ "id", "view.user_id" ]
