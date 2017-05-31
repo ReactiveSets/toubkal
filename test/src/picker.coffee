@@ -27,26 +27,44 @@ utils  = require( './tests_utils.js' ) unless this.expect
 expect = this.expect || utils.expect
 check  = this.check  || utils.check
 
+extend = this.rs && this.rs.RS.extend || require '../../lib/util/extend.js'
 picker = this.rs && this.rs.RS.picker || require '../../lib/util/picker.js'
 
+clone = extend.clone
+
 # ----------------------------------------------------------------------------------------------
-# Picker test suite
-# -----------------
+# Picker test suites
+# ------------------
+
+expression = null
+cloned     = null
 
 describe 'RS.picker()', ->
-  pick = null
+  pick       = null
   
   describe 'From Object expression', ->
     it 'should return a pick() function from expression {}', ->
-      expect( pick = picker {} ).to.be.a Function
+      expression = {}
+      cloned = clone expression
+      
+      expect( pick = picker expression ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return undefined from { a: 1, view: { user_id: 1 } }', ->
       expect( pick { a: 1, view: { user_id: 1 } } ).to.be undefined
     
     it 'should return a Function from expression { flow: "users", id: ".view.user_id", present: true }', ->
-      pick = picker { flow: "users", id: ".view.user_id", present: true }
+      expression = { flow: "users", id: ".view.user_id", present: true }
+      cloned = clone expression
+      
+      pick = picker expression
       
       expect( pick ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return { flow: "users", id: 1, present: true } from { a: 1, view: { user_id: 1 } }', ->
       expect( pick { a: 1, view: { user_id: 1 } } ).to.be.eql { flow: "users", id: 1, present: true }
@@ -59,15 +77,27 @@ describe 'RS.picker()', ->
   
   describe 'From Array expression', ->
     it 'should return a pick() function from expression []', ->
-      expect( pick = picker [], { allow_empty: true } ).to.be.a Function
+      expression = []
+      cloned = clone expression
+      
+      expect( pick = picker expression, { allow_empty: true } ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return undefined from {}', ->
       expect( pick {} ).to.be.eql {}
     
     it 'should return a Function from expression [ "id", "view.user_id" ]', ->
+      expression = [ "id", "view.user_id" ]
+      cloned = clone expression
+      
       pick = picker [ "id", "view.user_id" ]
       
       expect( pick ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 } }', ->
       expect( pick { id: 1, view: { user_id: 5 } } ).to.be.eql { id: 1, user_id: 5 }
@@ -82,9 +112,14 @@ describe 'RS.picker()', ->
       expect( pick {} ).to.be undefined
     
     it 'should return a Function from expression [ "id", [ "user", "view.user_id" ] ]', ->
-      pick = picker [ "id", [ "user", "view.user_id" ] ]
+      expression = [ "id", [ "user", "view.user_id" ] ]
+      cloned = clone expression
+      pick = picker expression
       
       expect( pick ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return { id: 1, user_id: 5 } from { id: 1, view: { user_id: 5 } }', ->
       expect( pick { id: 1, view: { user_id: 5 } } ).to.be.eql { id: 1, user: 5 }
@@ -100,26 +135,61 @@ describe 'RS.picker.inverse_expression()', ->
   
   describe 'From Object expression', ->
     it 'should return undefined from expression {}', ->
-      expect( inverse_picker_expression {} ).to.be undefined
+      expression = {}
+      cloned = clone expression
+      expect( inverse_picker_expression expression ).to.be undefined
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return undefined from expression { flow: "users", id: ".view.user_id", present: true }', ->
-      expect( inverse_picker_expression { flow: "users", id: ".view.user_id", present: true } ).to.be undefined
+      expression = { flow: "users", id: ".view.user_id", present: true }
+      cloned = clone expression
+      expect( inverse_picker_expression expression ).to.be undefined
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return { id: ".id", user_id: ".user" } from expression { id: ".id", user: ".user_id" }', ->
-      expect( inverse_picker_expression { id: ".id", user: ".user_id" } ).to.be.eql { id: ".id", user_id: ".user" }
+      expression = { id: ".id", user: ".user_id" }
+      cloned = clone expression
+      expect( inverse_picker_expression expression ).to.be.eql { id: ".id", user_id: ".user" }
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return { id: ".id" } from expression { flow: "user", id: ".id", user: ".view.user_id" }', ->
-      expect( inverse_picker_expression { flow: "user", id: ".id", user: ".view.user_id" } ).to.be.eql { id: ".id" }
+      expression = { flow: "user", id: ".id", user: ".view.user_id" }
+      cloned = clone expression
+      expect( inverse_picker_expression expression ).to.be.eql { id: ".id" }
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
   
   describe 'From Array expression', ->
     it 'should return undefined from expression []', ->
-      expect( inverse_picker_expression [] ).to.be undefined
+      expression = []
+      cloned = clone expression
+      expect( inverse_picker_expression expression ).to.be undefined
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return { id: ".id" } from expression [ "id", "view.user_id" ]', ->
-      expect( inverse_picker_expression [ "id", "view.user_id" ] ).to.be.eql { id: ".id" }
+      expression = [ "id", "view.user_id" ]
+      cloned = clone expression
+      expect( inverse_picker_expression expression ).to.be.eql { id: ".id" }
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return a { id: ".id", user_id: ".user" } from expression [ "id", [ "user", "user_id" ] ]', ->
-      expect( inverse_picker_expression [ "id", [ "user", "user_id" ] ] ).to.be.eql { id: ".id", user_id: ".user" }
+      expression = [ "id", [ "user", "user_id" ] ]
+      cloned = clone expression
+      expect( inverse_picker_expression expression ).to.be.eql { id: ".id", user_id: ".user" }
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
 
 describe 'RS.picker.filter_pick_keys()', ->
   inverse_picker_expression = picker.inverse_expression
@@ -127,17 +197,34 @@ describe 'RS.picker.filter_pick_keys()', ->
   
   describe 'From Object expression', ->
     it 'should return [ "id", "user" ] from piker expression { id: ".id", user: ".user_id" }', ->
-      expect( filter_pick_keys inverse_picker_expression { id: ".id", user: ".user_id" } ).to.be.eql [ "id", "user" ]
+      expression = { id: ".id", user: ".user_id" }
+      cloned = clone expression
+      expect( filter_pick_keys inverse_picker_expression expression ).to.be.eql [ "id", "user" ]
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return [ "id" ] from picker expression { flow: "user", id: ".id", user: ".view.user_id" }', ->
-      expect( filter_pick_keys inverse_picker_expression { flow: "user", id: ".id", user: ".view.user_id" } ).to.be.eql [ "id" ]
+      expression = { flow: "user", id: ".id", user: ".view.user_id" }
+      cloned = clone expression
+      expect( filter_pick_keys inverse_picker_expression expression ).to.be.eql [ "id" ]
   
   describe 'From Array expression', ->
     it 'should return [ "id" ] from expression [ "id", "view.user_id" ]', ->
-      expect( filter_pick_keys inverse_picker_expression [ "id", "view.user_id" ] ).to.be.eql [ "id" ]
+      expression = [ "id", "view.user_id" ]
+      cloned = clone expression
+      expect( filter_pick_keys inverse_picker_expression expression ).to.be.eql [ "id" ]
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return a [ "id", "user" ] from expression [ "id", [ "user", "user_id" ] ]', ->
-      expect( filter_pick_keys inverse_picker_expression [ "id", [ "user", "user_id" ] ] ).to.be.eql [ "id", "user" ]
+      expression = [ "id", [ "user", "user_id" ] ]
+      cloned = clone expression
+      expect( filter_pick_keys inverse_picker_expression expression ).to.be.eql [ "id", "user" ]
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
 
 describe 'RS.picker.inverse()', ->
   pick = null
@@ -145,17 +232,32 @@ describe 'RS.picker.inverse()', ->
   
   describe 'From Object expression', ->
     it 'should return undefined from expression {}', ->
-      expect( pick = inverse_picker {} ).to.be undefined
+      expression = {}
+      cloned = clone expression
+      expect( pick = inverse_picker expression ).to.be undefined
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return undefined from expression { flow: "users", id: ".view.user_id", present: true }', ->
-      pick = inverse_picker { flow: "users", id: ".view.user_id", present: true }
+      expression = { flow: "users", id: ".view.user_id", present: true }
+      cloned = clone expression
+      pick = inverse_picker expression
       
       expect( pick ).to.be undefined
     
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
+    
     it 'should return a pick function from expression { id: ".id", user: ".user_id" }', ->
-      pick = inverse_picker { id: ".id", user: ".user_id" }
+      expression = { id: ".id", user: ".user_id" }
+      cloned = clone expression
+      pick = inverse_picker expression
       
       expect( pick ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return { id: 1 } from { id: 1, user_id: 1 }', ->
       expect( pick { id: 1, user_id: 1 } ).to.be.eql { id: 1 }
@@ -168,12 +270,22 @@ describe 'RS.picker.inverse()', ->
   
   describe 'From Array expression', ->
     it 'should return undefined from expression []', ->
-      expect( pick = inverse_picker [] ).to.be undefined
+      expression = []
+      cloned = clone expression
+      expect( pick = inverse_picker expression ).to.be undefined
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'should return a pick function from expression [ "id", "view.user_id" ]', ->
-      pick = inverse_picker [ "id", "view.user_id" ]
+      expression = [ "id", "view.user_id" ]
+      cloned = clone expression
+      pick = inverse_picker expression
       
       expect( pick ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return { id: 1 } from { id: 1, user_id: 5 }', ->
       expect( pick { id: 1, user_id: 5 } ).to.be.eql { id: 1 }
@@ -185,9 +297,14 @@ describe 'RS.picker.inverse()', ->
       expect( pick {} ).to.be undefined
     
     it 'should return a Function from expression [ "id", [ "user", "user_id" ] ]', ->
-      pick = inverse_picker [ "id", [ "user", "user_id" ] ]
+      expression = [ "id", [ "user", "user_id" ] ]
+      cloned = clone expression
+      pick = inverse_picker expression
       
       expect( pick ).to.be.a Function
+    
+    it 'should not have mutated expression', ->
+      expect( expression ).to.be.eql cloned
     
     it 'pick() should return { id: 1, user_id: 5 } from { id: 1, user: 5, a: 1 }', ->
       expect( pick { id: 1, user: 5, a: 1 } ).to.be.eql { id: 1, user_id: 5 }
