@@ -34,20 +34,27 @@ Code = this.rs && this.rs.RS.Code || require '../../lib/util/code.js'
 # ---------------
 
 describe 'Code():', ->
-  f = code = new Code( 'Code Test' )
-    ._function( 'f', null, [] )
-      .add( 'var i' )
-      ._for( 'i = -1', ' ++i < 10' )
-      .end()
-      .add( 'return i' )
-    .end()
-    .get()
-  
-  eval code
-  
-  i = f()
+  f = null
+  i = null
   
   it 'f should be a function', ->
+    f = code = new Code( 'Code Test' )
+      ._function( 'f', null, [] )
+        .add( 'var i' )
+        ._for( 'i = -1', ' ++i < 10' )
+        .end()
+        ._if( 'true' )
+        ._else_if( 'true' )
+        ._else()
+        .end()
+        .add( 'return i' )
+      .end()
+      .get()
+    
+    eval code
+    
+    i = f()
+    
     expect( f ).to.be.a 'function'
   
   it 'i should be equal to 10', ->
