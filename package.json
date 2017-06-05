@@ -70,6 +70,11 @@
     "test"       : "sh test/bin/tests.sh"
   },
   
+  "testling": {
+    "harness": "mocha-tdd",
+    "files": "test/lib/*js"
+  },
+  
   "repository": {
     "type": "git",
     "url":  "git://github.com/ReactiveSets/toubkal.git"
