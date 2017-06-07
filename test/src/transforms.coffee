@@ -32,6 +32,8 @@ check  = this.check  || utils.check
 rs     = this.rs     || utils.rs
 clone  = rs.RS.extend.clone
 
+Expected_Operations = this.Expected_Operations || utils.Expected_Operations
+
 # ----------------------------------------------------------------------------------------------
 # Test File pipelets
 # ------------------
@@ -276,7 +278,8 @@ describe 'transforms', ->
           { flow: 'users', id: 4                        }
         ]
         
-        picked = source.pick( [ 'name', 'age' ], { key: [ 'name', 'age' ], allow_empty: true } )
+        expression = [ "name", "age" ]
+        picked = source.pick( expression, { key: expression, allow_empty: true } )
         
         picked._fetch_all ( values ) -> check done, () ->
           expect( values ).to.be.eql [
@@ -389,9 +392,8 @@ describe 'transforms', ->
       it 'should have made picked input lazy again', ->
         expect( picked._input.future_query.query ).to.be.eql []
     
-### Upcomming tests, WIP
     describe 'Object expression, pick( { id: ".user.id", order: ".order_id", name: ".user.name" } )', ->
-      it 'should pick 3 values, with id and name from user object in values', ( done ) ->
+      it 'should pick 5 values, with id, order from order_id, and name from user object in values', ( done ) ->
         source = rs.set [
           { flow: 'users', order_id: 10, user: { id: 1, name: 'Joe' , age: 76 } }
           { flow: 'users', order_id: 11, user: { id: 2, name: 'Jill', age: 45 } }
@@ -411,4 +413,92 @@ describe 'transforms', ->
             {        order: 13               }
             {        order: 14               }
           ]
-###
+      
+      it 'should be lazy', () ->
+        expect( picked._input.future_query ).to.be null
+  
+  describe 'filter_pick()', () ->
+    expected        = new Expected_Operations()
+    projects        = null
+    images          = null
+    images_projects = null
+    request         = null
+    requested       = null
+    store           = null
+    
+    it 'should allow to fetch no projects when not connected with downstream greedy pipelet', ( done ) ->
+      projects = rs.set [
+        { flow: "project", id: 1 }
+        { flow: "project", id: 2 }
+        { flow: "project", id: 4 }
+        { flow: "project", id: 5 }
+      ]
+      
+      images = rs.set [
+        { id: 10, project_id: 1 }
+        { id: 11, project_id: 1 }
+        { id: 12, project_id: 1 }
+        { id: 13, project_id: 2 }
+        { id: 14, project_id: 2 }
+        { id: 15, project_id: 3 }
+        { id: 16, project_id: 3 }
+        { id: 17, project_id: 3 }
+        { id: 18, project_id: 3 }
+      ]
+      
+      images_projects = projects.filter_pick( images, { flow: "project", id: ".project_id" } )
+      request   = rs.set()
+      requested = images_projects.filter request
+      store     = requested.store()
+      
+      images_projects._fetch_all ( fetched ) -> check done, () ->
+        expect( fetched ).to.be.eql []
+    
+    it 'should allow to get one project when request has one project', ( done ) ->
+      request._add( [ id: 2 ] )
+      
+      images_projects._fetch_all ( fetched ) -> check done, () ->
+        expect( fetched ).to.be.eql [
+          { flow: "project", id: 2 }
+        ]
+    
+    it 'should allow to fetch one operation from store', ->
+      expected.add 0, [ { flow: "project", id: 2 } ]
+      
+      store._output._fetch expected.receiver( 1 )
+    
+    it 'should not get project id 4 even when requested', ( done ) ->
+      request._add( [ id: 4 ] )
+      
+      images_projects._fetch_all ( fetched ) -> check done, () ->
+        expect( fetched ).to.be.eql [
+          { flow: "project", id: 2 }
+        ]
+    
+    it 'should not have emmitted any additional operation', ->
+      store._output._fetch expected.receiver( 1 )
+    
+    it 'should allow to remove an image from project 2 without emitting any change', ( done ) ->
+      images._remove [ { id: 14, project_id: 2 } ]
+      
+      images_projects._fetch_all ( fetched ) -> check done, () ->
+        expect( fetched ).to.be.eql [
+          { flow: "project", id: 2 }
+        ]
+    
+    it 'should not have emmitted any additional operation', ->
+      store._output._fetch expected.receiver( 1 )
+    
+    it 'should allow to remove last image from project 2, emitting one project remove', (done ) ->
+      images._remove [ { id: 13, project_id: 2 } ]
+      
+      images_projects._fetch_all ( fetched ) -> check done, () ->
+        expect( fetched ).to.be.eql []
+    
+    it 'should have emmitted a remove operation', ->
+      expected.add 1, [ { flow: "project", id: 2 } ]
+      
+      store._output._fetch expected.receiver( 2 )
+      
+      
+      
