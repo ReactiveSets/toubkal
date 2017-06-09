@@ -524,6 +524,10 @@ describe 'transforms', ->
       expected.add 1, [ { flow: "project", id: 2 } ]
       
       store._output._fetch expected.receiver( 2 )
+    
+    it 'should emit one more project when becoming greedy downstream', ->
+      request._add( [ {} ] )
       
+      expected.add 0, [ { flow: "project", id: 1 } ]
       
-      
+      store._output._fetch expected.receiver( 3 )
