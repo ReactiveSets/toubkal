@@ -21,7 +21,7 @@
     
     @short Introduction
     
-    @description:
+    @description
     ## What is Toubkal?
     
     Toubkal is a JavaScript dataflow library for the rapid developpement of higher-performances
@@ -444,104 +444,6 @@
     be a bug. Likewise, two removes, even if received out of order, should never refer to
     the same value. This also implies that updates should always update the identity of
     objects to allow updates out of order.
-    
-    Consistency, Availability, and Partition tolerence:
-    --------------------------------------------------
-    Consistency of distributed sets is 'eventual' and performed by conflict resolution agents,
-    i.e. Toubkal provides high availability and partition tolerence by delaying consistency.
-    
-    #### Stateless and Stateful Pipelets:
-    
-    There are two main types of pipelets: @@stateless pipelets that do not
-    hold the state of sets, and @@stateful pipelets that do hold a state.
-    
-    Stateless pipelets are very simple to implement, typically by @@composition
-    of other stateless pipelets such as @@pipelet:alter(), @@pipelet:map(),
-    @@pipelet:flat_map().
-    
-    Stateful pipelets may be more complex to implement if they cannot be
-    @@[composed](@@composition), and may require to derive from a class
-    such as @@class:Pipelet which is stateless but is the base of all
-    pipelets, or @@class:Set which is the base class for stateful
-    pipelets and the class of pipelet @@pipelet:set().
-    
-    Conflict Resolution / Convergence:
-    ---------------------------------
-    Stateful pipelets are responsible for resolving conflicts related to the final
-    state of a set. The same set should show the same final state even when operations
-    are received out of order.
-    
-    Stateless pipelets cannot resolve conflict process conflicting operations just
-    like any other operation.
-    
-    Conflicts happen when:
-      - Two or more add operations have the same key
-      - A remove or update operation does not find a matching value
-      - Other conditions specific to the semantic of a particular set
-    
-    Conflict detection can be differentiated from unordered operations because unordered
-    operations are transitional and should be compensated 'soon' after these are received.
-    
-    'soon' may go from milliseconds in the closed context of multi-process distribution on a
-    non-overloaded single machine, to many minutes or hours in a catastrophic event where all
-    replicas of a chard are temporarily unavailable.
-    
-    Therefore conflict can be detected faster if the state of availability of all chards
-    is known.
-    
-    One possible strategy for conflict resolution reverts all conflicting operations:
-      - adds becomes removes
-      - removes becomes adds
-      - updates are reverted, i.e. previous and new values are swapped
-    
-    Persistance:
-    -----------
-    Persistance is achieved using stateless pipelets that store all operations into some mass
-    storage.
-    
-    These operations can be stored in any order over many chards maintained by many independent
-    servers.
-    
-    Upon storing transactions, meta-information can be added such as timestamps and user ids.
-    
-    Replication:
-    -----------
-    Replication is achieved by persisting the same set of operations over more than one set
-    of chards.
-    
-    Initialisation and restart synchronisation between replicas may be optimized using
-    vector clocks allowing to _fetch a subset of set.
-    
-    Data Versionning:
-    ----------------
-    Because persistence is achieved by storing all operations, all previous versions of all
-    objects can be reconstructed.
-    
-    The requirement for a unique identity enables to re-order operations on every object.
-    
-    Reconstruction can be done forward by processing operations in storage order, or
-    backward by reverting operations in reverse storage order.
-    
-    Compaction and Version Discarding:
-    ---------------------------------
-    For performance and privacy issues, it may be desirable to discard past versions of
-    objects on all replicas. This can be achieved by several strategies:
-    
-    - Full compacting, by storing the current state and anti-state of a chard. Doing
-      so, all meta information of the original operations will most likely be discarded.
-    
-    - Selective object(s) compacting, by combining a number of operations into either
-      a single add operation corresponding to the last update for that object or the
-      complete removal of all operations if the last operation is remove. This method
-      can be used to preserve timestamps and other meta-data by using that of the last
-      update.
-    
-    Snapshots:
-    ---------
-    A snapshot is a point-in-time copy of the a database. It can be achieved using
-    operations timestamps by copying the content of all chards up to that timestamp.
-    
-    During snapshots, compaction must be delayed.   
 */
 
 /* ----------------------------------------------------------------------------
@@ -908,9 +810,9 @@
 /* ----------------------------------------------------------------------------
     @term lazy
     
-    @short A @@pipelet that @@(subscribe)s to no @@upstream events
+    @short A @@pipelet that initially @@(subscribe)s to no @@upstream events
     
-    @description:
+    @description
     
     Pipelets @@subscribe to @@upstream events using a @@query to limit the
     amount of data received from upstream.
