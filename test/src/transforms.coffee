@@ -416,6 +416,31 @@ describe 'transforms', ->
       
       it 'should be lazy', () ->
         expect( picked._input.future_query ).to.be null
+    
+    describe 'Using greedy option', ->
+      it 'should pick 5 values, with id, order from order_id, and name from user object in values', ( done ) ->
+        source = rs.set [
+          { flow: 'users', order_id: 10, user: { id: 1, name: 'Joe' , age: 76 } }
+          { flow: 'users', order_id: 11, user: { id: 2, name: 'Jill', age: 45 } }
+          { flow: 'users', order_id: 12, user: { id: 3              , age: 56 } }
+          { flow: 'users', order_id: 13, user: {                              } }
+          { flow: 'users', order_id: 14                                         }
+          { flow: 'users'                                                       }
+        ]
+        
+        picked = source.pick( { id: ".user.id", order: ".order_id", name: ".user.name" }, { greedy: true } )
+        
+        picked._fetch_all ( values ) -> check done, () ->
+          expect( values ).to.be.eql [
+            { id: 1, order: 10, name: 'Joe'  }
+            { id: 2, order: 11, name: 'Jill' }
+            { id: 3, order: 12               }
+            {        order: 13               }
+            {        order: 14               }
+          ]
+      
+      it 'should be greedy', () ->
+        expect( picked._input.future_query.query ).to.be.eql [ {} ]
   
   describe 'filter_pick()', () ->
     expected        = new Expected_Operations()
