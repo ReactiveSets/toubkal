@@ -60,6 +60,7 @@ require './query_selector'
 
 require './mailer'
 require './server'
+require './patch'
 
 try
   require.resolve 'zombie'
