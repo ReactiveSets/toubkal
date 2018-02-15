@@ -794,7 +794,9 @@ Work In Progress.
   - many pipelets, functions and methods are already following this documentation format
 
 - Transactional design patterns and pipelets
-  - fetch(): Fetches the current state of a store dataflow based on source events.
+  - fetch(): Fetches the current state of a store dataflow based on source events
+  - fetch_as(): Set attribute with fetched values from store by fetch_query
+  - fetch_first(): Set attribute with first fectched value from store
   - update_fetched(): Update fetched values in a transaction
   - fetched_differences(): Emits differences (A - B) between two fetched sets A then B
   - emit_operations(): Emits remove, update, and add operations in a transaction
@@ -912,6 +914,8 @@ throttle_last()                     | Emit last received source value before thr
 throttle()                          | Emit last received source value before throttle events
 update_fetched()                    | Update fetched values in a transaction
 fetch()                             | Fetches the current state of a store dataflow based on source events
+fetch_as()                          | Set attribute with fetched values from store
+fetch_first()                       | Set attribute with first fectched value from store
 pick()                              | Forwards only specified attributes
 has_none()                          | Has one value if source has none, has no value if source has one
 log_namespace()                     | Helps debug namespace issues
