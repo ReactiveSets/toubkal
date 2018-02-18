@@ -118,7 +118,7 @@ describe 'patch():', ->
   it 'should create a patch', ->
     a     = rs.set( [ { id: 1, path: 'test', content: x.join( '' ) } ] )
     b     = rs.trace( 'b' )
-    patch = b.create_patches( a, { id: '.id' } ).store()
+    patch = b.create_patches( a, [ [ 'id' ] ] ).store()
     c     = patch.patch( a.set(), { id: '.id' } ).store()
     none  = b.create_patches( rs.set(), { id: '.id' } ).store()
     d     = none.patch( rs.set(), { id: '.id' } ).store()
