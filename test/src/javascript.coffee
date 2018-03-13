@@ -39,12 +39,13 @@ else
 
 is_array  = javascript.is_array
 is_object = javascript.is_object
+is_date   = javascript.is_date
 
 # ----------------------------------------------------------------------------------------------
 # javascript test suite
 # ---------------------
 
-describe 'javascript.is_object', ->
+describe 'javascript.is_object()', ->
   it 'should return true for an empty Object', ->
     expect( is_object( {} ) ).to.be true
   
@@ -69,7 +70,7 @@ describe 'javascript.is_object', ->
   it 'should return false for an Array of two values', ->
     expect( is_object( [ 1, "test" ] ) ).to.be false
 
-describe 'javascript.is_array', ->
+describe 'javascript.is_array()', ->
   it 'should return false for undefined', ->
     expect( is_array( undefined ) ).to.be false
   
@@ -90,3 +91,25 @@ describe 'javascript.is_array', ->
   
   it 'should return true for an Array of two values', ->
     expect( is_array( [ 1, "test" ] ) ).to.be true
+
+describe 'javascript.is_date()', ->
+  it 'should return false for undefined', ->
+    expect( is_date( undefined ) ).to.be false
+
+  it 'should return false for null', ->
+    expect( is_date( null ) ).to.be false
+  
+  it 'should return false for boolean value true', ->
+    expect( is_date( true ) ).to.be false
+  
+  it 'should return false for number 1', ->
+    expect( is_date( 1 ) ).to.be false
+  
+  it 'should return false for an Object', ->
+    expect( is_date( {} ) ).to.be false
+  
+  it 'should return false for an empty Array', ->
+    expect( is_date( [] ) ).to.be false
+  
+  it 'should return true for a Date', ->
+    expect( is_date( new Date() ) ).to.be true
