@@ -40,6 +40,7 @@ else
 is_array  = javascript.is_array
 is_object = javascript.is_object
 is_date   = javascript.is_date
+next_tick = javascript.next_tick
 
 # ----------------------------------------------------------------------------------------------
 # javascript test suite
@@ -113,3 +114,7 @@ describe 'javascript.is_date()', ->
   
   it 'should return true for a Date', ->
     expect( is_date( new Date() ) ).to.be true
+
+describe 'javascript.next_tick()', ->
+  it 'should call function asynchronously', ( done ) ->
+    next_tick -> check done, ->
