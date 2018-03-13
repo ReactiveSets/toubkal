@@ -37,10 +37,14 @@ else
   # under node
   javascript = require javascript
 
-is_array  = javascript.is_array
-is_object = javascript.is_object
-is_date   = javascript.is_date
-next_tick = javascript.next_tick
+is_array    = javascript.is_array
+is_object   = javascript.is_object
+is_date     = javascript.is_date
+is_string   = javascript.is_string
+is_function = javascript.is_function
+is_number   = javascript.is_number
+
+next_tick   = javascript.next_tick
 
 # ----------------------------------------------------------------------------------------------
 # javascript test suite
@@ -114,6 +118,72 @@ describe 'javascript.is_date()', ->
   
   it 'should return true for a Date', ->
     expect( is_date( new Date() ) ).to.be true
+
+describe 'javascript.is_string()', ->
+  it 'should return true for literal empty string', ->
+    expect( is_string( '' ) ).to.be true
+  
+  it 'should return true for literal "hello" string', ->
+    expect( is_string( 'hello' ) ).to.be true
+  
+  it 'should return true for String Object "hello"', ->
+    expect( is_string( new String( 'hello' ) ) ).to.be true
+  
+  it 'should return false for undefined', ->
+    expect( is_string( undefined ) ).to.be false
+  
+  it 'should return false for null', ->
+    expect( is_string( null ) ).to.be false
+  
+  it 'should return false for boolean value true', ->
+    expect( is_string( true ) ).to.be false
+  
+  it 'should return false for number 1', ->
+    expect( is_string( 1 ) ).to.be false
+  
+  it 'should return false for an Object', ->
+    expect( is_string( {} ) ).to.be false
+
+describe 'javascript.is_function()', ->
+  it 'should return true for a function', ->
+    expect( is_function( () -> ) ).to.be true
+  
+  it 'should return false for undefined', ->
+    expect( is_function( undefined ) ).to.be false
+  
+  it 'should return false for null', ->
+    expect( is_function( null ) ).to.be false
+  
+  it 'should return false for boolean value true', ->
+    expect( is_function( true ) ).to.be false
+  
+  it 'should return false for an Object', ->
+    expect( is_function( {} ) ).to.be false
+
+describe 'javascript.is_number()', ->
+  it 'should return true for literal number 0', ->
+    expect( is_number( 0 ) ).to.be true
+  
+  it 'should return true for literal number 1', ->
+    expect( is_number( 1 ) ).to.be true
+  
+  it 'should return true for Object Number 0', ->
+    expect( is_number( new Number( 0 ) ) ).to.be true
+  
+  it 'should return false for string literal "1"', ->
+    expect( is_number( "1" ) ).to.be false
+  
+  it 'should return false for undefined', ->
+    expect( is_number( undefined ) ).to.be false
+  
+  it 'should return false for null', ->
+    expect( is_number( null ) ).to.be false
+  
+  it 'should return false for boolean value true', ->
+    expect( is_number( true ) ).to.be false
+  
+  it 'should return false for an Object', ->
+    expect( is_number( {} ) ).to.be false
 
 describe 'javascript.next_tick()', ->
   it 'should call function asynchronously', ( done ) ->
