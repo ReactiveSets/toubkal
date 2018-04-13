@@ -37,6 +37,8 @@ else
   # under node
   javascript = require javascript
 
+class_of    = javascript.class_of
+
 is_array    = javascript.is_array
 is_object   = javascript.is_object
 is_date     = javascript.is_date
@@ -50,7 +52,38 @@ next_tick   = javascript.next_tick
 # javascript test suite
 # ---------------------
 
-describe 'javascript.is_object()', ->
+describe 'javascript.class_of( value )', ->
+  it 'should return "Undefined" with no value', ->
+    expect( class_of() ).to.be.eql "Undefined"
+  
+  it 'should return "Undefined" for undefined', ->
+    expect( class_of( undefined ) ).to.be.eql "Undefined"
+  
+  it 'should return "Null" for null', ->
+    expect( class_of( null ) ).to.be.eql "Null"
+  
+  it 'should return "Number" for 0', ->
+    expect( class_of( 0 ) ).to.be.eql "Number"
+  
+  it 'should return "Number" for Infinity', ->
+    expect( class_of( Infinity ) ).to.be.eql "Number"
+  
+  it 'should return "Number" for NaN', ->
+    expect( class_of( NaN ) ).to.be.eql "Number"
+  
+  it 'should return "String" for ""', ->
+    expect( class_of( "" ) ).to.be.eql "String"
+  
+  it 'should return "Object" for {}', ->
+    expect( class_of( {} ) ).to.be.eql "Object"
+  
+  it 'should return "Array" for []', ->
+    expect( class_of( [] ) ).to.be.eql "Array"
+  
+  it 'should return "Error" for new Error()', ->
+    expect( class_of( new Error() ) ).to.be.eql "Error"
+
+describe 'javascript.is_object( value )', ->
   it 'should return true for an empty Object', ->
     expect( is_object( {} ) ).to.be true
   
@@ -75,7 +108,7 @@ describe 'javascript.is_object()', ->
   it 'should return false for an Array of two values', ->
     expect( is_object( [ 1, "test" ] ) ).to.be false
 
-describe 'javascript.is_array()', ->
+describe 'javascript.is_array( value )', ->
   it 'should return false for undefined', ->
     expect( is_array( undefined ) ).to.be false
   
@@ -97,7 +130,7 @@ describe 'javascript.is_array()', ->
   it 'should return true for an Array of two values', ->
     expect( is_array( [ 1, "test" ] ) ).to.be true
 
-describe 'javascript.is_date()', ->
+describe 'javascript.is_date( value )', ->
   it 'should return false for undefined', ->
     expect( is_date( undefined ) ).to.be false
 
@@ -119,7 +152,7 @@ describe 'javascript.is_date()', ->
   it 'should return true for a Date', ->
     expect( is_date( new Date() ) ).to.be true
 
-describe 'javascript.is_string()', ->
+describe 'javascript.is_string( value )', ->
   it 'should return true for literal empty string', ->
     expect( is_string( '' ) ).to.be true
   
@@ -144,7 +177,7 @@ describe 'javascript.is_string()', ->
   it 'should return false for an Object', ->
     expect( is_string( {} ) ).to.be false
 
-describe 'javascript.is_function()', ->
+describe 'javascript.is_function( value )', ->
   it 'should return true for a function', ->
     expect( is_function( () -> ) ).to.be true
   
@@ -160,7 +193,7 @@ describe 'javascript.is_function()', ->
   it 'should return false for an Object', ->
     expect( is_function( {} ) ).to.be false
 
-describe 'javascript.is_number()', ->
+describe 'javascript.is_number( value )', ->
   it 'should return true for literal number 0', ->
     expect( is_number( 0 ) ).to.be true
   
