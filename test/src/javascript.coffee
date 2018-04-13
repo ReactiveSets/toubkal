@@ -38,6 +38,7 @@ else
   javascript = require javascript
 
 class_of    = javascript.class_of
+is_class    = javascript.is_class
 
 is_array    = javascript.is_array
 is_object   = javascript.is_object
@@ -82,6 +83,16 @@ describe 'javascript.class_of( value )', ->
   
   it 'should return "Error" for new Error()', ->
     expect( class_of( new Error() ) ).to.be.eql "Error"
+
+describe 'javascript.is_class( _class )( value )', ->
+  it 'should return true for is_class( "Object" )( {} ) ', ->
+    expect( is_class( 'Object' )( {} ) ).to.be true
+  
+  it 'should return false for is_class( "Object" )( null ) ', ->
+    expect( is_class( 'Object' )( null ) ).to.be false
+  
+  it 'should return true for is_class( "Null" )( null ) ', ->
+    expect( is_class( 'Null' )( null ) ).to.be true
 
 describe 'javascript.is_object( value )', ->
   it 'should return true for an empty Object', ->
