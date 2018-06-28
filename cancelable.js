@@ -1,3 +1,5 @@
+#!node
+
 var cancelable = require( './lib/util/cancelable' )
   , log        = require( './lib/util/console_logger' )().bind( null, 'cancelable_test' )
   , limiter    = cancelable.limiter
