@@ -202,9 +202,8 @@
             .$to_dom()
         }, { name: 'manuals-content' } )
         
-        .greedy()
-        
-        ._output.on( 'complete', function() { console.log( document.location.href = document.location.href ) } )
+        // This causes the page to refresh immediately in a loop, comment-out for now
+        //.greedy()._output.on( 'complete', function() { console.log( document.location.href = document.location.href ) } )
       ;
     </script>
   </body>
