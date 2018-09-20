@@ -4,12 +4,16 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1920 Continuous Integration Tests*
+*1931 Continuous Integration Tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
 
 [![Join the chat at https://gitter.im/ReactiveSets/toubkal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReactiveSets/toubkal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+The current version allows rapid development of non-trivial, complex,
+all-reactive applications. We are using it in production applications
+developped for and with our clients.
 
 ## Teaser
 Displaying a reactive ```<table>``` which DOM container is ```#sales_table```, ordered by date,
@@ -88,72 +92,83 @@ The bottom line is that Toubkal allows you to write with less code higher perfor
 reactive applications, liberating your creativity.
 
 ## Introduction
-Toubkal is a high-productivity, high-performances, scalable, reactive web application
-framework aiming at improving your productivity for the development of complex
+Toubkal is a high-productivity, high-performances, scalable, all-reactive web
+application library aiming at improving your productivity for the development of complex
 applications, reducing servers' environmental footprint, and increasing mobile clients
 battery life by making an optimal use of server, network and client resources.
 
 ### Development Stage
-Toubkal is already quite reliable thanks to its comprehensive test suite and is
-currently used to deliver a complex enterprise web application.
+Toubkal is already quite reliable thanks to its comprehensive test suite
+and is currently used to deliver complex, all-reactive, enterprise
+progressive web applications for our clients.
 
-The architecture of Toubkal is now stable, with main components (pipelets, plugs, queries,
-and transaction) well defined.
+The architecture of Toubkal is now stable, with main components (pipelets,
+plugs, queries, and transaction) well defined.
 
-Although the API may still change from time to time, we have entered a more mature phase
-where the high level API is now quite stable, while lower-level API changes much less
-often.
+Although the API may still change from time to time, we have entered a
+more mature phase where the high level API is now quite stable, while
+lower-level API changes much less often.
 
-Toubkal should provide a functionally-rich framework by version 0.5 including reasonably
-complete documentation extracted from the code where it currently stands, and reasonably
-stable API.
+Toubkal is well documented, including all internals and client-server
+protocol.
 
 ### Our Team
-Toubkal is developped by a dedicated small team of experienced and passionate back-end
-and front-end developers.
+Toubkal is developped by a dedicated small team of experienced and
+passionate back-end and front-end developers.
 
-If you are an experienced JavaScript programmer, understand the power of reactive
-programming and would like to join our team, please contact us.
+If you are an experienced JavaScript programmer, understand the power
+of all-reactive programming and would like to join our team, please
+contact us.
 
 ### Why yet-another JavaScript Web Application Library?
-The short answer is because we are not satisfied with the productivity, performances,
-and authorization models, of existing frameworks.
+The short answer is because we are not satisfied with the productivity,
+performances, and authorization models, of existing frameworks and
+libraries.
 
-Internet servers are consuming an increasily significant share of worldwide exlectricity
-production, contributing to climate change and threatening Internet growth as the
-availability of cheap fosil fuels decreases due to population growth and per capita
-consumption growth.
+Internet servers are consuming an increasily significant share of
+worldwide electricity production, contributing to climate change and
+threatening Internet growth as the availability of cheap fosil fuels
+decreases due to population growth and per capita consumption growth.
 
-The power of Internet server is now mostly increasing through the addition of CPU cores,
-meaning that the key to efficient usage of server resources must shift from
-raw-single-thread performence to high concurrency and parallelism performance. This in
-turn requires new programming patterns to keep, or increase programmers' productivity.
+The power of Internet server is now mostly increasing through the
+addition of CPU cores, meaning that the key to efficient usage of server
+resources must shift from raw-single-thread performence to high
+concurrency and parallelism performance. This in turn requires new
+programming patterns to keep, or increase programmers' productivity.
 
-Also, one must realize that the bulk of the vast majorty of today's web applications is
-about controling the motion of data throughout the network. Such data is no-longer
-limited to strictly public or strictly private informtation, requiring complex
-authorization schemes. This calls for a framework that allows to greatly simplify the
-management of user authorizations well beyond all-or-nothing authentication.
+Also, one must realize that the bulk of the vast majorty of today's
+applications is about controling the motion of data throughout the
+network. Such data is no-longer limited to strictly public or strictly
+private informtation, requiring complex authorization schemes. This calls
+for new programing patterns that allows to greatly simplify the
+management of user authorizations well beyond all-or-nothing
+authentication.
 
 #### What do you mean by performances?
-Our first priority is high-performances, because we believe that performance is the key
-to better user experience, lowest operational costs, and a lower environemental
-footprint.
+Our first priority is high-performances, because we believe that
+performance is the key to better user experience, lowest operational
+costs, and lower environemental footprint.
 
 We are fighting simultaneously against:
-- **CPU cycles** that consume energy to run and cool-down servers, slow-down mobile
-clients, and **drain mobile batteries** faster than anyone desires
-- **Latency** decreasing the responsiveness of applications and user experiences
-- **Bandwidth** usage that consume energy, and increase latency over lower-bandwidth
-networks
+- **CPU cycles** that consume energy to run and cool-down servers,
+slow-down mobile clients, and **drain mobile batteries** faster
+than anyone desires;
+- **Latency** decreasing the responsiveness of applications and
+user experiences;
+- **Bandwidth** usage that consume energy, and increase latency over
+lower-bandwidth networks.
 
-We also want to keep **good performances at scale**. Most frameworks either do-not-scale
-or scale with lower per-server performances further increasing the need for cash while
-increasing environemental footprints.
+We also want to keep **good performances at scale**. Most libraries
+either do-not-scale or scale with lower per-server performances further
+increasing costs while increasing environemental footprints.
 
-Toubkal addresses all of these issues thanks to its unique **Subscribe / Push**
-reactive dataflow model that works accross web browsers and nodejs servers, as well as
-just-in-time code generators and other optimizations.
+Toubkal addresses all of these issues thanks to its unique
+**Publish / Subscribe** all-reactive dataflow model that works accross
+web browsers and nodejs servers, as well as just-in-time code generators
+and other unique optimizations.
+
+Most importantly Toubkal provides a programing model that can be
+further optimized while maintaining user-code compatibility.
 
 #### What's the big deal about authorizations?
 
@@ -181,7 +196,7 @@ model that works in all cases, without requiring you to write a single additiona
 code, so that you can sleep at night knowing that end-user data cannot be exposed by some
 piece of code that forgot to test a role in a corner-case.
 
-#### How does Toubkal improve your Productivity?
+#### How does Toubkal improve your productivity?
 
 By allowing you to describe **what** you need in a declarative style, instead of
 **how** this could ever be accomplished.
@@ -215,7 +230,7 @@ A pipelet is a **factory function** which instances:
 A Toubkal program is a JavaScript program where one can mix imperative-style programming
 with Toubkal declarative-style programming.
 
-Toubkal's **Subscribe / Push** reactive model allows to solve the **how** so that you
+Toubkal's **Publish / Subscribe** reactive model allows to solve the **how** so that you
 don't have to deal with it.
 
 To make it easier, the API describes **what** you want in **plain JavaScript** without
@@ -226,7 +241,7 @@ Toubkal reactive dataflow model provides higher level abstractions handling unde
 hood both subscribe dataflows and information push dataflows that allow to move the
 least amount of information possible between clients and servers reactively.
 
-### Toubkal Subscribe / Push Dataflow Model
+### Toubkal Publish / Subscribe Dataflow Model
 
 The following describes implementation details implemented at Toubkal's low level.
 Application Architects do not need do program anything for this to happen as it is
@@ -249,12 +264,12 @@ requestAnimationFrame() to prevent over-updating the DOM between refreshes.
 result in the transmission of large amounts of unused data, usually introducing
 unacceptable latency and bandwidth charges.
 
-Toubkal implements a **Subscribe / Push** model where downstream pipelets subscribe to
+Toubkal implements a **Publish / Subscribe** model where downstream pipelets subscribe to
 the subset of data they are interested in and subsequently receive all updates in a push
 fashion only for that subset. This allows Toubkal to move less data between clients and
 servers while remaining realtime with lower latency.
 
-Toubkal stateless pipelets also use a lazy model where they will not subscribe to anything
+Toubkal stateless pipelets use a lazy model where they will not subscribe to anything
 from upstream unless initial data is fetched by a downstream stateful pipelet. This again
 allows to transmit only what is really used by the application at any given time.
 
@@ -381,7 +396,7 @@ A company could run multiple services through a single network of stateless even
 dispatchers, acting as web service aggregator.
 
 The different nodes of a Toubkal network communicate using the Toubkal protocol that
-provides the Subscribe / Push service over a reliable transport (such as Sockets,
+provides the Publish / Subscribe service over a reliable transport (such as Sockets,
 WebSockets, ...) but not necessarily guarantying the order of packets. So Toubkal could
 also work over a protocol that would only guaranty the delivery of packets.
 
@@ -405,7 +420,7 @@ People will now expose their data, using a variety of services to view, edit, an
 their data to other people.
 
 Using only stateless pipelets, this architecture will reach internet-scale very
-efficiently, delivering a Marshalled Subscribe / Push multicasting data exchange
+efficiently, delivering a Marshalled Publish / Subscribe multicasting data exchange
 for services to share data among many service providers, while representing a business
 opportunity for **Toubkal Network Providers** much like today's CDNs but for marshalled
 dynamic real-time content solving caching issues thanks to the immutability of data
@@ -488,7 +503,7 @@ Then point a web browser at [localhost on port 8082](http://localhost:8082/).
 
 ### Automated Tests, Continuous Integration
 
-We have curently developped 1920 continuous integration tests for the Toubkal
+We have curently developped 1931 continuous integration tests for the Toubkal
 core and framework pipelets that run after every commit on Travis CI under
 node version 4.6.0 which is the current LTS version.
 
@@ -525,7 +540,7 @@ From npm, latest release:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1920 of 1920 tests
+-> passed 1931 of 1931 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -591,19 +606,9 @@ This version introduces the capability to keep historical values of objects pers
 
 - Dropbox file sharing for photo albums (developped and tested in demo repository)
 
-### Version 0.6.0 - Complex Queries
+### Version 0.6.0 - Complete core features and testing
 
 #### Main goals:
-- Intergrate Safe Complex Query expressions into Query and Query_Tree:
-  - Query..add(): Add complex query terms
-  - Query..remove(): remove complex query terms
-  - Query..and(): AND complex queries
-  - Query..differences(): Find differences between complex queries
-  - Query..generate(): Generate filter code from complex queries
-  - Query_Tree..add(): Add complex query terms into query tree
-  - Query_Tree..remove(): Remove complex query terms from query tree
-  - Query_Tree..route(): Route operations with complex queries
-
 - Query Tree else()
   - Emits data events not routed to any other destination input
   - Pipelet else() captures these events
@@ -612,50 +617,6 @@ This version introduces the capability to keep historical values of objects pers
 - Develop additional tests, goal is at least 2500 continuous integration tests
 
 #### Work in progress:
-
-- Safe Complex Query expressions (implemented, needs integration):
-  - Sanitized for safe execution on server even when crafted by untrusted clients
-  
-  - For execution by upstream servers to reduce bandwidth, cpu usage and latency
-  
-  - JSON Objects and Arrays for any JSON transport
-  
-  - Side-effect free
-  
-  - Any depth Abstract Syntax Tree, can be limited to prevent Denial of Service attacks
-  
-  - Consistent and rich semantic, above that of SQL and MongoDB:
-    - Nested Object and Array expressions
-    
-    - Regular expressions
-    
-    - All progressive operators, e.g.:
-      ```18 <= age <= 25```
-      ```sales / ( 0 != count ) > 1000```
-  
-  - Operators:
-    - Control flow       : ```&& || ! failed```
-    - Literals           : ```$ _ __ .```
-    - Grouping           : ```[]```
-    - Comparison         : ```== != > >= < <=```
-    - Arithmetic         : ```+ - * / %```
-    - Regular expressions: ```RegExp match match_index group split```
-    - Search in Array    : ```in```
-    - Array / String     : ```length```
-    - Date               : ```Date value year month day hours minutes seconds milliseconds time```
-    - Custom operators   : defined using JavaScript functions but used as JSON Strings and Arrays to prevent code-injection
-  
-  - Example: Expression to get active users whom last logged-in before 2013:
-
-```javascript
-    {
-        flow   : 'user'
-      , active : [ '==', true ]
-      , profile: {
-            last_logged_in: [ 'year', '<', 2013 ]
-        }
-    }
-```
 
 ### Version 0.5.0 - Packaging / First Beta
 
@@ -671,15 +632,15 @@ First Beta version with API almost finalized.
 
 #### Work-In-Progress:
 
-### Version 0.4.0 - Transactional Operations / Complex Authorizations / DOM Handling / Documentation
+### Version 0.4.0 - Transactional Operations / Complex Expressions and Authorizations / DOM Handling / Documentation
 
 Work In Progress.
 
-- 1920 Continuous Integration tests
+- 1931 Continuous Integration tests
 
 #### Main Goals:
 
-- Additional tests, goal is at least 1750 continuous integration tests
+- Additional tests, exceeded goal was at least 1750 continuous integration tests
 
 - Error routing and handling:
   - pipelet to push / pop sender, route errors
@@ -687,6 +648,16 @@ Work In Progress.
   - provide pipelet to revert errors (done)
   - filter may route errors based on error values
   - alter may alter error values
+
+- Complete Safe Complex Query expressions into Query and Query_Tree:
+  - Query..add(): Add complex query terms
+  - Query..remove(): remove complex query terms
+  - Query..differences(): Find differences between complex queries
+  - Query_Tree..add(): Add complex query terms into query tree
+  - Query_Tree..remove(): Remove complex query terms from query tree
+  - Query_Tree..route(): Route operations with complex queries
+  - Complex query to SQL query
+  - Implement set features as operators, options, or special attributes: limit, group_by, order_by, pick
 
 #### Work in progress:
 
@@ -703,6 +674,54 @@ Work In Progress.
 - Build Toubkal site, featuring documentation and examples
 
 #### Completed Work:
+
+- Safe Complex Query expressions:
+  - Query methods allowing non-reactive, fetch-only operation:
+    - Query..generate(): Generate filter code from complex queries
+    - Query..and(): AND complex queries
+  
+  - Sanitized for safe execution on server even when crafted by untrusted clients
+  
+  - For execution by upstream servers to reduce bandwidth, cpu usage and latency
+  
+  - JSON Objects and Arrays for any JSON transport
+  
+  - Side-effect free
+  
+  - Any depth Abstract Syntax Tree, may be limited to prevent Denial of Service attacks
+  
+  - Consistent and rich semantic:
+    - Nested Object and Array expressions
+    
+    - Regular expressions
+    
+    - All progressive operators, allowing to express the follozing:
+      ```18 <= age <= 25```
+      ```sales / ( 0 != count ) > 1000```
+  
+  - Operators:
+    - Control flow       : ```&& || ! failed reset```
+    - Literals           : ```$ _ __ .```
+    - Grouping           : ```[]```
+    - Comparison         : ```== != > >= < <=```
+    - Arithmetic         : ```+ - * / %```
+    - Regular expressions: ```RegExp match match_index group split```
+    - Search in Array    : ```in```
+    - Array / String     : ```length```
+    - Date               : ```Date value year month day hours minutes seconds milliseconds time```
+    - Custom operators   : defined using JavaScript functions but used as JSON Strings and Arrays to prevent code-injection
+  
+  - Example: Expression to get active users whom last logged-in between 2005 included and 2013 not included:
+
+```javascript
+    {
+        flow   : 'user'
+      , active : [ '==', true, '||', '==', 1 ]
+      , profile: {
+            last_logged_in: [ '$', 2005, '<=', 'year', '<', 2013 ]
+        }
+    }
+```
 
 - Redesign of Plug.._fetch() && ..update_upstream_query():
   - Synchronize update_upstream_query() and fetch() to guaranty data consistency
@@ -1124,9 +1143,9 @@ IO_Transaction            | Base class for Input_Transaction and Output_Transact
 Input_Transaction         | Manage an input transaction
 Output_Transaction        | Manage an output transaction
 
-### Version 0.2.0 - Subscribe / Push Dataflow Model - March 31 2014:
+### Version 0.2.0 - Publish / Subscribe Dataflow Model - March 31 2014:
 
-- Finalize Subscribe / Push reactive dataflow model using optimized Query Tree Router and lazy connection of stateless pipelets
+- Finalize Publish / Subscribe reactive dataflow model using optimized Query Tree Router and lazy connection of stateless pipelets
 - Filter support for static and dynamic queries
 - Transactions
 - Automate UI tests on Travis
