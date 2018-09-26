@@ -102,136 +102,136 @@ describe 'Query & Query_Tree test suite:', ->
     
     describe '==', ->
       it 'user.id == 1 -> true', ->
-        expect( Query.evaluate user, 'id', [ "==", 1 ] ).to.be true
+        expect( Query.evaluate user, 'id', [ '==', 1 ] ).to.be true
       
       it 'user.id == 2 -> false', ->
-        expect( Query.evaluate user, 'id', [ "==", 2 ] ).to.be false
+        expect( Query.evaluate user, 'id', [ '==', 2 ] ).to.be false
       
-      it 'user.profile == { first_name: "Alice", favorite_colors: [ "green", "blue" ] } -> true', ->
-        expect( Query.evaluate user, 'profile', [ "==", {
-          first_name: "Alice"
+      it "user.profile == { first_name: 'Alice', favorite_colors: [ 'green', 'blue' ] } -> true", ->
+        expect( Query.evaluate user, 'profile', [ '==', {
+          first_name: 'Alice'
           
           favorite_colors: [ 'green', 'blue' ]
           
           options: { busy: true }
         } ] ).to.be true
       
-      it 'user.profile == { first_name: "Bob", favorite_colors: [ "green", "blue" ] } -> false', ->
-        expect( Query.evaluate user, 'profile', [ "==", {
-          first_name: "Bob"
+      it "user.profile == { first_name: 'Bob', favorite_colors: [ 'green', 'blue' ] } -> false", ->
+        expect( Query.evaluate user, 'profile', [ '==', {
+          first_name: 'Bob'
           
           favorite_colors: [ 'green', 'blue' ]
           
           options: { busy: true }
         } ] ).to.be false
       
-      it 'user.profile == { last_name: "Alice" } -> false', ->
-        expect( Query.evaluate user, 'profile', [ "==", { last_name: "Alice" } ] ).to.be false
+      it "user.profile == { last_name: 'Alice' } -> false", ->
+        expect( Query.evaluate user, 'profile', [ '==', { last_name: 'Alice' } ] ).to.be false
       
-      it 'user.profile == {} -> false', ->
-        expect( Query.evaluate user, 'profile', [ "==", {} ] ).to.be false
+      it "user.profile == {} -> false", ->
+        expect( Query.evaluate user, 'profile', [ '==', {} ] ).to.be false
       
-      it 'user.fruits == [ "orange", "pear", "tomato" ] -> true', ->
-        expect( Query.evaluate user, 'fruits', [ "==", [ '$', [ "orange", "pear", 'tomato' ] ] ] ).to.be true
+      it "user.fruits == [ 'orange', 'pear', 'tomato' ] -> true", ->
+        expect( Query.evaluate user, 'fruits', [ '==', [ '$', [ 'orange', 'pear', 'tomato' ] ] ] ).to.be true
     
     describe 'Object expression', ->
-      it 'user.profile: { first_name: "Alice" } -> true', ->
-        expect( Query.evaluate user, 'profile', { first_name: "Alice" } ).to.be true
+      it "user.profile: { first_name: 'Alice' } -> true", ->
+        expect( Query.evaluate user, 'profile', { first_name: 'Alice' } ).to.be true
       
-      it 'user.profile: { first_name: "Bob" } -> false', ->
-        expect( Query.evaluate user, 'profile', { first_name: "Bob" } ).to.be false
+      it "user.profile: { first_name: 'Bob' } -> false", ->
+        expect( Query.evaluate user, 'profile', { first_name: 'Bob' } ).to.be false
       
-      it 'user.profile: { first_name: "Alice", last_name: "" } -> false', ->
-        expect( Query.evaluate user, 'profile', { first_name: "Alice", last_name: '' } ).to.be false
+      it "user.profile: { first_name: 'Alice', last_name: '' } -> false", ->
+        expect( Query.evaluate user, 'profile', { first_name: 'Alice', last_name: '' } ).to.be false
       
-      it 'user.profile: { first_name: [ "==", "Alice" ] } -> true', ->
-        expect( Query.evaluate user, 'profile', { first_name: [ "==", "Alice" ] } ).to.be true
+      it "user.profile: { first_name: [ '==', 'Alice' ] } -> true", ->
+        expect( Query.evaluate user, 'profile', { first_name: [ '==', 'Alice' ] } ).to.be true
       
-      it 'user.profile: { first_name: [ "==", "Bob" ] } -> false', ->
-        expect( Query.evaluate user, 'profile', { first_name: [ "==", "Bob" ] } ).to.be false
+      it "user.profile: { first_name: [ '==', 'Bob' ] } -> false", ->
+        expect( Query.evaluate user, 'profile', { first_name: [ '==', 'Bob' ] } ).to.be false
       
-      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green", "blue" ] } -> true', ->
+      it "user.profile: { first_name: 'Alice', favorite_colors: [ 'green', 'blue' ] } -> true", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
-          favorite_colors: [ '==', [ '$', [ "green", "blue" ] ] ]
+          favorite_colors: [ '==', [ '$', [ 'green', 'blue' ] ] ]
         } ).to.be true
       
-      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green" ] } -> false', ->
+      it "user.profile: { first_name: 'Alice', favorite_colors: [ 'green' ] } -> false", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Bob"
+          first_name: 'Bob'
           
-          favorite_colors: [ '==', [ '$', [ "green", "blue" ] ] ]
+          favorite_colors: [ '==', [ '$', [ 'green', 'blue' ] ] ]
         } ).to.be false
       
-      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green" ] } -> false', ->
+      it "user.profile: { first_name: 'Alice', favorite_colors: [ 'green' ] } -> false", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
-          favorite_colors: [ '==', [ '$', [ "green" ] ] ]
+          favorite_colors: [ '==', [ '$', [ 'green' ] ] ]
         } ).to.be false
       
-      it 'user.profile: { first_name: "Alice", favorite_colors: { 0: "green" } } -> true', ->
+      it "user.profile: { first_name: 'Alice', favorite_colors: { 0: 'green' } } -> true", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
-          favorite_colors: { 0: "green" }
+          favorite_colors: { 0: 'green' }
         } ).to.be true
       
-      it 'user.profile: { first_name: "Alice", favorite_colors: [ "green", "blue" ] } -> true', ->
+      it "user.profile: { first_name: 'Alice', favorite_colors: [ 'green', 'blue' ] } -> true", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
-          favorite_colors: [ '==', [ '$', [ "green", "blue" ] ] ]
+          favorite_colors: [ '==', [ '$', [ 'green', 'blue' ] ] ]
           
           options: { busy: true }
         } ).to.be true
       
-      it 'user.profile: { first_name: "Alice", options: { busy: true } } -> true', ->
+      it "user.profile: { first_name: 'Alice', options: { busy: true } } -> true", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
           options: { busy: true }
         } ).to.be true
       
-      it 'user.profile: { first_name: "Alice", _options: { busy: true } } -> false', ->
+      it "user.profile: { first_name: 'Alice', _options: { busy: true } } -> false", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
           _options: { busy: true }
         } ).to.be false
       
-      it 'user.profile: { first_name: "Alice", options: { busy: false } } -> false', ->
+      it "user.profile: { first_name: 'Alice', options: { busy: false } } -> false", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
           options: { busy: false }
         } ).to.be false
       
-      it 'user.profile: { first_name: "Alice", options: { more: {} } } -> false', ->
+      it "user.profile: { first_name: 'Alice', options: { more: {} } } -> false", ->
         expect( Query.evaluate user, 'profile', {
-          first_name: "Alice"
+          first_name: 'Alice'
           
           options: { more: {} }
         } ).to.be false
       
-      it 'user.profile: [ { more: { busy: true } }, [ ".", "first_name" ], "==", "Alice" ] -> true', ->
+      it "user.profile: [ { more: { busy: true } }, [ '.', 'first_name' ], '==', 'Alice' ] -> true", ->
         expect( Query.evaluate user, 'profile', [
           { options: { busy: true } }
           
-          [ '.', 'first_name' ], '==', "Alice"
+          [ '.', 'first_name' ], '==', 'Alice'
         ] ).to.be true
       
-      it 'user.profile: [ [ { more: { busy: true } }, ".", "first_name" ], "==", "Alice" ] -> true', ->
+      it "user.profile: [ [ { more: { busy: true } }, '.', 'first_name' ], '==', 'Alice' ] -> true", ->
         expect( Query.evaluate user, 'profile', [
-          [ { options: { busy: true } }, '.', 'first_name' ], '==', "Alice"
+          [ { options: { busy: true } }, '.', 'first_name' ], '==', 'Alice'
         ] ).to.be true
       
-      it 'user.profile: [ { more: { busy: false } }, [ ".", "first_name" ], "==", "Alice" ] -> false', ->
+      it "user.profile: [ { more: { busy: false } }, [ '.', 'first_name' ], '==', 'Alice' ] -> false", ->
         expect( Query.evaluate user, 'profile', [
           { options: { busy: false } }
           
-          [ '.', 'first_name' ], '==', "Alice"
+          [ '.', 'first_name' ], '==', 'Alice'
         ] ).to.be false
       
     describe '!=', ->
@@ -287,10 +287,10 @@ describe 'Query & Query_Tree test suite:', ->
         expect( Query.evaluate user, 'sales', [ [ '_', 'count' ], '!=', 5 ] ).to.be false
       
     describe '[ "_", attribute, sub-attribute ]', ->
-      it 'profile.first_name == "Alice" -> true', ->
+      it "profile.first_name == 'Alice' -> true", ->
         expect( Query.evaluate user, 'sales', [ [ '_', 'profile', 'first_name' ], '==', 'Alice' ] ).to.be true
       
-      it 'profile.first_name != "Alice" -> false', ->
+      it "profile.first_name != 'Alice' -> false", ->
         expect( Query.evaluate user, 'sales', [ [ '_', 'profile', 'first_name' ], '!=', 'Alice' ] ).to.be false
     
     describe 'Testing existance', ->
@@ -350,10 +350,10 @@ describe 'Query & Query_Tree test suite:', ->
             expect( Query.evaluate user, 'profile', [ '!', [ '.', 'first_name' ] ] ).to.be false
       
     describe '[ ".", sub-attribute ]', ->
-      it 'profile.first_name == "Alice" -> true', ->
+      it "profile.first_name == 'Alice' -> true", ->
         expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], '==', 'Alice' ] ).to.be true
       
-      it 'profile.first_name != "Alice" -> false', ->
+      it "profile.first_name != 'Alice' -> false", ->
         expect( Query.evaluate user, 'profile', [ [ '.', 'first_name' ], '!=', 'Alice' ] ).to.be false
       
     describe '[ "$", value ]', ->
@@ -522,26 +522,26 @@ describe 'Query & Query_Tree test suite:', ->
     describe 'Implicit and', ->
       describe 'Using [] to reset left value', ->
         it 'user.id ( > 0 ( == 1 ) ) -> true', ->
-          expect( Query.evaluate user, 'id', [ '>', 0, [ "==", 1 ] ] ).to.be true
+          expect( Query.evaluate user, 'id', [ '>', 0, [ '==', 1 ] ] ).to.be true
         
         it 'user.id ( > 0 ( == 0 ) ) -> false', ->
-          expect( Query.evaluate user, 'id', [ '>', 0, [ "==", 0 ] ] ).to.be false
+          expect( Query.evaluate user, 'id', [ '>', 0, [ '==', 0 ] ] ).to.be false
         
         it 'user.id ( > 1 ( == 1 ) ) -> false', ->
-          expect( Query.evaluate user, 'id', [ '>', 1, [ "==", 1 ] ] ).to.be false
+          expect( Query.evaluate user, 'id', [ '>', 1, [ '==', 1 ] ] ).to.be false
       
       describe 'Progressive', ->
         it 'user.id ( > 0 == 0 ) ) -> true', ->
-          expect( Query.evaluate user, 'id', [ '>', 0, "==", 0 ] ).to.be true
+          expect( Query.evaluate user, 'id', [ '>', 0, '==', 0 ] ).to.be true
         
         it 'user.id ( > 0 == 1 ) ) -> false', ->
-          expect( Query.evaluate user, 'id', [ '>', 0, "==", 1 ] ).to.be false
+          expect( Query.evaluate user, 'id', [ '>', 0, '==', 1 ] ).to.be false
         
         it 'user.id ( > 1 == 1 ) ) -> false', ->
-          expect( Query.evaluate user, 'id', [ '>', 1, "==", 1 ] ).to.be false
+          expect( Query.evaluate user, 'id', [ '>', 1, '==', 1 ] ).to.be false
         
         it 'user.id ( >= 1 == 1 ) ) -> true', ->
-          expect( Query.evaluate user, 'id', [ ">=", 1, "==", 1 ] ).to.be true
+          expect( Query.evaluate user, 'id', [ ">=", 1, '==', 1 ] ).to.be true
     
     describe '&& !', ->
       it 'user.id >= 1 && ! ( user.id < 1 ) -> true', ->
@@ -597,7 +597,7 @@ describe 'Query & Query_Tree test suite:', ->
         expect( Query.evaluate user, 'id', [ '>', 1, 'failed', '==', 1 ] ).to.be true
     
     describe 'Switching default attribute value using __ attribute', ->
-      it 'profile .first_name == "Alice" && ( ( __ id ) && .first_name == "Alice" failed && id > 0 && id < 2 ) ) -> true', ->
+      it "profile .first_name == 'Alice' && ( ( __ id ) && .first_name == 'Alice' failed && id > 0 && id < 2 ) ) -> true", ->
         expect( Query.evaluate user, 'profile', [ 
           [ '.', 'first_name' ], '==', 'Alice',
           '&&', [
@@ -612,41 +612,41 @@ describe 'Query & Query_Tree test suite:', ->
     describe 'Regular Expressions', ->
       describe 'RegExp, regular expression constructor', ->
         it '( RegExp "test" ) == /test/ -> true', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], "==", /test/ ] ).to.be true
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], '==', /test/ ] ).to.be true
         
         it '( RegExp "test" ) == "test" -> false', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], "==", "test" ] ).to.be false
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], '==', "test" ] ).to.be false
         
         it '( RegExp "test" ) == /tes/ -> false', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], "==", /tes/ ] ).to.be false
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test" ], '==', /tes/ ] ).to.be false
         
         it '( RegExp "test", "g" ) == /test/g -> true', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "g" ], "==", /test/g ] ).to.be true
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "g" ], '==', /test/g ] ).to.be true
         
         it '( RegExp "test", "g" ) == /test/i -> false', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "g" ], "==", /test/i ] ).to.be false
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "g" ], '==', /test/i ] ).to.be false
         
         it '( RegExp "test", "i" ) == /test/i -> true', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "i" ], "==", /test/i ] ).to.be true
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "i" ], '==', /test/i ] ).to.be true
         
         it '( RegExp "test", "i" ) == /test/ -> false', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "i" ], "==", /test/ ] ).to.be false
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "i" ], '==', /test/ ] ).to.be false
         
         it '( RegExp "test", "m" ) == /test/m -> true', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "m" ], "==", /test/m ] ).to.be true
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "m" ], '==', /test/m ] ).to.be true
         
         it '( RegExp "test", "m" ) == /test/g -> false', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "m" ], "==", /test/g ] ).to.be false
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "m" ], '==', /test/g ] ).to.be false
       
         it '( RegExp "test", "gim" ) == /test/gim -> true', ->
-          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "gim" ], "==", /test/gim ] ).to.be true
+          expect( Query.evaluate user, 'id', [ [ 'RegExp', "test", "gim" ], '==', /test/gim ] ).to.be true
       
       describe 'match', ->
         it 'text match "dolor" -> true', ->
           expect( Query.evaluate user, "text", [ 'match', "dolor" ] ).to.be true
         
         it 'text match "dolor" == 12 -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12 ] ).to.be true
+          expect( Query.evaluate user, "text", [ 'match', "dolor", '==', 12 ] ).to.be true
         
         it 'text match "Dolor" -> false', ->
           expect( Query.evaluate user, "text", [ 'match', "Dolor" ] ).to.be false
@@ -656,17 +656,17 @@ describe 'Query & Query_Tree test suite:', ->
       
       describe 'last_index', ->
         it 'text match "dolor" == 12, last_index == 0 -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', "dolor", "==", 12, "last_index", '==', 0 ] ).to.be true
+          expect( Query.evaluate user, "text", [ 'match', "dolor", '==', 12, "last_index", '==', 0 ] ).to.be true
         
         it 'text match ( RegExp "dolor", "g" ) == 12, last_index == 17 -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "last_index", '==', 17 ] ).to.be true
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], '==', 12, "last_index", '==', 17 ] ).to.be true
         
         it 'text match ( RegExp "dolor", "g" ) == 12, last_index == 17, ( match ) -> true', ->
-          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], "==", 12, "last_index", '==', 17, [ "match" ] ] ).to.be true
+          expect( Query.evaluate user, "text", [ 'match', [ "RegExp", "dolor", "g" ], '==', 12, "last_index", '==', 17, [ "match" ] ] ).to.be true
         
         it 'text match /dolor/g == 12, last_index == 17, ( match ) == 104, last_index == 109 -> true', ->
           expect( Query.evaluate user, "text", [
-            'match', /dolor/g, "==", 12
+            'match', /dolor/g, '==', 12
             'last_index', '==', 17
             [ 'match' ], '==', 104
             'last_index', '==', 109
@@ -715,44 +715,44 @@ describe 'Query & Query_Tree test suite:', ->
           ] ).to.be true
     
     describe 'in, contains', ->
-      it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] -> true', ->
+      it "'$', 'orange', 'in', 'pear', 'orange', 'banana' -> true", ->
         expect( Query.evaluate user, "text", [
-          '$', "orange", 'in', [ '$',[ "pear", "orange", "banana" ] ]
+          '$', 'orange', 'in', 'pear', 'orange', 'banana'
         ] ).to.be true
       
-      it '"orange" in [ "$", [ "pear", "orange", "banana" ] ] == 1" -> true', ->
+      it "[ '$', 'orange', 'in', 'pear', 'orange', 'banana' ], '==', 1 -> true", ->
         expect( Query.evaluate user, "text", [
-          '$', "orange", 'in', [ '$', [ "pear", "orange", "banana" ] ], '==', 1
+          [ '$', 'orange', 'in', 'pear', 'orange', 'banana' ], '==', 1
         ] ).to.be true
       
-      it '"tomato" in [ "$", [ "pear", "orange", "banana" ] ] -> false', ->
+      it "'$', 'tomato', 'in', 'pear', 'orange', 'banana' -> false", ->
         expect( Query.evaluate user, "text", [
-          '$', "tomato", 'in', [ '$', [ "pear", "orange", "banana" ] ]
+          '$', 'tomato', 'in', 'pear', 'orange', 'banana'
         ] ).to.be false
       
-      it '"tomato" in user.fruits -> true', ->
-        expect( Query.evaluate user, "fruits", [ '$', "tomato", 'in', [] ] ).to.be true
+      it "'tomato' in user.fruits -> true", ->
+        expect( Query.evaluate user, "fruits", [ '$', 'tomato', 'in', [] ] ).to.be true
       
-      it '"apple" in user.fruits -> false', ->
-        expect( Query.evaluate user, "apple", [ '$', "tomato", 'in', [] ] ).to.be false
+      it "'apple' in user.fruits -> false", ->
+        expect( Query.evaluate user, 'apple', [ '$', 'tomato', 'in', [] ] ).to.be false
       
-      it '"apple" in user.fruits == 2 -> false', ->
-        expect( Query.evaluate user, "apple", [ '$', "tomato", 'in', [], "==", 2 ] ).to.be false
+      it "'apple' in user.fruits == 2 -> false", ->
+        expect( Query.evaluate user, 'apple', [ [ '$', 'tomato', 'in', [] ], '==', 2 ] ).to.be false
       
-      it '[ "tomato", "pear" ] in user.fruits -> true', ->
-        expect( Query.evaluate user, "fruits", [ '$', [ "tomato", "pear" ], 'in', [] ] ).to.be true
+      it "[ 'tomato', 'pear' ] in user.fruits -> true", ->
+        expect( Query.evaluate user, "fruits", [ '$', [ 'tomato', 'pear' ], 'in', [] ] ).to.be true
       
-      it '[ "tomato", "apple" ] in user.fruits -> false', ->
-        expect( Query.evaluate user, "fruits", [ '$', [ "tomato", "apple" ], 'in', [] ] ).to.be false
+      it "[ 'tomato', 'apple' ] in user.fruits -> false", ->
+        expect( Query.evaluate user, "fruits", [ '$', [ 'tomato', 'apple' ], 'in', [] ] ).to.be false
       
-      it '[ "apple", "tomato" ] in user.fruits -> false', ->
-        expect( Query.evaluate user, "fruits", [ '$', [ "apple", "tomato" ], 'in', [] ] ).to.be false
+      it "[ 'apple', 'tomato' ] in user.fruits -> false", ->
+        expect( Query.evaluate user, "fruits", [ '$', [ 'apple', 'tomato' ], 'in', [] ] ).to.be false
       
-      it '[ "tomato", "pear" ] in user.fruits == 1 -> true', ->
-        expect( Query.evaluate user, "fruits", [ '$', [ "tomato", "pear" ], 'in', [], "==", 1 ] ).to.be true
+      it "[ 'tomato', 'pear' ] in user.fruits == 1 -> true", ->
+        expect( Query.evaluate user, "fruits", [ [ '$', [ 'tomato', 'pear' ], 'in', [] ], '==', 1 ] ).to.be true
       
-      it 'user.fruits contains [ "tomato", "pear" ] -> true', ->
-        expect( Query.evaluate user, "fruits", [ 'contains', [ '$', [ "tomato", "pear" ] ] ] ).to.be true
+      it "user.fruits contains [ 'tomato', 'pear' ] -> true", ->
+        expect( Query.evaluate user, "fruits", [ 'contains', [ '$', [ 'tomato', 'pear' ] ] ] ).to.be true
       
     describe 'Date Object', ->
       it "[ 'Date', 2014, 4, 9, 10, 56 ] year == 2014 -> true", ->

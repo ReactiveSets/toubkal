@@ -650,12 +650,6 @@ Work In Progress.
   - alter may alter error values
 
 - Complete Safe Complex Query expressions into Query and Query_Tree:
-  - Query..add(): Add complex query terms
-  - Query..remove(): remove complex query terms
-  - Query..differences(): Find differences between complex queries
-  - Query_Tree..add(): Add complex query terms into query tree
-  - Query_Tree..remove(): Remove complex query terms from query tree
-  - Query_Tree..route(): Route operations with complex queries
   - Complex query to SQL query
   - Implement set features as operators, options, or special attributes: limit, group_by, order_by, pick
 
@@ -679,6 +673,14 @@ Work In Progress.
   - Query methods allowing non-reactive, fetch-only operation:
     - Query..generate(): Generate filter code from complex queries
     - Query..and(): AND complex queries
+    - Query.least_restrictive_keys(): optionally try to determine which
+    AND-expression describes the largest set. Optimized for expressions
+    with one compararison operator in '<', '<=', '==', '>=', '>'. 
+    - Query..differences(): Allow comparison of complex queries using
+    value_equals().
+    - Query_Tree..add(): Add complex query terms into query tree
+    - Query_Tree..remove(): Remove complex query terms from query tree
+    - Query_Tree..route(): Route operations with complex queries
   
   - Sanitized for safe execution on server even when crafted by untrusted clients
   
@@ -704,9 +706,11 @@ Work In Progress.
     - Literals           : ```$ _ __ .```
     - Grouping           : ```[]```
     - Comparison         : ```== != > >= < <=```
+    - Ranges             : ```<< <=< <=<= <<=```
+    - Search in Array    : ```in```
+    - Search in set      : ```in_set```
     - Arithmetic         : ```+ - * / %```
     - Regular expressions: ```RegExp match match_index group split```
-    - Search in Array    : ```in```
     - Array / String     : ```length```
     - Date               : ```Date value year month day hours minutes seconds milliseconds time```
     - Custom operators   : defined using JavaScript functions but used as JSON Strings and Arrays to prevent code-injection
