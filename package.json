@@ -3,7 +3,7 @@
   
   "version": "0.3.12",
   
-  "description": "Transactional Reactive Programming for Node.js and the Browser",
+  "description": "Fully reactive programming for nodejs and the browser",
   
   "main": "lib/server.js",
   
@@ -82,7 +82,7 @@
   },
   
   "keywords": [
-    "transactional reactive programming",
+    "reactive programming",
     "transactional",
     "reactive",
     "dataflow"
