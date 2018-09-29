@@ -1,6 +1,6 @@
 # Toubkal
 
-**Transactional Reactive Programming for Nodejs and the Browser**
+**Fully reactive programming for nodejs and the browser**
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
@@ -76,51 +76,139 @@ improving client responsiveness, battery life and user experience.
 
 #### What does this mean?
 
-The Toubkal program above is expressed in one third the words required to express
-the problem in plain english replacing thousands of lines of complex and error-prone code.
+The Toubkal program above is expressed in one third the words required
+to express the problem in plain english replacing thousands of lines of
+complex and error-prone code.
 
-Toubkal programs have no *loops*, and no *ifs*, dramatically reducing the
-likelyhood of bugs and hence improving productivity by orders of magnitude. Under the
-hood, Toubkal provides all the optimized and comprehensively tested *loops* and
-*ifs* you need.
+Toubkal programs have no *loops*, and no *ifs*, dramatically reducing
+the likelyhood of bugs and hence greatly improving productivity.
+Under the hood, Toubkal provides all the optimized and comprehensively
+tested *loops* and *ifs* you need.
 
 These same declarative techniques are applied on the server side
-delivering a full stack scallable and secure framework with highest performances
-featuring reactive database and fine-grained authorization model.
+delivering a full stack scallable and secure framework with highest
+performances featuring a reactive database and fine-grained authorization
+design patterns.
 
-The bottom line is that Toubkal allows you to write with less code higher performance
-reactive applications, liberating your creativity.
+The bottom line is that Toubkal allows you to write with less code higher
+performance fully reactive applications, liberating your creativity.
 
-## Introduction
-Toubkal is a high-productivity, high-performances, scalable, all-reactive web
-application library aiming at improving your productivity for the development of complex
-applications, reducing servers' environmental footprint, and increasing mobile clients
-battery life by making an optimal use of server, network and client resources.
+## Installation
 
-### Development Stage
+From npm, latest release:
+```bash
+# npm install toubkal
+```
+
+## Documentation
+
+This readme provides a short introduction to Toubkal.
+
+Full reference documentation including internals and the Toubkal
+protocol is available at
+[https://toubkal.reactane.com/](https://toubkal.reactane.com/).
+
+This documentation site is a Toubkal reactive application. It updates
+automatically after each commit is pulled on our developpement server.
+
+Documentation is extracted from code using the following Toubkal
+server pipelets:
+- **acorn()**: parse javascript using the acorn library
+- **parse_documentation()**: emit documentation items from parsed comments
+- **documentation_markdown()**: format documentation items into markdown
+- **markdown()**: markdown to html converter using "remarkable" and "highlight.js"
+- **documentation_manuals()**: Toubkal documentation manuals metadata (not content)
+
+To work on the documentation on a local machine, run the documatation site:
+```bash
+  node site/server.js > site.out
+```
+
+Then point a web browser at [localhost on port 8082](http://localhost:8082/).
+
+## Automated Tests, Continuous Integration
+
+We have curently developped 1931 continuous integration tests for the Toubkal
+core and library pipelets that run after every commit on Travis CI under
+node version 4.6.0.
+
+In the event that a test does not pass our top priority is to fix the test
+before anything else. We usualy fix broken tests within hours.
+
+These tests also pass on Windows under [Cygwin](https://www.cygwin.com/)
+which although not officially supported by node, works with some caveats.
+
+In any case, one should expect Toubkal applications to run equally well
+on Windows and Linux.
+
+We also do manual testing on the following web browsers:
+- Chrome (latest),
+- Firefox (latest),
+- Safai (latest),
+- IE 11.
+
+### Running tests locally
+```bash
+# npm install -g coffee-script
+# npm install -g mocha
+# git clone https://github.com/ReactiveSets/toubkal.git
+# cd toubkal
+# npm install
+# ./run_tests.sh
+Full test results are in test.out
+-> passed 1931 of 1931 tests
+#
+# less -R test.out # for tests detailed traces
+```
+
+### Running core tests in a browser:
+```bash
+# node test/server/http.js
+```
+
+Then browse http://localhost:8080/test/manual/
+
+### Running browser examples:
+```bash
+# node examples/server.js
+```
+
+Then browse http://localhost:8081/
+
+## Development Stage
 Toubkal is already quite reliable thanks to its comprehensive test suite
 and is currently used to deliver complex, all-reactive, enterprise
-progressive web applications for our clients.
+progressive web applications for clients.
 
 The architecture of Toubkal is now stable, with main components (pipelets,
-plugs, queries, and transaction) well defined.
+plugs, queries, transactions, and more) well defined and implemented.
 
 Although the API may still change from time to time, we have entered a
 more mature phase where the high level API is now quite stable, while
 lower-level API changes much less often.
 
-Toubkal is well documented, including all internals and client-server
-protocol.
-
-### Our Team
+## Our team
 Toubkal is developped by a dedicated small team of experienced and
-passionate back-end and front-end developers.
+passionate full-stack developers for the web and other technologies.
+
+We are now fully funded and profitable by delivering Toubkal
+applications for our clients at [Reactane](https://www.reactane.com/).
+
+We have been developping Toubkal since December 2012 and cannot
+imagine ever going back to programming the old way.
 
 If you are an experienced JavaScript programmer, understand the power
 of all-reactive programming and would like to join our team, please
 contact us.
 
-### Why yet-another JavaScript Web Application Library?
+## Introduction
+Toubkal is a high-productivity, high-performances, scalable, all-reactive
+web application library aiming at improving your productivity for the
+development of complex applications, reducing servers' environmental
+footprint, and increasing mobile clients battery life by making an
+optimal use of server, network and client resources.
+
+### Why yet-another JavaScript application library?
 The short answer is because we are not satisfied with the productivity,
 performances, and authorization models, of existing frameworks and
 libraries.
@@ -420,7 +508,7 @@ People will now expose their data, using a variety of services to view, edit, an
 their data to other people.
 
 Using only stateless pipelets, this architecture will reach internet-scale very
-efficiently, delivering a Marshalled Publish / Subscribe multicasting data exchange
+efficiently, delivering a Marshalled publish / subscribe multicasting data exchange
 for services to share data among many service providers, while representing a business
 opportunity for **Toubkal Network Providers** much like today's CDNs but for marshalled
 dynamic real-time content solving caching issues thanks to the immutability of data
@@ -446,231 +534,125 @@ more data and more services available to more users and businesses.
 
 ### Ecosystem
 
-Toubkal backend runs on **Node.js** providing a scalable database, web server, validation,
-and authorizations.
+Toubkal backend runs on **Node.js** providing a scalable database, web
+server, validation, and authorizations.
 
-On the frontend, Toubkal provides reactive controlers and views driven by reactive dataflows.
+On the frontend, Toubkal provides reactive controlers and views driven
+by reactive dataflows.
 
-Toubkal can optionally be coupled with any other framework but we recommend using reactive
-libraries such as **AngularJS**, **Ember**, **Bacon.js**, **React**, which model is
-closer to RS.
+Toubkal can optionally be coupled with any other framework but we
+recommend using reactive libraries such as **AngularJS**, **Ember**,
+**Bacon.js**, **React**, which model is closer to Toubkal.
 
-For responsive layouts, we recommand **Bootstrap** that we use it for our reactive
-Carousel and Photo Albums.
+For responsive layouts, we recommand **Bootstrap** that we use it for our
+reactive Carousel and Photo Albums.
 
-For DOM manipulation one can use any library, or none at all, as Toubkal core has no
-dependencies.
+For DOM manipulation one can use any library, or none at all, as Toubkal
+core has no dependencies.
 
-Toubkal can either be used to gradually improve existing applications on the back-end or
-front-end, or as a full-stack framework.
+Toubkal can either be used to gradually improve existing applications on
+the back-end or front-end, or as a full-stack framework.
 
-#### Integrated database and model
+### Integrated reactive database and model
 
-Persistance was implemented in version 0.3.
+Toubkal features a reactive database model with joins, aggregates, filters
+and transactions with eventual consistency allowing both normalized and
+denormalized schemes.
 
-Toubkal features a document database model with joins, aggregates, filters and
-transactions with eventual consistency allowing both normalized and denormalized
-schemes.
+A reactive MySQL driver for Toubkal is available at
+[https://github.com/ReactiveSets/toubkal_mysql](https://github.com/ReactiveSets/toubkal_mysql).
 
-### Documentation
+## Roadmap and Release Notes
 
-This readme provides an introduction to Toubkal.
+Current work in progress is for version 0.4
 
-The bulk of the core documentation is currently embedded in the code of
-[pipelet.js](https://github.com/ReactiveSets/toubkal/tree/master/lib/core/pipelet.js)
-and other sources for other pipelets.
+### Version 1.0 - Finalize core, packaging, and framework
 
-We plan on extracting and completing this documentation to provide the following
-manuals from version 0.4:
+#### Main Goals
 
-- Toubkal Introduction
-- Toubkal Gloasary of Terms
+- Core
+  - Develop additional tests, goal is at least 3000 continuous integration tests
+  - Implement as many ToDo as possible
+  - Super-state and versioning
+    - define attribute _v for versions, allowing to manage complete anti-state and super-state
+    - super-state will contain versions of an object added after a first version is already in the state
+      - allow complete desorder between multiple adds and revmove on the same object defined by its id
+  - Versionned persistance
+    - Dataflows Meta Data for key, and query indexes definition
+    - Operations log
+    - Query cache
+  - File write
+  - Query Tree else()
+    - Emits data events not routed to any other destination input
+    - Pipelet else() captures these events
+    - May be used to detect clients attempts to submit unauthorized data
 
-- Toubkal Application Architect Manual
-- Toubkal Application Architect Reference
+- Packaging
+  - toubkal package manager
+  - split this repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ...
+  - automatic pipelet patching
 
-- Toubkal Pipelet Programmer's Guide
-- Toubkal Pipelet Programmer's Reference
+- Framework
+  - Social login client pipelet
+  - Notifications
+  - PWA
+  - Client SPA navigation / routing pipelet
+  - Navigation pipelets
+  - Internationalization
+  - Session Strorage Dataflow
+  - Refactor Web Server API to better integreate with Express
+    - Bug with routing algorythm for / route
+    - Fix updates
+  - Finalize server-side rendering
+    - using html_parse() to insert elements into a DOM tree
+    - using html_serialize() to rebuild modified html to server
+    - using $query_selector() to select into htmlparse2 tree
+    - using $to_dom() to modify htmlparse2 tree (not implemented)
 
-- Toubkal Internals
-
-To view this work in progress:
-```bash
-  node site/server.js > site.out
-```
-
-Then point a web browser at [localhost on port 8082](http://localhost:8082/).
-
-### Automated Tests, Continuous Integration
-
-We have curently developped 1931 continuous integration tests for the Toubkal
-core and framework pipelets that run after every commit on Travis CI under
-node version 4.6.0 which is the current LTS version.
-
-Our continuous integration process also requires that before each commit the
-developer runs these tests so travis usually passes all tests. In the event
-that a test does not pass the top priority is to fix the test before anything
-else.
-
-These tests also pass on Windows under [Cygwin](https://www.cygwin.com/)
-which although not officially supported by node, works with some caveats.
-In any case, one should expect Toubkal applications to run equally well
-on Windows and Linux.
-
-We also do manual testing on the following web browsers:
-- Chrome (latest),
-- Firefox (latest),
-- IE 11.
-
-We also update dependencies soon after new versions are released.
-
-## Installation
-
-From npm, latest release:
-```bash
-# npm install toubkal
-```
-
-## Running tests
-```bash
-# npm install -g coffee-script
-# npm install -g mocha
-# git clone https://github.com/ReactiveSets/toubkal.git
-# cd toubkal
-# npm install
-# ./run_tests.sh
-Full test results are in test.out
--> passed 1931 of 1931 tests
-#
-# less -R test.out # for tests detailed traces
-```
-
-## Running core tests in a browser:
-```bash
-# node test/server/http.js
-```
-
-Then browse http://localhost:8080/test/manual/
-
-## Running browser examples:
-```bash
-# node examples/server.js
-```
-
-Then browse http://localhost:8081/
-
-## Roadmap / Releases
-
-### Version 0.7.0 - Web Application Framework / Packaging / Versionning
-
-This version introduces the capability to keep historical values of objects persisted and cached.
-
-#### Main Goals:
-
-- Navigation pipelets
-
-- Internationalization
-
-- Packaging:
-  - Split This repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ... repositories
-  - Implement rs package manager
-  - Implement rs automatic pipelet patching
-
-- Develop additional tests, goal is at least 3000 continuous integration tests, measure test coverage
-
-- Super-state and versioning:
-  - define attribute _v for versions, allowing to manage complete anti-state and super-state
-  - super-state will contain versions of an object added after a first version is already in the state
-    - allow complete desorder between multiple adds and revmove on the same object defined by its id
-
-- Versionned persistance, i.e. 
-  - Dataflows Meta Data for key, and query indexes definition
-  - Operations log
-  - Query cache
-
-- Refactor Web Server API to allow use of other nodejs http server frameworks such as Connect, Express, Koa, ...
-  - Bug with routing algorythm for / route
-  - Fix updates
-
-- File write:
-  - to configuration()
-  - to other files
-
-- Server-side rendering:
-  - using html_parse() to insert elements into a DOM tree
-  - using html_serialize() to rebuild modified html to server
-  - using $query_selector() to select into htmlparse2 tree
-  - using $to_dom() to modify htmlparse2 tree (not implemented)
-
-#### Work in Progress:
-
-- Dropbox file sharing for photo albums (developped and tested in demo repository)
-
-### Version 0.6.0 - Complete core features and testing
-
-#### Main goals:
-- Query Tree else()
-  - Emits data events not routed to any other destination input
-  - Pipelet else() captures these events
-  - May be used to detect clients attempts to submit unauthorized data
-
-- Develop additional tests, goal is at least 2500 continuous integration tests
-
-#### Work in progress:
-
-### Version 0.5.0 - Packaging / First Beta
-
-First Beta version with API almost finalized.
-
-#### Main Goals:
-
-- Implement as many ToDo as possible
-- Develop additional tests, goal is at least 2000 continuous integration tests, code coverage to 90%
-- Session Strorage Dataflow
-- Social login client pipelet
-- Client SPA navigation / routing pipelet
-
-#### Work-In-Progress:
-
-### Version 0.4.0 - Transactional Operations / Complex Expressions and Authorizations / DOM Handling / Documentation
+### Version 0.4.0 - Transactional Operations / Complex Expressions / DOM Handling / Documentation
 
 Work In Progress.
 
-- 1931 Continuous Integration tests
+We are almost done with this major release which we currently use in production
+applications for clients.
 
-#### Main Goals:
+#### Main goals remaining
 
-- Additional tests, exceeded goal was at least 1750 continuous integration tests
-
-- Error routing and handling:
-  - pipelet to push / pop sender, route errors
-  - provide pipelet to filter-out errors using filter query [ { flow: [ '!', 'error' ] } ]
-  - provide pipelet to revert errors (done)
-  - filter may route errors based on error values
-  - alter may alter error values
-
-- Complete Safe Complex Query expressions into Query and Query_Tree:
+- Complete Safe Complex Query expressions
   - Complex query to SQL query
-  - Implement set features as operators, options, or special attributes: limit, group_by, order_by, pick
+  - Implement stateful features as operators, options, or special attributes
+    - limit value
+    - order_by expressions [,descending]
+    - group_by dimensions, measures
+    - pick
 
-#### Work in progress:
+- Error routing, eventual consistency
+  - pipelet to push / pop sender, route errors to sender
+  - eventual consistency with pipelet next()
+    - on error, update rejected value with new next value
 
-- Error handling:
-  - Rollback transactions to recover from errors:
-    - Using revert(), reverting add into remove, remove into add, and swapping update operations.
+#### Work in progress
 
-- Complex authorizations and validation:
+- 1931 Continuous Integration tests
+  - Exceeded goal which was at least 1750 continuous integration tests
+
+- Error routing, eventual consistency
+  - Rollback transactions to recover from errors
+    - Using revert(), reverting add into remove, remove into add, and swapping update operations
+
+- Complex authorizations and validation
   - using adds(), removes() and updates() to differentiate between Create,
   Delete and Update operations and apply authorization rules accordingly.
   - use pipelet fetch() to check authorizations.
   - using not_exists() to test appropriate existance on adds, removes and updates.
 
-- Build Toubkal site, featuring documentation and examples
+- Toubkal site, featuring documentation and examples
+  - Documatation available as a single page
 
-#### Completed Work:
+#### Completed Work (versions 0.3.x, x > 0)
 
-- Safe Complex Query expressions:
-  - Query methods allowing non-reactive, fetch-only operation:
+- Safe Complex Query expressions
+  - Query and Query_Tree methods
     - Query..generate(): Generate filter code from complex queries
     - Query..and(): AND complex queries
     - Query.least_restrictive_keys(): optionally try to determine which
@@ -692,7 +674,7 @@ Work In Progress.
   
   - Any depth Abstract Syntax Tree, may be limited to prevent Denial of Service attacks
   
-  - Consistent and rich semantic:
+  - Consistent and rich semantic
     - Nested Object and Array expressions
     
     - Regular expressions
@@ -701,7 +683,7 @@ Work In Progress.
       ```18 <= age <= 25```
       ```sales / ( 0 != count ) > 1000```
   
-  - Operators:
+  - Operators
     - Control flow       : ```&& || ! failed reset```
     - Literals           : ```$ _ __ .```
     - Grouping           : ```[]```
@@ -916,7 +898,7 @@ piexif_insert()                     | Inserts EXIF into content, using the piexi
 piexif_parse()                      | Parses content EXIF using the piexif library
 markdown()                          | Markdown to html converter using "remarkable" and "highlight.js"
 documentation_manuals()             | Toubkal documentation manuals metadata (not content)
-documentation_markdown()            | Emit documentation items from parsed "comments" attribute
+documentation_markdown()            | Format documentation items into markdown
 parse_documentation()               | Emit documentation items from parsed "comments" attribute
 acorn()                             | Parse javascript "content" attribute using the acorn library
 process_argv()                      | The set of command line arguments
