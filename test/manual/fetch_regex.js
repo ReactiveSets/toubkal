@@ -13,7 +13,7 @@ var rs = require( 'toubkal' )
       
       .pass_through()
       
-      .trace( 'from set', { all: true } )
+      //.trace( 'from set', { all: true } )
       
       .filter( authorizations )
       
@@ -25,7 +25,7 @@ var rs = require( 'toubkal' )
 ;
 
 users
-  .optimize()
+  //.optimize()
   .trace( 'users' )
   .greedy()
 ;
@@ -37,9 +37,9 @@ source
 ;
 
 //source._add( [ { id: 34 } ] );
-//source._add( [ { id: 35, query: [ { name: 'Jean Vincent' } ] } ] );
-//source._add( [ { id: 36, query: [ { name: [ 'match', 'Jean Vincent' ] } ] } ] );
-//source._add( [ { id: 36, query: [ { id: [ '<=', 5 ], name: [ 'match', 'k', '||', [ '_', 'id' ], '<=', 3, '&&', 'match', [ 'RegExp', 's', 'i' ] ] } ] } ] );
+//source._add( [ { id: 35, query: [ { name: 'John Snape' } ] } ] );
+//source._add( [ { id: 36, query: [ { name: [ 'match', 'John Snape' ] } ] } ] );
+source._add( [ { id: 36, query: [ { id: [ '<=', 5 ], name: [ 'match', 'k', '||', [ '_', 'id' ], '<=', 3, '&&', 'match', [ 'RegExp', 's', 'i' ] ] } ] } ] );
 //source._add( [ { id: 36, query: [ { id: [ '>', 1 ] } ] } ] );
 
 users_source._add( [ { id: 4, name: 'Jack London' } ] )
