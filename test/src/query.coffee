@@ -337,7 +337,7 @@ describe 'Query & Query_Tree test suite:', ->
       
       describe 'using "!"', ->
         it '! _ -> true', ->
-          expect( Query.evaluate user, '_', [ '!', [] ] ).to.be true
+          expect( Query.evaluate user, '_', [ '||', '!', [] ] ).to.be true
         
         it '! flow -> false', ->
           expect( Query.evaluate user, 'flow', [ '!', [] ] ).to.be false
@@ -790,42 +790,42 @@ describe 'Query & Query_Tree test suite:', ->
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56 ] month == 4 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
           [ 'Date', 2014, 4, 9, 10, 56 ], 'month', '==', 4
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56 ] day == 9 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
           [ 'Date', 2014, 4, 9, 10, 56 ], 'day', '==', 9
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56 ] hours == 10 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
           [ 'Date', 2014, 4, 9, 10, 56 ], 'hours', '==', 10
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56 ] minutes == 56 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
           [ 'Date', 2014, 4, 9, 10, 56 ], 'minutes', '==', 56
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56, 25 ] seconds == 25 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
           [ 'Date', 2014, 4, 9, 10, 56, 25 ], 'seconds', '==', 25
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] milliseconds == 432 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
           [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'milliseconds', '==', 432
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] < [ 'Date' ] -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
           [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], '<', [ 'Date' ]
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], '-' [ 'Date', 2014, 4, 10, 10, 56, 25, 432 ] == -86400000 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
             [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ]
           '-'
             [ 'Date', 2014, 4, 10, 10, 56, 25, 432 ]
@@ -834,14 +834,14 @@ describe 'Query & Query_Tree test suite:', ->
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ] time == [ 'Date', 1970, 0, 1, 10, 56, 25, 432 ] -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
             [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'time'
           '=='
             [ 'Date', 1970, 0, 1, 10, 56, 25, 432  ]
         ] ).to.be true
       
       it "[ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'time' - [ [ 'Date', 2014, 4, 10, 10, 56, 26, 432 ], 'time' ] == -1000 -> true", ->
-        expect( Query.evaluate user, "id", [
+        expect( Query.evaluate user, "date", [
             [ 'Date', 2014, 4, 9, 10, 56, 25, 432 ], 'time'
           '-'
             [ [ 'Date', 2014, 4, 10, 10, 56, 26, 432 ], 'time' ]
