@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1931 Continuous Integration Tests*
+*1936 Continuous Integration Tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -128,7 +128,7 @@ Then point a web browser at [localhost on port 8082](http://localhost:8082/).
 
 ## Automated Tests, Continuous Integration
 
-We have curently developped 1931 continuous integration tests for the Toubkal
+We have curently developped 1936 continuous integration tests for the Toubkal
 core and library pipelets that run after every commit on Travis CI under
 node version 4.6.0.
 
@@ -156,7 +156,7 @@ We also do manual testing on the following web browsers:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1931 of 1931 tests
+-> passed 1936 of 1936 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -633,7 +633,7 @@ applications for clients.
 
 #### Work in progress
 
-- 1931 Continuous Integration tests
+- 1936 Continuous Integration tests
   - Exceeded goal which was at least 1750 continuous integration tests
 
 - Error routing, eventual consistency

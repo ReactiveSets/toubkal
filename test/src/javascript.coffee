@@ -46,6 +46,7 @@ is_date     = javascript.is_date
 is_string   = javascript.is_string
 is_function = javascript.is_function
 is_number   = javascript.is_number
+is_regexp   = javascript.is_regexp
 
 next_tick   = javascript.next_tick
 
@@ -228,6 +229,22 @@ describe 'javascript.is_number( value )', ->
   
   it 'should return false for an Object', ->
     expect( is_number( {} ) ).to.be false
+
+describe 'javascript.is_regexp( value )', ->
+  it 'should return true for literal regular expression /test/', ->
+    expect( is_regexp( /test/ ) ).to.be true
+  
+  it 'should return false for number 1', ->
+    expect( is_regexp( 1 ) ).to.be false
+  
+  it 'should return false for undefined', ->
+    expect( is_regexp() ).to.be false
+  
+  it 'should return false for null', ->
+    expect( is_regexp( null ) ).to.be false
+  
+  it 'should return false for Object {}', ->
+    expect( is_regexp( {} ) ).to.be false
 
 describe 'javascript.next_tick()', ->
   it 'should call function asynchronously', ( done ) ->
