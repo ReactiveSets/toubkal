@@ -706,7 +706,7 @@ applications for clients.
         flow   : 'user'
       , active : [ '==', true, '||', '==', 1 ]
       , profile: {
-            last_logged_in: [ '$', 2005, '<=', 'year', '<', 2013 ]
+            last_logged_in: [ '$', 2005, '<=', [ 'year' ], '<', 2013 ]
         }
     }
 ```
