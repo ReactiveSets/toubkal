@@ -685,7 +685,8 @@ applications for clients.
   
   - Operators
     - Control flow       : ```&& || ! failed reset```
-    - Literals           : ```$ _ __ .```
+    - Literals           : ```$ $$```
+    - Deep inspection    : ```. _ __```
     - Grouping           : ```[]```
     - Comparison         : ```== != > >= < <=```
     - Ranges             : ```<< <=< <=<= <<=```
@@ -694,7 +695,8 @@ applications for clients.
     - Arithmetic         : ```+ - * / %```
     - Regular expressions: ```RegExp match match_index group split```
     - Array / String     : ```length```
-    - Date               : ```Date value year month day hours minutes seconds milliseconds time```
+    - Object valueOf     : ```value```
+    - Date               : ```Date year month day hours minutes seconds milliseconds time```
     - Custom operators   : defined using JavaScript functions but used as JSON Strings and Arrays to prevent code-injection
   
   - Example: Expression to get active users whom last logged-in between 2005 included and 2013 not included:
