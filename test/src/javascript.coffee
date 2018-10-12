@@ -84,6 +84,12 @@ describe 'javascript.class_of( value )', ->
   
   it 'should return "Error" for new Error()', ->
     expect( class_of( new Error() ) ).to.be.eql "Error"
+  
+  it 'should return "Date" for new Date()', ->
+    expect( class_of( new Date() ) ).to.be.eql "Date"
+  
+  it 'should return "RegExp" for /test/', ->
+    expect( class_of( /test/ ) ).to.be.eql "RegExp"
 
 describe 'javascript.is_class( _class )( value )', ->
   it 'should return true for is_class( "Object" )( {} ) ', ->
