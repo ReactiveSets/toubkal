@@ -454,10 +454,10 @@
     @description:
     Terms required to understand Toubkal concepts and documentation.
     
-    The most important terms are:
+    To learn the fondamentals of Toubkal, start with these terms:
     - @@pipelet
+    - @@query
     - @@dataflow
-    - @@pipelet
     - @@namespace
 */
 
