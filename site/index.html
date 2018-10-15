@@ -113,9 +113,10 @@
               if( type == 'manual' ) return;
               
               if( typeof manuals != 'string' )
-                return console.log( 'Error, manual is not a string', manuals )
+                return console.log( 'Error, manuals is not a string', manuals )
               ;
               
+              // use only one (first) manual at this time
               return manuals.split( /, ?/ ).slice( 0, 1 ).map( function( manual ) {
                 var content =  type == 'chapter'
                       ? item.title
@@ -191,7 +192,7 @@
             
             .filter( [ { manual: id } ] )
             
-            .alter( function add_node( _ ) {
+            .alter( function( _ ) {
               _.$node = manual.$node;
               _.content = _.html;
               delete _.html;
@@ -202,8 +203,18 @@
             .$to_dom()
         }, { name: 'manuals-content' } )
         
-        // This causes the page to refresh immediately in a loop, comment-out for now
-        //.greedy()._output.on( 'complete', function() { console.log( document.location.href = document.location.href ) } )
+        // Scroll hash into view when loaded
+        .greedy()._output.on( 'complete', function() {
+          var id = window.location.hash.slice( 1 )
+            , node = document.getElementById( id )
+          ;
+          
+          if ( node ) {
+            // console.log( 'scroll hash into view', id );
+            
+            node.scrollIntoView();
+          }
+        } )
       ;
     </script>
   </body>
