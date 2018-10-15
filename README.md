@@ -23,8 +23,6 @@ data is available from the server
 (complete working code including http server is available at
 [examples/teaser](https://github.com/ReactiveSets/toubkal/tree/master/examples/teaser)):
 
-See it live at [Toubkal Teaser](http://toubkal.rocks/teaser/index.html)
-
 #### client.js
 
 ```javascript
@@ -113,11 +111,11 @@ automatically after each commit is pulled on our developpement server.
 
 Documentation is extracted from code using the following Toubkal
 server pipelets:
-- **acorn()**: parse javascript using the acorn library
-- **parse_documentation()**: emit documentation items from parsed comments
-- **documentation_markdown()**: format documentation items into markdown
-- **markdown()**: markdown to html converter using "remarkable" and "highlight.js"
-- **documentation_manuals()**: Toubkal documentation manuals metadata (not content)
+- **[acorn()](https://toubkal.reactane.com/#pipelet_acorn)**: parse javascript using the acorn library
+- **[parse_documentation()](https://toubkal.reactane.com/#pipelet_parse_documentation)**: emit documentation items from parsed comments
+- **[documentation_markdown()](https://toubkal.reactane.com/#pipelet_documentation_markdown)**: format documentation items into markdown
+- **[markdown()](https://toubkal.reactane.com/#pipelet_markdown)**: markdown to html converter using "remarkable" and "highlight.js"
+- **[documentation_manuals()](https://toubkal.reactane.com/#pipelet_documentation_manuals)**: Toubkal documentation manuals metadata (not content)
 
 To work on the documentation on a local machine, run the documatation site:
 ```bash
