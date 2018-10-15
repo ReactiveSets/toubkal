@@ -1,9 +1,9 @@
-/*  examples.js
+/*  site.js
 
     The MIT License (MIT)
-
-    Copyright (c) 2013-2017, Reactive Sets
-
+    
+    Copyright (c) 2013-2018, Reactane
+    
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
     in the Software without restriction, including without limitation the rights
@@ -33,60 +33,60 @@ module.exports = function( servers ) {
     , ug          = log
     , assets      = require( 'toubkal/lib/server/client_assets.js' )
     , toubkal     = assets.toubkal
-    , toubkal_min // = assets.toubkal_min()
     , react_js    = assets.react.watch()
     , scope       = {}
   ;
   
-  var manuals_parsed = rs
-    .set( [ { name: 'toubkal/documentation/manuals.js' } ] )
-    .require_resolve()
-    .watch()
-    .acorn()
-  ;
-  
   toubkal = toubkal
     .auto_increment()
+    
     .watch( { name: 'toubkal assets' } )
   ;
   
-  toubkal_min = toubkal
+  var toubkal_min = toubkal
+    
     .order( [ { id: 'id' } ] )
+    
     .uglify( 'lib/toubkal-min.js', { warnings: false } )
-    
-    /*
-    .group( function( _ ) { return {} } )
-    .map( function( _ ) {
-      return {
-        path: 'lib/toubkal-min.js',
-        
-        content: _.content
-          .map( function( file ) { return file.content } )
-          .join( '\n' )
-        }
-    } )
-    */
   ;
   
-  var client_parsed = toubkal.acorn()
+  var server_documentation_files = rs
     
-    , server_parsed = require( 'toubkal/lib/modules_files' )
-        .modules_files()
-        .require_resolve()
-        .watch()
-        .acorn()
+    .set( [ { name: 'toubkal/documentation/manuals.js' } ] )
+    
+    .union( [ require( 'toubkal/lib/modules_files' ).modules_files() ] )
+    
+    .require_resolve()
+    
+    .watch()
   ;
   
-  var documentation = client_parsed.union( [ manuals_parsed, server_parsed ] )
+  var documentation = toubkal
+    
+    .union( [ server_documentation_files ] )
+    
+    .acorn()
+    
     .parse_documentation()
+    
     .optimize()
-    .trace( 'parsed documentation', { counts: true } )
-    .auto_increment( { attribute: 'order' } )
-    // .trace( 'documentation', { pick: { id: '.id', range: '.range', order: '.order' } } )
+    
     .documentation_markdown()
+    
     .markdown()
+    
+    // Pick attributes needed by client, rename "html" attribute to "content"
+    .pick( [ 'id', 'order', 'type', 'name', 'signature', 'title', 'manual', [ 'content', 'html' ] ] )
+    
+    .optimize()
+    
+    //.trace( 'documentation', { pick: [ 'id', 'module', 'order' ] } )
+    
+    // Cache generated documentation
     .set()
+    
     //.trace( 'documentation', { counts: true } )
+    
     .set_flow( 'documentation' )
   ;
   

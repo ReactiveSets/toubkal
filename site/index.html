@@ -41,17 +41,18 @@
         
         .pass_through( { tag: 'synchronizing' } )
         
-        //.debug( de, 'cached', { counts: true } )
+        .debug( de, 'cached', { all: true, _counts: true } )
       ;
       
       var documentation = cached
         .flow( 'documentation' )
         
-        .debug( de, 'documentation', { all: true, counts: true, _pick: { id:'.id', manual: '.manual', html_length: '.html.length' } } )
+        //.debug( de, 'documentation', { all: true, _counts: true, pick: { id: '.id', order: '.order', manual: '.manual', content_length: '.content.length' } } )
       ;
       
       var manuals = cached
-        //.debug( 0, 'documentation_manuals', { all: true, pick: { name: '.name' }, _counts: true } )
+        //.debug( de, 'documentation_manuals', { all: true, pick: { id: '.id', order: '.order', name: '.name' }, _counts: true } )
+        
         .flow( 'documentation_manuals' )
       ;
     </script>
@@ -59,8 +60,10 @@
   
   <body>
     <div id="documentation">
-      <h1>Toubkal Manuals</h1>
+      <h1>Toubkal - Table of contents</h1>
       <div id="documentation-toc"></div>
+      
+      <h1>Toubkal - Manuals content</h1>
       <div id="documentation-content"></div>
     </div>
     
@@ -76,19 +79,19 @@
           return {
             id: 'toc_' + id + '_container',
             
-            start: manual.range[ 0 ],
+            order: manual.order,
             
             content:
               '<h2>' +
                 '<a href="#manual_' + id + '">' + manual.name + '</a>' +
               '</h2>' +
               '<div id="toc-manual_' + id + '"></div>'
-          };
+          }
         }, { query_transform: function( term ) { return term } } )
         
         .optimize()
         
-        .order( [ { id: 'start' } ] )
+        .order( [ { id: 'order' } ] )
         
         .$to_dom( rs.RS.$( '#documentation-toc' ) )
       ;
@@ -154,8 +157,6 @@
             
             .order( [ { id: 'order' } ] )
             
-            //.debug( de, 'toc' )
-            
             .$to_dom()
         }, { name: 'manuals-toc' } )
       ;
@@ -166,11 +167,9 @@
       // Manuals content manual_<manual.id>
       var manuals_content = documentation
         
-        .debug( de, 'manuals content', { pick: { id:'.id', html_length: '.html.length' } } )
+        .debug( de, 'manuals content', { pick: { id:'.id', content_length: '.content.length' } } )
         
         .filter( [ { type: 'manual' } ] )
-        
-        .pick( [ 'id', 'order', 'html' ] )
         
         .order( [ { id: 'order' } ] )
         
@@ -185,32 +184,27 @@
         .dispatch( manuals_content, function( source, options ) {
           var manual = this
             , id     = manual.id.replace( 'manual#', '' )
+            , node   = manual.$node
           ;
           
           return source
-            .debug( de, 'content of manual ' + id, { pick: { id: '.id', manual: '.manual', node: '.$node' } } )
             
             .filter( [ { manual: id } ] )
             
-            .alter( function( _ ) {
-              _.$node = manual.$node;
-              _.content = _.html;
-              delete _.html;
-            } )
-            
             .order( [ { id: 'order' } ] )
             
-            .$to_dom()
+            .$to_dom( node )
+        
         }, { name: 'manuals-content' } )
         
-        // Scroll hash into view when loaded
+        // Scroll window location hash into view when loaded
         .greedy()._output.on( 'complete', function() {
           var id = window.location.hash.slice( 1 )
             , node = document.getElementById( id )
           ;
           
           if ( node ) {
-            // console.log( 'scroll hash into view', id );
+            console.log( 'scroll hash into view', id );
             
             node.scrollIntoView();
           }
