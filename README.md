@@ -128,7 +128,7 @@ Then point a web browser at [localhost on port 8082](http://localhost:8082/).
 
 We have curently developped 1938 continuous integration tests for the Toubkal
 core and library pipelets that run after every commit on Travis CI under
-node version 4.6.0.
+node version 8.12.0 LTS.
 
 In the event that a test does not pass our top priority is to fix the test
 before anything else. We usualy fix broken tests within hours.
