@@ -25,45 +25,36 @@
 module.exports = function( servers ) {
   'use strict';
   
-  var rs          = servers.create_namespace( 'site', true ) // child namespace
-    , RS          = rs.RS
-    , extend      = RS.extend
-    , log         = RS.log.bind( null, 'site' )
-    , de          = true
-    , ug          = log
-    , assets      = require( 'toubkal/lib/server/client_assets.js' )
-    , toubkal     = assets.toubkal
-    , react_js    = assets.react.watch()
-    , scope       = {}
+  var rs            = servers.create_namespace( 'site', true ) // child namespace
+    , RS            = rs.RS
+    , extend        = RS.extend
+    , log           = RS.log.bind( null, 'site' )
+    , de            = true
+    , ug            = log
+    , modules_files = require( 'toubkal/lib/modules_files' ).modules_files()
+    , assets        = require( 'toubkal/lib/server/client_assets.js' )
+    , toubkal_min   = assets.toubkal_min() // js/toubkal-min.js
+    , react_js      = assets.react.watch()
+    , scope         = {}
   ;
   
-  toubkal = toubkal
-    .auto_increment()
-    
-    .watch( { name: 'toubkal assets' } )
-  ;
-  
-  var toubkal_min = toubkal
-    
-    .order( [ { id: 'id' } ] )
-    
-    .uglify( 'lib/toubkal-min.js', { warnings: false } )
-  ;
-  
-  var server_documentation_files = rs
+  var documentation = rs
     
     .set( [ { name: 'toubkal/documentation/manuals.js' } ] )
     
-    .union( [ require( 'toubkal/lib/modules_files' ).modules_files() ] )
+    .union( [ modules_files ] )
     
     .require_resolve()
     
-    .watch()
-  ;
-  
-  var documentation = toubkal
+    .union( [ assets.toubkal ] )
     
-    .union( [ server_documentation_files ] )
+    .pick( [ 'path' ] )
+    
+    .unique()
+    
+    .auto_increment()
+    
+    .watch( { name: 'all assets' } )
     
     .acorn()
     
