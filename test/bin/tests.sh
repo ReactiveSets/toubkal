@@ -43,4 +43,4 @@ fi
 echo Run tests $test
 echo npm version `npm --version`
 echo mocha version `npx mocha --version`
-npx mocha -R mocha-unfunk-reporter $test
+npx mocha -R mocha-unfunk-reporter --exit $test
