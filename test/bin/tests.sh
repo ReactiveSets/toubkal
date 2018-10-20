@@ -40,7 +40,7 @@ else
   test=test/lib/$test.js
 fi
 
-echo tests $test
-echo
-echo "Run tests"
-mocha -R mocha-unfunk-reporter $test
+echo Run tests $test
+echo npm version `npm --version`
+echo mocha version `npx mocha --version`
+npx mocha -R mocha-unfunk-reporter $test

@@ -28,6 +28,15 @@
 if [ "$1" = "" ]; then
   npm test 2>&1 > test.out || echo " test failed"
 else
+  if [ "$1" = "list" ]; then
+    ls test/lib/*js \
+      | sed -e 's/test\/lib\/\(.*\)\.js/\1/' \
+      | egrep -v 'ui_tests|url_events|url_pattern|all_tests|control|controlsform_tests|form|sketchfab|tests_utils|table|load_images' \
+      | column
+    
+    exit 0
+  fi
+  
   if [ "$1" = "ui" ]; then
     printf "test/server/http.js output:\n\n" > http.out
     ./node_modules/forever/bin/forever -m 1 -a -o http.out -e http.out start test/server/http.js
