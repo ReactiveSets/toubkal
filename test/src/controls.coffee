@@ -346,9 +346,8 @@ describe 'Controls Test Suite', ->
         ]
     
     it 'after "Cooking" check and "Stamp / Coin Collection" uncheck, hobbies should be equal to result', ( done ) ->
-      browser
-        .check  ( '#hobbies-5' )
-        .uncheck( '#hobbies-6' )
+      browser.check  ( '#hobbies-5' )
+      browser.uncheck( '#hobbies-6' )
       
       browser.window.hobbies._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [
