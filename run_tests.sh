@@ -37,18 +37,8 @@ else
     exit 0
   fi
   
-  if [ "$1" = "ui" ]; then
-    printf "test/server/http.js output:\n\n" > http.out
-    ./node_modules/forever/bin/forever -m 1 -a -o http.out -e http.out start test/server/http.js
-    
-    sleep 18
-  fi
-  
   ./test/bin/tests.sh $1 2>&1 > test.out || echo " test failed"
-  
-  if [ "$1" = "ui" ]; then
-    ./node_modules/forever/bin/forever stop test/server/http.js
-  fi
+
 fi
 
 echo
