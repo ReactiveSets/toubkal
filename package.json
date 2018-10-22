@@ -4,9 +4,9 @@
   "description": "Fully reactive programming for nodejs and the browser",
   "main": "lib/server.js",
   "files": [
+    "node_modules_self_reference.js",
     "lib",
     "documentation",
-    "test",
     "bin",
     "examples",
     "site"
