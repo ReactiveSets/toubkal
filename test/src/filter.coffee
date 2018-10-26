@@ -77,7 +77,7 @@ describe 'filter()', ->
           { id: 2, name: "Mountain View", country: "USA", state: "California" }
         ]
     
-    describe 'add():', ->
+    describe 'add', ->
       it 'cities_in_usa should show one more city after adding New York to cities', ( done ) ->
         cities._add [ { id: 5, name: "New York", country: "USA", state: "New York" } ]
         
@@ -98,7 +98,7 @@ describe 'filter()', ->
           { id: 7, name: "Huston"       , country: "USA", state: "Texas"      }
         ]
     
-    describe '_update', ->
+    describe 'update', ->
       it 'cities_in_usa should be updated when updating "New York" to "New York City" in cities', ( done ) ->
         cities._update [
           [ { id: 5, name: "New York", country: "USA", state: "New York" }, { id: 5, name: "New York City", country: "USA", state: "New York" } ]
@@ -139,8 +139,8 @@ describe 'filter()', ->
             { id: 5, name: "New York City", country: "USA", state: "New York"   }
             { id: 8, name: "Detroit"      , country: "USA", state: "Michigan"   }
           ]
-      
-    describe 'remove()', ->
+    
+    describe 'remove', ->
       it 'cities_in_usa should be equal to result: cities._remove( [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ] )', ( done ) ->
         cities._remove [ { id: 2, name: "Mountain View", country: "USA", state: "California" } ]
         
@@ -705,95 +705,3 @@ describe 'filter()', ->
   
   filter_keys_tests 0
   filter_keys_tests 20
-  
-  describe '_notify():', ->
-    it 'add(): employee._notify( transaction ) should be equal to result', ( done ) ->
-      employee._notify [
-        {
-          action: "add"
-          objects: [
-            { id: 7, name: "John Morrison", salary: "$3000", customer_id: "228", order_id: "1228" }
-            { id: 8, name: "Thomas Buch", salary: "$2500", customer_id: "229", order_id: "1229" }
-          ]
-        }
-      ]
-      
-      employee._fetch_all ( values ) -> check done, ->
-        expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
-          { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
-          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
-          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
-          { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
-          { id: 8, name: "Thomas Buch"     , salary: "$2500", customer_id: "229", order_id: "1229" }
-        ]
-    
-    it 'remove(): employee._notify( transaction ) should be equal to result', ( done ) ->
-      employee._notify [ { action: "remove", objects: [ { id: 8 } ] } ]
-      
-      employee._fetch_all ( values ) -> check done, ->
-        expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
-          { id: 2, name: "Josephin Tan"    , salary: "$1500", customer_id: "223", order_id: "1223" }
-          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
-          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
-          { id: 7, name: "John Morrison"   , salary: "$3000", customer_id: "228", order_id: "1228" }
-        ]
-    
-    it '_update(): employee._notify( transaction ) should be equal to result', ( done ) ->
-      employee._notify [ {
-        action: "update"
-        objects: [
-          [
-            { id: 7, name: "John Morrison", salary: "$3000", customer_id: "228", order_id: "1228" }
-            { id: 7, name: "John Morrison", salary: "$3500", customer_id: "228", order_id: "1228" }
-          ]
-          [
-
-            { id: 2, name: "Josephin Tan", salary: "$1500", customer_id: "223", order_id: "1223" }
-            { id: 2, name: "Josephin Tan", salary: "$2750", customer_id: "223", order_id: "1223" }
-          ]
-        ]
-      } ]
-
-      employee._fetch_all ( values ) -> check done, ->
-        expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
-          { id: 2, name: "Josephin Tan"    , salary: "$2750", customer_id: "223", order_id: "1223" }
-          { id: 3, name: "Khalifa P Nassik", Salary: "$1500", customer_id: "224", order_id: "1224" }
-          { id: 4, name: "James A. Pentel" , salary: "$1750", customer_id: "225", order_id: "1225" }
-          { id: 7, name: "John Morrison"   , salary: "$3500", customer_id: "228", order_id: "1228" }
-        ]
-    
-    it 'filter(): cities.filter( is_in_morocco ) should be equal to result', ( done ) ->
-      cities_in_morocco = cities.filter( ( city ) -> return city.country is "Morocco" ).set()
-      
-      cities._notify [
-        {
-          action: "add"
-          objects: [
-            { id:  9, name: "Moscow", country: "Russia"  }
-            { id: 10, name: "Tanger", country: "Morocco" }
-          ]
-        }
-        {
-          action: "update"
-          objects: [
-            [ { id:  6, name: "Casablanca", country: "Morocco" }, { id:  6, name: "Casa" , country: "Morocco" } ]
-            [ { id: 10, name: "Tanger"    , country: "Morocco" }, { id: 11, name: "Cairo", country: "Egypt"   } ]
-            [ { id:  3, name: "Paris"     , country: "France"  }, { id: 12, name: "Fes"  , country: "Morocco" } ]
-            [ { id:  9, name: "Madrid"    , country: "Spain"   }, { id: 13, name: "LA"   , country: "USA", state: "California" } ]
-          ]
-        }
-        {
-          action: "remove"
-          objects: [
-            { id: 13, name: "LA"   , country: "USA", state: "California" }
-            { id: 12, name: "Fes"  , country: "Morocco" }
-            { id: 11, name: "Cairo", country: "Egypt"   }
-          ]
-        }
-      ]
-      
-      cities_in_morocco._fetch_all ( values ) -> check done, ->
-        expect( values.sort ( a, b ) -> a.id > b.id ).to.be.eql [
-          { id:  1, name: "Marrakech", country: "Morocco" }
-          { id:  6, name: "Casa"     , country: "Morocco" }
-        ]
