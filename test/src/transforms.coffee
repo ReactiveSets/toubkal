@@ -145,7 +145,7 @@ describe 'transforms', ->
             { city: 'Marseille' }
           ]
   
-  describe 'values_to_attribute()', ->
+  describe 'group()', ->
     cities = [
       { city: 'Paris'     }
       { city: 'Marseille' }
@@ -156,13 +156,13 @@ describe 'transforms', ->
     source = null
     value = null
     
-    values_to_attribute_tests = ( flavor ) ->
+    group_tests = ( flavor ) ->
       flavor = if flavor then ' (' + flavor + ')' else ''
       
       it 'should embed all cities into a value with content attribute' + flavor, ->
         source = rs.set cities, { key: [ 'city' ] }
         
-        value = source.values_to_attribute()
+        value = source.group()
         
         value = value.set() if flavor is 'on a set'
         
@@ -259,8 +259,8 @@ describe 'transforms', ->
         value._fetch_all ( values ) ->
           expect( values ).to.be.eql []
     
-    values_to_attribute_tests()
-    values_to_attribute_tests( 'on a set' )
+    group_tests()
+    group_tests( 'on a set' )
 
   describe 'pick()', ->
     source   = null
