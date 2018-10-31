@@ -124,7 +124,7 @@ var login_menu = rs
   .alter( function( strategy ) { strategy.order = strategy.order || strategy.name } )
   
   // All strategies into content attribute
-  .values_to_attribute()
+  .group()
   
   // Sort strategies in content by order attribute
   .content_order( 'order' )
