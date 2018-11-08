@@ -880,6 +880,7 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+child_process_exec                  | Executes a command in a child process
 rename_properties                   | Renames properties
 store()                             | Store operations history
 json_hide()                         | Hide attribute values in downstream pipelets using JSON.stringify()

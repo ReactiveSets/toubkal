@@ -10,6 +10,7 @@
 
     "files": [
       "file",
+      "child_process",
       "exif",
       "require",
       "toubkal_acorn",
