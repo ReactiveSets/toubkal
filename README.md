@@ -880,6 +880,7 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+rename_properties                   | Renames properties
 store()                             | Store operations history
 json_hide()                         | Hide attribute values in downstream pipelets using JSON.stringify()
 debug()                             | Conditional trace()
