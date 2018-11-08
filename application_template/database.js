@@ -18,10 +18,6 @@
       `first_name` varchar(255) DEFAULT NULL,
       `last_name` varchar(255) DEFAULT NULL,
       `photo` text,
-      `phone` varchar(32) DEFAULT NULL,
-      `zip_code` varchar(32) DEFAULT NULL,
-      `city` varchar(255) DEFAULT NULL,
-      `settings` text,
       PRIMARY KEY (`id`),
       UNIQUE KEY `email_UNIQUE` (`email`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
