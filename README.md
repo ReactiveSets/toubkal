@@ -649,6 +649,12 @@ applications for clients.
 
 #### Completed Work (versions 0.3.x, x > 0)
 
+- Pipelets alter() amd map() now allow assynchronous cancelable transforms
+  using functions cancelable_map() and cancelable_limiter(). This form
+  also allows filter() and flat_map() behavior.
+  
+  If transform has more than 2 parameters it is consided stateful.
+
 - Safe Complex Query expressions
   - Query and Query_Tree methods
     - Query..generate(): Generate filter code from complex queries
