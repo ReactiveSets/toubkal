@@ -22,7 +22,8 @@
   // database cache
   var schema = [
     { id: 'login_strategies' },
-    { id: 'profile' }
+    { id: 'profile' },
+    { id: 'todos'   }
   ];
   
   var database_cache = socket_io_server
@@ -33,7 +34,15 @@
 
     // Filter-out early non-cached dataflows queries and fetches comming from application
     .delivers( schema.map( function( _ ) { return _.id } ) )
+    
+    .application_loop_( rs.url_pipelet(), 'body' )
+    
+    .delivers( schema.map( function( _ ) { return _.id } ) )
+    
+    .socket_io_server()
   ;
+  
+  return rs;
   
   // --------------------------------------------------------------------------------------------
   // login strategies or user profile

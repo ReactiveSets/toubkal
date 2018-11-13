@@ -70,14 +70,13 @@ module.exports = function client_handler( source, module, options ) {
     // Write authorizations
     // ------------------------------------------------------------------------------------------
     // can write
-    var can_write = rs
-      .union( [] )
-    ;
+    var can_write = rs.set( [ { flow: 'todos' } ] );
     
     return rs
       .union( [
           all_login_strategies
         , user_profile
+        , source.flow( 'todos' )
       ] )
       
       // .trace( 'client read', { all: true } )
