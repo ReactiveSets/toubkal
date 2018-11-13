@@ -22,6 +22,7 @@ module.exports = function( rs ) {
   var app_js_files = [
         'url.js',
         'utils.js',
+        'widgets.js',
         'main.js'
       ]
       
