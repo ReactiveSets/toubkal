@@ -909,7 +909,7 @@ documentation_manuals()             | Toubkal documentation manuals metadata (no
 documentation_markdown()            | Format documentation items into markdown
 parse_documentation()               | Emit documentation items from parsed "comments" attribute
 acorn()                             | Parse javascript "content" attribute using the acorn library
-process_argv()                      | The set of command line arguments
+process_variables()                 | Gets command line arguments, environment variables, and more
 application_loop()                  | Processes an application from a dataflow of components and input dataflows.
 database_cache()                    | Cache for an entire database from schema
 cache()                             | Stateful and lazy pipelet

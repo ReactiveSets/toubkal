@@ -11,6 +11,7 @@
     "files": [
       "file",
       "child_process",
+      "process",
       "exif",
       "require",
       "toubkal_acorn",
