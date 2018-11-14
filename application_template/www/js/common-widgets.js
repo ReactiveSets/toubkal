@@ -1,97 +1,15 @@
 /*  
-  utils.js
-  --------
+  common-widgets.js
+  -----------------
   
   Licence
+  
 */
 ( this.undefine || require( 'undefine' )( module, require ) )()
-( 'utils', [ [ 'rs', 'toubkal' ] ], function( rs ) {
+( 'common-widgets', [ [ 'rs', 'toubkal' ] ], function( rs ) {
   "use strict";
   
-  var RS = rs.RS
-    , extend       = RS.extend
-    , add_class    = RS.add_class
-    , remove_class = RS.remove_class
-    , timestamp    = RS.timestamp_string
-  ;
-  
   return rs
-    /* ---------------------------------------------------------------------------------------------------------------------
-    */
-    
-    .Singleton( 'application_routes', function( source, options ) {
-      return rs
-        
-        .set( [
-            {
-                id: 'home'
-              , pipelet_name: '$home'
-              , title: 'Home'
-            },
-            { 
-                id: 'todo_list'
-              , pipelet_name: '$todo_list'
-              , title: 'ToDo list'
-            },
-            {
-                id: 'signin'
-              , pipelet_name: '$signin'
-              , title: 'Sign-In with Passport'
-            }
-          ].map( function( v, i ) {
-            v.order = i;
-            
-            return v;
-          } )
-        )
-      ;
-    } ) // application_routes()
-  
-    /* ---------------------------------------------------------------------------------------------------------------------
-    */
-    .Compose( 'application_loop_', function( source, url, $selector, options ) {
-      var rs = source.namespace();
-      
-      // application routes
-      var application_routes = rs
-        .application_routes()
-        
-        .set_flow( 'application_routes' )
-      ;
-      
-      // application $page
-      var $page = application_routes
-        
-        .join( url
-          , [ [ 'id', 'route' ] ]
-          , function( route, url ) {
-              return extend( {}, route, url )
-            }
-          , { no_filter: true, key: [ 'id' ] }
-        )
-        .alter( function( _ ) {
-          _.tag = 'div';
-        } )
-        
-        .$to_dom( $selector )
-        
-        .optimize()
-      ;
-      
-      return source
-        .optimize()
-        
-        .union( [ application_routes ] )
-        
-        .dispatch( $page, function( source, options ) {
-          var page    = this
-            , pipelet = source[ page.pipelet_name ]
-          ;
-          
-          return pipelet ? source[ page.pipelet_name ]( page ) : source.namespace();
-        } )
-      ;
-    } ) // application_loop_()
     
     /*-------------------------------------------------------------------------
       @pipelet strategies_or_profile( options )
@@ -170,4 +88,3 @@
     } ) // strategies_or_profile()
   ;
 } );
-

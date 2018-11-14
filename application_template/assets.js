@@ -18,9 +18,12 @@ module.exports = function( rs ) {
   var toubkal_min = client_assets.toubkal_min(); // js/toubkal-min.js
   
   var template_application_name_files = [
-        'url.js',
-        'utils.js',
-        'widgets.js',
+        'route.js',
+        'common-widgets.js',
+        'navigation.js',
+        'homepage.js',
+        'signin-page.js',
+        'todo-list-page.js',
         'main.js'
       ]
       
