@@ -9,7 +9,7 @@ module.exports = function client_handler( source, module, options ) {
   var version = '0.1'
     , rs      = source.namespace()
     , RS      = rs.RS
-    , log     = RS.log.bind( null, 'My Application client.js version', version )
+    , log     = RS.log.bind( null, 'template_application_name client.js version', version )
   ;
   
   log( 'loaded' );

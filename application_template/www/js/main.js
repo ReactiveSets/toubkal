@@ -48,28 +48,4 @@
   // login strategies or user profile
   var strategies_or_profile = socket_io_server.strategies_or_profile();
   
-  // --------------------------------------------------------------------------------------------
-  // URL events
-  var url = rs.url_pipelet();
-  
-  // --------------------------------------------------------------------------------------------
-  // application routes
-  var routes = rs.set();
-  
-  // --------------------------------------------------------------------------------------------
-  // display pages and emit to server
-  database_cache
-    
-    .dispatch( routes, function( source, options ) {
-      var page  = this
-        , route = routes[ page.id ]
-      ;
-      
-      return source[ route.pipelet_name ]( page.$node );
-    } )
-    
-    .pass_through()
-    
-    .socket_io_server()
-  ;
 } ); // module.export

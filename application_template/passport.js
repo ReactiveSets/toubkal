@@ -21,7 +21,7 @@ module.exports = function( http_servers, rs ) {
     
     , session_options = {
         key: 'rs_sid',
-        secret: 'bazinga', // ToDo: get express-session secret from configuration
+        secret: 'template_application_name-secret', // ToDo: get express-session secret from configuration
         saveUninitialized: true,
         resave: false
       }

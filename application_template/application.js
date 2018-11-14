@@ -5,7 +5,7 @@
 module.exports = function( servers ) {
   'use strict';
   
-  var rs = servers.create_namespace( 'my-namespace', true );
+  var rs = servers.create_namespace( 'template_application_name', true );
   
   servers.set_namespace( rs ); // set namespace to servers' child namespace
   

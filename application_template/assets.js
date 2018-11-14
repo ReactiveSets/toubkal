@@ -15,11 +15,9 @@ module.exports = function( rs ) {
   
   // -------------------------------------------------------------------------------------------
   // Load and Serve Assets
-  var toubkal_min = client_assets.toubkal_min() // js/toubkal-min.js
-    , map_support = rs.source_map_support_min()
-  ;
+  var toubkal_min = client_assets.toubkal_min(); // js/toubkal-min.js
   
-  var app_js_files = [
+  var template_application_name_files = [
         'url.js',
         'utils.js',
         'widgets.js',
@@ -31,10 +29,10 @@ module.exports = function( rs ) {
       } )
   ;
   
-  var app_min = rs
-    .set( app_js_files, { key: [ 'path' ] } )
+  var template_application_name_min = rs
+    .set( template_application_name_files, { key: [ 'path' ] } )
     
-    .build( 'lib/app-min.js', www )
+    .build( 'lib/template_application_name-min.js', www )
   ;
   
   return rs
@@ -73,6 +71,6 @@ module.exports = function( rs ) {
     
     .watch( www )
     
-    .union( [ toubkal_min, map_support, app_min ] )
+    .union( [ toubkal_min, map_support, template_application_name_min ] )
   ;
 }; // module.export
