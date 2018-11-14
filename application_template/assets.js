@@ -71,6 +71,6 @@ module.exports = function( rs ) {
     
     .watch( www )
     
-    .union( [ toubkal_min, map_support, template_application_name_min ] )
+    .union( [ toubkal_min, template_application_name_min ] )
   ;
 }; // module.export
