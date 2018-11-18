@@ -9,7 +9,62 @@
 ( 'common-widgets', [ [ 'rs', 'toubkal' ] ], function( rs ) {
   "use strict";
   
+  var extend = rs.RS.extend;
+  
   return rs
+    
+    /*-------------------------------------------------------------------------
+      @pipelet content_editable( options )
+      
+      @short Make a DOM element editable
+      
+      @source
+      Must be a dataflow of DOM elements.
+      
+      @emits new content
+      
+      @parameters
+      - options (Object):
+    
+    */
+    .Compose( '$content_editable', function( $nodes, options ) {
+      var $elems = $nodes
+        
+        .alter( function( _ ) {
+          _.$node.setAttribute( 'contenteditable', true );
+          _.$node.setAttribute( 'class', 'content-editable' );
+        } )
+        
+        .greedy()
+      ;
+      
+      // emits new value when pressing Enter key
+      $elems
+        .$on( 'keypress' )
+        
+        .map( function( _ ) {
+          var $e = _.$event;
+          
+          if( $e.key == 'Enter' && !$e.ctrlKey && !$e.shiftKey && !$e.altKey )
+            $e.target.blur()
+          ;
+        } )
+      ;
+      
+      return $elems
+        .$on( 'blur' )
+        
+        .map( function( _ ) {
+          var previous_content = _.content
+            , new_content      = _.$event.target.innerText
+          ;
+          
+          if( new_content && new_content != previous_content ) {
+            return extend( {}, _, { content: new_content } );
+          }
+        } )
+      ;
+    } ) // $content_editable()
     
     /*-------------------------------------------------------------------------
       @pipelet strategies_or_profile( options )
