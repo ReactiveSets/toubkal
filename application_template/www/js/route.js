@@ -78,7 +78,7 @@
       ```
     */
     .Singleton( 'url_route', function( source, options ) {
-      var opts = extend( { pattern: '#/(:route)', segment_name_charset: 'a-zA-Z0-9_-' }, options ); // default options
+      var pattern = options.pattern || '#/(:route)';
       
       return source
         .namespace()
@@ -87,11 +87,7 @@
         
         .url_parse( { parse_query_string: true } )
         
-        .url_pattern(
-            'hash'
-          , opts.pattern
-          , { segmentNameCharset: opts.segment_name_charset }
-        )
+        .url_pattern( pattern, options )
         
         .map( function( url ) {
           var route = url.route
@@ -143,19 +139,13 @@
           , { no_filter: true, key: [ 'id' ] }
         )
         
-        .$to_dom( $selector )
-        
-        .optimize()
-        
-        /*
         .alter( function( _ ) {
-          _.tag = 'div';
+          _.tag = 'main';
         } )
         
-        .optimize()
-        
         .$to_dom( $selector )
-        */
+        
+        .optimize()
       ;
       
       return source
