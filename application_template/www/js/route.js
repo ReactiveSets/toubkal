@@ -113,7 +113,7 @@
         {
           pattern           : '#/(:id)',
           parse_query_string: true,
-          default_page      : 'home'
+          default_page      : 'home',
           flow              : 'url_route'
         },
         
@@ -184,8 +184,6 @@
         } )
         
         .$to_dom( $selector )
-        
-        .optimize()
       ;
       
       return source
