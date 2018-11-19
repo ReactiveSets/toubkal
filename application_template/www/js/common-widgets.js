@@ -9,12 +9,144 @@
 ( 'common-widgets', [ [ 'rs', 'toubkal' ] ], function( rs ) {
   "use strict";
   
-  var extend = rs.RS.extend;
+  var RS = rs.RS
+    , extend    = rs.RS.extend
+    , has_class = RS.has_class
+  ;
   
   return rs
     
     /*-------------------------------------------------------------------------
-      @pipelet content_editable( options )
+      @pipelet $radio( options )
+      
+      @short Build a radio control widget
+      
+      @source
+      Must be a dataflow of DOM elements.
+      
+      @emits selected value
+      
+      @parameters
+      - options (Object):
+       - radio_name(String): radio input name attribute, default is: radio
+       - selected  (String): id of the default selected value, default is: undefined
+    
+    */
+    .Compose( '$radio', function( $nodes, options ) {
+      options = extend( {}, options, { radio_name: 'radio' } );
+      
+      // default state
+      var state = [];
+      
+      options.selected && state.push( { id: options.selected } );
+      
+      // output
+      var output = $nodes
+        .namespace()
+        
+        .set( state )
+        
+        .union()
+      ;
+      
+      // radio control:
+      // - build label and input radio
+      // - get radio input changes
+      var $radio_changes = $nodes
+        .flat_map( function( _ ) {
+          var id = _.id
+            , $  = _.$node
+            , checked = id == options.selected ? { checked: true } : {}
+          ;
+          
+          return [
+            {
+                id: id + '-radio'
+              , tag: 'input'
+              , $node: $
+              , attributes: extend( { name: options.radio_name || 'radio', type: 'radio', value: id }, checked )
+            },
+            {
+                id: id + '-label'
+              , tag: 'label'
+              , $node: $
+              , content: _.label || id
+              , attributes: { for: id + '-radio' }
+            },
+          ]
+        } )
+        
+        .$to_dom()
+        
+        .set()
+        
+        .filter( [ { tag: 'input' } ] )
+        
+        .$on( 'change' )
+      ;
+      
+      // toggle class active from previous to current selected $node
+      var $previous_$current = $radio_changes
+        
+        .fetch( $nodes.set() )
+        
+        .flat_map( function( _ ) {
+          var $values = _.values;
+          
+          var $previous = $values
+            .filter( function( elem ) {
+              return has_class( elem.$node, 'active' );
+            } )
+          ;
+          
+          return $values
+            .filter( function( elem ) {
+              return elem.id == _.source.attributes.value
+            } )
+            
+            .map( function( elem ) {
+              return extend( { is_active: true }, elem );
+            } )
+            
+            .concat( $previous )
+          ;
+        } )
+      ;
+      
+      // remove class active from previous selected node
+      $previous_$current
+        .$has_class( 'active' )
+        
+        .$remove_class( 'active' )
+      ;
+      
+      // add class active to current selected node
+      $previous_$current
+        .filter( [ { is_active: true } ] )
+        
+        .$add_class( 'active' )
+      ;
+      
+      // update output state
+      $radio_changes
+        
+        .fetch( output.set() )
+        
+        .map( function( _ ) {
+          return {
+            updates: [ [ _.values[ 0 ], { id: _.source.$node.value } ] ]
+          }
+        } )
+        
+        .emit_operations()
+        
+        .through( output )
+      ;
+      
+      return output.set();
+    } ) // $radio()
+    /*-------------------------------------------------------------------------
+      @pipelet $content_editable( options )
       
       @short Make a DOM element editable
       
