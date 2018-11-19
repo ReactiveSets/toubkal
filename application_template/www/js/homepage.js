@@ -28,10 +28,21 @@
         .namespace()
         
         .set( [
-          { id: 'home-page', tag: 'ul', attributes: { class: 'home' } }
+          { id: 'home-page', tag: 'section', attributes: { class: 'homepage' } }
         ] )
         
         .$to_dom( $selector )
+        
+        .map( function( _ ) {
+          return {
+              id: 'home-page-content'
+            , tag: 'div'
+            , $node: _.$node
+            , attributes: { class: 'content' }
+          }
+        } )
+        
+        .$to_dom()
       ;
       
       source

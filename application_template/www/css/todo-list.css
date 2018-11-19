@@ -1,0 +1,95 @@
+/*
+   todo-list.css
+   -------------
+   
+   Licence
+*/
+
+/* ToDo list */
+/* todo control */
+.todo-control {
+  margin-bottom: 0.75rem;
+}
+
+.todo-control input {
+  display: none;
+}
+
+.todo-control li {
+  display: inline-block;
+  margin-right: 0.75rem;
+}
+
+.todo-control li label {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent; /*rgba(175, 47, 47, 0.2);*/
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.todo-control li.active label {
+  border-color: rgba( 64, 201, 62, 0.2 );
+  color: #40c9a2;
+}
+
+.todo-control li label:hover {
+  border-color: rgba( 175, 47, 47, 0.1 );
+}
+
+/* new todo */
+.new-todo {
+  font-size: 1.25rem;
+}
+
+.new-todo .button {
+  position: absolute;
+  z-index: 10;
+}
+
+.new-todo div.content-editable {
+  padding: 1.25rem;
+  border: 1px solid #eee;
+  background: rgba( 0, 0, 0, 0.003 );
+  box-shadow: inset 0 -2px 1px rgba( 0, 0, 0, 0.03 );
+}
+
+/* todo list */
+.todo-list .todo-item {
+  font-size: 1.25rem;
+  padding: 1.25rem 0.75rem;
+  border: 1px solid #eee;
+  position: relative;
+}
+
+.todo-list .todo-item span {
+  margin-left: 2.2rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.todo-list .todo-item span.content-editable:focus {
+  postion: relative;
+  z-index: 99;
+}
+
+.todo-list .todo-item .button {
+  font-size: 1.7rem;
+  line-height: 1.7rem;
+  padding-top: 0.64rem;
+  padding-bottom: 0.725rem;
+  position: absolute;
+  z-index: 10;
+}
+
+.todo-list .todo-item .button.complete {
+  color: #40c9a2;
+}
+
+.todo-list .todo-item .button.open {
+  color: #e5f9e0;
+}
+
+.todo-list .todo-item .button.open:hover {
+  color: #a3f7b5;
+}

@@ -5,3 +5,103 @@
    Licence
 */
 
+body {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  margin: 0 !important;
+  background-color: grey !important;
+  color: #555;
+}
+
+main {
+  width: 100%;
+  max-width: 375px;
+  max-height: 667px;
+  min-height: 667px;
+  margin: 0 auto !important;
+  overflow-y: scroll;
+  padding: 0 !important;
+  background-color: #fff;
+  position: relative;
+}
+
+section {
+  display: flex;
+  padding: 0.75rem;
+}
+
+section > .content {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+h2 {
+  font-weight: 400;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  list-style-type: none;
+}
+/* class: button */
+.button {
+  border: none;
+  background: none;
+}
+
+.button:focus {
+  outline: none;
+}
+
+/* content editable */
+.content-editable {
+  font-family: 'Cousine', monospace;
+  padding: 0.725rem 1.2rem;
+  display: block;
+  cursor: text;
+}
+
+/* Fonts */
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css?family=Cousine|Lato:400,700');
+
+/* Custom icons from Icon Moon */
+@font-face {
+  font-family: 'todo-list';
+  src:  url('fonts/todo-list.eot?otw6wk');
+  src:  url('fonts/todo-list.eot?otw6wk#iefix') format('embedded-opentype'),
+    url('fonts/todo-list.ttf?otw6wk') format('truetype'),
+    url('fonts/todo-list.woff?otw6wk') format('woff'),
+    url('fonts/todo-list.svg?otw6wk#todo-list') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'todo-list' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-check-circle:before {
+  content: "\e900";
+}
+.icon-circle:before {
+  content: "\e901";
+}

@@ -69,6 +69,8 @@ module.exports = function( rs ) {
       { extension: 'png'  },
       { extension: 'jpg'  },
       { extension: 'jpeg' },
+      { extension: 'ttf'  },
+      { extension: 'woff' },
       { extension: 'svg'  }
     ] )
     

@@ -1,0 +1,22 @@
+/*
+   homepage.css
+   ------------
+   
+   Licence
+*/
+
+
+.homepage li {
+  list-style-type: none;
+}
+
+.homepage li a {
+  display: block;
+  padding: 0.25rem 1.2rem;
+  text-decoration: none;
+  color: #555;
+}
+
+.homepage li a:hover {
+  color: #00a5cf;
+}

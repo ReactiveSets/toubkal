@@ -27,7 +27,7 @@
     .database_cache( rs.set( schema ), { synchronizing: rs.socket_io_synchronizing() } )
     
     .pass_through( { tag: 'synchronizing' } )
-
+    
     // Filter-out early non-cached dataflows queries and fetches comming from application
     .delivers( dataflows )
     
@@ -43,7 +43,7 @@
   rs
     .output( 'updates' )
     
-    // .database_cache()
+    .database_cache()
   ;
   
   return rs;
