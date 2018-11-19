@@ -184,7 +184,7 @@
       // todos list
       var $todo_list = source
         
-        .filter( todos_by_state, { filter_keys: [ 'flow', 'id' ] } )
+        .filter( todos_by_state )
         
         .order( [ { id: 'timestamp' } ] )
         
