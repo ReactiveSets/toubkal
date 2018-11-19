@@ -8,7 +8,9 @@
 ( 'route', [ [ 'rs', 'toubkal' ] ], function( rs ) {
   "use strict";
   
-  var extend = rs.RS.extend;
+  var extend   = rs.RS.extend
+    , extend_2 = extend._2
+  ;
   
   return rs
     /* ---------------------------------------------------------------------------------------------------------------------
@@ -42,57 +44,95 @@
       ;
     } ) // application_routes()
     
-    /* ----------------------------------------------------------------------------------------------
-      @pipelet url_route( options )
-      
-      @short emits current URL route
-      
-      @description
-      Parses urls to extract current page route matching a URL pattern
-      
-      @emits
-      - flow: pipelet dataflow name = 'url_route'
-      - id: URL route name matching pattern ( the module name loaded by require() )
-      and other attributes regarding URL pattern
-      
-      @parameters
-      - options (Object):
-        - pattern             (String): pattern provided to pipelet url_pattern();
-          default is '#/(:route)'
-        - segment_name_charset(String): set of chars allowed in named segment;
-          default is 'a-zA-Z0-9_-'
-      
-      @examples
-      Using default pattern:
-      ```javascript
-        // URL: http://localhost/#/homepage?date=desc
-        rs.url_route();
-      ```
-      Output:
-      ```javascript
-        {
-            flow: 'url_route'
-          , id: 'homepage'
-          , query: { date: 'desc' }
-        }
-      ```
+    /* ------------------------------------------------------------------------
+        @pipelet url_route( options )
+        
+        @short Get url events and parses
+        
+        @parameters
+        - **options** (Object): @@class:Pipelet options, plus:
+          - **parse_query_string** (Boolean): for pipelet url_parse().
+            Default is *true*.
+          
+          - **pattern** (String): pattern provided to pipelet url_pattern(),
+            MUST define an *id* attribute that matches the *id* of the page.
+            Default is ```"#/(:id)"```.
+          
+          - **attribute** (String): for pipelet url_pattern() from
+            pipelet url_parse(). Default is ```"hash"```.
+          
+          - **segment_name_charset** (String): set of chars allowed in named
+            segment for pipelet url_pattern(). Default is
+            ```"a-zA-Z0-9_-"```.
+          
+          - **default_page** (String): when current url does not countain a page
+            identifier, default is ```"home"```.
+          
+          - **flow** (String): default is ```"url_route"```.
+        
+        @emits
+        - **flow** (String): dataflow name, always ```options.flow```.
+        
+        - **id** (String): Matched url route, default is
+          ```options.default_page```.
+        
+        - all other parsed attributes from pipelet url_parse()
+          and pipelet url_pattern() and according to *pattern* option.
+        
+        @examples
+        Using default pattern:
+        ```javascript
+          // URL: http://localhost/#/homepage?date=desc
+          rs.url_route();
+        ```
+        Output:
+        ```javascript
+          {
+              flow: "url_route"
+            , id: "homepage"
+            , query: { date: "desc" }
+          }
+        ```
+        
+        @description
+        This is a @@singleton, @@stateful, @@synchronous pipelet.
+        
+        It initially emits an add @@operation, then updates on each url
+        change event.
+        
+        For information only, do not rely on this, this pipelet is
+        currently built from the following pipelets, in this order:
+        - Pipelet url_events()
+        - Pipelet url_parse()
+        - Pipelet url_pattern()
+        - Pipelet map()
+        - Pipelet last()
     */
     .Singleton( 'url_route', function( source, options ) {
-      var pattern = options.pattern || '#/(:route)';
+      options = extend_2(
+        {
+          pattern           : '#/(:id)',
+          parse_query_string: true,
+          default_page      : 'home'
+          flow              : 'url_route'
+        },
+        
+        options
+      );
       
       return source
+        
         .namespace()
         
         .url_events()
         
-        .url_parse( { parse_query_string: true } )
+        .url_parse( options )
         
-        .url_pattern( pattern, options )
+        .url_pattern( options.pattern, options )
         
         .map( function( url ) {
-          var route = url.route
           
-          return { flow: 'url_route', id: route || 'home', query: url.query }
+          return extend_2( { flow: options.flow, id: options.default_page }, url )
         }, { key: [ 'id' ] } )
         
         .last()
