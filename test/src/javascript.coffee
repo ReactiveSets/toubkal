@@ -218,6 +218,9 @@ describe 'javascript.is_number( value )', ->
   it 'should return true for literal number 1', ->
     expect( is_number( 1 ) ).to.be true
   
+  it 'should return true for NaN', ->
+    expect( is_number( NaN ) ).to.be true
+  
   it 'should return true for Object Number 0', ->
     expect( is_number( new Number( 0 ) ) ).to.be true
   

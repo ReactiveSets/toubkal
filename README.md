@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1934 Continuous Integration Tests*
+*1935 Continuous Integration Tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -126,7 +126,7 @@ Then point a web browser at [localhost on port 8082](http://localhost:8082/).
 
 ## Automated Tests, Continuous Integration
 
-We have curently developped 1934 continuous integration tests for the Toubkal
+We have curently developped 1935 continuous integration tests for the Toubkal
 core and library pipelets that run after every commit on Travis CI under
 node version 8.12.0 LTS.
 
@@ -154,7 +154,7 @@ We also do manual testing on the following web browsers:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1934 of 1934 tests
+-> passed 1935 of 1935 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -579,11 +579,6 @@ Current work in progress is for version 0.4
     - Dataflows Meta Data for key, and query indexes definition
     - Operations log
     - Query cache
-  - File write
-  - Query Tree else()
-    - Emits data events not routed to any other destination input
-    - Pipelet else() captures these events
-    - May be used to detect clients attempts to submit unauthorized data
 
 - Packaging
   - toubkal package manager
@@ -629,9 +624,31 @@ applications for clients.
   - eventual consistency with pipelet next()
     - on error, update rejected value with new next value
 
+- Rewrite and complete lib/server/file.js pipelets
+  - fs_watch()
+  - fs_stat()
+  - fs_lstat()
+  - fs_read_file()
+  - fs_read_link()
+  - fs_read_directory()
+  - fs_write_file()
+  - fs_append_file()
+  - fs_chmod()
+  - fs_chown()
+  - fs_mkdir()
+  - fs_rmdir()
+  - fs_mkdirp()
+  - fs_link()
+  - fs_symlink()
+  - fs_unlink()
+  - fs_rename()
+  - configuration() write
+  - watch() and watch_directories() should be composed from redesigned
+  pipelets.
+
 #### Work in progress
 
-- 1934 Continuous Integration tests
+- 1935 Continuous Integration tests
   - Exceeded goal which was at least 1750 continuous integration tests
 
 - Error routing, eventual consistency
