@@ -626,7 +626,6 @@ applications for clients.
 
 - Rewrite and complete lib/server/file.js pipelets
   - fs_watch()
-  - fs_stat()
   - fs_lstat()
   - fs_read_file()
   - fs_read_link()
@@ -903,6 +902,7 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+fs_stat()                           | Gets file or directory stat information
 child_process_exec                  | Executes a command in a child process
 rename_properties                   | Renames properties
 store()                             | Store operations history
