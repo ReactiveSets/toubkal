@@ -63,31 +63,26 @@ describe 'url', ->
   
   describe 'url_pattern()', ->
     describe 'url_pattern() invalid parameters:', ->
-      it 'should throw if attribute is not defined', ->
-        f = -> source.url_pattern( null, '/api/users/:id' )
-        
-        expect( f ).to.throwException()
-      
       it 'should throw if pattern is not defined', ->
-        f = -> source.url_pattern( 'content' )
+        f = -> source.url_pattern()
         
         expect( f ).to.throwException()
       
       it 'should throw if pattern is an Array, and the first element is not a RegExp', ->
-        f = -> source.url_pattern( 'content', [ '/api/users/:id' ] )
+        f = -> source.url_pattern( [ '/api/users/:id' ] )
         
         expect( f ).to.throwException()
     
-    describe 'url_pattern( content, /api/users/:id ):', ->
-      output = source.url_pattern( 'content', '/api/users/:id' )
+    describe 'url_pattern( "/api/users/:id", { attribute: "content" } ):', ->
+      output = source.url_pattern( '/api/users/:id', { attribute: "content" } )
       
-      it '/api/products/5 should be empty object', ( done ) ->
+      it 'source "/api/products/5" should yield an empty Object', ( done ) ->
         source._add [ { content: '/api/products/5' } ]
         
         output._fetch_all ( values ) -> check done, () ->
           expect( values[ 0 ] ).to.be.empty()
       
-      it '/api/users/10 should extract { id: 10 }', ( done ) ->
+      it 'source "/api/users/10" should yield { id: 10 }', ( done ) ->
         source._add [ { content: '/api/users/10' } ]
         
         output._fetch_all ( values ) -> check done, () ->
@@ -95,16 +90,16 @@ describe 'url', ->
             { content: '/api/users/10', id: '10' }
           ]
     
-    describe 'url_pattern( content, [ /^\/api\/([^\/]+)(?:\/(\d+))?$/, resource, id ] ):', ->
-      output = source.url_pattern( 'content', [ /^\/api\/([^\/]+)(?:\/(\d+))?$/, 'resource', 'id' ] )
+    describe 'url_pattern( [ /^\/api\/([^\/]+)(?:\/(\d+))?$/, resource, id ], { attribute: "content" } ):', ->
+      output = source.url_pattern( [ /^\/api\/([^\/]+)(?:\/(\d+))?$/, 'resource', 'id' ], { attribute: "content" } )
       
-      it '/apiiii/users/10 should be empty', ( done ) ->
+      it 'source "/apiiii/users/10" should be empty', ( done ) ->
         source._add [ { content: '/apiiii/users/10' } ]
         
         output._fetch_all ( values ) -> check done, () ->
           expect( values[ 0 ] ).to.be.empty()
       
-      it '/api/users/10 should extract { resource: users, id: 10 }', ( done ) ->
+      it 'source "/api/users/10" should extract { resource: users, id: 10 }', ( done ) ->
         source._add [ { content: '/api/users/10' } ]
         
         output._fetch_all ( values ) -> check done, () ->
