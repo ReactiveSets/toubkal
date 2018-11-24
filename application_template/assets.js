@@ -15,7 +15,9 @@ module.exports = function( rs ) {
   
   // -------------------------------------------------------------------------------------------
   // Load and Serve Assets
-  var toubkal_min = client_assets.toubkal_min(); // js/toubkal-min.js
+  var toubkal_min = client_assets.toubkal_min() // js/toubkal-min.js
+    , map_support = rs.source_map_support_min()
+  ;
   
   var template_application_name_files = [
         'route.js',
@@ -76,6 +78,6 @@ module.exports = function( rs ) {
     
     .watch( www )
     
-    .union( [ toubkal_min, template_application_name_min ] )
+    .union( [ toubkal_min, map_support, template_application_name_min ] )
   ;
 }; // module.export
