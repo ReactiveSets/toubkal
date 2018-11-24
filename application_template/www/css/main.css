@@ -4,7 +4,7 @@
    
    Licence
 */
-
+/*
 body {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
@@ -15,7 +15,7 @@ body {
   background-color: grey !important;
   color: #555;
 }
-
+/*
 main {
   width: 100%;
   max-width: 375px;
@@ -51,6 +51,7 @@ ul li {
   list-style-type: none;
 }
 /* class: button */
+/*
 .button {
   border: none;
   background: none;
@@ -61,6 +62,7 @@ ul li {
 }
 
 /* content editable */
+/*
 .content-editable {
   font-family: 'Cousine', monospace;
   padding: 0.725rem 1.2rem;
@@ -73,6 +75,7 @@ ul li {
 @import url('https://fonts.googleapis.com/css?family=Cousine|Lato:400,700');
 
 /* Custom icons from Icon Moon */
+/*
 @font-face {
   font-family: 'todo-list';
   src:  url('fonts/todo-list.eot?otw6wk');
@@ -85,7 +88,7 @@ ul li {
 }
 
 i {
-  /* use !important to prevent issues with browser extensions that change fonts */
+  /* use !important to prevent issues with browser extensions that change fonts /
   font-family: 'todo-list' !important;
   speak: none;
   font-style: normal;
@@ -94,7 +97,7 @@ i {
   text-transform: none;
   line-height: 1;
 
-  /* Better Font Rendering =========== */
+  /* Better Font Rendering =========== /
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -105,3 +108,4 @@ i {
 .icon-circle:before {
   content: "\e901";
 }
+*/
