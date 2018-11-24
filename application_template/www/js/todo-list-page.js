@@ -12,12 +12,470 @@
   
   var RS = rs.RS
     , extend  = RS.extend
-    , uuid_v4 = RS.uuid.v4
-    , add_class = RS.add_class
-    , remove_class = RS.remove_class
+    , uuid_v4   = RS.uuid.v4
   ;
   
   return rs
+    
+    /*---------------------------------------------------------------------------------------------------------------------
+      @pipelet $new_todo( $selector, options )
+      
+      @short Creates input and emits new todo
+      
+      @emits new todos
+      
+      @parameters
+      - $selector(Pipelet): DOM element where to display data
+      - options   (Object): optional object
+    */
+    .Compose( '$new_todo', function( source, $selector, options ) {
+      return source
+        .namespace()
+        
+        .set( [
+          {
+              id: 'new-todo'
+            , tag: 'input'
+            , attributes: {
+                  type: 'text'
+                , class: 'new-todo'
+                , placeholder: 'What needs to be done?'
+              }
+          }
+        ] )
+        
+        .$to_dom( $selector )
+        
+        .$on( 'keypress' )
+        
+        .map( function( _ ) {
+          var $e = _.$event;
+          
+          if( $e.key == 'Enter' && !$e.ctrlKey && !$e.shiftKey && !$e.altKey ) {
+            var $ = _.$node, value = $.value;
+            
+            // reset content
+            $.value = '';
+            
+            if( value )
+              return {
+                  flow: 'todos'
+                , id: uuid_v4()
+                , text: value
+                , state: 1
+              }
+            ;
+          }
+        } )
+        
+        .timestamp()
+      ;
+    } ) // $new_todo()
+    
+    /*---------------------------------------------------------------------------------------------------------------------
+      @pipelet $toggle_all( $checkbox, options )
+      
+      @short Toggles all todos state ( all active or uncomplete )
+      
+      @emits updates todos state
+      
+      @parameters
+      - $checkbox(Pipelet): Checkbox element 
+      - options   (Object): optional object
+    */
+    .Compose( '$toggle_all', function( source, $checkbox, options ) {
+      return $checkbox
+        .$on( 'change' )
+        
+        .fetch( source, { flow: 'todos' } )
+        
+        .map( function( _ ) {
+          var checked = _.source.$node.checked;
+          
+          return {
+            updates: _.values
+              .slice()
+              
+              .map( function( todo ) {
+                if( checked && todo.state == 1 ) {
+                  return [ todo, extend( {}, todo, { state: 2 } ) ];
+                } else if( !checked && todo.state == 2 ) {
+                  return [ todo, extend( {}, todo, { state: 1 } ) ];
+                }
+              } )
+          }
+        } )
+        
+        .emit_operations()
+        
+        .optimize()
+      ;
+    } ) // $toggle_all()
+    
+    /*---------------------------------------------------------------------------------------------------------------------
+      @pipelet $todo_content( $selector, options )
+      
+      @short Toggles all todos state ( all active or uncomplete )
+      
+      @emits updates todos state
+      
+      @parameters
+      - $selector(Pipelet): DOM element where to display data
+      - options   (Object): optional object
+    */
+    .Compose( '$todo_content', function( source, $selector, options ) {
+      // toogle all checked state
+      var input = source
+        .flow( 'todos' )
+        
+        .group( function() {
+          return { id: 'toggle-all' }
+        }, { initial_groups: [ { id: 'toggle-all' } ] } )
+        
+        .map( function( _ ) {
+          var attributes = extend(
+            _.content.every( function( v ) { return v.state == 2 } ) ? { checked: true } : {},
+            { type: 'checkbox', class: 'toggle-all' }
+          );
+          
+          return {
+              id: _.id
+            , checked: _.content.every( function( v ) { return v.state == 2 } )
+            , tag: 'input'
+            , attributes: attributes
+            , order: 1
+          }
+        } )
+      ;
+      
+      // content items
+      var $items = source
+        .namespace()
+        
+        .set( [
+          {
+              id: 'toggle-all-label'
+            , tag: 'label'
+            , content: 'Mark all as complete'
+            , attributes: { for: 'toggle-all' }
+            , order: 2
+          },
+          {
+              id: 'todo-list'
+            , tag: 'ul'
+            , attributes: { class: 'todo-list' }
+            , order: 3
+          },
+        ] )
+        
+        .union( [ input ] )
+        
+        .optimize()
+        
+        .order( [ { id: 'order' } ] )
+        
+        .$to_dom( $selector )
+        
+        .set()
+      ;
+      
+      // toogle all control: update all todos state to complete or uncomplete
+      var toggle_all = source.$toggle_all( $items.filter( [ { id: 'toggle-all' } ] ) ).trace( 'toggle all' );
+      
+      // todo list: update todo text and state
+      return source
+        .$todo_list( $items.filter( [ { id: 'todo-list' } ] ) )
+        
+        .union( [ toggle_all ] )
+      ;
+    } ) // $todo_content()
+    
+    /*---------------------------------------------------------------------------------------------------------------------
+      @pipelet $todo_footer( $selector, options )
+      
+      @short Toggles all todos state ( all active or uncomplete )
+      
+      @emits updates todos state
+      
+      @parameters
+      - $selector(Pipelet): DOM element where to display data
+      - options   (Object): optional object
+    */
+    .Compose( '$todo_footer', function( source, $selector, options ) {
+      var filters = source
+        .flow( 'url_route' )
+        
+        .map( function( _ ) {
+          var state = _.query.state || 'all';
+          
+          return {
+              id: 'filters'
+            , tag: 'ul'
+            , attributes: { class: 'filters' }
+            , order: 1
+            , content: [ 'all', 'active', 'completed' ]
+                .map( function( s ) {
+                  var li = '<li><a href="#/todo_list';
+                  
+                  s != 'all' && ( li += '?state=' + s );
+                  
+                  li += '"';
+                  
+                  s == state && ( li += ' class="selected"' );
+                  
+                  return li += '>' + s.charAt( 0 ).toUpperCase() + s.slice( 1 ) + '</li>';
+                } )
+                
+                .join( '' )
+          }
+        } )
+      ;
+      
+      var $footer = source
+        .namespace()
+        
+        .set( [
+            { id: 'todo-count', tag: 'span', attributes: { class: 'todo-count' }, order: 0 },
+            {
+                id: 'clear-completed'
+              , tag: 'button'
+              , content: 'Clear completed'
+              , attributes: { class: 'clear-completed' }
+              , order: 2
+            }
+        ] )
+        
+        .union( [ filters ] )
+        
+        .order( [ { id: 'order' } ] )
+        
+        .$to_dom( $selector )
+      ;
+    } ) // $todo_footer()
+    
+    /*---------------------------------------------------------------------------------------------------------------------
+      @pipelet $todo_list( $selector, options )
+      
+      @short Toggles all todos state ( all active or uncomplete )
+      
+      @emits updates todos state
+      
+      @parameters
+      - options (Object): optional object
+    */
+    .Compose( '$todo_list', function( source, $selector, options ) {
+      // editing class
+      var editing_class = source.namespace().union();
+      
+      // ----------------------------------------------------------------------------
+      // Todo list: update todos state and text
+      var by_state = source
+        .flow( 'url_route' )
+        
+        .map( function( _ ) {
+          var state = _.query.state || 'all';
+          
+          switch( state ) {
+            case 'active':
+              return { flow: 'todos', state: 1 };
+            break;
+            
+            case 'completed':
+              return { flow: 'todos', state: 2 };
+            break;
+            
+            case 'all':
+              return { flow: 'todos' };
+            break;
+          }
+        } )
+        
+        .set()
+      ;
+      
+      // todos filtered by state
+      var todos = source
+        
+        .filter( by_state )
+        
+        .optimize()
+      ;
+      
+      // ----------------------------------------------------------------------------
+      // li
+      var $li_items = todos
+        .join( editing_class
+          , [ 'id' ]
+          , function( todo, editing ) {
+              return extend( { editing: !!editing }, todo )
+            }
+          , { left: true, no_filter: true }
+        )
+        
+        .alter( function( _ ) {
+          _.todo_id = _.id;
+          
+          _.tag = 'li';
+          
+          _.attributes = {
+            class: 'todo' 
+              + ( _.state == 2 ? ' completed' : '' )
+              + ( _.editing    ? ' editing'   : '' )
+          }
+        } )
+        
+        .optimize()
+        
+        .order( [ { id: 'timestamp' } ] )
+        
+        .$to_dom( $selector )
+        
+        .flat_map( function( _ ) {
+          var id = _.todo_id;
+          
+          return [
+              { 
+                  id: 'view-' + id
+                , tag: 'div'
+                , attributes: { class: 'view' }
+              },
+              {
+                  id: 'input-' + id
+                , tag: 'input'
+                , attributes: extend(
+                    _.editing ? { autofocus: true } : {},
+                    { class: 'edit', type: 'text', value: _.text }
+                  )
+              }
+            ].map( function( v ) {
+              return extend( {}, _, v );
+            } )
+          ;
+        } )
+        
+        .$to_dom()
+        
+        .set()
+      ;
+      
+      // ----------------------------------------------------------------------------
+      // li items
+      var $view_items = $li_items
+        .filter( [ { tag: 'div' } ] )
+        
+        .flat_map( function( _ ) {
+          var id = _.todo_id
+            , $  = _.$node
+          ;
+          
+          return [
+            {
+                id: 'toggle-' + id
+              , tag: 'input'
+              , $node: $
+              , attributes: extend(
+                  { type: 'checkbox', class: 'toggle' },
+                  _.state == 2 ? { checked: true } : {}
+                )
+              , todo_id: id
+            },
+            {
+                id: 'label-' + id
+              , tag: 'label'
+              , $node: $
+              , content: _.text
+              , todo_id: id
+            },
+            {
+                id: 'button-' + id
+              , tag: 'button'
+              , $node: $
+              , attributes: { class: 'destroy' }
+              , todo_id: id
+            }
+          ]
+        } )
+        
+        .$to_dom()
+        
+        .set()
+      ;
+      
+      // update todo state
+      var $toggle_state = $view_items
+        .$on( 'change' )
+        
+        .alter( function( _ ) {
+          _.new_value = { state: _.$node.checked ? 2 : 1 }
+        } )
+      ;
+      
+      // toggle class editing
+      // add editing class on label double click
+      $view_items
+        .filter( [ { tag: 'label' } ] )
+        
+        .$on( 'dblclick' )
+        
+        .map( function( _ ) {
+          return { id: _.todo_id }
+        } )
+        
+        .through( editing_class )
+      ;
+        
+      // remove editing class on key Enter
+      var $input = $li_items.filter( [ { tag: 'input' } ] );
+      
+      $input
+        .$on( 'keydown' )
+        
+        .map( function( _ ) {
+          var $e = _.$event;
+          
+          if( $e.key == 'Escape' || $e.key == 'Tab' || ( $e.key == 'Enter' && !$e.ctrlKey && !$e.shiftKey && !$e.altKey ) )
+            _.$node.blur()
+          ;
+        } )
+      ;
+      
+      var $input_blur = $input.$on( 'blur' );
+      
+      $input_blur
+        .pick( { id: '.todo_id' } )
+        
+        .revert()
+        
+        .through( editing_class )
+      ;
+      
+      return $input_blur
+        .map( function( _ ) {
+          var value = _.$node.value;
+          
+          if( _.text != value )
+            return extend( { new_value: { text: value } }, _ );
+          ;
+        } )
+        
+        .union( [ $toggle_state ] )
+        
+        .fetch( todos, { flow: 'todos', id: '.todo_id' } )
+        
+        .map( function( _ ) {
+          var previous = _.values[ 0 ];
+          
+          
+          return {
+            updates: [ [ previous, extend( {}, previous, _.source.new_value ) ] ]
+          }
+        } )
+        
+        .emit_operations()
+        
+        .optimize()
+      ;
+    } ) // $todo_list()
     
     /*---------------------------------------------------------------------------------------------------------------------
       @pipelet $todo_list_page( $selector, options )
@@ -32,259 +490,53 @@
       - $selector(String/Object/Pipelet): DOM element where to display data
       - options                 (Object): optional object
     */
-    .Compose( '$todo_list_page', function( source, $selector, options ) {
+    .Compose( '$todo_list_page', function( source, $page, options ) {
+      var rs = source.namespace();
+      
       // ----------------------------------------------------------------------------
-      // page items containers
-      var $containers = source
-        .namespace()        
-        
+      // Page elements
+      var $elements = rs
         .set( [
           {
-              id: 'todo-list-page'
+              id: 'todo-header'
+            , tag: 'header'
+            , content: '<h1>todo</h1>'
+            , attributes: { class: 'header' }
+          },
+          {
+              id: 'todo-content'
             , tag: 'section'
-            , attributes: { class: 'todo-list-page' }
+            , attributes: { class: 'main' }
+          },
+          {
+              id: 'todo-footer'
+            , tag: 'footer'
+            , attributes: { class: 'footer' }
           }
         ] )
         
-        .$to_dom( $selector )
-        
-        .alter( function( _ ) {
-          _.id = 'todo-list-page-content';
-          _.tag = 'div';
-          _.attributes = { class: 'content' };
-        } )
-        
-        .$to_dom()
-        
-        .flat_map( function( _ ) {
-          var $ = _.$node;
-
-          return [
-            {
-                id: _.id + '-title'
-              , tag: 'h2'
-              , content: 'ToDo list app'
-              , attributes: { class: 'title' }
-            },
-            {
-                id: 'todo-control'
-              , tag: 'div'
-              , attributes: { class: 'todo-control' }
-            },
-            {
-                id: 'new-todo'
-              , tag: 'div'
-              , attributes: { class: 'new-todo' }
-            },
-            {
-                id: 'todo-list'
-              , tag: 'ul'
-              , attributes: { class: 'todo-list' }
-            }
-          ].map( function( v, i ) {
-            return extend( {}, v, { order: i, $node: $ } )
-          } )
-        } )
-        
-        .optimize()
-        
-        .order( [ { id: 'order' } ] )
-        
-        .$to_dom()
+        .$to_dom( $page )
         
         .set()
       ;
       
       // ----------------------------------------------------------------------------
-      // new todo
-      var new_todo = $containers
-        .filter( [ { id: 'new-todo' } ] )
-        
-        .map( function( _ ) {
-          return {
-              id: 'new-todo-input'
-            , tag: 'div'
-            , $node: _.$node
-            , placeholder: 'What must be done?'
-          }
-        } )
-        
-        .$to_dom()
-        
-        .$content_editable()
-        
-        .map( function( _ ) {
-          // reset content  
-          _.$node.innerText = '';
-          
-          return {
-              flow: 'todos'
-            , id: uuid_v4()
-            , text: _.content
-            , state: 1
-          }
-        } )
-        
-        .timestamp()
-      ;
+      // header: new ToDo
+      var new_todo = rs.$new_todo( $elements.filter( [ { id: 'todo-header' } ] ) );
       
       // ----------------------------------------------------------------------------
-      // control to filter todos by state
-      var todos_by_state = $containers
-        .filter( [ { id: 'todo-control' } ] )
-      
-        .map( function( _ ) {
-          return {
-              id: 'todo-state'
-            , tag: 'ul'
-            , $node: _.$node
-            , attributes: { class: 'todo-state' }
-          }
-        } )
-        
-        .$to_dom()
-        
-        .flat_map( function( _ ) {
-          var $ = _.$node;
-          
-          return [ 'open', 'complete' ]
-            .map( function( v, i ) {
-              return {
-                  id: v
-                , tag: 'li'
-                , $node: $
-                , label: v.charAt( 0 ).toUpperCase() + v.slice( 1 )
-                , attributes: { class: v + ( v == 'open' ? ' active' : '' ) }
-                , order: i
-              }
-            } )
-          ;
-        } )
-        
-        .order( [ { id: 'order' } ] )
-        
-        .$to_dom()
-        
-        .$radio( { name: 'todo-state', selected: 'open' } )
-        
-        .map( function( _ ) {
-          switch( _.id ) {
-            case 'open':
-              return { flow: 'todos', state: 1 };
-            break;
-            
-            case 'complete':
-              return { flow: 'todos', state: 2 };
-            break;
-          } // switch()
-        } )
-      ;
+      // section: todo content
+      // - toggle all control
+      // - ToDo list
+      var update_todos = source.$todo_content( $elements.filter( [ { id: 'todo-content' } ] ) );
       
       // ----------------------------------------------------------------------------
-      // todos list
-      var $todo_list = source
-        
-        .filter( todos_by_state )
-        
-        .order( [ { id: 'timestamp' } ] )
-        
-        .alter( function( _ ) {
-          var id = _.id;
-          
-          _.id = 'todo-' + id;
-          _.tag = 'li';
-          _.attributes = { class: 'todo-item' };
-          _.todo_id = id;
-        } )
-        
-        .optimize()
-        
-        .order( [ { id: 'timestamp' } ] )
-        
-        .$to_dom( $containers.filter( [ { id: 'todo-list' } ] ) )
-        
-        .flat_map( function( _ ) {
-          var  $    = _.$node
-            , id    = _.todo_id
-            , state = _.state
-            , content = [
-                  { label: '<i class="icon-circle"></i>'      , class: 'open'    , value: 2 }
-                , { label: '<i class="icon-check-circle"></i>', class: 'complete', value: 1 }
-              ][ state - 1 ]
-          ;
-          
-          return [
-            {
-                id: 'todo-control-' + id
-              , tag: 'button'
-              , $node: $
-              , content: content.label
-              , attributes: { type: 'button', class: 'button ' + content.class, value: content.value }
-              , todo_id: id
-              , order: 1
-            },
-            {
-                id: 'todo-content-' + id
-              , tag: 'span'
-              , $node: $
-              , content: _.text.replace( /\n/g, '<br />' )
-              , attributes: { class: '' }
-              , todo_id: id
-              , order: 2
-            }
-          ]
-        } )
-       
-        .optimize()
-        
-        .$to_dom()
-        
-        .set()
-      ;
+      // ToDo footer
+      source.$todo_footer( $elements.filter( [ { id: 'todo-footer' } ] ) );
       
-      // update ToDo list content
-      var update_todo_text = $todo_list
-        
-        .filter( [ { tag: 'span' } ] )
-        
-        .$content_editable()
-        
-        .alter( function( _ ) {
-          _.new_value = { text: _.content.replace( /<br\s*\/?>/, '\n' ) };
-        } )
+      return rs
+        .union( [ new_todo, update_todos ] )
       ;
-      
-      // update todo : state and text content
-      return $todo_list
-        
-        .filter( [ { tag: 'button' } ] )
-        
-        .$on( 'click' )
-        
-        .alter( function( _ ) {
-          _.new_value = { state: _.$node.value };
-        } )
-        
-        .union( [ update_todo_text ] )
-        
-        .fetch( source, [ { flow: 'todos', id: '.todo_id' } ] )
-        
-        // .trace( 'fetched' ) 
-        
-        .map( function( _ ) {
-          var previous  = _.values[ 0 ]
-            , new_value = extend( {}, previous, _.source.new_value )
-          ;
-          
-          return { updates: [ [ previous, new_value ] ] }
-        } )
-        
-        .emit_operations()
-        
-        .union( [ new_todo ] )
-        
-        .optimize()
-      ;
-    } ) // $todo_list()
+    } )
   ;
 } ); // module.export
