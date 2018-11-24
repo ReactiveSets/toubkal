@@ -21,6 +21,7 @@ module.exports = function( rs ) {
   
   var template_application_name_files = [
         'route.js',
+        'application_routes.js',
         'common-widgets.js',
         'navigation.js',
         'homepage.js',
