@@ -36,7 +36,9 @@ rs     = this.rs     || utils.rs
 # ----------------
 
 describe 'order()', ->
-  books = rs.set [
+  books_operations = rs.emit_operations()
+  
+  books = books_operations.set [
     { id: 1, title: "A Tale of Two Cities" , author: "Charles Dickens" , year: 1859 }
     { id: 2, title: "The Lord of the Rings", author: "J. R. R. Tolkien", year: 1955 }
     { id: 3, title: "The Da Vinci Code"    , author: "Dan Brown"       , year: 2003 }
@@ -44,7 +46,9 @@ describe 'order()', ->
     { id: 5, title: "Angels and Demons"    , author: "Dan Brown"       , year: 2000 }
   ], { name: 'books' }
   
-  organizer = rs.set [ { id: "year" } ], { name: 'by_year' }
+  organizer_operations = rs.emit_operations()
+  
+  organizer = organizer_operations.set [ { id: "year" } ], { name: 'by_year' }
   
   by_ascending_author  = ( a, b ) ->
     if ( a = a.author ) == ( b = b.author ) then return 0
@@ -329,10 +333,10 @@ describe 'order()', ->
       ]
     
     it 'add a second field to organizer, books_ordered_by_year should be ordered by ascending year and title', ( done ) ->
-      organizer._notify [
-        { action: "update", objects: [ [ { id: "title" }, { id: "year" } ] ] }
-        { action: "add"   , objects: [ { id: "title" } ] }
-      ]
+      organizer_operations._add [ {
+        updates: [ [ { id: "title" }, { id: "year" } ] ]
+        adds: [ { id: "title" } ]
+      } ]
       
       books_ordered_by_year._fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
         { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
@@ -393,7 +397,7 @@ describe 'order()', ->
         { id: 14, title: "And Then There Were None"                , author: "Agatha Christie"        , year: undefined }
       ]
     
-    it 'books_ordered_by_ascending_id should be ordered by ascending id: organizer is an objects', ( done ) ->
+    it 'books_ordered_by_ascending_id should be ordered by ascending id: organizer is an object', ( done ) ->
       books_ordered_by_ascending_id = books.order( [ { id: "id" } ] ).ordered().ordered()
       
       books_ordered_by_ascending_id._fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
@@ -415,7 +419,7 @@ describe 'order()', ->
         { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
       ]
 
-    it 'books_ordered_by_descending should be ordered by descending id: organizer is an objects', ( done ) ->
+    it 'books_ordered_by_descending should be ordered by descending id: organizer is an object', ( done ) ->
       books_ordered_by_ascending_id = books.order( [ { id: "id", descending: true } ] ).ordered().ordered()
       
       books_ordered_by_ascending_id._fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
@@ -483,11 +487,10 @@ describe 'order()', ->
         { id: 16, title: "Charlie and the Chocolate Factory"       , author: "Roald Dahl"                          }
       ]
     
-    it 'after books._notify( 4 updates transaction ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
-      books._notify [
+    it 'after books_operations._add( updates ), books_ordered_by_year should be ordered by ascending year', ( done ) ->
+      books_operations._add [
         {
-          action : "update"
-          objects: [
+          updates: [
             [
               { id:  8, title: "The Hobbit", author: "J. R. R. Tolkien"         , year: 1937 }
               { id:  8, title: "The Hobbit Changed", author: "J. R. R. Tolkien 8" , year: 1937 }
@@ -555,7 +558,7 @@ describe 'order()', ->
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
       ]
     
-    it 'after books._notify( transaction ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
+    it 'after books_operations._add( transaction ), books_ordered_by_descending_year should be ordered by descending year', ( done ) ->
       books_ordered_by_descending_year._fetch_all ( books ) -> check done, () -> expect( books ).to.be.eql [
         { id:  6, title: "The Girl with the Dragon Tattoo"         , author: "Stieg Larsson"          , year: 2005 }
         { id:  3, title: "The Da Vinci Code"                       , author: "Dan Brown"              , year: 2003 }
