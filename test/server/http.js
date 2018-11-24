@@ -80,9 +80,11 @@ var mocha_expect = rs.set( [
   .require_resolve()
   .auto_increment() // will auto-increment the id attribute starting at 1
   .watch()
+;
+
+var mocha_expect_min = mocha_expect
   .order( [ { id: 'id' } ] ) // order loaded files
   .uglify( 'test/javascript/mocha_expect-min.js' )
-  .union( [ mocha_css ] )
 ;
 
 // HTML test pages
@@ -177,11 +179,11 @@ var source_maps = test_lib
 // Serve assets to http servers
 tests.serve( http_servers, { routes: '/test' } );
 
-rs.union( [ mocha_expect, compiled_coffee, source_maps, coffee_source ] )
+rs.union( [ mocha_expect_min, mocha_css, compiled_coffee, source_maps, coffee_source ] )
   .serve( http_servers, { routes: '/test' } ) // ToDo: test serve() with default route ('/') does not work
 ;
 
-rs.union( [ mocha_css, mocha_expect ] )
+rs.union( [ mocha_expect ] )
   .serve( http_servers, { routes: '/node_modules' } )
 ;
 
