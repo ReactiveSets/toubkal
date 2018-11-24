@@ -1,5 +1,5 @@
 /*  
-  utils.js
+  route.js
   --------
   
   Licence
@@ -13,36 +13,6 @@
   ;
   
   return rs
-    /* ---------------------------------------------------------------------------------------------------------------------
-    */
-    .Singleton( 'application_routes', function( source, options ) {
-      return source
-        
-        .namespace()
-        
-        .set( [
-            {
-                id: 'home'
-              , pipelet_name: '$homepage'
-              , title: 'Home'
-              , navigation: false
-            },
-            { 
-                id: 'todo_list'
-              , pipelet_name: '$todo_list_page'
-              , title: 'ToDo list'
-            },
-            {
-                id: 'signin'
-              , pipelet_name: '$signin_page'
-              , title: 'Sign-In with Passport'
-            }
-          ].map( function( v, i ) {
-            return extend( { flow: 'application_routes' }, v, { order: i } );
-          } )
-        )
-      ;
-    } ) // application_routes()
     
     /* ------------------------------------------------------------------------
         @pipelet url_route( options )
@@ -111,7 +81,7 @@
     .Singleton( 'url_route', function( source, options ) {
       options = extend_2(
         {
-          pattern           : '#/(:id)',
+          pattern           : '#/(:route)',
           parse_query_string: true,
           default_page      : 'home',
           flow              : 'url_route'
@@ -132,7 +102,7 @@
         
         .map( function( url ) {
           
-          return extend_2( { flow: options.flow, id: options.default_page }, url )
+          return extend_2( { flow: options.flow, route: options.default_page }, url )
         }, { key: [ 'id' ] } )
         
         .last()
@@ -172,16 +142,18 @@
       // application page route
       var $page_route = application_routes
         .join( url_route
-          , [ 'id' ]
+          , [ [ 'id', 'route' ] ]
           , function( route, url ) {
-              return extend( {}, route, url )
+              return extend( {}, route )
             }
           , { no_filter: true, key: [ 'id' ] }
         )
         
-        .alter( function( _ ) {
-          _.tag = 'main';
+        .map( function( _ ) {
+          return extend( { tag: 'main' }, _ );
         } )
+        
+        .optimize()
         
         .$to_dom( $selector )
       ;
@@ -189,7 +161,7 @@
       return source
         .optimize()
         
-        .union( [ application_routes ] )
+        .union( [ application_routes, url_route ] )
         
         .dispatch( $page_route, function( source, options ) {
           var page    = this
@@ -202,4 +174,3 @@
     } ) // route()
   ;
 } );
-
