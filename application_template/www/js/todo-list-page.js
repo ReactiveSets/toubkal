@@ -47,34 +47,41 @@
       
       // ----------------------------------------------------------------------------
       // Page elements
-      var $elements = rs
-        .set( [
-          {
-              id: 'todo-header'
-            , tag: 'header'
-            , content: '<h1>todo</h1>'
-            , attributes: { class: 'header' }
-            , order: 1
-          },
-          {
-              id: 'todo-content'
-            , tag: 'section'
-            , attributes: { class: 'main' }
-            , order: 1
-          },
-          {
+      var $elements = todos_group
+        .flat_map( function( _ ) {
+          var values = [
+            {
+                id: 'todo-header'
+              , tag: 'header'
+              , content: '<h1>todo</h1>'
+              , attributes: { class: 'header' }
+              , order: 1
+            },
+            {
+                id: 'todo-content'
+              , tag: 'section'
+              , attributes: { class: 'main' }
+              , order: 2
+            }
+          ];
+          
+          _.content.length && values.push( {
               id: 'todo-footer'
             , tag: 'footer'
             , attributes: { class: 'footer' }
-            , order: 1
-          }
-        ] )
+            , order: 3
+          } );
+          
+          return values;
+        } )
         
-        order( [ { id: 'order' } ] )
+        .order( [ { id: 'order' } ] )
         
         .$to_dom( $page )
         
         .set()
+        
+        .optimize()
       ;
       
       // ----------------------------------------------------------------------------
@@ -192,12 +199,13 @@
           
           return {
               id: 'toggle-all'
-            , checked: _.content.every( function( v ) { return v.state == 2 } )
             , tag: 'input'
             , attributes: attributes
             , order: 1
           }
         } )
+        
+        .set()
       ;
       
       // content items
@@ -227,6 +235,8 @@
         .order( [ { id: 'order' } ] )
         
         .$to_dom( $selector )
+        
+        .trace( 'todo content' )
         
         .set()
       ;
@@ -421,7 +431,6 @@
       
       // ToDos filtered by state
       var todos = source
-        
         .filter( by_state )
         
         .optimize()
@@ -440,6 +449,8 @@
         
         .alter( function( _ ) {
           _.todo_id = _.id;
+          
+          _.id = 'todo-' + _.id
           
           _.tag = 'li';
           
