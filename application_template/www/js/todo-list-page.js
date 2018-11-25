@@ -18,9 +18,102 @@
   return rs
     
     /*---------------------------------------------------------------------------------------------------------------------
+      @pipelet $todo_list_page( $selector, options )
+      
+      @short ToDo list app
+      
+      @source dataflows
+      - todos
+      - url_route
+      
+      @emits new or updated todos
+      
+      @parameters
+      - $selector(String/Object/Pipelet): DOM element where to display data
+      - options                 (Object): optional object
+    */
+    .Compose( '$todo_list_page', function( source, $page, options ) {
+      var rs = source.namespace();
+      
+      // ----------------------------------------------------------------------------
+      // ToDos group: group all ToDos
+      var todos_group = source
+        .flow( 'todos' )
+        
+        .group( function() {
+          return { id: 'todos-group' }
+        }, { initial_groups: [ { id: 'todos-group' } ] } )
+      ;
+      
+      // ----------------------------------------------------------------------------
+      // Page elements
+      var $elements = rs
+        .set( [
+          {
+              id: 'todo-header'
+            , tag: 'header'
+            , content: '<h1>todo</h1>'
+            , attributes: { class: 'header' }
+            , order: 1
+          },
+          {
+              id: 'todo-content'
+            , tag: 'section'
+            , attributes: { class: 'main' }
+            , order: 1
+          },
+          {
+              id: 'todo-footer'
+            , tag: 'footer'
+            , attributes: { class: 'footer' }
+            , order: 1
+          }
+        ] )
+        
+        order( [ { id: 'order' } ] )
+        
+        .$to_dom( $page )
+        
+        .set()
+      ;
+      
+      // ----------------------------------------------------------------------------
+      // header:
+      // - new ToDo
+      var new_todo = rs.$new_todo( $elements.filter( [ { id: 'todo-header' } ] ) );
+      
+      // ----------------------------------------------------------------------------
+      // section: ToDo content
+      // - toggle all control
+      // - ToDo list
+      var update_todos = source
+        
+        .union( [ todos_group ] )
+        
+        .$todo_content( $elements.filter( [ { id: 'todo-content' } ] ) )
+      ;
+      
+      // ----------------------------------------------------------------------------
+      // ToDo footer: 
+      // - display active ToDos count
+      // - display filters
+      // - clear completed ToDos
+      var clear_completed = source
+        
+        .union( [ todos_group ] )
+        
+        .$todo_footer( $elements.filter( [ { id: 'todo-footer' } ] ) )
+      ;
+      
+      return rs
+        .union( [ new_todo, update_todos, clear_completed ] )
+      ;
+    } )
+    
+    /*---------------------------------------------------------------------------------------------------------------------
       @pipelet $new_todo( $selector, options )
       
-      @short Creates input and emits new todo
+      @short Creates input and emits new ToDo
       
       @emits new todos
       
@@ -73,64 +166,23 @@
     } ) // $new_todo()
     
     /*---------------------------------------------------------------------------------------------------------------------
-      @pipelet $toggle_all( $checkbox, options )
-      
-      @short Toggles all todos state ( all active or uncomplete )
-      
-      @emits updates todos state
-      
-      @parameters
-      - $checkbox(Pipelet): Checkbox element 
-      - options   (Object): optional object
-    */
-    .Compose( '$toggle_all', function( source, $checkbox, options ) {
-      return $checkbox
-        .$on( 'change' )
-        
-        .fetch( source, { flow: 'todos' } )
-        
-        .map( function( _ ) {
-          var checked = _.source.$node.checked;
-          
-          return {
-            updates: _.values
-              .slice()
-              
-              .map( function( todo ) {
-                if( checked && todo.state == 1 ) {
-                  return [ todo, extend( {}, todo, { state: 2 } ) ];
-                } else if( !checked && todo.state == 2 ) {
-                  return [ todo, extend( {}, todo, { state: 1 } ) ];
-                }
-              } )
-          }
-        } )
-        
-        .emit_operations()
-        
-        .optimize()
-      ;
-    } ) // $toggle_all()
-    
-    /*---------------------------------------------------------------------------------------------------------------------
       @pipelet $todo_content( $selector, options )
       
-      @short Toggles all todos state ( all active or uncomplete )
+      @description ToDos content section
+      - toggle all ToDos state ( all to completed or active )
+      - display ToDos list
       
-      @emits updates todos state
+      @emits updates ToDos state and text
       
       @parameters
-      - $selector(Pipelet): DOM element where to display data
+      - $selector(Pipelet): DOM element where to display content
       - options   (Object): optional object
     */
     .Compose( '$todo_content', function( source, $selector, options ) {
       // toogle all checked state
       var input = source
-        .flow( 'todos' )
         
-        .group( function() {
-          return { id: 'toggle-all' }
-        }, { initial_groups: [ { id: 'toggle-all' } ] } )
+        .filter( [ { id: 'todos-group' } ] )
         
         .map( function( _ ) {
           var attributes = extend(
@@ -139,7 +191,7 @@
           );
           
           return {
-              id: _.id
+              id: 'toggle-all'
             , checked: _.content.every( function( v ) { return v.state == 2 } )
             , tag: 'input'
             , attributes: attributes
@@ -179,10 +231,10 @@
         .set()
       ;
       
-      // toogle all control: update all todos state to complete or uncomplete
-      var toggle_all = source.$toggle_all( $items.filter( [ { id: 'toggle-all' } ] ) ).trace( 'toggle all' );
+      // toogle all control: update all ToDos state to complete or uncomplete
+      var toggle_all = source.$toggle_all( $items.filter( [ { id: 'toggle-all' } ] ) );
       
-      // todo list: update todo text and state
+      // ToDo list: update ToDo text and state
       return source
         .$todo_list( $items.filter( [ { id: 'todo-list' } ] ) )
         
@@ -193,9 +245,9 @@
     /*---------------------------------------------------------------------------------------------------------------------
       @pipelet $todo_footer( $selector, options )
       
-      @short Toggles all todos state ( all active or uncomplete )
+      @short Toggles all ToDos state ( all active or uncomplete )
       
-      @emits updates todos state
+      @emits updates ToDos state
       
       @parameters
       - $selector(Pipelet): DOM element where to display data
@@ -231,34 +283,108 @@
         } )
       ;
       
-      var $footer = source
-        .namespace()
+      return source
         
-        .set( [
-            { id: 'todo-count', tag: 'span', attributes: { class: 'todo-count' }, order: 0 },
-            {
-                id: 'clear-completed'
-              , tag: 'button'
-              , content: 'Clear completed'
-              , attributes: { class: 'clear-completed' }
-              , order: 2
-            }
-        ] )
+        .filter( [ { id: 'todos-group' } ] )
+        
+        .flat_map( function( _ ) {
+          var l = _.content.filter( function( v ) { return v.state == 1 } ).length
+            , s = l != 1 ? 's' : ''
+          ;
+          
+          var values = [ {
+              id: 'todo-count'
+            , tag: 'span'
+            , content: '<strong>' + l + '</strong> item' + s + ' left'
+            , attributes: { class: 'todo-count' }
+            , order: 0
+          } ];
+          
+          _.content.filter( function( v ) { return v.state == 2 } ).length && values.push( {
+              id: 'clear-completed'
+            , tag: 'button'
+            , content: 'Clear completed'
+            , attributes: { class: 'clear-completed' }
+            , order: 2
+          } );
+          
+          return values;
+        } )
         
         .union( [ filters ] )
         
         .order( [ { id: 'order' } ] )
         
         .$to_dom( $selector )
+        
+        .set()
+        
+        .filter( [ { id: 'clear-completed' } ] )
+        
+        .$on( 'click' )
+        
+        .fetch( source, { flow: 'todos', state: 2 } )
+        
+        .map( function( _ ) {
+          return { removes: _.values }
+        } )
+        
+        .emit_operations()
+        
+        .optimize()
       ;
     } ) // $todo_footer()
     
     /*---------------------------------------------------------------------------------------------------------------------
-      @pipelet $todo_list( $selector, options )
+      @pipelet $toggle_all( $checkbox, options )
       
       @short Toggles all todos state ( all active or uncomplete )
       
       @emits updates todos state
+      
+      @parameters
+      - $checkbox(Pipelet): Checkbox element 
+      - options   (Object): optional object
+    */
+    .Compose( '$toggle_all', function( source, $checkbox, options ) {
+      return $checkbox
+        .$on( 'change' )
+        
+        .fetch( source, { flow: 'todos' } )
+        
+        .map( function( _ ) {
+          var checked = _.source.$node.checked;
+          
+          return {
+            updates: _.values
+              .slice()
+              
+              .map( function( todo ) {
+                if( checked && todo.state == 1 ) {
+                  return [ todo, extend( {}, todo, { state: 2 } ) ];
+                } else if( !checked && todo.state == 2 ) {
+                  return [ todo, extend( {}, todo, { state: 1 } ) ];
+                }
+              } )
+              
+              .filter( function( v ) {
+                return !!v;
+              } )
+          }
+        } )
+        
+        .emit_operations()
+        
+        .optimize()
+      ;
+    } ) // $toggle_all()
+    
+    /*---------------------------------------------------------------------------------------------------------------------
+      @pipelet $todo_list( $selector, options )
+      
+      @short Toggles all ToDos state ( all active or uncomplete )
+      
+      @emits updates ToDos state
       
       @parameters
       - options (Object): optional object
@@ -293,7 +419,7 @@
         .set()
       ;
       
-      // todos filtered by state
+      // ToDos filtered by state
       var todos = source
         
         .filter( by_state )
@@ -401,7 +527,7 @@
         .set()
       ;
       
-      // update todo state
+      // update ToDo state
       var $toggle_state = $view_items
         .$on( 'change' )
         
@@ -476,67 +602,5 @@
         .optimize()
       ;
     } ) // $todo_list()
-    
-    /*---------------------------------------------------------------------------------------------------------------------
-      @pipelet $todo_list_page( $selector, options )
-      
-      @short ToDo list app
-      
-      @source dataflow 'todos'
-      
-      @emits new or updated todos
-      
-      @parameters
-      - $selector(String/Object/Pipelet): DOM element where to display data
-      - options                 (Object): optional object
-    */
-    .Compose( '$todo_list_page', function( source, $page, options ) {
-      var rs = source.namespace();
-      
-      // ----------------------------------------------------------------------------
-      // Page elements
-      var $elements = rs
-        .set( [
-          {
-              id: 'todo-header'
-            , tag: 'header'
-            , content: '<h1>todo</h1>'
-            , attributes: { class: 'header' }
-          },
-          {
-              id: 'todo-content'
-            , tag: 'section'
-            , attributes: { class: 'main' }
-          },
-          {
-              id: 'todo-footer'
-            , tag: 'footer'
-            , attributes: { class: 'footer' }
-          }
-        ] )
-        
-        .$to_dom( $page )
-        
-        .set()
-      ;
-      
-      // ----------------------------------------------------------------------------
-      // header: new ToDo
-      var new_todo = rs.$new_todo( $elements.filter( [ { id: 'todo-header' } ] ) );
-      
-      // ----------------------------------------------------------------------------
-      // section: todo content
-      // - toggle all control
-      // - ToDo list
-      var update_todos = source.$todo_content( $elements.filter( [ { id: 'todo-content' } ] ) );
-      
-      // ----------------------------------------------------------------------------
-      // ToDo footer
-      source.$todo_footer( $elements.filter( [ { id: 'todo-footer' } ] ) );
-      
-      return rs
-        .union( [ new_todo, update_todos ] )
-      ;
-    } )
   ;
 } ); // module.export
