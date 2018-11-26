@@ -268,7 +268,10 @@
         .flow( 'url_route' )
         
         .map( function( _ ) {
-          var state = _.query.state || 'all';
+          var query = _.query
+            , route = _.hash || '#/'
+            , state = query && query.state || 'all'
+          ;
           
           return {
               id: 'filters'
@@ -277,7 +280,7 @@
             , order: 1
             , content: [ 'all', 'active', 'completed' ]
                 .map( function( s ) {
-                  var li = '<li><a href="#/todo_list';
+                  var li = '<li><a href="' + route;
                   
                   s != 'all' && ( li += '?state=' + s );
                   
@@ -396,7 +399,9 @@
         .flow( 'url_route' )
         
         .map( function( _ ) {
-          var state = _.query.state || 'all';
+          var query = _.query
+            , state = query && query.state || 'all'
+          ;
           
           switch( state ) {
             case 'active':
@@ -525,8 +530,25 @@
         .set()
       ;
       
+      // remove todo
+      var remove_todo = $view_items
+        .filter( [ { tag: 'button' } ] )
+
+        .$on( 'click' )
+        
+        .fetch( todos, { flow: 'todos', id: '.todo_id' } )
+        
+        .map( function( _ ) {
+          return _.values[ 0 ];
+        } )
+        
+        .revert()
+      ;
+      
       // update ToDo state
       var $toggle_state = $view_items
+        .filter( [ { tag: 'input' } ] )
+        
         .$on( 'change' )
         
         .alter( function( _ ) {
@@ -596,6 +618,8 @@
         } )
         
         .emit_operations()
+        
+        .union( [ remove_todo ] )
         
         .optimize()
       ;
