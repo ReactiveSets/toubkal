@@ -236,7 +236,7 @@
         
         .$to_dom( $selector )
         
-        .trace( 'todo content' )
+        //.trace( 'todo content' )
         
         .set()
       ;
@@ -348,44 +348,31 @@
     /*---------------------------------------------------------------------------------------------------------------------
       @pipelet $toggle_all( $checkbox, options )
       
-      @short Toggles all todos state ( all active or uncomplete )
+      @short Force all todos state according to toggle checkbox
       
-      @emits updates todos state
+      @emits todos updates
       
       @parameters
-      - $checkbox(Pipelet): Checkbox element 
-      - options   (Object): optional object
+      - $checkbox (Pipelet): Checkbox element 
+      - options   (Object): optional, for output pipelet map()
     */
     .Compose( '$toggle_all', function( source, $checkbox, options ) {
       return $checkbox
         .$on( 'change' )
         
-        .fetch( source, { flow: 'todos' } )
-        
-        .map( function( _ ) {
-          var checked = _.source.$node.checked;
-          
-          return {
-            updates: _.values
-              .slice()
-              
-              .map( function( todo ) {
-                if( checked && todo.state == 1 ) {
-                  return [ todo, extend( {}, todo, { state: 2 } ) ];
-                } else if( !checked && todo.state == 2 ) {
-                  return [ todo, extend( {}, todo, { state: 1 } ) ];
-                }
-              } )
-              
-              .filter( function( v ) {
-                return !!v;
-              } )
-          }
+        .fetch( source, function( _ ) {
+          return [ { flow: 'todos', state: _.$node.checked ? 1 : 2 } ]
         } )
         
-        .emit_operations()
+        .map( function( fetched ) {
+          return { updates : fetched.values.map( update ) }
+          
+          function update( todo ) {
+            return [ todo, extend( {}, todo, { state: todo.state == 1 ? 2 : 1 } ) ]
+          }
+        }, options )
         
-        .optimize()
+        .emit_operations()
       ;
     } ) // $toggle_all()
     
