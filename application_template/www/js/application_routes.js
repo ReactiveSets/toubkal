@@ -76,8 +76,10 @@
         .set( [
             {
                 id: 'home'
-              , pipelet_name: '$homepage'
+              , pipelet_name: '$todo_list_page'
               , title: 'Home'
+              , tag: 'section'
+              , attributes: { class: 'todoapp' }
               , navigation: false
             },
             { 
@@ -86,11 +88,6 @@
               , title: 'ToDo list'
               , tag: 'section'
               , attributes: { class: 'todoapp' }
-            },
-            {
-                id: 'signin'
-              , pipelet_name: '$signin_page'
-              , title: 'Sign-In with Passport'
             }
           ].map( function( v, i ) {
             return extend( { flow: 'application_routes' }, v, { order: i } );
