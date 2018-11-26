@@ -47,9 +47,21 @@
       
       // ----------------------------------------------------------------------------
       // Page elements
-      var $elements = todos_group
-        .flat_map( function( _ ) {
-          var values = [
+      var footer = todos_group
+        .filter( [ { content: [ [ '.', 'length' ], '>', 0 ] } ] )
+        
+        .pick( {
+            id: 'todo-footer'
+          , tag: 'footer'
+          , attributes: { class: 'footer' }
+          , order: 3
+        } )
+        
+        .optimize()
+      ;
+      
+      var $elements = rs
+        .set( [
             {
                 id: 'todo-header'
               , tag: 'header'
@@ -63,25 +75,15 @@
               , attributes: { class: 'main' }
               , order: 2
             }
-          ];
-          
-          _.content.length && values.push( {
-              id: 'todo-footer'
-            , tag: 'footer'
-            , attributes: { class: 'footer' }
-            , order: 3
-          } );
-          
-          return values;
-        } )
+        ] )
+        
+        .union( [ footer ] )
         
         .order( [ { id: 'order' } ] )
         
         .$to_dom( $page )
         
         .set()
-        
-        .optimize()
       ;
       
       // ----------------------------------------------------------------------------
