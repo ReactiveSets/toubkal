@@ -365,14 +365,14 @@
         .$on( 'change' )
         
         .fetch( source, function( _ ) {
-          return [ { flow: 'todos', complete: parseInt( +!_.$node.checked ) } ]
+          return [ { flow: 'todos', complete: +!_.$node.checked } ]
         } )
         
         .map( function( fetched ) {
           return { updates : fetched.values.map( update ) }
           
           function update( todo ) {
-            return [ todo, extend( {}, todo, { complete: +fetched.source.$node.checked } ) ]
+            return [ todo, extend( {}, todo, { complete: todo.complete ^ 1 } ) ]
           }
         }, options )
         
