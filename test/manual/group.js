@@ -18,7 +18,7 @@ var cities = rs
 
 var cities_by_country = cities
   .group( by_country, {
-    initial_groups: [ { country: 'Germany' }, { country: 'England' } ],
+    sticky_groups: [ { country: 'Germany' }, { country: 'England' } ],
     name: 'cities_by_country'
   } )
 ;
