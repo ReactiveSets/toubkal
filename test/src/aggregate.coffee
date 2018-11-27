@@ -853,3 +853,135 @@ describe 'aggregate()', ->
         sales.sort by_author_year_sorter
         
         expect( sales ).to.be.eql expected
+  
+  describe 'aggregate population by state with sticky groups', ->
+    population = [ { id: "population" } ]
+    by_country = [ { id: 'country'    } ]
+    
+    # Population data from https://en.wikipedia.org/wiki/List_of_cities_proper_by_population
+    cities_polulation = rs.set( [
+      { country: "China"     , city: "Chongqing", population: 30165500 }
+      { country: "China"     , city: "Shanghai" , population: 24183300 }
+      { country: "China"     , city: "Beijing"  , population: 21707000 }
+      { country: "Turkey"    , city: "Istanbul" , population: 15029231 }
+      { country: "Pakistan"  , city: "Karachi"  , population: 14910352 }
+      { country: "Bangladesh", city: "Dhaka"    , population: 14399000 }
+      { country: "China"     , city: "Guangzhou", population: 13081000 }
+      { country: "China"     , city: "Shenzhen" , population: 12528300 }
+      { country: "India"     , city: "Mumbai"   , population: 12442373 }
+      { country: "Russia"    , city: "Moscow"   , population: 13200000 }
+      { country: "Brazil"    , city: "São Paulo", population: 12038000 }
+      { country: "DRC"       , city: "Kinshasa" , population: 11462000 }
+      { country: "China"     , city: "Tianjin"  , population: 11249000 }
+    ], { key: [ "country", "city" ] } )
+    
+    population_by_country = cities_polulation
+      
+      .aggregate( population, by_country, { sticky_groups: [ { country: "DRC" }, { country: "Indonesia" } ] } )
+      
+      .debug( de, 'population_by_country' ).greedy()
+    
+    it 'should provide aggregates with two sticky groups', ( done ) ->
+      population_by_country._fetch_all ( population ) -> check done, () ->
+        expect( population ).to.be.eql [
+          { country: "DRC"       , population:  11462000, _count: 1 }
+          { country: "Indonesia" , population:         0, _count: 0 }
+          { country: "China"     , population: 112914100, _count: 6 }
+          { country: "Turkey"    , population:  15029231, _count: 1 }
+          { country: "Pakistan"  , population:  14910352, _count: 1 }
+          { country: "Bangladesh", population:  14399000, _count: 1 }
+          { country: "India"     , population:  12442373, _count: 1 }
+          { country: "Russia"    , population:  13200000, _count: 1 }
+          { country: "Brazil"    , population:  12038000, _count: 1 }
+        ]
+    
+    it 'should update aggregates when adding Lahore (Pakistan), Delhi (India), and Jakarta (Indonesia)', ( done ) ->
+      cities_polulation._add [
+        { country: "Pakistan"  , city: "Lahore"   , population: 11126000 }
+        { country: "India"     , city: "Delhi"    , population: 11034555 }
+        { country: "Indonesia" , city: "Jakarta"  , population: 10624000 }
+      ]
+      
+      population_by_country._fetch_all ( population ) -> check done, () ->
+        expect( population ).to.be.eql [
+          { country: "DRC"       , population:  11462000, _count: 1 }
+          { country: "Indonesia" , population:  10624000, _count: 1 }
+          { country: "China"     , population: 112914100, _count: 6 }
+          { country: "Turkey"    , population:  15029231, _count: 1 }
+          { country: "Pakistan"  , population:  26036352, _count: 2 }
+          { country: "Bangladesh", population:  14399000, _count: 1 }
+          { country: "India"     , population:  23476928, _count: 2 }
+          { country: "Russia"    , population:  13200000, _count: 1 }
+          { country: "Brazil"    , population:  12038000, _count: 1 }
+        ]
+    
+    it 'should update aggregates when removing 3 cities, not-removing sticky_groups', ( done ) ->
+      cities_polulation._remove [
+        { country: "Russia"    , city: "Moscow"   , population: 13200000 }
+        { country: "Indonesia" , city: "Jakarta"  , population: 10624000 }
+        { country: "Pakistan"  , city: "Lahore"   , population: 11126000 }
+      ]
+      
+      population_by_country._fetch_all ( population ) -> check done, () ->
+        expect( population ).to.be.eql [
+          { country: "DRC"       , population:  11462000, _count: 1 }
+          { country: "Indonesia" , population:         0, _count: 0 }
+          { country: "China"     , population: 112914100, _count: 6 }
+          { country: "Turkey"    , population:  15029231, _count: 1 }
+          { country: "Pakistan"  , population:  14910352, _count: 1 }
+          { country: "Bangladesh", population:  14399000, _count: 1 }
+          { country: "India"     , population:  23476928, _count: 2 }
+          { country: "Brazil"    , population:  12038000, _count: 1 }
+        ]
+    
+    it 'should update aggregates on cities populations updates', ( done ) ->
+      cities_polulation._update [
+        [
+          { country: "Turkey"    , city: "Istanbul" , population: 15029231 }
+          { country: "Turkey"    , city: "Istanbul" , population: 15029231 + 1000 }
+        ]
+        [
+          { country: "Bangladesh", city: "Dhaka"    , population: 14399000 }
+          { country: "Bangladesh", city: "Dhaka"    , population: 14399000 - 1000 }
+        ]
+        [
+          { country: "China"     , city: "Tianjin"  , population: 11249000 }
+          { country: "China"     , city: "Tianjin"  , population: 11249000 - 325 }
+        ]
+      ]
+      
+      population_by_country._fetch_all ( population ) -> check done, () ->
+        expect( population ).to.be.eql [
+          { country: "DRC"       , population:  11462000, _count: 1 }
+          { country: "Indonesia" , population:         0, _count: 0 }
+          { country: "China"     , population: 112914100 - 325, _count: 6 }
+          { country: "Turkey"    , population:  15029231 + 1000, _count: 1 }
+          { country: "Pakistan"  , population:  14910352, _count: 1 }
+          { country: "Bangladesh", population:  14399000 - 1000, _count: 1 }
+          { country: "India"     , population:  23476928, _count: 2 }
+          { country: "Brazil"    , population:  12038000, _count: 1 }
+        ]
+    
+    it 'should remove all groups but sticky groups when removing remaining cities', ( done ) ->
+      cities_polulation._remove [
+        { country: "China"     , city: "Chongqing", population: 30165500 }
+        { country: "China"     , city: "Shanghai" , population: 24183300 }
+        { country: "China"     , city: "Beijing"  , population: 21707000 }
+        { country: "Turkey"    , city: "Istanbul" , population: 15029231 }
+        { country: "Pakistan"  , city: "Karachi"  , population: 14910352 }
+        { country: "Bangladesh", city: "Dhaka"    , population: 14399000 }
+        { country: "China"     , city: "Guangzhou", population: 13081000 }
+        { country: "China"     , city: "Shenzhen" , population: 12528300 }
+        { country: "India"     , city: "Mumbai"   , population: 12442373 }
+        { country: "Brazil"    , city: "São Paulo", population: 12038000 }
+        { country: "DRC"       , city: "Kinshasa" , population: 11462000 }
+        { country: "China"     , city: "Tianjin"  , population: 11249000 }
+        { country: "India"     , city: "Delhi"    , population: 11034555 }
+      ]
+      
+      population_by_country._fetch_all ( population ) -> check done, () ->
+        expect( population ).to.be.eql [
+          { country: "DRC"       , population:         0, _count: 0 }
+          { country: "Indonesia" , population:         0, _count: 0 }
+        ]
+  
