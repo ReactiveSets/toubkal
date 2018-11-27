@@ -40,15 +40,13 @@
       var states_counts = source
         .flow( 'todos' )
         
-        .aggregate( [ { id: 'complete' } ], [], { initial_groups: [ {} ] } )
+        .aggregate( [ { id: 'complete' } ], [], { sticky_groups: [ {} ] } )
         
         .alter( function( _ ) {
           _.remaining = _._count - _.complete
           
           _.flow = 'states-counts';
         } )
-        
-        .optimize()
       ;
       
       // ----------------------------------------------------------------------------
