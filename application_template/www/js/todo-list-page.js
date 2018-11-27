@@ -36,19 +36,25 @@
       var rs = source.namespace();
       
       // ----------------------------------------------------------------------------
-      // ToDos group: group all ToDos
-      var todos_group = source
+      // ToDos states count: 
+      var states_counts = source
         .flow( 'todos' )
         
-        .group( function() {
-          return { id: 'todos-group' }
-        }, { initial_groups: [ { id: 'todos-group' } ] } )
+        .aggregate( [ { id: 'complete' } ], [], { initial_groups: [ {} ] } )
+        
+        .alter( function( _ ) {
+          _.remaining = _._count - _.complete
+          
+          _.flow = 'states-counts';
+        } )
+        
+        .optimize()
       ;
       
       // ----------------------------------------------------------------------------
       // Page elements
-      var footer = todos_group
-        .filter( [ { content: [ [ '.', 'length' ], '>', 0 ] } ] )
+      var footer = states_counts
+        .filter( [ { _count: [ '>', 0 ] } ] )
         
         .pick( {
             id: 'todo-footer'
@@ -97,7 +103,7 @@
       // - ToDo list
       var update_todos = source
         
-        .union( [ todos_group ] )
+        .union( [ states_counts ] )
         
         .$todo_content( $elements.filter( [ { id: 'todo-content' } ] ) )
       ;
@@ -109,7 +115,7 @@
       // - clear completed ToDos
       var clear_completed = source
         
-        .union( [ todos_group ] )
+        .union( [ states_counts ] )
         
         .$todo_footer( $elements.filter( [ { id: 'todo-footer' } ] ) )
       ;
@@ -164,7 +170,7 @@
                   flow: 'todos'
                 , id: uuid_v4()
                 , text: value
-                , state: 1
+                , complete: 0
               }
             ;
           }
@@ -191,23 +197,29 @@
       // toogle all checked state
       var input = source
         
-        .filter( [ { id: 'todos-group' } ] )
+        .filter( [ { flow: 'states-counts', _count: [ '>', 0 ] } ] )
         
-        .map( function( _ ) {
-          var attributes = extend(
-            _.content.every( function( v ) { return v.state == 2 } ) ? { checked: true } : {},
-            { type: 'checkbox', class: 'toggle-all' }
-          );
+        .flat_map( function( _ ) {
+          var checked = _._count == _.complete ? { checked: true } : {};
           
-          return {
-              id: 'toggle-all'
-            , tag: 'input'
-            , attributes: attributes
-            , order: 1
-          }
+          return [
+            {
+                id: 'toggle-all'
+              , tag: 'input'
+              , attributes: extend( {}, checked, { type: 'checkbox', class: 'toggle-all' } )
+              , order: 1
+            },
+            {
+                id: 'toggle-all-label'
+              , tag: 'label'
+              , content: 'Mark all as complete'
+              , attributes: { for: 'toggle-all' }
+              , order: 2
+            }
+          ]
         } )
         
-        .set()
+        .optimize()
       ;
       
       // content items
@@ -215,13 +227,6 @@
         .namespace()
         
         .set( [
-          {
-              id: 'toggle-all-label'
-            , tag: 'label'
-            , content: 'Mark all as complete'
-            , attributes: { for: 'toggle-all' }
-            , order: 2
-          },
           {
               id: 'todo-list'
             , tag: 'ul'
@@ -232,13 +237,9 @@
         
         .union( [ input ] )
         
-        .optimize()
-        
         .order( [ { id: 'order' } ] )
         
         .$to_dom( $selector )
-        
-        //.trace( 'todo content' )
         
         .set()
       ;
@@ -300,10 +301,10 @@
       
       return source
         
-        .filter( [ { id: 'todos-group' } ] )
+        .flow( 'states-counts' )
         
         .flat_map( function( _ ) {
-          var l = _.content.filter( function( v ) { return v.state == 1 } ).length
+          var l = _.remaining
             , s = l != 1 ? 's' : ''
           ;
           
@@ -315,7 +316,7 @@
             , order: 0
           } ];
           
-          _.content.filter( function( v ) { return v.state == 2 } ).length && values.push( {
+          _.complete && values.push( {
               id: 'clear-completed'
             , tag: 'button'
             , content: 'Clear completed'
@@ -338,7 +339,7 @@
         
         .$on( 'click' )
         
-        .fetch( source, { flow: 'todos', state: 2 } )
+        .fetch( source, { flow: 'todos', complete: 1 } )
         
         .map( function( _ ) {
           return { removes: _.values }
@@ -366,14 +367,14 @@
         .$on( 'change' )
         
         .fetch( source, function( _ ) {
-          return [ { flow: 'todos', state: _.$node.checked ? 1 : 2 } ]
+          return [ { flow: 'todos', complete: parseInt( +!_.$node.checked ) } ]
         } )
         
         .map( function( fetched ) {
           return { updates : fetched.values.map( update ) }
           
           function update( todo ) {
-            return [ todo, extend( {}, todo, { state: todo.state == 1 ? 2 : 1 } ) ]
+            return [ todo, extend( {}, todo, { complete: +fetched.source.$node.checked } ) ]
           }
         }, options )
         
@@ -407,11 +408,11 @@
           
           switch( state ) {
             case 'active':
-              return { flow: 'todos', state: 1 };
+              return { flow: 'todos', complete: 0 };
             break;
             
             case 'completed':
-              return { flow: 'todos', state: 2 };
+              return { flow: 'todos', complete: 1 };
             break;
             
             case 'all':
@@ -450,8 +451,8 @@
           
           _.attributes = {
             class: 'todo' 
-              + ( _.state == 2 ? ' completed' : '' )
-              + ( _.editing    ? ' editing'   : '' )
+              + ( _.complete ? ' completed' : '' )
+              + ( _.editing  ? ' editing'   : '' )
           }
         } )
         
@@ -506,7 +507,7 @@
               , $node: $
               , attributes: extend(
                   { type: 'checkbox', class: 'toggle' },
-                  _.state == 2 ? { checked: true } : {}
+                  _.complete ? { checked: true } : {}
                 )
               , todo_id: id
             },
@@ -554,7 +555,7 @@
         .$on( 'change' )
         
         .alter( function( _ ) {
-          _.new_value = { state: _.$node.checked ? 2 : 1 }
+          _.new_value = { complete: +_.$node.checked }
         } )
       ;
       

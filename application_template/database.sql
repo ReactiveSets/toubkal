@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `template_database_name`.`todos` (
   `creator_id` BINARY(16) NULL DEFAULT NULL,
   `timestamp` VARCHAR(32) NULL DEFAULT NULL,
   `text` TEXT NULL DEFAULT NULL,
-  `state` INT(11) NULL DEFAULT NULL,
+  `complete` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_todos_creator_id` (`creator_id` ASC),
   CONSTRAINT `fk_todos_creator_id`

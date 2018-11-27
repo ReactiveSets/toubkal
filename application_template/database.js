@@ -60,7 +60,7 @@
       `creator_id` BINARY(16) NULL DEFAULT NULL,
       `timestamp` VARCHAR(32) NULL DEFAULT NULL,
       `content` TEXT NULL DEFAULT NULL,
-      `state` INT(11) NULL DEFAULT NULL,
+      `complete` INT(11) NULL DEFAULT NULL,
       PRIMARY KEY (`id`),
       INDEX `idx_todos_creator_id` (`creator_id` ASC),
       CONSTRAINT `fk_todos_creator_id`
@@ -132,7 +132,7 @@ module.exports = function( rs ) {
         { id: 'id'        , converter: 'uuid_b16' },
         { id: 'creator_id', converter: 'uuid_b16' },
         { id: 'timestamp' , converter: timestamp_converter },
-        'text', 'state'
+        'text', 'complete'
       ]
     }
   ] );
