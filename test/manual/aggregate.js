@@ -1,6 +1,6 @@
 var input = require( "toubkal" )
   
-  .aggregate( [], [], { initial_groups: [ {} ] } )
+  .aggregate( [], [], { sticky_groups: [ {} ] } )
 ;
 
 input.trace().greedy();
