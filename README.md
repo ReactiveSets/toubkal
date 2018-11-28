@@ -888,9 +888,6 @@ applications for clients.
   - cache(): Stateful and lazy pipelet
   - database_cache(): Cache for an entire database from schema
 
-- Application-level pipelets:
-  - application_loop(): Processes an application from a dataflow of components and input dataflows
-
 - Server pipelets:
   - require_pipeline(): Load, and auto-unload, a module exporting a Toubkal pipeline
   - path_relative(): Alter path using node path.relative()
@@ -927,7 +924,6 @@ documentation_markdown()            | Format documentation items into markdown
 parse_documentation()               | Emit documentation items from parsed "comments" attribute
 acorn()                             | Parse javascript "content" attribute using the acorn library
 process_variables()                 | Gets command line arguments, environment variables, and more
-application_loop()                  | Processes an application from a dataflow of components and input dataflows.
 database_cache()                    | Cache for an entire database from schema
 cache()                             | Stateful and lazy pipelet
 query_updates()                     | Emit query updates from pipelet
