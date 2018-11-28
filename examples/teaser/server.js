@@ -68,7 +68,7 @@ var sales = rs
   .configuration( { filepath: 'sales.json', flow: 'teaser/sales', base_directory: __dirname } ) // The sales dataflow 
   
   .alter( function( sale ) {
-    sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
+    sale.year = parseInt( sale.date.slice( 0, 4 ), 10 );
   } )
 ;
 

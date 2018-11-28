@@ -29,7 +29,7 @@ module.exports = function processor( source ) {
     .flow( 'teaser/sales' )
     
     .alter( function( sale ) {
-      sale.year = parseInt( sale.date.substr( 0, 4 ), 10 );
+      sale.year = parseInt( sale.date.slice( 0, 4 ), 10 );
     }, { name: 'alter teaser/sales_year' } )
     
     //.trace( 'teaser/sales_year' )

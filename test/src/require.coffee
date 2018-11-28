@@ -56,7 +56,7 @@ describe 'require_resolve():', ->
       path = uuid.path.replace( /\\/g, '/' )
       
       expect( name ).to.be.eql 'node-uuid/uuid.js'
-      expect( path.substr( path.length - name.length ) ).to.be.eql name
+      expect( path.slice( path.length - name.length ) ).to.be.eql name
       expect( uuid.uri ).to.be.eql '/node_modules/node-uuid/uuid.js'
   
   it 'should allow to remove a module', ( done ) ->
