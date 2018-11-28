@@ -58,7 +58,7 @@ module.exports = function( servers ) {
       
       function ignore_temporary_files( entry ) {
         return entry.extension.slice( -1 )  != '~'
-            && entry.base.substring( 0, 2 ) != '.#'
+            && entry.base.slice( 0, 2 ) != '.#'
         ;
       }
     } ) // directory_entries()

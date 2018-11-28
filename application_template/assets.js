@@ -51,7 +51,7 @@ module.exports = function( rs ) {
       
       function ignore( entry ) {
         return entry.extension.slice( -1 )  != '~' 
-            && entry.base.substring( 0, 1 ) != '.'
+            && entry.base.slice( 0, 1 ) != '.'
         ;
       }
     } )
