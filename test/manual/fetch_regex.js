@@ -6,9 +6,9 @@ var rs = require( 'toubkal' )
   
   , users = users_source
       .set( [
-        { id: 1, name: 'John Snape'   },
-        { id: 2, name: 'Natalie Lee' },
-        { id: 3, name: 'Jeremy De Souza'   },
+        { id: 1, name: 'John Snape'      },
+        { id: 2, name: 'Natalie Lee'     },
+        { id: 3, name: 'Jeremy De Souza' },
       ] )
       
       .pass_through()
@@ -25,14 +25,20 @@ var rs = require( 'toubkal' )
 ;
 
 users
-  //.optimize()
-  .trace( 'users' )
-  .greedy()
+  .optimize( { emit_transactions: true } )
+  
+  .emit_operations()
+  
+  .trace( 'optimized users', { transactional: true } )
+  
+  .greedy( { transactional: true } )
 ;
 
 source
   .fetch( users, function( v ) { return v.query } )
-  .trace( 'fetched' )
+  
+  //.trace( 'fetched' )
+  
   .greedy()
 ;
 
@@ -45,4 +51,4 @@ source._add( [ { id: 36, query: [ { id: [ '<=', 5 ], name: [ 'match', 'k', '||',
 users_source._add( [ { id: 4, name: 'Jack London' } ] )
 
 // authorizations._remove( [ { id: [ '<=<', 1, 5 ] } ] );
-authorizations._update( [ [ { id: [ '<=<', 1, 5 ] }, { id: [ 'in_set', '<<=', 1, 2, '<<=', 3, 5 ] } ] ] )
+// authorizations._update( [ [ { id: [ '<=<', 1, 5 ] }, { id: [ 'in_set', '<<=', 1, 2, '<<=', 3, 5 ] } ] ] )
