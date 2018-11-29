@@ -92,11 +92,10 @@ describe 'Controls Test Suite', ->
     it 'checkbox should be checked', ->
       expect( browser.query( '#charts input[type="checkbox"]' ).checked   ).to.be true
     
-    it 'after charts_source clear and add { id: false }, charts should be equal to { id: false } ', ( done ) ->
-      browser.window.charts_source._notify [
-        { action: 'clear' }
-        { action: 'add' , objects: [ { id: false } ] }
-      ]
+    it 'after charts_source remove and add { id: false }, charts should be equal to { id: false } ', ( done ) ->
+      browser.window.charts_source._remove [ { id: true } ]
+      
+      browser.window.charts_source._add [ { id: false } ]
       
       browser.window.charts._fetch_all ( values ) -> check done, ->
         expect( values ).to.be.eql [ { id: false } ]
