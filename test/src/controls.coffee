@@ -93,8 +93,7 @@ describe 'Controls Test Suite', ->
       expect( browser.query( '#charts input[type="checkbox"]' ).checked   ).to.be true
     
     it 'after charts_source remove and add { id: false }, charts should be equal to { id: false } ', ( done ) ->
-      browser.window.charts_source._remove [ { id: true } ]
-      
+      browser.window.charts_source._clear()
       browser.window.charts_source._add [ { id: false } ]
       
       browser.window.charts._fetch_all ( values ) -> check done, ->
@@ -104,7 +103,9 @@ describe 'Controls Test Suite', ->
       expect( browser.query( '#charts input[type="checkbox"]' ).checked ).to.be false
     
     it 'checkbox element should be disabled', ->
-      expect( browser.query( '#charts input[type="checkbox"]' ).disabled ).to.be true
+      input_checkbox_value = browser.query( '#charts input[type="checkbox"]' )
+      
+      expect( input_checkbox_value.disabled ).to.be true
     
     it 'checkbox label should be equal to "Charts"', ->
       expect( browser.query( '#charts label' ).innerHTML ).to.be 'Charts'
