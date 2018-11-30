@@ -472,10 +472,8 @@
               {
                   id: 'input-' + id
                 , tag: 'input'
-                , attributes: extend(
-                    _.editing ? { autofocus: true } : {},
-                    { class: 'edit', type: 'text', value: _.text }
-                  )
+                // extend( _.editing ? { autofocus: true } : {}, { class: 'edit', type: 'text', value: _.text } )
+                , attributes: { class: 'edit', type: 'text', value: _.text } 
               }
             ].map( function( v ) {
               return extend( {}, _, v );
@@ -486,6 +484,23 @@
         .$to_dom()
         
         .set()
+      ;
+      
+      // work-around to set focus on input in editing mode
+      $li_items
+        .filter( [ { tag: 'input', editing: true } ] )
+        
+        .adds()
+        
+        .alter( function( _ ) {
+          var $ = _.$node
+            , l = $.value.length
+          ;
+          
+          $.focus();
+          
+          $.setSelectionRange( l, l );
+        } )
       ;
       
       // ----------------------------------------------------------------------------
