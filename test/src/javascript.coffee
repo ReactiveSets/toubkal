@@ -37,6 +37,8 @@ else
   # under node
   javascript = require javascript
 
+array_n     = javascript.array_n
+
 class_of    = javascript.class_of
 is_class    = javascript.is_class
 
@@ -53,6 +55,18 @@ next_tick   = javascript.next_tick
 # ----------------------------------------------------------------------------------------------
 # javascript test suite
 # ---------------------
+
+describe 'javascript.array_n( 5 )', ->
+  a = array_n( 5 )
+  
+  it 'should return an Array', ->
+    expect( a ).to.be.an Array
+  
+  it 'when joined, it should return a string of 3 characters', ->
+    expect( a.join().length ).to.be 4
+  
+  it 'should be able to be initialized with map', ->
+    expect( a.map ( _, i ) -> i ).to.be.eql [ 0, 1, 2, 3, 4 ]
 
 describe 'javascript.class_of( value )', ->
   it 'should return "Undefined" with no value', ->
