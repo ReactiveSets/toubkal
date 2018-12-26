@@ -899,6 +899,7 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+handle_errors                       | Handles errors for asynchronous map transform
 fs_stat()                           | Gets file or directory stat information
 child_process_exec                  | Executes a command in a child process
 rename_properties                   | Renames properties
