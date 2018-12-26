@@ -40,6 +40,9 @@ fix_path = ( o ) ->
 
 require '../../lib/server/file.js'
 
+fs   = require 'fs'
+path = require 'path'
+
 de = false
 
 # ----------------------------------------------------------------------------------------------
@@ -48,48 +51,113 @@ de = false
 
 describe 'file', ->
   describe 'configuration():', ->
+    configuration = null
+    configuration_greedy = null
+    expected = [
+      {
+        flow: "configuration"
+        id: "nodemailer"
+        transport: "sendmail"
+        transport_options: {}
+      }
+      
+      {
+        flow: "configuration"
+        "id": "passport_strategy"
+        "strategies": [
+          {
+            "id": "twitter"
+            "credentials": {
+              "key": "***"
+              "secret": "---"
+            }
+          }
+          
+          {
+            "id": "facebook"
+            "credentials": {
+              "key": "***"
+              "secret": "---"
+            }
+          }
+        ]
+      }
+    ]
+    
+    filepath = '../fixtures/file/config.json'
+    
     it 'should read a confirugation file in fixtures/config.json', ( done ) ->
       configuration = rs
-      
+        
         .configuration( {
-          filepath      : '../fixtures/file/config.json'
+          filepath      : filepath
           base_directory: __dirname
+          debug         : 1
         } )
       
-      configuration._output.on 'complete', () ->
+      configuration_greedy = configuration.greedy()
+      
+      configuration_greedy._output.once 'complete', () ->
         receiver = ( values ) -> check done, () ->
-          expect( values ).to.be.eql [
-            {
-              flow: "configuration"
-              id: "nodemailer"
-              transport: "sendmail"
-              transport_options: {}
-            }
-            
-            {
-              flow: "configuration"
-              "id": "passport_strategy"
-              "strategies": [
-                {
-                  "id": "twitter"
-                  "credentials": {
-                    "key": "***"
-                    "secret": "---"
-                  }
-                }
-                
-                {
-                  "id": "facebook"
-                  "credentials": {
-                    "key": "***"
-                    "secret": "---"
-                  }
-                }
-              ]
-            }
-          ]
+          expect( values ).to.be.eql expected
         
         configuration._fetch_all receiver
+    
+    it 'should allow to add a value', ( done ) ->
+      configuration._add [ { id: "new value" } ]
+      
+      expected.push { flow: "configuration", id: "new value" }
+      
+      configuration_greedy._output.once 'complete', () ->
+        receiver = ( values ) -> check done, () ->
+          expect( values ).to.be.eql expected
+        
+        configuration._fetch_all receiver
+    
+    it 'should have modified configuration file', ( done ) ->
+      fs.readFile path.join( __dirname, filepath ), 'utf8', ( error, data ) ->
+        check done, () ->
+          expect( error ).to.be null
+          
+          expect( JSON.parse( data ) ).to.be.eql expected
+    
+    it 'should allow to update added value', ( done ) ->
+      configuration._update [ [ { id: "new value" }, { id: "new value", test: 1 } ] ]
+      
+      expected[ expected.length - 1 ] = { flow: "configuration", id: "new value", test: 1 }
+      
+      configuration_greedy._output.once 'complete', () ->
+        receiver = ( values ) -> check done, () ->
+          expect( values ).to.be.eql expected
+        
+        configuration._fetch_all receiver
+    
+    it 'should have modified configuration file', ( done ) ->
+      fs.readFile path.join( __dirname, filepath ), 'utf8', ( error, data ) ->
+        check done, () ->
+          expect( error ).to.be null
+          
+          expect( JSON.parse( data ) ).to.be.eql expected
+    
+    it 'should allow to remove added value', ( done ) ->
+      configuration._remove [ { id: "new value" } ]
+      
+      expected.pop()
+      
+      test = () ->
+        receiver = ( values ) -> check done, () ->
+          expect( values ).to.be.eql expected
+        
+        configuration._fetch_all receiver
+      
+      setTimeout( test, 100 )
+    
+    it 'should have modified configuration file', ( done ) ->
+      fs.readFile path.join( __dirname, filepath ), 'utf8', ( error, data ) ->
+        check done, () ->
+          expect( error ).to.be null
+          
+          expect( JSON.parse( data ) ).to.be.eql expected
   
   describe 'watch_directories():', ->
     directories_source = rs

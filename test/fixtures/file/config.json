@@ -1,12 +1,12 @@
 [
   {
+    "flow": "configuration",
     "id": "nodemailer",
     "transport": "sendmail",
-    "transport_options": {
-    }
+    "transport_options": {}
   },
-  
   {
+    "flow": "configuration",
     "id": "passport_strategy",
     "strategies": [
       {
@@ -16,7 +16,6 @@
           "secret": "---"
         }
       },
-      
       {
         "id": "facebook",
         "credentials": {

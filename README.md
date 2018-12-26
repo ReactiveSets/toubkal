@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1942 Continuous Integration Tests*
+*1948 Continuous Integration Tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -126,7 +126,7 @@ Then point a web browser at [localhost on port 8082](http://localhost:8082/).
 
 ## Automated Tests, Continuous Integration
 
-We have curently developped 1942 continuous integration tests for the Toubkal
+We have curently developped 1948 continuous integration tests for the Toubkal
 core and library pipelets that run after every commit on Travis CI under
 node version 8.12.0 LTS.
 
@@ -154,7 +154,7 @@ We also do manual testing on the following web browsers:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1942 of 1942 tests
+-> passed 1948 of 1948 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -627,10 +627,8 @@ applications for clients.
 - Rewrite and complete lib/server/file.js pipelets
   - fs_watch()
   - fs_lstat()
-  - fs_read_file()
   - fs_read_link()
   - fs_read_directory()
-  - fs_write_file()
   - fs_append_file()
   - fs_chmod()
   - fs_chown()
@@ -641,13 +639,12 @@ applications for clients.
   - fs_symlink()
   - fs_unlink()
   - fs_rename()
-  - configuration() write
   - watch() and watch_directories() should be composed from redesigned
   pipelets.
 
 #### Work in progress
 
-- 1942 Continuous Integration tests
+- 1948 Continuous Integration tests
   - Exceeded goal which was at least 1750 continuous integration tests
 
 - Error routing, eventual consistency
@@ -664,6 +661,12 @@ applications for clients.
   - Documatation available as a single page
 
 #### Completed Work (versions 0.3.x, x > 0)
+
+- file system pipelets:
+  - fs_stat()
+  - fs_read_file()
+  - fs_write_file()
+  - configuration() write
 
 - Pipelets alter() amd map() now allow assynchronous cancelable transforms
   using functions cancelable_map() and cancelable_limiter(). This form
@@ -899,10 +902,12 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
-handle_errors                       | Handles errors for asynchronous map transform
+fs_read_file()                      | Reads file into content property
+fs_write_file()                     | Writes file content property into file
+handle_errors()                     | Handles errors for asynchronous map transform
 fs_stat()                           | Gets file or directory stat information
-child_process_exec                  | Executes a command in a child process
-rename_properties                   | Renames properties
+child_process_exec()                | Executes a command in a child process
+rename_properties()                 | Renames properties
 store()                             | Store operations history
 json_hide()                         | Hide attribute values in downstream pipelets using JSON.stringify()
 debug()                             | Conditional trace()
