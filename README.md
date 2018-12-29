@@ -662,10 +662,12 @@ applications for clients.
 
 #### Completed Work (versions 0.3.x, x > 0)
 
-- file system pipelets:
+- new file system pipelets and improvements:
   - fs_stat()
   - fs_read_file()
   - fs_write_file()
+  - directory_entries()
+  - all_directory_entries()
   - configuration() write
 
 - Pipelets alter() amd map() now allow assynchronous cancelable transforms
@@ -902,6 +904,8 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+directory_entries()                 | @@multiton directories watcher from base directory
+all_directory_entries()             | @@multiton all sub-directories watcher from base directory
 fs_read_file()                      | Reads file into content property
 fs_write_file()                     | Writes file content property into file
 handle_errors()                     | Handles errors for asynchronous map transform
