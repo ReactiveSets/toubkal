@@ -1,0 +1,18 @@
+[
+  {
+    id: "lib/template_application_name-min.js",
+    
+    base_directory: [ "js" ],
+    
+    files: [
+      'route.js',
+      'application_routes.js',
+      'common-widgets.js',
+      'navigation.js',
+      'homepage.js',
+      'signin-page.js',
+      'todo-list-page.js',
+      'main.js'
+    ]
+  }
+]
