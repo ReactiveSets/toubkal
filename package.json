@@ -9,7 +9,8 @@
     "documentation",
     "bin",
     "examples",
-    "site"
+    "site",
+    "application_template"
   ],
   "directories": {
     "lib": "lib",
