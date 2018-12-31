@@ -22,6 +22,7 @@
       { "module": "mailer", "dependencies": [ "nodemailer" ] },
       "passport",
       "express",
+      "client_assets",
       "thumbnails",
       "json_hide"
     ]
