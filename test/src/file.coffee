@@ -364,21 +364,21 @@ describe 'file', ->
         from_empty_directory_path._fetch_all ( values ) -> check done, () ->
           expect( values.map( get_entry_static_attributes ).sort entry_sorter ).to.be.eql [
             {
-              "path": "./css"
+              "path": "css"
               "type": "directory"
               "extension": ""
               "depth": 1
             }
             
             {
-              "path": "./html"
+              "path": "html"
               "type": "directory"
               "extension": ""
               "depth": 1
             }
             
             {
-              "path": "./lib"
+              "path": "lib"
               "type": "directory"
               "extension": ""
               "depth": 1
