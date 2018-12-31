@@ -1,6 +1,6 @@
 {
   "name": "toubkal",
-  "version": "0.3.18",
+  "version": "0.3.19",
   "description": "Fully reactive programming for nodejs and the browser",
   "main": "lib/server.js",
   "files": [
