@@ -904,6 +904,8 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+build_bundles()                     | Provides minified bundles from base/bundles.json configuration
+www_files()                         | Provide all public static assets for web clients
 directory_entries()                 | @@multiton directories watcher from base directory
 all_directory_entries()             | @@multiton all sub-directories watcher from base directory
 fs_read_file()                      | Reads file into content property
