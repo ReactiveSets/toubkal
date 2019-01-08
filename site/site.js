@@ -33,8 +33,6 @@ module.exports = function( servers ) {
     , ug            = log
     , modules_files = require( 'toubkal/lib/modules_files' ).modules_files()
     , assets        = require( 'toubkal/lib/server/client_assets.js' )
-    , toubkal_min   = assets.toubkal_min() // js/toubkal-min.js
-    , react_js      = assets.react.watch()
     , scope         = {}
   ;
   
@@ -86,20 +84,17 @@ module.exports = function( servers ) {
   servers.set_namespace( rs ); // set namespace to servers' child namespace
   
   // Listen when lib/toubkal-min.js is ready
-  servers.http_listen( toubkal_min );
+  servers.http_listen( rs.toubkal_min() );
   
   /* ------------------------------------------------------------------------------------
-     Watch all directories from here
+     Load and Serve Static Assets
   */
   rs
     .www_files( __dirname )
     
-    /* ------------------------------------------------------------------------------------
-       Load and Serve Static Assets
-    */
     .set_output( 'assets', scope )
     
-    .union( [ toubkal_min, rs.source_map_support_min(), react_js ] )
+    .union( [ rs.toubkal_min(), rs.source_map_support_min() ] )
     
     // Serve assets to http servers
     .serve( servers )
@@ -160,6 +155,7 @@ module.exports = function( servers ) {
   ;
   
   rs.output( 'assets', scope )
+    
     .filter( [
       { extension: 'html' },
       { extension: 'css'  },
