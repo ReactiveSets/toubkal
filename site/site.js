@@ -92,27 +92,12 @@ module.exports = function( servers ) {
      Watch all directories from here
   */
   rs
-    .all_directory_entries( __dirname )
-    
-    .filter( function( entry ) {
-      return entry.extension.slice( -1 )  != '~'
-          && entry.base.slice( 0, 2 ) != '.#'
-      ;
-    } )
+    .www_files( __dirname )
     
     /* ------------------------------------------------------------------------------------
        Load and Serve Static Assets
     */
     .set_output( 'assets', scope )
-    
-    .filter( [
-      { extension: 'html' },
-      { extension: 'css'  },
-      { extension: 'js'   },
-      { extension: 'json' }
-    ] )
-    
-    .watch( { base_directory: __dirname } )
     
     .union( [ toubkal_min, rs.source_map_support_min(), react_js ] )
     
