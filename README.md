@@ -904,6 +904,7 @@ applications for clients.
 
 New Pipelets or method              | Short Description
 ------------------------------------|--------------------------------------------------------------
+ssh_exec()                          | Executes ssh commands using pipelet child_process_exec()
 build_bundles()                     | Provides minified bundles from base/bundles.json configuration
 www_files()                         | Provide all public static assets for web clients
 directory_entries()                 | @@multiton directories watcher from base directory
