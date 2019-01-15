@@ -25,6 +25,7 @@
 
 # utils
 require './javascript'
+require './escape'
 require './clone'
 require './value_equals'
 require './object_diff'
