@@ -42,4 +42,4 @@ describe 'escape():', ->
     expect( () -> escape( '' )( {} ) ).to.throwException()
   
   it 'should escape a string', ->
-    expect( escape( '"' )( 'this is a "string to quote"' ) ).to.be.eql 'this is a \\"string to quote\\"'
+    expect( escape( '"' )( 'this is \\ a "string to quote"' ) ).to.be.eql 'this is \\\\ a \\"string to quote\\"'
