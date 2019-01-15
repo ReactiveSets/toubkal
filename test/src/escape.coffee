@@ -43,3 +43,10 @@ describe 'escape():', ->
   
   it 'should escape a string', ->
     expect( escape( '"' )( 'this is \\ a "string to quote"' ) ).to.be.eql 'this is \\\\ a \\"string to quote\\"'
+  
+  it 'should escape a single quoted bash string', ->
+    expect( escape( "'", "'\"'\"'" )(
+      "this is a 'single-quoted string to quote' with a backslash \\ to not escape"
+    ) ).to.be.eql(
+      "this is a '\"'\"'single-quoted string to quote'\"'\"' with a backslash \\ to not escape"
+    )
