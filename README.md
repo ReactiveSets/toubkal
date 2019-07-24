@@ -114,7 +114,7 @@ server pipelets:
 - **[acorn()](https://toubkal.reactane.com/#pipelet_acorn)**: parse javascript using the acorn library
 - **[parse_documentation()](https://toubkal.reactane.com/#pipelet_parse_documentation)**: emit documentation items from parsed comments
 - **[documentation_markdown()](https://toubkal.reactane.com/#pipelet_documentation_markdown)**: format documentation items into markdown
-- **[markdown()](https://toubkal.reactane.com/#pipelet_markdown)**: markdown to html converter using "remarkable" and "highlight.js"
+- **[markdown()](https://toubkal.reactane.com/#pipelet_markdown)**: markdown to html converter using "markdown-it" and "highlight.js"
 - **[documentation_manuals()](https://toubkal.reactane.com/#pipelet_documentation_manuals)**: Toubkal documentation manuals metadata (not content)
 
 To work on the documentation on a local machine, run the documatation site:
@@ -931,7 +931,7 @@ emit_operations()                   | Emits remove, update, and add operations i
 modules_files()                     | Singleton dataflow of toubkal modules' files from toubkal/lib/modules.json
 piexif_insert()                     | Inserts EXIF into content, using the piexif library
 piexif_parse()                      | Parses content EXIF using the piexif library
-markdown()                          | Markdown to html converter using "remarkable" and "highlight.js"
+markdown()                          | Markdown to html converter using "markdown-it" and "highlight.js"
 documentation_manuals()             | Toubkal documentation manuals metadata (not content)
 documentation_markdown()            | Format documentation items into markdown
 parse_documentation()               | Emit documentation items from parsed "comments" attribute

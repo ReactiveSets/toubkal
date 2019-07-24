@@ -1,6 +1,6 @@
 {
   "name": "toubkal",
-  "version": "0.3.19",
+  "version": "0.3.20",
   "description": "Fully reactive programming for nodejs and the browser",
   "main": "lib/server.js",
   "files": [
@@ -36,7 +36,7 @@
     "nodemailer2": "2.7.1",
     "passport": "0.3.2",
     "piexifjs": "1.0.3",
-    "remarkable": "1.7.1",
+    "markdown-it": "9.0.1",
     "socket.io": "2.1.1",
     "socket.io-client": "2.1.1",
     "source-map": "0.5.6",
