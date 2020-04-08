@@ -60,8 +60,6 @@
     "zombie": "6.1.4"
   },
   "scripts": {
-    "preinstall": "node ./node_modules_self_reference.js remove",
-    "postinstall": "node ./node_modules_self_reference.js add",
     "test": "sh test/bin/tests.sh"
   },
   "testling": {
