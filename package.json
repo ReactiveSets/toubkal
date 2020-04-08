@@ -1,10 +1,9 @@
 {
   "name": "toubkal",
-  "version": "0.3.20",
+  "version": "0.3.21",
   "description": "Fully reactive programming for nodejs and the browser",
   "main": "lib/server.js",
   "files": [
-    "node_modules_self_reference.js",
     "lib",
     "documentation",
     "bin",
@@ -30,21 +29,22 @@
     "express-session": "1.15.6",
     "highlight.js": "9.12.0",
     "htmlparser2": "3.9.2",
+    "markdown-it": "^9.0.1",
     "mime": "1.4.1",
-    "node-uuid": "1.4.8",
+    "node-uuid": "^1.4.8",
     "nodemailer-sendmail-transport": "1.0.2",
     "nodemailer2": "2.7.1",
     "passport": "0.3.2",
     "piexifjs": "1.0.3",
-    "markdown-it": "9.0.1",
     "socket.io": "2.1.1",
     "socket.io-client": "2.1.1",
     "source-map": "0.5.6",
     "uglify-js": "3.0.17",
-    "undefine": "latest",
+    "undefine": "^0.2.14",
     "url-pattern": "1.0.3"
   },
   "devDependencies": {
+    "toubkal": "file:.",
     "coffee-script": "1.12.6",
     "expect.js": "0.3.1",
     "express": "4.16.4",
@@ -60,8 +60,6 @@
     "zombie": "6.1.4"
   },
   "scripts": {
-    "preinstall": "node ./node_modules_self_reference.js remove",
-    "postinstall": "node ./node_modules_self_reference.js add",
     "test": "sh test/bin/tests.sh"
   },
   "testling": {
