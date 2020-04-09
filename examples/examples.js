@@ -49,27 +49,9 @@ module.exports = function( servers ) {
      Watch all directories from here
   */
   rs
-    .Singleton( 'directory_entries', function( source, options ) {
-      return source
-        .watch_directories( extend._2( { base_directory: __dirname } ) )
-        
-        .filter( ignore_temporary_files )
-      ;
-      
-      function ignore_temporary_files( entry ) {
-        return entry.extension.slice( -1 )  != '~'
-            && entry.base.slice( 0, 2 ) != '.#'
-        ;
-      }
-    } ) // directory_entries()
-    
     .set( [ { path: '' } ] )
     
-    .directory_entries()
-    
-    .filter( [ { type: 'directory' } ] )
-    
-    .directory_entries()
+    .all_directory_entries( __dirname )
     
     /* ------------------------------------------------------------------------------------
        Load and Serve Static Assets
@@ -95,7 +77,7 @@ module.exports = function( servers ) {
   var client = {};
   
   var client_module = rs
-    .directory_entries()
+    .all_directory_entries( __dirname )
     .filter( [ { base: 'client.js', depth: 1 } ] )
     .path_join( __dirname )
     .alter( function( _ ) { _.client = client } )
@@ -110,7 +92,7 @@ module.exports = function( servers ) {
      The database, made of all found json files
   */
   rs
-    .directory_entries()
+    .all_directory_entries( __dirname )
     
     .filter( [ { extension: 'json' } ] )
     
@@ -204,7 +186,7 @@ module.exports = function( servers ) {
   
   // Require examples' data processors
   rs
-    .directory_entries()
+    .all_directory_entries( __dirname )
     
     .filter( [
       { base: 'data.js', depth: 2 },
