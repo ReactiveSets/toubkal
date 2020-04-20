@@ -658,9 +658,14 @@ applications for clients.
   - using not_exists() to test appropriate existance on adds, removes and updates.
 
 - Toubkal site, featuring documentation and examples
-  - Documatation available as a single page
+  - Documentation available as a single page
 
 #### Completed Work (versions 0.3.x, x > 0)
+
+- Pipelet api to ease integration with other libraries, e.g. front-end
+  libraries and native applications. It exposes a stable API providing
+  methods add(), remove(), update(), fetch(), update_subscriptions(),
+  and on().
 
 - new file system pipelets and improvements:
   - fs_stat()
