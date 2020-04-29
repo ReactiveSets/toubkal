@@ -60,7 +60,7 @@ var session_options = require( './passport.js' )( http_servers );
 */
 
 // lib/toubkal-min.js
-var toubkal_min = client_assets.toubkal_min()
+var toubkal_min = rs.toubkal_min()
   , map_support = rs.source_map_support_min()
 ;
 
