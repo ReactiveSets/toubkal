@@ -4,7 +4,7 @@
     
     ----
     
-    Copyright (c) 2013-2017, Reactive Sets
+    Copyright (c) 2013-2020, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -26,8 +26,6 @@ var rs      = require( 'toubkal' )
   , log     = RS.log
   , extend  = RS.extend
 ;
-
-var client_assets = require( 'toubkal/lib/server/client_assets.js' );
 
 /* -------------------------------------------------------------------------------------------
    de&&ug()
@@ -59,12 +57,12 @@ var session_options = require( './passport.js' )( http_servers );
    Load and Serve Assets
 */
 
-// lib/toubkal-min.js
-var toubkal_min = rs.toubkal_min()
+// /lib/toubkal-socket_io-ui-bootstrap-min.js
+var toubkal_min = rs.toubkal_min( { socket_io: true, ui: true, bootstrap: true } )
   , map_support = rs.source_map_support_min()
 ;
 
-// Listen when lib/toubkal-min.js is ready
+// Listen when /lib/toubkal-socket_io-ui-bootstrap-min.js is ready
 http_servers.http_listen( toubkal_min );
 
 var mocha_css = rs

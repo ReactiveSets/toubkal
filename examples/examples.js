@@ -31,9 +31,7 @@ module.exports = function( servers ) {
     , log                = RS.log.bind( null, 'examples' )
     , de                 = true
     , ug                 = log
-    , assets             = require( 'toubkal/lib/server/client_assets.js' )
-    , toubkal_min        = rs.toubkal_min()
-    , react_js           = assets.react.watch()
+    , toubkal_min        = rs.toubkal_min( { socket_io: true, ui: true, react: true } ) // /lib/toubkal-socket_io-ui-react-min.js
     , source_map_support = rs.source_map_support_min()
     , scope              = {}
   ;
@@ -67,7 +65,7 @@ module.exports = function( servers ) {
     
     .watch( { base_directory: __dirname } )
     
-    .union( [ toubkal_min, source_map_support, react_js ] )
+    .union( [ toubkal_min, source_map_support ] )
     
     // Serve assets to http servers
     .serve( servers )

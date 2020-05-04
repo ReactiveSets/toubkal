@@ -2,7 +2,7 @@
 
     The MIT License (MIT)
     
-    Copyright (c) 2013-2018, Reactane
+    Copyright (c) 2013-2020, Reactane
     
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@ module.exports = function( servers ) {
     , de            = true
     , ug            = log
     , modules_files = require( 'toubkal/lib/modules_files' ).modules_files()
-    , assets        = require( 'toubkal/lib/server/client_assets.js' )
     , scope         = {}
   ;
   
@@ -44,7 +43,7 @@ module.exports = function( servers ) {
     
     .require_resolve()
     
-    .union( [ assets.toubkal ] )
+    .union( [ rs.toubkal_assets() ] )
     
     .pick( [ 'path' ] )
     
@@ -83,8 +82,10 @@ module.exports = function( servers ) {
   // so we can set its namespace
   servers.set_namespace( rs ); // set namespace to servers' child namespace
   
-  // Listen when lib/toubkal-min.js is ready
-  servers.http_listen( rs.toubkal_min() );
+  var toubkal_min = rs.toubkal_min( { name: 'documentation', socket_io: true, ui: true } ); // lib/toubkal-socket_io-ui-min.js
+  
+  // Listen when lib/toubkal-socket_io-ui-min.js is ready
+  servers.http_listen( toubkal_min );
   
   /* ------------------------------------------------------------------------------------
      Load and Serve Static Assets
@@ -94,7 +95,7 @@ module.exports = function( servers ) {
     
     .set_output( 'assets', scope )
     
-    .union( [ rs.toubkal_min(), rs.source_map_support_min() ] )
+    .union( [ toubkal_min, rs.source_map_support_min() ] )
     
     // Serve assets to http servers
     .serve( servers )
@@ -274,7 +275,7 @@ module.exports = function( servers ) {
       } // hijack()
     } ) // data_processor() pipelet
   ;
-    
+  
   rs
     .dispatch( rs.output( 'data_processors', scope ), pipeline, { loop: true } )
   ;
