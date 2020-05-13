@@ -655,10 +655,10 @@
 /* ----------------------------------------------------------------------------
     @term namespace
     
-    @short:
-    A repository of @@pipelets, @@singletons, @@multitons, and @@outputs names
+    @short A repository of @@pipelet\s, @@singleton\s, @@multiton\s, and
+    @@reference names
     
-    @description:
+    @description
     
     A namespace such as @@namespace:rs, the root namespace, allows to start
     a @@(pipeline).
@@ -677,6 +677,28 @@
     
     To debug issues with namespaces use
     @@method:Pipelet..log_namespace( name ).
+    
+    @see_also
+    - @@scope
+    - @@method:Pipelet..namespace()
+    - @@method:Pipelet..create_namespace()
+    - @@method:Pipelet..is_namespace()
+    - @@method:Pipelet..log_namespace()
+    - @@method:Pipelet..set_namespace()
+    - @@method:Pipelet..set_reference()
+    - @@method:Pipelet..reference()
+*/
+
+/* ----------------------------------------------------------------------------
+    @term reference
+    
+    @short A pointer to a pipelet instance
+    
+    @see_also
+    - @@namespace
+    - @@scope
+    - @@method:Pipelet..set_reference()
+    - @@method:Pipelet..reference()
 */
 
 /* ----------------------------------------------------------------------------
@@ -1104,19 +1126,47 @@
 /* --------------------------------------------------------------------------
     @term singleton
     
-    @short A @@pipelet which can have one instance at most
+    @short A @@pipelet which can have one instance at most per instance
+    @scope
+    
+    @see_also
+    - Method Pipelet..Singleton()
+    - Method Pipelet..Compose()
 */
 
 /* --------------------------------------------------------------------------
     @term multiton
     
     @short A @@pipelet which number of instances depends on its parameters
+    and instance @scope
+    
+    @see_also
+    - Method Pipelet..Multiton()
+    - Method Pipelet..Compose()
+*/
+
+/* --------------------------------------------------------------------------
+    @term scope
+    
+    @short Object of a @@namespace that stores @@singleton and @@multiton
+    instances.
+    
+    @see_also
+    - @@method:Pipelet..namespace()
+    - @@method:Pipelet..Singleton()
+    - @@method:Pipelet..Multiton()
+    - @@method:Pipelet..Compose()
+    - @@reference
 */
 
 /* --------------------------------------------------------------------------
     @term key
     
     @short Attributes which concatenated values are unique for a @@dataflow
+    
+    @see_also
+    - @@identity
+    - @@class:Pipelet()
 */
 
 /* --------------------------------------------------------------------------
