@@ -189,7 +189,8 @@ module.exports = function( servers ) {
   
   // Serve database to socket.io clients
   rs
-    .Singleton( 'database', function( source, tables, options ) {
+    // ToDo: use toubkal database() pipelet
+    .Singleton( 'site_database', function( source, tables, options ) {
       return source
         .dispatch( tables, function( source, options ) {
           var flow = this.name;
@@ -208,7 +209,7 @@ module.exports = function( servers ) {
     
     .log_namespace( 'after singleton' )
     
-    .database( rs.output( 'tables', scope ) )
+    .site_database( rs.output( 'tables', scope ) )
     
     .clients()
   ;
