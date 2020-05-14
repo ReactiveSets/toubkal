@@ -66,7 +66,7 @@ rs
   } ) // define schemas()
   
   // Define in-memory database
-  .Singleton( 'database', function( source, schemas, options ) {
+  .Singleton( 'sets_database', function( source, schemas, options ) {
     return source
       .dispatch( schemas, function( source, options ) {
         var flow = this.id;
@@ -80,9 +80,9 @@ rs
         ;
       } )
     ;
-  } ) // define database()
+  } ) // define sets_database()
   
-  .database( rs.schemas() )
+  .sets_database( rs.schemas() )
   
   .flow( 'user_profile' )
   
@@ -111,7 +111,7 @@ rs
   
   .flow( 'user_profile' ) // filters-out non-user_profile query updates
   
-  .database()
+  .sets_database()
 ;
 
 var login_menu = rs

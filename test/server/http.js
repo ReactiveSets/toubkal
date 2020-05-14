@@ -284,7 +284,7 @@ var sessions = rs
   //.trace( 'after passport_user_sessions', { all: true } )
 ;
 
-rs.union( [ source_set, source_1, sessions, rs.database() ] )
+rs.union( [ source_set, source_1, sessions, rs.sets_database() ] )
   
   //.trace( 'to socket.io clients', { all: true } ) // acts as the dispatcher (no_encapsulate: true)
   
