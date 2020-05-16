@@ -51,7 +51,7 @@ var http_servers = rs
 ;
 
 // Passport Application is described in ./passport.js
-var session_options = require( './passport.js' )( http_servers );
+require( './passport.js' )( http_servers );
 
 /* -------------------------------------------------------------------------------------------
    Load and Serve Assets
@@ -185,18 +185,25 @@ rs.union( [ mocha_expect ] )
   .serve( http_servers, { routes: '/node_modules' } )
 ;
 
-// The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
-// of self-unions of pipelets. The prefered form is remains using an explicit Union.
-// rs.union( [ toubkal_core_min, toubkal_ui_min, toubkal_min ] )
-rs.serve( http_servers, { routes: [ '/lib', '/node_modules' ], session_options: session_options } )
-  ._input
-  .insert_source_union()     // adding a union as the source of rs.serve() input, for testing purposes
-  ._add_source( map_support )
-  ._add_source( toubkal_min )
-;
-
-// Socket.io Server tests
-var clients = http_servers.socket_io_clients( { remove_timeout: 10, session_options: session_options } );
+var clients = http_servers.dispatch( rs.express_application(), function( source, options ) {
+  var session_options = this.session_options;
+  
+  if ( ! session_options ) throw 'need session_options';
+  
+  // The following union is replaced by the series of _add_source() calls after serve() only for testing purposes
+  // of self-unions of pipelets. The prefered form is remains using an explicit Union.
+  // rs.union( [ toubkal_core_min, toubkal_ui_min, toubkal_min ] )
+  rs.serve( source, { routes: [ '/lib', '/node_modules' ], session_options: session_options } )
+    ._input
+    .insert_source_union()     // adding a union as the source of rs.serve() input, for testing purposes
+    ._add_source( map_support )
+    ._add_source( toubkal_min )
+  ;
+  
+  // Socket.io Server tests
+  return source
+    .socket_io_clients( { remove_timeout: 10, session_options: session_options } );
+} );
 
 // ToDo: add authorizations test
 function client( source, options ) {
