@@ -27,6 +27,14 @@ rs
   
   .update_fetched()
   
+  .optimize( { emit_transactions: 1 } )
+  
+  .alter( function( transaction ) {
+    transaction.id = 1
+  } )
+  
+  .emit_operations()
+  
   .test_database()
   
   .trace( 'database' )
