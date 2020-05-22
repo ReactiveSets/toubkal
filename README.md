@@ -562,54 +562,30 @@ A reactive MySQL driver for Toubkal is available at
 
 ## Roadmap and Release Notes
 
-Current work in progress is for version 0.4
-
-### Version 1.0 - Finalize core, packaging, and framework
-
-#### Main Goals
-
-- Core
-  - Develop additional tests, goal is at least 3000 continuous integration tests
-  - Implement as many ToDo as possible
-  - Super-state and versioning
-    - define attribute _v for versions, allowing to manage complete anti-state and super-state
-    - super-state will contain versions of an object added after a first version is already in the state
-      - allow complete desorder between multiple adds and revmove on the same object defined by its id
-  - Versionned persistance
-    - Dataflows Meta Data for key, and query indexes definition
-    - Operations log
-    - Query cache
-
-- Packaging
-  - toubkal package manager
-  - split this repository into toubkal (core), toubkal_server, toubkal_client, toubkal_socket_io, toubkal_bootstrap, ...
-  - automatic pipelet patching
-
-- Framework
-  - Social login client pipelet
-  - Notifications
-  - PWA
-  - Client SPA navigation / routing pipelet
-  - Navigation pipelets
-  - Internationalization
-  - Session Strorage Dataflow
-  - Refactor Web Server API to better integreate with Express
-    - Bug with routing algorythm for / route
-    - Fix updates
-  - Finalize server-side rendering
-    - using html_parse() to insert elements into a DOM tree
-    - using html_serialize() to rebuild modified html to server
-    - using $query_selector() to select into htmlparse2 tree
-    - using $to_dom() to modify htmlparse2 tree (not implemented)
+Current work in progress is for version 0.4. Expected release date is
+December 12th 2020.
 
 ### Version 0.4.0 - Transactional Operations / Complex Expressions / DOM Handling / Documentation
 
 Work In Progress.
 
-We are almost done with this major release which we currently use in production
-applications for clients.
+This release is a major stabilization and framework release using the
+technics we have learned using toubkal in production for serveral years
+now. We are therefore developing pipelets representing best toubkal
+practices for building fully reactive applications.
 
 #### Main goals remaining
+
+- Authorizations, validationm error routing, eventual consistency
+  - Schema-based authorizations and validation
+  - Write authorizations and validation at the transactional level
+  - Adding sender to transaction to route errors back to sender
+  - Eventual consistency:
+    - Revert writes on transaction errors
+    - Acknowlege successful transactions completion to sender
+
+- Integration with third-party client libraries for both native apps and
+  view.js through a toubkal client API.
 
 - Complete Safe Complex Query expressions
   - Complex query to SQL query
@@ -618,11 +594,6 @@ applications for clients.
     - order_by expressions [,descending]
     - group_by dimensions, measures
     - pick
-
-- Error routing, eventual consistency
-  - pipelet to push / pop sender, route errors to sender
-  - eventual consistency with pipelet next()
-    - on error, update rejected value with new next value
 
 - Rewrite and complete lib/server/file.js pipelets
   - fs_watch()
@@ -647,15 +618,19 @@ applications for clients.
 - 1949 Continuous Integration tests
   - Exceeded goal which was at least 1750 continuous integration tests
 
+- Passport-express integration:
+  - Refactor implementation
+
 - Error routing, eventual consistency
   - Rollback transactions to recover from errors
     - Using revert(), reverting add into remove, remove into add, and swapping update operations
 
 - Complex authorizations and validation
-  - using adds(), removes() and updates() to differentiate between Create,
-  Delete and Update operations and apply authorization rules accordingly.
-  - use pipelet fetch() to check authorizations.
-  - using not_exists() to test appropriate existance on adds, removes and updates.
+  - Implement verrifications at the transaction level from schema
+  - new pipelets WIP:
+    - validate_schema_transactions()
+    - schema_to_models()
+    - validate_transactions()
 
 - Toubkal site, featuring documentation and examples
   - Documentation available as a single page
