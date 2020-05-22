@@ -619,7 +619,11 @@ practices for building fully reactive applications.
   - Exceeded goal which was at least 1750 continuous integration tests
 
 - Passport-express integration:
-  - Refactor implementation
+  - Refactor implementation, new pipelets:
+    - express_use_passport(): Initialize express instance with passport instance
+    - express_application(): Instanciate an express application and get
+      express application instance
+    - passport_instance(): Instanciate a passport instance for an application
 
 - Error routing, eventual consistency
   - Rollback transactions to recover from errors
