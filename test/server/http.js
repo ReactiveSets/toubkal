@@ -239,7 +239,8 @@ function client( source, options ) {
       // public dataflows
       rs.set( [
         { flow: 'client_set' },
-        { flow: 'source' }
+        { flow: 'source'     },
+        { flow: 'providers'  }
       ] ),
       
       // Current authenticated user profile, if any
@@ -250,6 +251,9 @@ function client( source, options ) {
   
   return source
     .filter( can_read, { filter_keys: [ 'flow' ] } )
+    
+    .trace( 'client read', { all: true } )
+    
     .through( input )
   ;
 } // client()
@@ -291,7 +295,31 @@ var sessions = rs
   //.trace( 'after passport_user_sessions', { all: true } )
 ;
 
-rs.union( [ source_set, source_1, sessions, rs.sets_database() ] )
+var providers = rs
+
+  .passport_strategies()
+
+  .map( function( strategy ) {
+    var name = strategy.name;
+
+    return {
+        flow : 'providers'
+      , id   : name
+      , name : name
+      , href : '/passport/' + name
+      , order: strategy.order        || name
+      , icon : strategy.icon         || ''
+      , label: strategy.display_name || name
+    };
+  } )
+
+  .optimize()
+
+  .set()
+;
+
+
+rs.union( [ source_set, source_1, sessions, rs.sets_database(), providers ] )
   
   //.trace( 'to socket.io clients', { all: true } ) // acts as the dispatcher (no_encapsulate: true)
   

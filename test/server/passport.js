@@ -87,7 +87,7 @@ module.exports = function( http_servers ) {
     
     .passport_profiles( rs.passport_instance() )
     
-    //.trace( 'logged-in user profiles' )
+    .trace( 'logged-in user profiles' )
     
     .map( function( user ) {
       // New user profile from provider profile
@@ -116,6 +116,8 @@ module.exports = function( http_servers ) {
   var login_menu = rs
     
     .passport_strategies( rs.passport_instance() )
+    
+    .trace( 'strategies' )
     
     // Don't do anything if this is just a credentials change
     .optimize()
