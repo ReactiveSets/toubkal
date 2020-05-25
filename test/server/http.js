@@ -206,12 +206,12 @@ var clients = http_servers.dispatch( rs.express_application(), function( source,
     
     // Ignore updates in connected state, i.e. when client temporarily disconnects
     // ToDo: allow updates with dispatch
-    .pick( [ 'id', 'socket' ] ).optimize()
+    //.pick( [ 'id', 'socket' ] ).optimize()
   ;
 } );
 
 // ToDo: add authorizations test
-function client( source, options ) {
+function client( source, options, on ) {
   de&&ug( 'creating socket_io client id: ' + this.id );
   
   var rs     = source.namespace()
@@ -219,6 +219,9 @@ function client( source, options ) {
     , socket = input.socket
     , sid    = socket.sid
   ;
+  
+  on( 'update', function( update ) { log( 'client update' ) } );
+  on( 'remove', function( remove ) { log( 'client remove' ) } );
   
   de&&ug( 'client() sid:', sid );
   
