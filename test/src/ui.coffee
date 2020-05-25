@@ -26,3 +26,4 @@
 require( './url_events.js' )
 require( './controls.js'   )
 require( './form.js'       )
+require( './passport.js'   )

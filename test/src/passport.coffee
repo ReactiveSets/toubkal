@@ -34,26 +34,51 @@ check   = this.check  || utils.check
 # ----------------------------------------------------------------------------------------------
 
 describe 'Passport Test Suite', ->
-  before ( done ) ->
-    browser.visit 'http://localhost:8080/test/automated/rs_passport.html', done
+  describe 'Unautheticated', ->
+    before ( done ) ->
+      browser.visit 'http://localhost:8080/test/automated/rs_passport.html', done
+      
+    it 'body element should have an "a" element, with ID equal to "test-strategy"', ->
+      expect( browser.queryAll( '#sign-in a#test-strategy' ).length ).to.be 1
     
-  it 'body element should have a "div" element, with ID equal to "social-signin"', ->
-    expect( browser.queryAll( '#social-signin' ).length ).to.be 1
+    it 'user profile should be empty', ( done ) ->
+      browser.window.profile._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.empty()
+    
+    it 'providers should be equal to result', ( done ) ->
+      browser.window.providers._fetch_all ( values ) -> check done, ->
+        expect( values ).to.be.eql [
+          {
+            flow: 'providers',
+            href: '/passport/test-strategy',
+            icon: 'test-strategy',
+            id: 'test-strategy',
+            label: 'Test Strategy',
+            name: 'test-strategy',
+            order: 1
+          }
+        ]
   
-  it 'user profile should be empty', ( done ) ->
-    browser.window.profile._fetch_all ( values ) -> check done, ->
-      expect( values ).to.be.empty()
-  
-  it 'providers should be equal to result', ( done ) ->
-    browser.window.providers._fetch_all ( values ) -> check done, ->
-      expect( values ).to.be.eql [
-        {
-          flow: 'providers',
-          href: '/passport/test-strategy',
-          icon: 'test-strategy',
-          id: 'test-strategy',
-          label: 'Test Strategy',
-          name: 'test-strategy',
-          order: 1
-        }
-      ]
+  describe 'Auhtenticated', ->
+    before ( done ) ->
+      browser.visit 'http://localhost:8080/passport/test-strategy/callback', ->
+        browser.visit 'http://localhost:8080/test/automated/rs_passport.html', done
+      
+    it 'body element should have an "a" element, with ID equal to "logout"', ->
+      expect( browser.queryAll( '#profile a#logout' ).length ).to.be 1
+    
+    it 'user profile should be equal to result', ( done ) ->
+      browser.window.profile._fetch_all ( values ) -> check done, ->
+        value = values[ 0 ]
+        
+        expect( value.flow          ).to.be.eql 'user_profile'
+        expect( value.provider_name ).to.be.eql 'test-strategy'
+        expect( value.provider_id   ).to.be.eql '007'
+        expect( value.name          ).to.be.eql 'Khalifa Nassik'
+        expect( value.photo         ).to.be.eql 'https://lh5.googleusercontent.com/-jebMPOHkFlU/AAAAAAAAAAI/AAAAAAAAAGU/AFElBGJysOE/photo.jpg?sz=50'
+        expect( value.emails        ).to.be.eql [
+          {
+            value: 'knassik@gmail.com',
+            type: 'account'
+          }
+        ]

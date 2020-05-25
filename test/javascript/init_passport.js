@@ -19,12 +19,84 @@
 */
 
 ( function( exports ) {
-//var $node = document.body;
+  var $sign_in         = document.querySelector( '#sign-in' )
+    , $profile         = document.querySelector( '#profile' )
+    , socket_io_server = exports.rs.socket_io_server()
+  ;
 
-var socket_io_server = rs
-  .socket_io_server()
-;
+  var providers = socket_io_server.flow( 'providers' );
 
-exports.profile   = socket_io_server.flow( 'user_profile' ).set();
-exports.providers = socket_io_server.flow( 'providers'    ).set();
+  providers
+    .greedy()
+    
+    .api
+    
+    .on( 'add', function( added ) {
+      signin_html( $sign_in, added );
+    } )
+    
+    .on( 'remove', function( removed ) {
+      $sign_in.innerHTML = '';
+    } )
+    
+    .on( 'update', function( updates ) {
+      signin_html( $sign_in, updates[ 0 ][ 1 ] );
+    } )
+    
+    .fetch( function( fetched ) {
+      signin_html( $sign_in, fetched );
+    } )
+  ;
+
+  var profile = socket_io_server.flow( 'user_profile' );
+
+  profile
+    .greedy()
+    
+    .api
+    
+    .on( 'add', function( added ) {
+      signin_html( $profile, added );
+    } )
+    
+    .on( 'remove', function( removed ) {
+      $profile.innerHTML = '';
+    } )
+    
+    .on( 'update', function( updates ) {
+      signin_html( $profile, updates[ 0 ][ 1 ] );
+    } )
+    
+    .fetch( function( fetched ) {
+      signin_html( $profile, fetched );
+    } )
+  ;
+
+  // Sign-in menu
+  function signin_html( $node, adds ) {
+    adds.forEach( function( add ) {
+      switch ( add.flow ) {
+        case 'providers':
+          console.log( 'signin_html(), providers', add );
+          
+          $node.innerHTML = '<a id="' + add.id + '" '
+            +   'class="has-gap" '
+            +   'href="' + add.href + '">'
+            +  '<i class="mt-' + add.icon + '"></i>'
+            +  add.label
+            + '</a>'
+          ;          
+        break;
+        
+        case 'user_profile':
+          $node.innerHTML = 'Welcome back ' + add.name
+            + '<br /><a id="logout" href="/passport/logout">Logout</a>'
+          ;
+        break;
+      }
+    } );
+  } // signin_html()
+
+  exports.profile   = profile.set();
+  exports.providers = providers.set();
 } ) ( this );

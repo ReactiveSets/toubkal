@@ -3,7 +3,8 @@
 
     Copyright (C) 2013, 2020, Reactive Sets
 
-    Inspired from https://github.com/jboxman/koa-passport-oauth2-testing
+    Inspired from https://github.com/jboxman/koa-passport-oauth2-testing, licence: ISC
+    
 
 */
 

@@ -4,10 +4,6 @@
     "pipelet"     : "passport_strategies",
     "module"      : "../../test/server/test-strategy.js",
     "name"        : "test-strategy",
-    "credentials" : {
-      "clientID"    : "592842294991-d2p8tefe7tag1ibfqluprto94arrkpdm.apps.googleusercontent.com",
-      "clientSecret": "DRsE-SJF1ufeuSuXhY22DEtv"
-    },
     "scope"       : [ "profile", "email" ],
     "display_name": "Test Strategy",
     "icon"        : "test-strategy",
