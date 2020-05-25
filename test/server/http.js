@@ -202,7 +202,12 @@ var clients = http_servers.dispatch( rs.express_application(), function( source,
   
   // Socket.io Server tests
   return source
-    .socket_io_clients( { remove_timeout: 10, session_options: session_options } );
+    .socket_io_clients( { remove_timeout: 10, session_options: session_options } )
+    
+    // Ignore updates in connected state, i.e. when client temporarily disconnects
+    // ToDo: allow updates with dispatch
+    .pick( [ 'id', 'socket' ] ).optimize()
+  ;
 } );
 
 // ToDo: add authorizations test
