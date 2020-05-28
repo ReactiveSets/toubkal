@@ -115,7 +115,7 @@ module.exports = function( http_servers ) {
 
   var login_menu = rs
     
-    .passport_strategies( rs.passport_instance() )
+    .passport_strategies()
     
     .trace( 'strategies' )
     
@@ -168,7 +168,7 @@ module.exports = function( http_servers ) {
     
     //.trace( 'configured strategies' )
     
-    .passport_strategies( rs.passport_instance() )
+    .passport_strategies()
     
     //.trace( 'initialized strategies' )
     
