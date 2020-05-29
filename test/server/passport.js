@@ -172,7 +172,7 @@ module.exports = function( http_servers ) {
     
     //.trace( 'initialized strategies' )
     
-    .passport_strategies_routes( rs.passport_instance() )
+    .passport_strategies_routes()
     
     // ToDo: add a union to express route input
     .union( [ logout_profile_routes, login_menu ] )
