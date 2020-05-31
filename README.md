@@ -4,7 +4,7 @@
 
 *Liberating your Creativity by improving your Productivity and runtime Performances*
 
-*1954 Continuous Integration Tests*
+*1964 Continuous Integration Tests*
 
 [![Travis CI Build Status](https://travis-ci.org/ReactiveSets/toubkal.png?branch=master)](https://travis-ci.org/ReactiveSets/toubkal)
 [![npm version](https://badge.fury.io/js/toubkal.svg)](https://badge.fury.io/js/toubkal)
@@ -126,7 +126,7 @@ Then point a web browser at [localhost on port 8082](http://localhost:8082/).
 
 ## Automated Tests, Continuous Integration
 
-We have curently developped 1954 continuous integration tests for the Toubkal
+We have curently developped 1964 continuous integration tests for the Toubkal
 core and library pipelets that run after every commit on Travis CI under
 node version 8.12.0 LTS.
 
@@ -154,7 +154,7 @@ We also do manual testing on the following web browsers:
 # npm install
 # ./run_tests.sh
 Full test results are in test.out
--> passed 1954 of 1954 tests
+-> passed 1964 of 1964 tests
 #
 # less -R test.out # for tests detailed traces
 ```
@@ -615,7 +615,7 @@ practices for building fully reactive applications.
 
 #### Work in progress
 
-- 1954 Continuous Integration tests
+- 1964 Continuous Integration tests
   - Exceeded goal which was at least 1750 continuous integration tests
 
 - Passport-express integration:

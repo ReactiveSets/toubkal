@@ -1,7 +1,7 @@
 ###
     transactions.coffee
 
-    Copyright (c) 2013-2017, Reactive Sets
+    Copyright (c) 2013-2020, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -27,6 +27,8 @@ utils   = require( './tests_utils.js' ) unless this.expect?
 expect  = this.expect || utils.expect
 rs      = this.rs     || utils.rs
 RS      = rs.RS
+log     = RS.log
+pretty  = log.pretty
 uuid_v4 = RS.uuid.v4
 clone   = RS.extend.clone
 slice   = Array.prototype.slice
@@ -90,6 +92,58 @@ describe 'Transactions test suite', ->
   # RS.uuid_v4()
   
   describe 'Options', ->
+    describe 'Options.get_tid( options )', ->
+      get_tid = Options.get_tid
+      
+      it 'should be a function with one parameter', ->
+        expect( get_tid ).to.be.a( 'function' )
+        expect( get_tid.length ).to.be.eql 1
+      
+      it 'should return undefined when no options are provided', ->
+        expect( get_tid() ).to.be.eql undefined
+      
+      it 'should return undefined when no transaction object is present', ->
+        expect( get_tid {} ).to.be.eql undefined
+      
+      it 'should return undefined when no transaction id is present in transaction object', ->
+        expect( get_tid { _t: {} } ).to.be.eql undefined
+      
+      it 'should return a transaction identifier is present in options transaction object', ->
+        expect( get_tid { _t: { id: 42 } } ).to.be 42
+    
+    describe 'Options.get_tid( options )', ->
+      get_tid = Options.get_tid
+      set_tid = Options.set_tid
+      
+      it 'should be a function with one parameter', ->
+        expect( set_tid ).to.be.a( 'function' )
+        expect( set_tid.length ).to.be.eql 1
+      
+      it 'should not modify options if a transaction identifier is present in options transaction object', ->
+        options_in  = { _t: { id: 42 } }
+        options_out = set_tid( options_in )
+        
+        expect( options_out ).to.be options_in
+        expect( get_tid options_out ).to.be 42
+      
+      it 'should modify options to set a valid uuid_v4 in a transaction object', ->
+        options_in  = { _t: {} }
+        options_out = set_tid( options_in )
+        log( 'options_out:', pretty( options_out ) )
+        
+        expect( options_out ).to.not.be options_in
+        expect( get_tid options_out ).to.match( valid_uuid_v4 )
+      
+      it 'should modify options to set a valid uuid_v4 in a new transaction object', ->
+        options_in  = {}
+        options_out = set_tid( options_in )
+        
+        expect( options_out ).to.not.be options_in
+        expect( get_tid options_out ).to.match( valid_uuid_v4 )
+      
+      it 'should create options with a transaction object and a valid uuid_v4 tid', ->
+        expect( get_tid set_tid() ).to.match( valid_uuid_v4 )
+    
     describe 'Options.forward( more )', ->
       options_forward = Options.forward
       uuid = uuid_v4()
