@@ -51,6 +51,8 @@ require './join'
 
 require './json'
 require './transforms'
+require './transactional'
+
 require './require'
 require './file'
 require './html_parse'
