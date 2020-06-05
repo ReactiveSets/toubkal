@@ -2,7 +2,7 @@
 
     The MIT License (MIT)
 
-    Copyright (c) 2013-2017, Reactive Sets
+    Copyright (c) 2013-2020, Reactive Sets
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@
     .cache( { synchronizing: rs.socket_io_synchronizing() } )
     
     // Pull teaser/sales dataflow
-    .flow( 'teaser/sales_year', { tag: 'synchronizing' } )
+    .flow( 'teaser/sales_year', { untag: 'synchronizing' } )
     
     // Limit pulled sales to some years
     .filter( [
