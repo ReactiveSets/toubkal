@@ -42,9 +42,12 @@ describe 'set():', ->
   it 'set should be a Set', ->
     expect( set ).to.be.a Set
   
-  it 'should throw an exception if trying to initialize a set with an Object not instance of Array', ->
-    expect( () -> rs.set( {} ) ).to.throwException()
-    
+  it 'should allow to initialize a set with an Object not instance of Array', ->
+    expect( rs.set( { id: 42 } ).a ).to.be.eql [ { id: 42 } ]
+  
+  it 'should allow to initialize a set with a single scalar', ->
+    expect( rs.set( 42 ).a ).to.be.eql [ { id: 42 } ]
+  
   cities = rs.set [
     { id: 1, name: "Marrakech"    , country: "Morocco"                      }
     { id: 2, name: "Mountain View", country: "USA"    , state: "California" }
