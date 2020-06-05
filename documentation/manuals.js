@@ -1,6 +1,6 @@
 /*  manuals.js
     
-    Copyright (c) 2013-2017, Reactive Sets
+    Copyright (c) 2013-2020, Reactive Sets
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -332,7 +332,7 @@
       are the final operation of single-operation transactions.
     - forks: and Array of fork tag strings for each tagged fork this transaction has been
       through. Fork tags are added at pipelets having a 'fork_tag' option and are removed
-      at pipelets having a matching 'tag' option.
+      at pipelets having a matching "untag" option.
     
     Example:
     
