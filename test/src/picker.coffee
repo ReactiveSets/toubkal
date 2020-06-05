@@ -1,7 +1,7 @@
 ###
     picker.coffee
 
-    Copyright (c) 2013-2017, Reactive Sets
+    Copyright (c) 2013-2020, Reactive Sets
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -74,6 +74,23 @@ describe 'RS.picker()', ->
     
     it 'pick() should return { flow: "users", present: true } from { a: 1 }', ->
       expect( pick { a: 1 } ).to.be.eql { flow: "users", present: true }
+  
+  describe 'From a single string expression', ->
+    it 'should return a pick() function from expression "id"', ->
+      expression = "id"
+      expect( pick = picker expression, { allow_empty: true } ).to.be.a Function
+      expect( pick { id: 42, v: 2 } ).to.be.eql { id: 42 }
+  
+  describe 'From a single non-string scalar expression', ->
+    it 'should throw from a number', ->
+      f = () -> picker 0
+      
+      expect( f ).to.throwException()
+    
+    it 'should throw from a boolean', ->
+      f = () -> picker true
+      
+      expect( f ).to.throwException()
   
   describe 'From Array expression', ->
     it 'should return a pick() function from expression []', ->
@@ -165,6 +182,21 @@ describe 'RS.picker.inverse_expression()', ->
     
     it 'should not have mutated expression', ->
       expect( expression ).to.be.eql cloned
+  
+  describe 'From a single string expression', ->
+    it 'should return a pick expression from expression "id"', ->
+      expect( inverse_picker_expression "id" ).to.be.eql { id: ".id" }
+  
+  describe 'From a single non-string scalar expression', ->
+    it 'should throw from a number', ->
+      f = () -> inverse_picker_expression 0
+      
+      expect( f ).to.throwException()
+    
+    it 'should throw from a boolean', ->
+      f = () -> inverse_picker_expression true
+      
+      expect( f ).to.throwException()
   
   describe 'From Array expression', ->
     it 'should return undefined from expression []', ->
