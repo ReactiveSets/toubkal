@@ -270,7 +270,7 @@
         
         .cache( { synchronizing: rs.socket_io_synchronizing() } )
         
-        .pass_through( { tag: 'synchronizing' } )
+        .pass_through( { untag: 'synchronizing' } )
       ;
     } ) // strategies_or_profile()
   ;
