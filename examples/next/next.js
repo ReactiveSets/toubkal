@@ -64,7 +64,7 @@
     .union( [
       rs.crankshaft( tag ).flow( 'counters' ),
       rs.crankshaft( tag ).flow( 'trigger' ).delay( 200 )
-    ], { tag: tag } )
+    ], { untag: tag } )
     
     .trace( 'after union' )
     .greedy()
