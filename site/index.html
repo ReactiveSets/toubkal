@@ -40,7 +40,7 @@
         
         .database_cache( database_schema, { synchronizing: rs.socket_io_synchronizing() } )
         
-        .pass_through( { tag: 'synchronizing' } )
+        .pass_through( { untag: 'synchronizing' } )
         
         .debug( de, 'cached', { all: true, _counts: true } )
       ;
