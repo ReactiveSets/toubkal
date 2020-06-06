@@ -229,7 +229,7 @@ describe 'Transactions test suite', ->
         expect( last_fork_tag( { forks: [ 'a first tag', 'a second tag', fork_tag ] } ) ).to.be fork_tag
      # last_fork_tag( options )
      
-     describe 'Options.add_fork_tag( options, tag )', ->
+     describe 'Options.add_fork_tag( options, fork_tag )', ->
        add_fork_tag = Options.add_fork_tag
        options = null
        
@@ -427,7 +427,7 @@ describe 'Transactions test suite', ->
          it 'should have no other attributes', ->
            expect( options ).to.be.eql { _t: { id: uuid, forks: [ 'upstream tag', 'a tag' ] } }
        
-     # add_fork_tag( options, tag )
+     # add_fork_tag( options, fork_tag )
      
   describe 'RS.Transactions() and RS.Transaction()', ->
     start_count = Transaction.count
@@ -764,7 +764,7 @@ describe 'Transactions test suite', ->
       it 'should create a transaction with a count of 3, a name, and a fork tag', ->
         expect( t.get_tid()   ).to.be tid
         expect( t.is_closed() ).to.be false
-        expect( t.fork        ).to.be 'fork_tag'
+        expect( t.fork_tag    ).to.be 'fork_tag'
         expect( t.toJSON()    ).to.be.eql {
           number        : start_count + 3
           name          : 'Transaction( output #' + ( start_count + 3 ) + ' )'
@@ -863,7 +863,7 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = input.transactions = new Input_Transactions( 'input', input )
-        input_transactions.set_tag( 'source' )
+        input_transactions.set_untag( 'source' )
         input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
@@ -1040,7 +1040,7 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = input.transactions = new Input_Transactions( 'input', input )
-        input_transactions.set_tag( 'source' )
+        input_transactions.set_untag( 'source' )
         input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
@@ -1387,7 +1387,7 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = input.transactions = new Input_Transactions( 'input', input )
-        input_transactions.set_tag( 'source' )
+        input_transactions.set_untag( 'source' )
         input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
@@ -1564,7 +1564,7 @@ describe 'Transactions test suite', ->
         input    = new RS.Loggable 'input'
         
         input_transactions = input.transactions = new Input_Transactions( 'input', input )
-        input_transactions.set_tag( 'source' )
+        input_transactions.set_untag( 'source' )
         input_transactions.add_branches( 2 )
         
         output_1_transactions = new Output_Transactions 'output_1'
