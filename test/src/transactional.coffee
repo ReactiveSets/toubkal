@@ -44,13 +44,13 @@ valid_uuid_v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 # -----------------------
 
 describe 'Transactional pipelets test suite', ->
-  describe 'emit_operations() with optimize()', ->
+  describe 'emit_operations() with emit_transactions()', ->
     rs.Singleton( 'to_strict_transactions', ( source, options ) ->
       return source
         
         .emit_operations()
         
-        .optimize( { emit_transactions: true } )
+        .emit_transactions()
         
         .set() # of transactions
     )

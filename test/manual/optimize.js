@@ -32,7 +32,7 @@ require( 'toubkal' )
   
   .reference( 'operations' )
   
-  .optimize( { emit_transactions: true } ) // emit optimized transaction in one add
+  .emit_transactions() // emit optimized transaction in one add
   
   .trace( 'transactions', { fetched: false } ).greedy()
 ;
