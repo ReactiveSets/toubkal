@@ -635,12 +635,16 @@ practices for building fully reactive applications.
   - new pipelets WIP:
     - validate_schema_transactions()
     - schema_to_models()
+    - fetched_transactions()
     - validate_transactions()
 
 - Toubkal site, featuring documentation and examples
   - Documentation available as a single page
 
 #### Completed Work (versions 0.3.x, x > 0)
+
+- Other new pipelets:
+  - emit_transactions()
 
 - Pipelet api to ease integration with other libraries, e.g. front-end
   libraries and native applications. It exposes a stable API providing
