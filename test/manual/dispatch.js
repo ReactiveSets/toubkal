@@ -15,7 +15,7 @@ var rs     = require( 'toubkal' )
               }, { name: 'c', single: de } )
               
               //.pass_through()
-              .debug( 1, 'c-trace', { tag: 'b' } )
+              .debug( 1, 'c-trace', { untag: 'b' } )
               .greedy()
               
   , forks  //= [ 'b' ]

@@ -68,7 +68,7 @@ var friends_of_friends = friends
     { key: [ 'id', 'friend_of_friend_id' ], no_filter: true, concurrent: { 'friends': true } }
   )
   
-  .unique( [], { tag : 'friends' } )
+  .unique( [], { untag : 'friends' } )
   
   //.filter( [ { id: 10 } ] )
   
