@@ -31,7 +31,7 @@
     "express-session": "1.15.6",
     "highlight.js": "9.12.0",
     "htmlparser2": "3.9.2",
-    "markdown-it": "9.0.1",
+    "markdown-it": "12.3.2",
     "mime": "1.4.1",
     "mocha": "^7.2.0",
     "node-uuid": "1.4.8",
