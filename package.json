@@ -37,7 +37,7 @@
     "node-uuid": "1.4.8",
     "nodemailer": "^6.8.0",
     "nodemailer-sendmail-transport": "1.0.2",
-    "passport": "0.3.2",
+    "passport": "0.6.0",
     "piexifjs": "1.0.3",
     "socket.io": "2.1.1",
     "socket.io-client": "2.1.1",
