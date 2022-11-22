@@ -39,7 +39,7 @@
     "nodemailer-sendmail-transport": "1.0.2",
     "passport": "0.3.2",
     "piexifjs": "1.0.3",
-    "socket.io": "2.1.1",
+    "socket.io": "2.5.0",
     "socket.io-client": "2.1.1",
     "source-map": "0.5.6",
     "uglify-js": "3.0.17",
